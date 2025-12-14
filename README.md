@@ -22,7 +22,7 @@ No site você encontra:
 - **Modelagem**  
   Página de catálogo voltada à modelagem, organizada como galeria/paginação de itens.
 
-- **Simulação** 
+- **Simulação**  
   Catálogo de animações voltadas à simulação, em formato de cards.
 
 ## Roadmap (próximos upgrades)

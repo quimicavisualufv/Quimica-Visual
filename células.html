@@ -1,0 +1,1439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redes Cristalinas</title>
+  <style>
+    :root{
+      --bg0:#0b0f14;
+      --bg1:#0f1722;
+      --panel:#0f172a88;
+      --panel2:#0b1220cc;
+      --stroke:#94a3b8;
+      --muted:#94a3b8cc;
+      --text:#e5e7eb;
+      --accent:#22c55e;
+      --accent2:#60a5fa;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 25% 20%, #1b2a3a55, transparent 60%),
+                  radial-gradient(900px 700px at 80% 30%, #0ea5e933, transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow:hidden;
+    }
+    .app{
+      height:100%;
+      display:grid;
+      grid-template-rows: 64px 1fr;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(148,163,184,.12);
+      background: linear-gradient(180deg, rgba(15,23,42,.55), rgba(15,23,42,.25));
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width: 280px;
+    }
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:
+        radial-gradient(12px 12px at 30% 30%, rgba(34,197,94,.45), transparent 60%),
+        radial-gradient(14px 14px at 70% 70%, rgba(96,165,250,.42), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      border:1px solid rgba(148,163,184,.22);
+      box-shadow: var(--shadow);
+    }
+    .brand h1{
+      font-size: 14px;
+      margin:0;
+      letter-spacing:.3px;
+      font-weight: 750;
+      line-height:1.1;
+    }
+    .brand p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+    .spacer{flex:1}
+    .chip{
+      display:flex; align-items:center; gap:10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(148,163,184,.18);
+      background: rgba(2,6,23,.35);
+    }
+    .chip label{
+      font-size:12px;
+      color:var(--muted);
+      user-select:none;
+    }
+    select, button, input[type="range"]{
+      font: inherit;
+    }
+    select{
+      background: rgba(15,23,42,.55);
+      color: var(--text);
+      border: 1px solid rgba(148,163,184,.22);
+      padding: 7px 10px;
+      border-radius: 10px;
+      outline:none;
+    }
+    select:focus{border-color: rgba(96,165,250,.65)}
+    button{
+      background: rgba(15,23,42,.55);
+      color: var(--text);
+      border: 1px solid rgba(148,163,184,.22);
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: transform .08s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+    }
+    button:hover{border-color: rgba(96,165,250,.55)}
+    button:active{transform: translateY(1px)}
+    .btnAccent{
+      border-color: rgba(34,197,94,.55);
+      background: rgba(34,197,94,.12);
+    }
+    .btnAccent:hover{border-color: rgba(34,197,94,.85)}
+    .btnGhost{
+      background: rgba(2,6,23,.18);
+    }
+    .main{
+      display:grid;
+      grid-template-columns: 25% 1fr 20%;
+      gap: 14px;
+      padding: 14px;
+      height: calc(100vh - 64px);
+    }
+    .card{
+      border-radius: var(--radius);
+      background: rgba(2,6,23,.22);
+      border: 1px solid rgba(148,163,184,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height: 0;
+    }
+    .viewer{
+      display:grid;
+      grid-template-rows: auto 1fr;
+    }
+    .viewerTop{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(2,6,23,.45), rgba(2,6,23,.15));
+      border-bottom: 1px solid rgba(148,163,184,.12);
+      backdrop-filter: blur(10px);
+    }
+    .viewerTop .mini{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(15,23,42,.28);
+    }
+    .viewerTop .mini b{font-size:12px}
+    .viewerTop .mini span{font-size:12px;color:var(--muted)}
+    canvas{
+      width:100%;
+      height:100%;
+      display:block;
+      background: radial-gradient(900px 700px at 40% 35%, rgba(96,165,250,.12), transparent 60%),
+                  radial-gradient(900px 700px at 70% 65%, rgba(34,197,94,.10), transparent 60%),
+                  linear-gradient(180deg, rgba(2,6,23,.25), rgba(2,6,23,.5));
+    }
+    .sidebar{
+      display:grid;
+      grid-template-rows: auto auto 1fr auto;
+    }
+        .sidebarLeft{
+      grid-template-rows: auto 1fr auto;
+    }
+    .sidebarRight{
+      grid-template-rows: auto 1fr;
+    }
+    .sidebarRight .controls{
+      border-bottom: none;
+      overflow:auto;
+      min-height: 0;
+    }
+.sideTop{
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(2,6,23,.55), rgba(2,6,23,.15));
+      border-bottom: 1px solid rgba(148,163,184,.12);
+    }
+    .sideTop h2{
+      margin:0 0 6px 0;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .sideTop p{
+      margin:0;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .controls{
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid rgba(148,163,184,.12);
+      display:grid;
+      gap:10px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .field{
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(15,23,42,.22);
+      border-radius: 14px;
+      padding: 10px 10px 8px;
+    }
+    .field .label{
+      display:flex; align-items:baseline; justify-content:space-between;
+      gap:10px;
+      margin-bottom: 6px;
+    }
+    .field .label b{font-size:12px}
+    .field .label em{
+      font-style: normal;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--accent2);
+    }
+    .toggles{
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    .toggle{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(15,23,42,.22);
+      user-select:none;
+      cursor:pointer;
+    }
+    .toggle input{transform: translateY(1px)}
+    .content{
+      padding: 12px 14px;
+      overflow:auto;
+    }
+    .stepTitle{
+      font-size: 15px;
+      margin: 0 0 10px;
+      font-weight: 800;
+      letter-spacing:.2px;
+    }
+    .content p{
+      margin: 0 0 10px;
+      color: rgba(229,231,235,.92);
+      line-height: 1.55;
+      font-size: 13.2px;
+    }
+    .callout{
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid rgba(96,165,250,.25);
+      background: rgba(96,165,250,.09);
+      margin: 10px 0 12px;
+    }
+    .callout b{display:block; margin-bottom:6px; font-size:12px}
+    .callout span{color: rgba(229,231,235,.92); font-size: 12.8px; line-height:1.5; display:block}
+    .footerNav{
+      padding: 12px 14px;
+      border-top: 1px solid rgba(148,163,184,.12);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background: linear-gradient(180deg, rgba(2,6,23,.10), rgba(2,6,23,.40));
+    }
+    .progress{
+      flex:1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.14);
+      overflow:hidden;
+      border: 1px solid rgba(148,163,184,.10);
+    }
+    .bar{
+      height:100%;
+      width:40%;
+      background: linear-gradient(90deg, rgba(34,197,94,.85), rgba(96,165,250,.85));
+      border-radius: 999px;
+    }
+    .hint{
+      font-size: 12px;
+      color: var(--muted);
+      user-select:none;
+    }
+
+    /* Responsivo */
+    @media (max-width: 980px){
+      body{overflow:auto}
+      .app{height:auto; min-height:100%}
+      .main{
+        height:auto;
+        grid-template-columns: 1fr;
+      }
+      .viewer{height: 60vh}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Redes Cristalinas — Tutorial </h1>
+          <p>Visualização 3D + explicação lado a lado</p>
+        </div>
+      </div>
+
+      <div class="chip" title="Sistema cristalino atual">
+        <label for="systemSel">Sistema</label>
+        <select id="systemSel">
+          <option value="cubic">Cúbico</option>
+          <option value="tetragonal">Tetragonal</option>
+          <option value="orthorhombic">Ortorrombico</option>
+          <option value="hexagonal">Hexagonal</option>
+          <option value="monoclinic">Monoclínico</option>
+          <option value="triclinic">Triclínico</option>
+        </select>
+      </div>
+
+      <div class="chip" title="Estilo de rede (opcional)">
+        <label for="latticeSel">Modelo de Esferas</label>
+        <select id="latticeSel">
+          
+          <option value="none">Nenhuma</option><option value="corners">Só cantos</option>
+          <option value="bcc">BCC (cubo de corpo centrado)</option>
+          <option value="fcc">FCC (cubo de faces centradas)</option>
+        </select>
+      </div>
+
+      <div class="spacer"></div>
+
+      <button id="resetBtn" class="btnGhost" title="Voltar a câmera ao padrão">Reset câmera</button>
+</header>
+
+    <div class="main">
+            <!-- TUTORIAL -->
+      <aside class="card sidebar sidebarLeft" id="leftCard">
+        <div class="sideTop">
+          <h2 id="sideH2">Parte 1 — Células unitárias em 3D</h2>
+          <p>Você está vendo uma célula unitária construída por vetores (a⃗, b⃗, c⃗) e ângulos (α, β, γ). O tutorial vai acender as luzes certas no cérebro.</p>
+        </div>
+
+        <div class="content" id="content">
+          <h3 class="stepTitle" id="stepTitle">01 — O que você está vendo</h3>
+          <p id="stepBody"></p>
+          <div class="callout" id="callout">
+            <b>Macete visual</b>
+            <span id="calloutBody"></span>
+          </div>
+          <p class="hint" id="hint">Atalho mental: mudar o sistema cristalino = mudar relações entre a,b,c e α,β,γ.</p>
+        </div>
+
+        <div class="footerNav">
+          <button id="prevBtn" class="btnGhost">◀ Anterior</button>
+          <div class="progress" aria-label="Progresso do tutorial"><div class="bar" id="bar"></div></div>
+          <button id="nextBtn" class="btnAccent">Próximo ▶</button>
+        </div>
+      </aside>
+
+<!-- VIEWER -->
+      <section class="card viewer" id="viewerCard">
+        <div class="viewerTop">>
+          <div class="mini"><b>Parâmetros:</b> <span id="paramReadout">a=1.00 b=1.00 c=1.00 | α=90° β=90° γ=90°</span></div>
+        </div>
+        <canvas id="cv" aria-label="Visualização 3D da célula unitária"></canvas>
+      </section>
+
+      
+
+      <!-- CONTROLS -->
+      <aside class="card sidebar sidebarRight" id="rightCard">
+        <div class="sideTop">
+          <h2>Controles</h2>
+          <p>Ajuste dimensões, ângulos (quando liberados pelo sistema), e marque opções visuais.</p>
+        </div>
+
+        <div class="controls" id="controls">
+          <div class="row">
+            <div class="field" id="fa">
+              <div class="label"><b>a</b><em><span id="va">1.00</span></em></div>
+              <input id="sa" type="range" min="0.60" max="2.00" value="1.00" step="0.01" />
+            </div>
+            <div class="field" id="fb">
+              <div class="label"><b>b</b><em><span id="vb">1.00</span></em></div>
+              <input id="sb" type="range" min="0.60" max="2.00" value="1.00" step="0.01" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field" id="fc">
+              <div class="label"><b>c</b><em><span id="vc">1.00</span></em></div>
+              <input id="sc" type="range" min="0.60" max="2.40" value="1.00" step="0.01" />
+            </div>
+            <div class="field" id="falpha">
+              <div class="label"><b>α</b><em><span id="valpha">90</span>°</em></div>
+              <input id="salpha" type="range" min="55" max="125" value="90" step="1" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field" id="fbeta">
+              <div class="label"><b>β</b><em><span id="vbeta">90</span>°</em></div>
+              <input id="sbeta" type="range" min="55" max="125" value="90" step="1" />
+            </div>
+            <div class="field" id="fgamma">
+              <div class="label"><b>γ</b><em><span id="vgamma">90</span>°</em></div>
+              <input id="sgamma" type="range" min="55" max="125" value="90" step="1" />
+            </div>
+          </div>
+
+          <div class="toggles">
+            <label class="toggle" title="Mostra eixos a, b, c">
+              <input id="tAxes" type="checkbox" checked />
+              <span>Eixos</span>
+            </label>
+            <label class="toggle" title="Mostra rótulos a, b, c">
+              <input id="tLabels" type="checkbox" checked />
+              <span>Rótulos</span>
+            </label>
+            <label class="toggle" title="Repete a célula em 3×3×3 (visão de rede)">
+              <input id="tRep" type="checkbox" />
+              <span>Repetir 3×3×3</span>
+            </label>
+
+            <label class="toggle" title="Mostra arcos dos ângulos α, β, γ">
+              <input id="tAngles" type="checkbox" checked />
+              <span>Ângulos</span>
+            </label>
+
+            <label class="toggle" title="Esferas opacas (sem alpha)">
+              <input id="tAlpha" type="checkbox" checked />
+              <span>Esferas opacas</span>
+            </label>
+
+          </div>
+        </div>
+      </aside>
+</div>
+  </div>
+
+<script>
+(() => {
+  // ========= Estado =========
+  const $ = (id) => document.getElementById(id);
+
+  const cv = $("cv");
+  const ctx = cv.getContext("2d", { alpha: false });
+
+  const systemSel = $("systemSel");
+  const latticeSel = $("latticeSel");
+  const resetBtn = $("resetBtn");
+const sa = $("sa"), sb = $("sb"), sc = $("sc");
+  const salpha = $("salpha"), sbeta = $("sbeta"), sgamma = $("sgamma");
+  const va = $("va"), vb = $("vb"), vc = $("vc");
+  const valpha = $("valpha"), vbeta = $("vbeta"), vgamma = $("vgamma");
+  const tAlpha = $("tAlpha");
+  const fa = $("fa"), fb = $("fb"), fc = $("fc"), falpha = $("falpha"), fbeta = $("fbeta"), fgamma = $("fgamma");
+
+  const tAxes = $("tAxes"), tLabels = $("tLabels"), tRep = $("tRep"), tAngles = $("tAngles");
+
+  const paramReadout = $("paramReadout");
+
+  const stepTitle = $("stepTitle");
+  const stepBody = $("stepBody");
+  const calloutBody = $("calloutBody");
+  const bar = $("bar");
+  const prevBtn = $("prevBtn");
+  const nextBtn = $("nextBtn");
+
+  const viewerCard = $("viewerCard");
+  const leftCard = $("leftCard");
+  const rightCard = $("rightCard");
+const state = {
+    a: 1.00, b: 1.00, c: 1.00,
+    alpha: 90, beta: 90, gamma: 90,
+    system: "cubic",
+    lattice: "corners",
+    showAxes: true,
+    showLabels: true,
+    showAngles: true,
+    showAlpha: true,
+    repeat: false,
+
+    // camera
+    yaw: -0.65,
+    pitch: 0.35,
+    zoom: 0.55, // >1 mais perto
+    dragging: false,
+    lastX: 0,
+    lastY: 0,
+  };
+
+  // ========= Mapeamento de exibição =========
+  // No viewer, os rótulos foram rearranjados para ficar:
+  //   b onde antes era a, c onde antes era b, a onde antes era c
+  // Para não virar uma zona (sliders, valores e ângulos), o UI usa este "mapa".
+  const viewMap = {
+    // Comprimentos (a, b, c) exibidos na UI
+    getLenA: () => state.c,
+    getLenB: () => state.a,
+    getLenC: () => state.b,
+    setLenA: (v) => state.c = v,
+    setLenB: (v) => state.a = v,
+    setLenC: (v) => state.b = v,
+
+    // Ângulos exibidos na UI:
+    // α = ∠(b,c)  -> aqui corresponde ao ângulo interno γ
+    // β = ∠(a,c)  -> aqui corresponde ao ângulo interno α
+    // γ = ∠(a,b)  -> aqui corresponde ao ângulo interno β
+    getAlpha: () => state.gamma,
+    getBeta:  () => state.alpha,
+    getGamma: () => state.beta,
+    setAlpha: (v) => state.gamma = v,
+    setBeta:  (v) => state.alpha = v,
+    setGamma: (v) => state.beta = v,
+  };
+
+  // Cores padrão dos eixos (internos a, b, c)
+  const colors = {
+    a: 'rgba(34,197,94,.95)',   // verde
+    b: 'rgba(96,165,250,.95)',  // azul
+    c: 'rgba(245,158,11,.95)',  // laranja
+  };
+
+  // ========= Tutorial =========
+  const steps = [
+    {
+      title: "01 — O que você está vendo",
+      body:
+        "Isso é uma célula unitária: o “tijolinho” que, repetido no espaço, constrói a rede cristalina. " +
+        "As arestas são definidas por três vetores (a⃗, b⃗, c⃗). Os ângulos entre eles são α (entre b e c), β (entre a e c) e γ (entre a e b).",
+      callout:
+        "Arraste pra girar e procure perceber: quando os ângulos deixam de ser 90°, a caixa vira um “paralelepípedo torto” — e isso é exatamente a ideia.",
+      action: () => {
+        state.system = "cubic";
+        applySystemPreset(state.system);
+        state.showAxes = false; state.showLabels = false; state.repeat = false;
+        tAxes.checked = false; tLabels.checked = false; tRep.checked = false;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = false;
+      }
+    },
+    {
+      title: "02 — Eixos e Angulos",
+      body:
+        "Por convenção, são atribuídos a ao eixo y, b ao eixo x e c ao eixo z. " +
+        "Entre esses três vetores, formam-se os ângulos α (entre b e c), β (entre a e c) e γ (entre a e b).",
+      callout:
+        "Observe os angulos.",
+      action: () => {
+        state.system = "cubic";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "03 — Parametros e formatos de uma célula",
+      body:
+        "O formato geometrico nos diz como os lados a, b, c e os ângulos se relacionam. " +
+        "Cúbico: a=b=c e α=β=γ=90°. Tetragonal: a=b≠c e ângulos 90°. Ortorrombico: a≠b≠c e ângulos 90°. " +
+        "Hexagonal: a=b≠c e γ=120°. Monoclínico: um ângulo diferente de 90°. Triclínico: tudo pode ser diferente.",
+      callout:
+        "Truque: mexa no seletor de Sistema lá em cima e tente adivinhar quais sliders “deveriam” travar automaticamente.",
+      action: () => {
+        state.system = "cubic";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "04 — Cúbico (a=b=c, 90°)",
+      body:
+        "No cúbico, a simetria é máxima: todos os lados iguais e todos os ângulos retos. " ,
+      callout:
+        "No 3D, cubo é o “modo zen”: qualquer rotação parece familiar. Se isso te dá conforto, é porque a simetria tá fazendo carinho.",
+      action: () => {
+        state.system = "cubic";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "05 — Tetragonal (a=b≠c, 90°)",
+      body:
+        "Tetragonal é tipo um cubo que tomou um estirão (ou foi comprimido) no eixo c. " +
+        "Os ângulos continuam 90°, mas agora você sente a diferença entre “altura” e “base”.",
+      callout:
+        "A melhor leitura visual: compare as faces quadradas com as faces retangulares.",
+      action: () => {
+        state.system = "tetragonal";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "06 — Ortorrombico (a≠b≠c, 90°)",
+      body:
+        "Ortorrombico mantém ângulos retos, mas perde a igualdade dos comprimentos. " +
+        "É o paralelepípedo retinho, só que cada direção tem sua própria escala.",
+      callout:
+        "Se você estiver pensando em “caixa de sapato”, você está no caminho certo (sem meme).",
+      action: () => {
+        state.system = "orthorhombic";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "07 — Hexagonal (γ=120°)",
+      body:
+        "No hexagonal, a=b e o ângulo γ entre a e b é 120°. Isso cria uma base com simetria hexagonal. " +
+        "O eixo c é a “altura” do prisma. Visualmente, a base parece um losango com cara de favo.",
+      callout:
+        "Gire até olhar “de cima”: a base fica muito mais óbvia quando você alinha a câmera com o eixo c.",
+      action: () => {
+        state.system = "hexagonal";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "08 — Monoclínico (um ângulo torto)",
+      body:
+        "Monoclínico é quando dois ângulos são 90° e um não. Em geral, toma-se α=γ=90° e β ≠ 90°. " +
+        "O resultado é uma célula inclinada em uma direção só, como se uma face tivesse “escorregado”.",
+      callout:
+        "Mexe no β e observe como o topo “desloca” sem quebrar a base.",
+      action: () => {
+        state.system = "monoclinic";
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "09 — Triclínico (tudo pode)",
+      body:
+        "Triclínico é o modo sem garantias: a, b, c diferentes e α, β, γ diferentes de 90° em geral. " +
+        "É o caso mais geral — útil pra lembrar que os outros sistemas são “restrições” desse aqui.",
+      callout:
+        "Se parecer caótico, perfeito: o triclínico é o lembrete de que a natureza não assinou contrato com nossos ângulos retos.",
+      action: () => {
+        state.system = "triclinic"; 
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = true;
+      }
+    },
+    {
+      title: "10 — Célula vs rede (repetição 3×3×3)",
+      body:
+        "Uma célula unitária sozinha é só o tijolo. Quando você repete, aparece a ideia de periodicidade: " +
+        "a rede é o padrão infinito (na prática, grande o bastante).",
+      callout:
+        "Ative “Repetir 3×3×3” e gire: repare como o olho para de ver “uma caixa” e começa a ver “estrutura”.",
+      action: () => {
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = true;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.lattice = "none"; latticeSel.value = "none"; state.showAngles = false;
+      }
+    },
+    {
+      title: "11 — Célula Unitária com modelo de esferas",
+      body:
+        "O modelo de esfera representa a posição e interação da menor periodicidade possivel (tijololo) entre os átomos. Existem os mais diversos formatos e peculiaridades" +
+        "SC: só cantos. BCC: cantos + centro do corpo. FCC: cantos + centros das faces.",
+      callout:
+        "Troque o seletor “Modelo de esferas” no topo e compare.",
+      action: () => {
+        state.system = "cubic"; applySystemPreset(state.system);
+        applySystemPreset(state.system);
+        state.showAxes = true; state.showLabels = true; state.repeat = false;
+        tAxes.checked = true; tLabels.checked = true; tRep.checked = true;
+        state.showAngles = false; state.lattice = "bcc"; latticeSel.value = "bcc";
+      }
+    },
+  ];
+
+  let stepIndex = 0;
+
+  function setStep(i){
+    stepIndex = Math.max(0, Math.min(steps.length-1, i));
+    const s = steps[stepIndex];
+    stepTitle.textContent = s.title;
+    stepBody.textContent = s.body;
+    calloutBody.textContent = s.callout;
+    const p = (stepIndex+1)/steps.length;
+    bar.style.width = `${Math.round(p*100)}%`;
+    prevBtn.disabled = stepIndex === 0;
+    nextBtn.disabled = stepIndex === steps.length-1;
+    if (typeof s.action === "function") s.action();
+    syncUIFromState();
+  }
+
+  prevBtn.addEventListener("click", () => setStep(stepIndex-1));
+  nextBtn.addEventListener("click", () => setStep(stepIndex+1));
+
+  // ========= Sistemas / presets =========
+  function applySystemPreset(sys){
+    state.system = sys;
+    systemSel.value = sys;
+
+    // Defaults
+    if (sys === "cubic"){
+      state.a = 1.00; state.b = 1.00; state.c = 1.00;
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "tetragonal"){
+      state.a = 1.00; state.b = 1.00; state.c = 1.55;
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "orthorhombic"){
+      state.a = 0.90; state.b = 1.35; state.c = 1.65;
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "hexagonal"){
+      state.a = 1.00; state.b = 1.00; state.c = 1.55;
+      state.alpha = 90; state.beta = 90; state.gamma = 120;
+    } else if (sys === "monoclinic"){
+      state.a = 1.00; state.b = 1.25; state.c = 1.55;
+      state.alpha = 90; state.beta = 108; state.gamma = 90;
+    } else if (sys === "triclinic"){
+      state.a = 0.95; state.b = 1.35; state.c = 1.25;
+      state.alpha = 78; state.beta = 102; state.gamma = 112;
+    }
+
+    enforceConstraints();
+  }
+
+  function enforceConstraints(){
+    const sys = state.system;
+
+    // Travar/derivar relações
+    if (sys === "cubic"){
+      state.b = state.a; state.c = state.a;
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "tetragonal"){
+      state.b = state.a;
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "orthorhombic"){
+      state.alpha = 90; state.beta = 90; state.gamma = 90;
+    } else if (sys === "hexagonal"){
+      state.b = state.a;
+      state.alpha = 90; state.beta = 90; state.gamma = 120;
+    } else if (sys === "monoclinic"){
+      // convencional: α=γ=90, β livre
+      state.alpha = 90; state.gamma = 90;
+    } else if (sys === "triclinic"){
+      // nada
+    }
+
+    // Clamp ângulos (evitar degeneração)
+    state.alpha = clamp(state.alpha, 55, 125);
+    state.beta  = clamp(state.beta,  55, 125);
+    state.gamma = clamp(state.gamma, 55, 125);
+    // Gamma não pode ser 0 ou 180 de jeito nenhum, 
+  }
+
+  // ========= UI sync =========
+  function syncUIFromState(){
+    // ativa/desativa sliders conforme sistema (valores INTERNOS continuam no state,
+    // mas a UI mostra um mapeamento pra bater com os rótulos do viewer)
+    const sys = state.system;
+
+    const setField = (field, enabled) => {
+      field.style.opacity = enabled ? "1" : ".45";
+      field.querySelector("input").disabled = !enabled;
+    };
+
+    // Comprimentos exibidos (a,b,c) -> (state.c, state.a, state.b)
+    setField(fa, sys !== "cubic"); // no cúbico, 'a' exibido segue o único parâmetro livre
+    setField(fb, true);            // sempre ajustável (é o parâmetro livre no cúbico)
+    setField(fc, !(sys === "cubic" || sys === "tetragonal" || sys === "hexagonal"));
+
+    // Ângulos exibidos:
+    // α -> state.gamma | β -> state.alpha | γ -> state.beta
+    setField(falpha, sys === "triclinic");
+    setField(fbeta,  sys === "triclinic");
+    setField(fgamma, sys === "monoclinic" || sys === "triclinic");
+
+    // valores exibidos
+    const da = viewMap.getLenA(), db = viewMap.getLenB(), dc = viewMap.getLenC();
+    const dα = viewMap.getAlpha(), dβ = viewMap.getBeta(), dγ = viewMap.getGamma();
+
+    sa.value = da.toFixed(2);
+    sb.value = db.toFixed(2);
+    sc.value = dc.toFixed(2);
+    salpha.value = dα;
+    sbeta.value  = dβ;
+    sgamma.value = dγ;
+
+    va.textContent = da.toFixed(2);
+    vb.textContent = db.toFixed(2);
+    vc.textContent = dc.toFixed(2);
+    valpha.textContent = Math.round(dα);
+    vbeta.textContent  = Math.round(dβ);
+    vgamma.textContent = Math.round(dγ);
+
+    systemSel.value = state.system;
+    latticeSel.value = state.lattice;
+
+    tAxes.checked = state.showAxes;
+    tLabels.checked = state.showLabels;
+    tAngles.checked = state.showAngles;
+    tRep.checked = state.repeat;
+
+    
+    tAlpha.checked = state.showAlpha;
+paramReadout.textContent =
+      `a=${da.toFixed(2)} b=${db.toFixed(2)} c=${dc.toFixed(2)} | α=${Math.round(dα)}° β=${Math.round(dβ)}° γ=${Math.round(dγ)}°`;
+  }
+
+  function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+
+  // ========= Eventos UI =========
+  function bindSlider(slider, on){
+    slider.addEventListener("input", () => on());
+    slider.addEventListener("change", () => on());
+  }
+
+  bindSlider(sa, () => {
+    viewMap.setLenA(parseFloat(sa.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+  bindSlider(sb, () => {
+    viewMap.setLenB(parseFloat(sb.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+  bindSlider(sc, () => {
+    viewMap.setLenC(parseFloat(sc.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+
+  bindSlider(salpha, () => {
+    viewMap.setAlpha(parseFloat(salpha.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+  bindSlider(sbeta, () => {
+    viewMap.setBeta(parseFloat(sbeta.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+  bindSlider(sgamma, () => {
+    viewMap.setGamma(parseFloat(sgamma.value));
+    enforceConstraints();
+    syncUIFromState();
+  });
+
+  systemSel.addEventListener("change", () => {
+    applySystemPreset(systemSel.value);
+    syncUIFromState();
+  });
+
+  latticeSel.addEventListener("change", () => {
+    state.lattice = latticeSel.value;
+    syncUIFromState();
+  });
+
+  tAxes.addEventListener("change", () => state.showAxes = tAxes.checked);
+  tLabels.addEventListener("change", () => state.showLabels = tLabels.checked);
+  tAngles.addEventListener("change", () => state.showAngles = tAngles.checked);
+  tRep.addEventListener("change", () => state.repeat = tRep.checked);
+
+  
+  tAlpha.addEventListener("change", () => state.showAlpha = tAlpha.checked);
+resetBtn.addEventListener("click", () => {
+    state.yaw = -0.65; state.pitch = 0.35; state.zoom = 0.55;
+  });
+// ========= Canvas / câmera =========
+  function resizeCanvas(){
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    const rect = cv.getBoundingClientRect();
+    const w = Math.max(2, Math.floor(rect.width * dpr));
+    const h = Math.max(2, Math.floor(rect.height * dpr));
+    if (cv.width !== w || cv.height !== h){
+      cv.width = w; cv.height = h;
+    }
+  }
+  window.addEventListener("resize", resizeCanvas);
+
+  cv.addEventListener("mousedown", (e) => {
+    state.dragging = true;
+    state.lastX = e.clientX;
+    state.lastY = e.clientY;
+  });
+  window.addEventListener("mouseup", () => state.dragging = false);
+  window.addEventListener("mousemove", (e) => {
+    if (!state.dragging) return;
+    const dx = e.clientX - state.lastX;
+    const dy = e.clientY - state.lastY;
+    state.lastX = e.clientX;
+    state.lastY = e.clientY;
+
+    state.yaw += dx * 0.0075;
+    state.pitch += dy * 0.0075;
+    state.pitch = clamp(state.pitch, -1.35, 1.35);
+  });
+
+  cv.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const s = Math.sign(e.deltaY);
+    state.zoom *= (s > 0) ? 0.92 : 1.09;
+    state.zoom = clamp(state.zoom, 0.35, 1.35);
+  }, { passive:false });
+
+  // ========= Matemática cristalográfica (vetores a,b,c a partir de a,b,c e αβγ) =========
+  function deg2rad(d){ return d * Math.PI / 180; }
+
+  function latticeVectors(a,b,c, alphaDeg, betaDeg, gammaDeg){
+    const alpha = deg2rad(alphaDeg);
+    const beta  = deg2rad(betaDeg);
+    const gamma = deg2rad(gammaDeg);
+
+    const ca = Math.cos(alpha), cb = Math.cos(beta), cg = Math.cos(gamma);
+    const sg = Math.sin(gamma);
+
+    // a⃗ = (a, 0, 0)
+    const ax = a, ay = 0, az = 0;
+
+    // b⃗ = (b cosγ, b sinγ, 0)
+    const bx = b * cg;
+    const by = b * sg;
+    const bz = 0;
+
+    // c⃗:
+    // cx = c cosβ
+    // cy = c (cosα - cosβ cosγ) / sinγ
+    // cz = c * sqrt(1 - cos^2β - (cy/c)^2 )
+    // forma padrão para célula geral
+    const cx = c * cb;
+    const cy = c * ( (ca - cb*cg) / (sg || 1e-6) );
+
+    let cz2 = c*c - cx*cx - cy*cy;
+    if (cz2 < 1e-10) cz2 = 1e-10; // evita NaN em casos extremos
+    const cz = Math.sqrt(cz2);
+
+    return {
+      a: {x:ax,y:ay,z:az},
+      b: {x:bx,y:by,z:bz},
+      c: {x:cx,y:cy,z:cz},
+    };
+  }
+
+  function add(u,v){ return {x:u.x+v.x, y:u.y+v.y, z:u.z+v.z}; }
+  function sub(u,v){ return {x:u.x-v.x, y:u.y-v.y, z:u.z-v.z}; }
+  function mul(u,s){ return {x:u.x*s, y:u.y*s, z:u.z*s}; }
+
+  function centroid(points){
+    let x=0,y=0,z=0;
+    for (const p of points){ x+=p.x; y+=p.y; z+=p.z; }
+    const n = points.length || 1;
+    return {x:x/n,y:y/n,z:z/n};
+  }
+
+  // ========= Geometria da célula =========
+  function cellGeometry(){
+    const v = latticeVectors(state.a, state.b, state.c, state.alpha, state.beta, state.gamma);
+    const O = {x:0,y:0,z:0};
+    const A = v.a;
+    const B = v.b;
+    const C = v.c;
+
+    const P0 = O;
+    const P1 = A;
+    const P2 = B;
+    const P3 = add(A,B);
+    const P4 = C;
+    const P5 = add(A,C);
+    const P6 = add(B,C);
+    const P7 = add(add(A,B),C);
+
+    const corners = [P0,P1,P2,P3,P4,P5,P6,P7];
+
+    const edges = [
+      [0,1],[0,2],[1,3],[2,3],
+      [4,5],[4,6],[5,7],[6,7],
+      [0,4],[1,5],[2,6],[3,7]
+    ];
+
+    return { corners, edges, v };
+  }
+
+  function latticePointsForCell(vectors){
+    // Retorna posições fracionárias dentro de uma célula [0,1)
+    if (state.lattice === "none") return [];
+    const pts = [];
+
+    // Cantos (SC)
+    const cornersFrac = [
+      [0,0,0],[1,0,0],[0,1,0],[1,1,0],
+      [0,0,1],[1,0,1],[0,1,1],[1,1,1],
+    ];
+    for (const f of cornersFrac) pts.push({fx:f[0], fy:f[1], fz:f[2]});
+
+    if (state.lattice === "bcc"){
+      pts.push({fx:0.5, fy:0.5, fz:0.5});
+    } else if (state.lattice === "fcc"){
+      pts.push({fx:0.5, fy:0.5, fz:0.0});
+      pts.push({fx:0.5, fy:0.0, fz:0.5});
+      pts.push({fx:0.0, fy:0.5, fz:0.5});
+      pts.push({fx:0.5, fy:0.5, fz:1.0});
+      pts.push({fx:0.5, fy:1.0, fz:0.5});
+      pts.push({fx:1.0, fy:0.5, fz:0.5});
+    }
+
+    // Transform fracionário -> cartesiano
+    const A = vectors.a, B = vectors.b, C = vectors.c;
+    const out = [];
+    for (const p of pts){
+      const pos = add(add(mul(A,p.fx), mul(B,p.fy)), mul(C,p.fz));
+      out.push(pos);
+    }
+    return out;
+  }
+
+  function replicatedCells(baseCorners, edges, vectors){
+    // Repete 3×3×3 centrado na célula do meio
+    const A = vectors.a, B = vectors.b, C = vectors.c;
+    const allEdges = [];
+    const allPoints = [];
+    const base = baseCorners;
+
+    // Monta pontos por célula (8 cantos)
+    const cellOffsets = [];
+    for (let i=-1;i<=1;i++){
+      for (let j=-1;j<=1;j++){
+        for (let k=-1;k<=1;k++){
+          cellOffsets.push(add(add(mul(A,i), mul(B,j)), mul(C,k)));
+        }
+      }
+    }
+
+    let idxOffset = 0;
+    for (const off of cellOffsets){
+      const pts = base.map(p => add(p, off));
+      for (const p of pts) allPoints.push(p);
+      for (const e of edges) allEdges.push([e[0] + idxOffset, e[1] + idxOffset]);
+      idxOffset += 8;
+    }
+
+    return { points: allPoints, edges: allEdges };
+  }
+
+  // ========= Render 3D (canvas 2D) =========
+  function rotateY(p, a){
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x: p.x*c + p.z*s, y: p.y, z: -p.x*s + p.z*c };
+  }
+  function rotateX(p, a){
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x: p.x, y: p.y*c - p.z*s, z: p.y*s + p.z*c };
+  }
+
+  function project(p, w, h){
+  // câmera: rotação + escala (zoom) — SEM perspectiva (ortográfica)
+  let q = rotateY(p, state.yaw);
+  q = rotateX(q, state.pitch);
+
+  // zoom uniforme
+  q = mul(q, state.zoom);
+
+  // projeção ortográfica: ignora profundidade na escala
+  return {
+    x: (w*0.5) + q.x*240,
+    y: (h*0.5) - q.y*240,
+    z: q.z,   // ainda usamos z pra ordenar o que está "na frente"
+    k: 1      // mantém compatibilidade com o resto do código
+  };
+}
+
+  function drawTextLabel(text, x, y){
+    ctx.save();
+    ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillStyle = "rgba(229,231,235,.92)";
+    ctx.strokeStyle = "rgba(2,6,23,.85)";
+    ctx.lineWidth = 4;
+    ctx.strokeText(text, x+6, y-6);
+    ctx.fillText(text, x+6, y-6);
+    ctx.restore();
+  }
+
+  
+  function normAngle(a){
+    while (a <= -Math.PI) a += Math.PI*2;
+    while (a > Math.PI) a -= Math.PI*2;
+    return a;
+  }
+
+  function shortestArc(a1, a2){
+    const d = normAngle(a2 - a1);
+    return { start: a1, end: a1 + d, anticlockwise: d < 0, delta: d };
+  }
+
+  function roundRectPath(x, y, w, h, r){
+    const rr = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  function drawAngleWedge(cx, cy, a1, a2, r, fill, stroke, label){
+    const arc = shortestArc(a1, a2);
+    const mid = arc.start + arc.delta / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, arc.start, arc.end, arc.anticlockwise);
+    ctx.closePath();
+
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1.25;
+    ctx.stroke();
+
+    const tx = cx + Math.cos(mid) * (r + 12);
+    const ty = cy + Math.sin(mid) * (r + 12);
+
+    ctx.fillStyle = "rgba(226,232,240,.95)";
+    ctx.font = "800 14px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, tx, ty);
+
+    ctx.restore();
+  }
+
+  function drawMiniAngleDiagram(px, py, dα, dβ, dγ){
+    const pw = 260, ph = 190;
+
+    // mantém dentro do canvas
+    px = clamp(px, 8, cv.width - pw - 8);
+    py = clamp(py, 8, cv.height - ph - 8);
+
+    ctx.save();
+
+    // painel
+    roundRectPath(px, py, pw, ph, 14);
+    ctx.fillStyle = "rgba(2,6,23,.55)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(148,163,184,.22)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+        const sum = Math.max(1e-6, (dα + dβ + dγ));
+        const k = 180 / sum;
+
+        // Normaliza (α+β+γ = 180°) só pro triângulo 2D ficar coerente.
+        // Os valores numéricos mostrados continuam sendo os do seu slider.
+        const aDeg = clamp(dα * k, 1, 179);
+        const bDeg = clamp(dβ * k, 1, 179);
+
+        const alpha = aDeg * Math.PI / 180;
+        const beta  = bDeg * Math.PI / 180;
+
+        // triângulo em coordenadas "matemáticas" (y pra cima), com base unitária A=(0,0), B=(1,0)
+        const d1 = {x: Math.cos(alpha), y: Math.sin(alpha)};
+        const d2 = {x: Math.cos(Math.PI - beta), y: Math.sin(Math.PI - beta)};
+        const denom = d1.x * d2.y - d1.y * d2.x;
+
+        // ponto C (unitário); fallback evita NaN se ficar degenerado
+        let C0 = {x: 0.68, y: 0.62};
+        if (Math.abs(denom) > 1e-6){
+          const t1 = d2.y / denom; // cross((1,0), d2) / cross(d1, d2)
+          C0 = {x: t1 * d1.x, y: t1 * d1.y};
+        }
+
+        // escala pra caber no card (pw×ph)
+        const maxW = pw - 44;
+        const maxH = ph - 86;
+        const scale = Math.max(28, Math.min(maxW, maxH / Math.max(0.001, C0.y)));
+
+        const baseY = py + ph - 48;
+        const baseX = px + (pw - scale) * 0.5;
+
+        const A = {x: baseX, y: baseY};
+        const B = {x: baseX + scale, y: baseY};
+        const C = {x: baseX + C0.x*scale, y: baseY - C0.y*scale};
+
+        // triângulo
+        ctx.strokeStyle = "rgba(226,232,240,.72)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(A.x, A.y);
+        ctx.lineTo(B.x, B.y);
+        ctx.lineTo(C.x, C.y);
+        ctx.closePath();
+        ctx.stroke();
+
+    // wedges (igual referência: α amarelo, β verde, γ rosa)
+    const ang = (V, P) => Math.atan2(P.y - V.y, P.x - V.x);
+    drawAngleWedge(A.x, A.y, ang(A, C), ang(A, B), 18, "rgba(250,204,21,.18)", "rgba(250,204,21,.55)", "α");
+    drawAngleWedge(B.x, B.y, ang(B, A), ang(B, C), 18, "rgba(34,197,94,.18)",  "rgba(34,197,94,.55)",  "β");
+    drawAngleWedge(C.x, C.y, ang(C, B), ang(C, A), 18, "rgba(236,72,153,.18)", "rgba(236,72,153,.55)", "γ");
+
+    // rótulos dos vértices
+    ctx.fillStyle = "rgba(226,232,240,.9)";
+    ctx.font = "700 12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("A", A.x - 10, A.y + 12);
+    ctx.fillText("B", B.x + 10, B.y + 12);
+    ctx.fillText("C", C.x + 10, C.y - 12);
+
+    // rótulos das arestas (c na base, b à esquerda, a à direita)
+    const mid = (P, Q) => ({x:(P.x+Q.x)/2, y:(P.y+Q.y)/2});
+    const mAB = mid(A, B), mAC = mid(A, C), mBC = mid(B, C);
+
+    ctx.font = "800 12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillStyle = "rgba(226,232,240,.85)";
+    ctx.fillText("c", mAB.x, mAB.y + 12);
+    ctx.fillText("b", mAC.x - 10, mAC.y);
+    ctx.fillText("a", mBC.x + 10, mBC.y);
+
+    // valores dos ângulos
+    ctx.font = "700 11px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillStyle = "rgba(226,232,240,.78)";
+    ctx.fillText(`α ${dα}°   β ${dβ}°   γ ${dγ}°`, px + pw/2, py + ph - 18);
+
+    ctx.restore();
+  }
+
+function render(){
+    resizeCanvas();
+    const w = cv.width, h = cv.height;
+
+    // fundo
+    ctx.fillStyle = "rgb(6,10,18)";
+    ctx.fillRect(0,0,w,h);
+
+    const { corners, edges, v } = cellGeometry();
+
+    // pontos de rede
+    let latticePts = latticePointsForCell(v);
+
+    // repetição
+    let points = corners;
+    let eds = edges;
+    let latticePtsAll = latticePts;
+
+    if (state.repeat){
+      const rep = replicatedCells(corners, edges, v);
+      points = rep.points;
+      eds = rep.edges;
+
+      // pontos também repetidos
+      const A = v.a, B = v.b, C = v.c;
+      const all = [];
+      for (let i=-1;i<=1;i++){
+        for (let j=-1;j<=1;j++){
+          for (let k=-1;k<=1;k++){
+            const off = add(add(mul(A,i), mul(B,j)), mul(C,k));
+            for (const p of latticePts) all.push(add(p, off));
+          }
+        }
+      }
+      latticePtsAll = all;
+    }
+
+    // centraliza tudo pelo centroid (melhor sensação visual)
+    const center = centroid(points);
+    const centered = points.map(p => sub(p, center));
+    const centeredLattice = latticePtsAll.map(p => sub(p, center));
+
+    // projeta
+    const projPoints = centered.map(p => project(p, w, h));
+    const projLattice = centeredLattice.map(p => project(p, w, h));
+
+    // desenha arestas (depth sort simples por z médio)
+    const edgeDraw = eds.map(e => {
+      const p0 = projPoints[e[0]], p1 = projPoints[e[1]];
+      return { e, z: (p0.z + p1.z) * 0.5, p0, p1 };
+    }).sort((a,b) => a.z - b.z);
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (const ed of edgeDraw){
+      const {p0,p1} = ed;
+      const zFade = clamp(1 - (ed.z+1.8)/4.5, 0.20, 1);
+      ctx.strokeStyle = `rgba(148,163,184,${0.85*zFade})`;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+    }
+
+    // eixos / rótulos / ângulos (viewer)
+    const O = {x:0,y:0,z:0};
+    const A = sub(v.a, O);
+    const B = sub(v.b, O);
+    const C = sub(v.c, O);
+    const axisScale = 1.15;
+
+    const o = project(sub(O, center), w, h);
+    const pa = project(sub(mul(A, axisScale), center), w, h); // (interno a) -> rótulo b
+    const pb = project(sub(mul(B, axisScale), center), w, h); // (interno b) -> rótulo c
+    const pc = project(sub(mul(C, axisScale), center), w, h); // (interno c) -> rótulo a
+
+    const drawAxis = (p, style) => {
+      ctx.strokeStyle = style;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(o.x, o.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+
+      // ponta
+      const dx = p.x - o.x, dy = p.y - o.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const ux = dx / len, uy = dy / len;
+      const px2 = -uy, py2 = ux;
+
+      ctx.fillStyle = style;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - ux*10 + px2*5, p.y - uy*10 + py2*5);
+      ctx.lineTo(p.x - ux*10 - px2*5, p.y - uy*10 - py2*5);
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    if (state.showAxes){
+      drawAxis(pa, colors.a);
+      drawAxis(pb, colors.b);
+      drawAxis(pc, colors.c);
+
+      if (state.showLabels){
+        drawTextLabel("b", pa.x, pa.y);
+        drawTextLabel("c", pb.x, pb.y);
+        drawTextLabel("a", pc.x, pc.y);
+      }
+    } else if (state.showLabels){
+      // rótulos sem desenhar as linhas dos eixos
+      drawTextLabel("b", pa.x, pa.y);
+      drawTextLabel("c", pb.x, pb.y);
+      drawTextLabel("a", pc.x, pc.y);
+    }
+
+    if (state.showAngles){
+      const ang = (p) => Math.atan2(p.y - o.y, p.x - o.x);
+
+      const alphaDeg = Math.round(viewMap.getAlpha());
+      const betaDeg  = Math.round(viewMap.getBeta());
+      const gammaDeg = Math.round(viewMap.getGamma());
+
+      // arcos na origem (entre os eixos exibidos)
+      drawAngleWedge(o.x, o.y, ang(pa), ang(pb), 32,
+        "rgba(250,204,21,.12)", "rgba(250,204,21,.45)", "α");
+
+      drawAngleWedge(o.x, o.y, ang(pc), ang(pb), 32,
+        "rgba(34,197,94,.12)", "rgba(34,197,94,.45)", "β");
+
+      drawAngleWedge(o.x, o.y, ang(pc), ang(pa), 32,
+        "rgba(236,72,153,.12)", "rgba(236,72,153,.45)", "γ");
+
+      // mini-diagrama tipo a referência
+      drawMiniAngleDiagram(14, h - 14 - 190, alphaDeg, betaDeg, gammaDeg);
+    }
+
+    // pontos de rede (bolinhas)
+    // depth sort por z
+    const dots = projLattice.map(p => ({p, z:p.z})).sort((a,b) => a.z - b.z);
+    for (const d of dots){
+      const {p} = d;
+      const zFade = clamp(1 - (d.z+1.9)/4.8, 0.15, 1);
+      const r = 40;
+
+      if (state.showAlpha){
+        // Esferas opacas (sem alpha)
+        ctx.fillStyle = "rgb(226,232,240)";
+        ctx.strokeStyle = "rgb(2,6,23)";
+      } else {
+        // Esferas com alpha (profundidade)
+        ctx.fillStyle = `rgba(226,232,240,${0.85*zFade})`;
+        ctx.strokeStyle = `rgba(2,6,23,${0.9*zFade})`;
+      }
+
+ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  // ========= Inicialização =========
+  function init(){
+    // Texto do primeiro passo
+    $("stepBody").textContent = steps[0].body;
+    $("calloutBody").textContent = steps[0].callout;
+
+    // estado inicial
+    applySystemPreset("cubic");
+    enforceConstraints();
+    syncUIFromState();
+
+    // binds tutorial
+    setStep(0);
+
+    render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

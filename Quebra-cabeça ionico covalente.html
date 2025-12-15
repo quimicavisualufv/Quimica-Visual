@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quebra-Cabeça iônico/covalente</title>
+<style>
+  :root{ --bg:#f7f7f8; --panel:#ffffff; --ink:#0f172a; --grid:#e5e7eb; }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font:500 16px/1.35 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto}
+  header{
+    position:sticky; top:0; z-index:5; background:var(--panel);
+    border-bottom:1px solid var(--grid); display:flex; gap:12px; align-items:center; padding:12px 16px;
+  }
+  header h1{font-size:16px; margin:0; display:none}
+  .tabs{display:flex; gap:8px; margin-left:auto}
+  .tab{appearance:none; border:1px solid var(--grid); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font:700 13px}
+  .tab.active{box-shadow:0 0 0 3px #c7d2fe66; border-color:#93c5fd}
+  main{padding:14px}
+  .deck{background:var(--panel); border:1px solid var(--grid); border-radius:14px; overflow:hidden}
+  .topbar{display:flex; gap:10px; align-items:center; padding:10px 12px; border-bottom:1px solid var(--grid)}
+  .spacer{flex:1}
+  .btn{appearance:none; border:1px solid var(--grid); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font:600 13px; text-decoration:none; color:#111827}
+  .frameWrap{position:relative; height:78vh; background:#fff}
+  iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:none; background:#fff}
+  iframe.active{display:block}
+  .hint{color:#475569; font-size:12px; padding:8px 12px}
+  code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid var(--grid)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧪 Mini Hub — Tudo em um</h1>
+  <div class="tabs">
+    <button class="tab active" data-view="ions">Íons</button>
+    <button class="tab" data-view="cov">Covalente</button>
+  </div>
+</header>
+
+<main>
+  <section class="deck">
+    <div class="frameWrap">
+      <iframe id="frame-ions" title="Quebra-cabeça de Íons"></iframe>
+      <iframe id="frame-cov" title="Quebra-cabeça Covalente"></iframe>
+    </div>
+  </section>
+</main>
+
+<!-- CÓDIGOS EMBUTIDOS -->
+<template id="tpl-ions">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quebra-cabeça de Íons — offline (v5)</title>
+<style>
+  :root{
+    --left:320px; --right:340px;
+    --bg:#f7f7f8; --panel:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --ok:#10b981; --err:#ef4444; --cat:#facc15; --an:#60a5fa;
+    --snap:#22c55e33; --grid:#e5e7eb;
+    --port: 38px; /* diâmetro visual da bolinha de encaixe */
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:500 16px/1.3 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
+  }
+  header{
+    padding:14px 18px; display:flex; gap:12px; align-items:center;
+    border-bottom:1px solid var(--grid); background:var(--panel); position:sticky; top:0; z-index:5;
+  }
+  header h1{font-size:16px; margin:0; letter-spacing:.2px}
+  header .pill{padding:6px 10px; border:1px solid var(--grid); border-radius:999px; color:var(--muted)}
+  main{display:grid; grid-template-columns: var(--left,320px) 1fr var(--right,340px); grid-template-areas: 'left board right'; gap:14px; padding:14px;}
+  .col{background:var(--panel); border:1px solid var(--grid); border-radius:14px; overflow:clip}
+  .col h2{margin:0; padding:10px 14px; font-size:14px; border-bottom:1px solid var(--grid); color:#111827; display:flex; align-items:center; justify-content:space-between; gap:10px}
+  #library{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; padding:12px; max-height:68vh; overflow:auto}
+  .chip{
+    user-select:none; border:1.5px solid var(--grid); border-radius:12px; padding:10px 8px;
+    background:white; display:flex; align-items:center; justify-content:center;
+    min-height:56px; cursor:grab; position:relative; box-shadow:0 1px 0 #00000008; overflow:visible;
+    min-width:100px;
+  }
+  .chip.cat{background:linear-gradient(#fffbe6,#fff4bf); background-clip:padding-box; border-color:#f6e3a5; border-radius:999px; padding-right:34px}
+  .chip.an{background:linear-gradient(#eef7ff,#ffffff); background-clip:padding-box; border-color:#cfe8fb}
+  .chip.op{background:linear-gradient(#ffffff,#f3f4f6); background-clip:padding-box; border-color:#e5e7eb}
+  .chip::after{content:""; position:absolute; top:50%; width:22px; height:22px; border-radius:999px; transform:translateY(-50%); box-shadow:0 0 0 1.2px var(--grid); pointer-events:none}
+  .chip.an::after{left:-14px; background:#fff}
+  .chip.cat::after{right:-8px; width:30px; height:30px; background:var(--panel); box-shadow:0 0 0 2px #f6e3a5}
+  .chip.op::after{ display:none }
+  .sym{font-weight:700; font-size:18px; padding:0 34px} /* respiro extra */
+  .sup{font-size:12px; vertical-align:super; margin-left:2px}
+  .val{position:absolute; inset:auto 8px 6px auto; font-size:11px; color:var(--muted)}
+  .slot{ position:absolute; inset:auto auto 10px 10px; font:600 11px/1 ui-sans-serif; padding:3px 6px; border-radius:6px; border:1px dashed var(--grid); color:var(--muted) }
+  #board{
+    position:relative; background:
+      linear-gradient(var(--panel),var(--panel)),
+      linear-gradient(90deg,var(--grid) 1px, transparent 1px),
+      linear-gradient(0deg,var(--grid) 1px, transparent 1px);
+    background-size: auto, 24px 24px, 24px 24px;
+    background-position: 0 0, 0 0, 0 0;
+        width:100%;
+    min-height:72vh;
+  }
+  #board .tile{
+    position:absolute; left:40px; top:40px; padding:14px 12px; border-radius:12px; border:1.5px solid var(--grid);
+    background:#fff; cursor:grab; user-select:none; box-shadow:0 6px 24px #00000010;
+    min-width:108px; min-height:200px; text-align:center; overflow:visible;
+  }
+  #board .tile.cat{outline:none; border-radius:999px; background:linear-gradient(#fffbe6,#fff4bf); border:2px solid #f6e3a5; padding-right:34px; overflow:hidden; z-index:1}
+  #board .tile.an{outline:3px solid #93c5fd55; z-index:2}
+  #board .tile.op{outline:3px dashed #cbd5e1}
+  #board .tile.dragging{opacity:.9; box-shadow:0 12px 32px #00000022; z-index:20}
+  #board .halo{position:absolute; inset:-8px; border-radius:14px; background:var(--snap); pointer-events:none; display:none}
+  #board .tile.valid .halo{display:block}
+  /* portas / bolinhas de encaixe — mais afastadas (saem do cartão) */
+  .port{
+    position:absolute;
+    width:var(--port);
+    height:var(--port);
+    border-radius:999px;
+    pointer-events:none;
+    transform:translate(-50%, -50%);
+  }
+  .port.an{
+    left:-18px;
+    background:#fff;
+    z-index:3;
+    box-shadow:0 0 0 1.5px var(--grid), 0 6px 18px #0000001f;
+  }            /* saliência (ânion) à esquerda */
+  .port.cat{
+    left:100%;
+    background:radial-gradient(circle at 35% 35%, #00000020 0%, #00000075 100%);
+    z-index:2;
+    box-shadow: inset 0 10px 14px #00000045;
+  } /* buraco (cátion) à direita */
+
+  .tile.op .port{ display:none }
+  .toolbar{display:flex; flex-wrap:wrap; gap:8px; padding:10px; border-top:1px solid var(--grid)}
+  button{ appearance:none; border:1px solid var(--grid); padding:9px 12px; border-radius:10px; background:white; cursor:pointer; font:600 14px ui-sans-serif; transition:.15s transform }
+  button:active{transform:translateY(1px)}
+  .ghost{opacity:.35}
+  .ok{color:#065f46; background:#ecfdf5; border-color:#a7f3d0}
+  .bad{color:#7f1d1d; background:#fef2f2; border-color:#fecaca}
+  .info{color:#1f2937; background:#eef2ff; border-color:#c7d2fe}
+  #side{display:flex; flex-direction:column}
+  #calc{padding:12px; display:grid; gap:8px}
+  #readout{border-top:1px solid var(--grid); padding:10px 12px; display:grid; gap:6px}
+  .row{display:flex; justify-content:space-between; align-items:center; gap:8px; color:var(--muted)}
+  .big{font-size:12px; font-weight:700; letter-spacing:.2px; color:#111827; white-space:normal; line-height:1.1; word-break:break-word; overflow:auto; max-height:7em}
+  .hint{font-size:13px; color:#64748b}
+  .badge{background:#00000008; padding:2px 8px; border-radius:999px; font-size:12px}
+  .list{padding:10px 12px; display:grid; gap:8px; max-height:40vh; overflow:auto}
+  .mini{display:flex; gap:6px; align-items:center; font-size:13px}
+  .mini .sw{width:10px; height:10px; border-radius:2px; background:var(--grid)}
+  .mini .sw.cat{background:#fde68a}
+  .mini .sw.an{background:#93c5fd}
+  .hr{height:1px; background:var(--grid); margin:6px 0}
+  .kbd{font:600 12px ui-monospace, SFMono-Regular, Menlo, monospace; padding:2px 6px; border:1px solid var(--grid); border-radius:6px; background:#fff}
+  .note{padding:10px 12px; font-size:13px; color:#374151}
+
+  .name{font-size:12px; color:#475569; max-width:100%; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  #board .tile{background:linear-gradient(#fff,#f9fafb)}
+  #board .tile .tag{position:absolute; bottom:14px; left:50%; transform:translateX(-50%); width:calc(100% - 18px); font-size:12px; font-weight:700; color:#0f172a; opacity:.92; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center}
+  .chip.op .sym{font-size:24px}
+
+
+  /* famílias (cores sutilmente inspiradas na sua tabela) */
+  .fam-cat{ --fam:#fde68a }   /* cátions: amarelo-ouro */
+  .fam-nit{ --fam:#fef08a }   /* nitrogênio: amarelo claro */
+  .fam-fos{ --fam:#d9f99d }   /* fósforo: verde-lima */
+  .fam-sul{ --fam:#fbcfe8 }   /* enxofre: rosa suave */
+  .fam-hal{ --fam:#f0abfc }   /* halogênios: magenta claro */
+  .fam-carb{ --fam:#e5e7eb }  /* carbono: cinza */
+  .fam-out{ --fam:#bae6fd }   /* outros: azul clarinho */
+  .fam-sym{ --fam:#e5e7eb }   /* símbolos */
+
+  .chip{ background:linear-gradient(#fff,#f9fafb); border-color:var(--grid); }
+  .chip.fam-cat, .chip.fam-nit, .chip.fam-fos, .chip.fam-sul, .chip.fam-hal, .chip.fam-carb, .chip.fam-out{
+    background:linear-gradient(#fff,#fff), linear-gradient(90deg,var(--fam),#fff);
+    background-clip:padding-box,border-box;
+    border-width:2px; border-color: color-mix(in srgb, var(--fam) 60%, var(--grid));
+  }
+  #board .tile{ background:linear-gradient(#fff,#f9fafb); }
+  #board .tile.fam-cat, #board .tile.fam-nit, #board .tile.fam-fos, #board .tile.fam-sul, #board .tile.fam-hal, #board .tile.fam-carb, #board .tile.fam-out{
+    box-shadow:0 6px 24px #00000018, inset 0 0 0 5px color-mix(in srgb, var(--fam) 65%, transparent);
+    border:2px solid color-mix(in srgb, var(--fam) 65%, var(--grid));
+  }
+  .badge.s{ background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
+  .badge.aq{ background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
+
+
+  .libGroup{padding:6px 8px}
+  .libTitle{position:sticky; top:0; z-index:2; margin:0 -8px 6px; padding:8px 10px; font:800 11px/1 ui-sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#334155; background:linear-gradient(#fff,#f8fafc); border-bottom:1px solid var(--grid)}
+  .grid2{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; padding:6px 0}
+
+
+/* --- scale tiles on the board to 3/4 --- */
+#board .tile{ padding: calc(10px * .75) calc(12px * .75); min-width: 51px }
+#board .tile .sym{ font-size: 14px }
+#board .tile .sup{ font-size: 9px }
+#board .tile .tag{font-size:12px; bottom:14px}
+
+
+  /* Layout toggles: expand board without scaling tiles */
+  
+  
+  body.right-off { --right:0px; }
+  body.right-off #side{ display:none; }
+
+  /* Toggle controls in header */
+  /* Robust collapse when panels are toggled */
+  
+  body.right-off main{ grid-template-columns: var(--left) 1fr 0; }
+  
+  body.right-off #side{ display:none !important; }
+
+
+  #leftCol{ grid-area:left; }
+  #board{ grid-area:board;     width:100%;
+    min-height:72vh;
+  }
+  #side{ grid-area:right; }
+
+
+  /* expressão com legenda embaixo */
+  #formulaOut .exprItem{display:inline-flex; flex-direction:column; align-items:center; margin:0 6px 4px 0; vertical-align:middle}
+  #formulaOut .exprSpecies{font-weight:700; font-size:11.5px}
+  #formulaOut .exprName{font-size:9px; color:var(--muted)}
+  #formulaOut .exprOp{font-weight:800; padding:0 3px; font-size:11.5px}
+
+
+  /* search box */
+  .col h2{display:flex; align-items:center; justify-content:space-between; gap:10px; display:flex; align-items:center; justify-content:space-between; gap:10px}
+  #searchBox{min-width:160px; max-width:220px; padding:7px 10px; border-radius:999px; border:1px solid var(--grid); font-size:13px; outline:none}
+  #searchBox:focus{box-shadow:0 0 0 3px #60a5fa55; border-color:#93c5fd}
+
+
+  header .spacer{flex:1}
+
+  .toggleSide{appearance:none; border:1px solid var(--grid); padding:8px 12px; border-radius:10px; background:#fff; cursor:pointer; font:600 13px ui-sans-serif;}
+  .toggleSide:active{transform:translateY(1px)}
+
+  /* Board tiles: centralizar texto e aumentar tamanho */
+  #board .tile{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
+  #board .tile .sym{font-size:26px; padding:0; line-height:1.1;}
+  #board .tile.cat, #board .tile.an{min-height:240px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚗️ Quebra-cabeça de Íons</h1>
+  <span class="spacer"></span>
+  <button id="toggleSide" class="toggleSide">Esconder Leitura & Dicas</button>
+
+</header>
+
+<main>
+  <!-- Biblioteca -->
+  <section class="col" id="leftCol">
+    <h2><span>Biblioteca</span><input id="searchBox" type="search" placeholder="Pesquisar..." aria-label="Pesquisar" /></h2>
+    <div id="library"></div>
+    <div class="toolbar">
+      <button id="clearBoard" title="Limpar mesa">Limpar</button>
+      
+    </div>
+  </section>
+
+  <!-- Mesa -->
+  <section class="col">
+    <h2>Mesa de montagem</h2>
+    <div id="boardWrap" class="boardWrap"><div id="board" aria-label="Área de montagem"></div></div>
+    <div class="toolbar">
+      <button id="check" class="ok">Conferir eletroneutralidade</button>
+      <button id="deleteSel" class="bad">Remover seleção</button>
+      <span style="flex:1"></span>
+      <button id="addPlus" title="Adicionar sinal de +">+ (adicionar)</button>
+      <button id="addArrow" title="Adicionar seta de reação">→ (reação)</button>
+      <button id="addEq" title="Adicionar seta de equilíbrio">⇌ (equilíbrio)</button>
+    </div>
+  </section>
+
+  <!-- Painel -->
+  <aside class="col" id="side">
+    <h2>Leitura & Dicas</h2>
+    <div id="calc">
+      <div class="row"><span>Carga total (íons)</span><span id="charge" class="badge">0</span></div>
+      <div class="row"><span>Peças na mesa</span><span id="count" class="badge">0</span></div>
+      <div class="hr"></div>
+      <div class="row"><span id="formulaOut" class="big">—</span></div>
+      <div class="note">
+        <div><b>Regras de encaixe:</b> cada <i>porta</i> liga com no máx. 1 oposto; nº de portas = |carga|.</div>
+        <div style="margin-top:6px">Dica: arraste até as bolinhas ficarem <b>sobrepostas</b> — elas se alinham exatamente.</div>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div class="list" id="legend"></div>
+  </aside>
+</main>
+
+<script>
+/*** DADOS ***/
+
+
+
+const IONS = [
+  // -------- CÁTIONS (carregam +) --------
+  // Grupo 1 e clássicos 1+
+  {id:'Li+',  label:'Li',  name:'lítio',        charge:+1, type:'cat', family:'cat'},
+  {id:'Na+',  label:'Na',  name:'sódio',        charge:+1, type:'cat', family:'cat'},
+  {id:'K+',   label:'K',   name:'potássio',     charge:+1, type:'cat', family:'cat'},
+  {id:'Rb+',  label:'Rb',  name:'rubídio',      charge:+1, type:'cat', family:'cat'},
+  {id:'Cs+',  label:'Cs',  name:'césio',        charge:+1, type:'cat', family:'cat'},
+  {id:'Ag+',  label:'Ag',  name:'prata(I)',     charge:+1, type:'cat', family:'cat'},
+  {id:'H+',   label:'H',   name:'hidrogênio (próton)', charge:+1, type:'cat', family:'cat'},
+  {id:'H3O+', label:'H\u2083O', name:'hidroxônio', charge:+1, type:'cat', poly:true, family:'cat'},
+  {id:'NH4+', label:'NH\u2084', name:'amônio',   charge:+1, type:'cat', poly:true, family:'cat'},
+
+  // Grupo 2 e 2+ comuns
+  {id:'Mg2+', label:'Mg', name:'magnésio', charge:+2, type:'cat', family:'cat'},
+  {id:'Ca2+', label:'Ca', name:'cálcio',   charge:+2, type:'cat', family:'cat'},
+  {id:'Sr2+', label:'Sr', name:'estrôncio',charge:+2, type:'cat', family:'cat'},
+  {id:'Ba2+', label:'Ba', name:'bário',    charge:+2, type:'cat', family:'cat'},
+  {id:'Zn2+', label:'Zn', name:'zinco',    charge:+2, type:'cat', family:'cat'},
+  {id:'Hg2+', label:'Hg', name:'mercúrio(II) (mercúrico)', charge:+2, type:'cat', family:'cat'},
+  {id:'Hg2_2+', label:'Hg\u2082', name:'mercúrio(I) (dímero Hg\u2082\u00B2\u207A)', charge:+2, type:'cat', poly:true, family:'cat'},
+
+  // 3+ clássico
+  {id:'Al3+', label:'Al', name:'alumínio', charge:+3, type:'cat', family:'cat'},
+
+  // Multivalentes
+  {id:'Cu+',  label:'Cu', name:'cobre(I)',   charge:+1, type:'cat', family:'cat'},
+  {id:'Cu2+', label:'Cu', name:'cobre(II)',  charge:+2, type:'cat', family:'cat'},
+  {id:'Au+',  label:'Au', name:'ouro(I)',    charge:+1, type:'cat', family:'cat'},
+  {id:'Au3+', label:'Au', name:'ouro(III)',  charge:+3, type:'cat', family:'cat'},
+  {id:'Fe2+', label:'Fe', name:'ferro(II) (ferroso)', charge:+2, type:'cat', family:'cat'},
+  {id:'Fe3+', label:'Fe', name:'ferro(III) (férrico)', charge:+3, type:'cat', family:'cat'},
+  {id:'Co2+', label:'Co', name:'cobalto(II)', charge:+2, type:'cat', family:'cat'},
+  {id:'Co3+', label:'Co', name:'cobalto(III)',charge:+3, type:'cat', family:'cat'},
+  {id:'Ni2+', label:'Ni', name:'níquel(II)',  charge:+2, type:'cat', family:'cat'},
+  {id:'Ni3+', label:'Ni', name:'níquel(III)', charge:+3, type:'cat', family:'cat'},
+  {id:'Cr2+', label:'Cr', name:'cromo(II)',   charge:+2, type:'cat', family:'cat'},
+  {id:'Cr3+', label:'Cr', name:'cromo(III)',  charge:+3, type:'cat', family:'cat'},
+  {id:'Pb2+', label:'Pb', name:'chumbo(II) (plumboso)', charge:+2, type:'cat', family:'cat'},
+  {id:'Pb4+', label:'Pb', name:'chumbo(IV) (plúmbico)', charge:+4, type:'cat', family:'cat'},
+  {id:'Sn2+', label:'Sn', name:'estanho(II) (estanoso)', charge:+2, type:'cat', family:'cat'},
+  {id:'Sn4+', label:'Sn', name:'estanho(IV) (estânico)', charge:+4, type:'cat', family:'cat'},
+  {id:'Pt2+', label:'Pt', name:'platina(II)', charge:+2, type:'cat', family:'cat'},
+  {id:'Pt4+', label:'Pt', name:'platina(IV)', charge:+4, type:'cat', family:'cat'},
+
+  // -------- ÂNIONS (carregam −) --------
+  // Nitrogênio
+  {id:'NO2-', label:'NO\u2082', name:'nitrito', charge:-1, type:'an', poly:true, family:'nit'},
+  {id:'NO3-', label:'NO\u2083', name:'nitrato', charge:-1, type:'an', poly:true, family:'nit'},
+  {id:'N3_1-', label:'N\u2083', name:'azida',   charge:-1, type:'an', poly:true, family:'nit'},
+  {id:'N3-',  label:'N',   name:'nitreto', charge:-3, type:'an', family:'nit'},
+
+  // Fósforo
+  {id:'PO3_1-', label:'PO\u2083', name:'metafosfato', charge:-1, type:'an', poly:true, family:'fos'},
+  {id:'H2PO2-', label:'H\u2082PO\u2082', name:'hipofosfito', charge:-1, type:'an', poly:true, family:'fos'},
+  {id:'HPO3_2-', label:'HPO\u2083', name:'hidrogenofosfito', charge:-2, type:'an', poly:true, family:'fos'},
+  {id:'PO3_3-', label:'PO\u2083', name:'fosfito', charge:-3, type:'an', poly:true, family:'fos'},
+  {id:'PO4_3-', label:'PO\u2084', name:'fosfato', charge:-3, type:'an', poly:true, family:'fos'},
+  {id:'P3-',    label:'P', name:'fosfeto', charge:-3, type:'an', family:'fos'},
+  {id:'P2O7_4-', label:'P\u2082O\u2087', name:'pirofosfato', charge:-4, type:'an', poly:true, family:'fos'},
+  {id:'P2O6_4-', label:'P\u2082O\u2086', name:'hipofosfato', charge:-4, type:'an', poly:true, family:'fos'},
+
+  // Enxofre
+  {id:'S2-',   label:'S', name:'sulfeto', charge:-2, type:'an', family:'sul'},
+  {id:'SO4_2-', label:'SO\u2084', name:'sulfato', charge:-2, type:'an', poly:true, family:'sul'},
+  {id:'SO3_2-', label:'SO\u2083', name:'sulfito', charge:-2, type:'an', poly:true, family:'sul'},
+  {id:'S2O3_2-', label:'S\u2082O\u2083', name:'tiossulfato', charge:-2, type:'an', poly:true, family:'sul'},
+  {id:'HSO3-',  label:'HSO\u2083', name:'hidrogenossulfito', charge:-1, type:'an', poly:true, family:'sul'},
+  {id:'S2O8_2-', label:'S\u2082O\u2088', name:'persulfato', charge:-2, type:'an', poly:true, family:'sul'},
+  {id:'S4O6_2-', label:'S\u2084O\u2086', name:'tetrationato', charge:-2, type:'an', poly:true, family:'sul'},
+
+  // Halogênios
+  {id:'F-',  label:'F',  name:'fluoreto', charge:-1, type:'an', family:'hal'},
+  {id:'Cl-', label:'Cl', name:'cloreto',  charge:-1, type:'an', family:'hal'},
+  {id:'Br-', label:'Br', name:'brometo',  charge:-1, type:'an', family:'hal'},
+  {id:'I-',  label:'I',  name:'iodeto',   charge:-1, type:'an', family:'hal'},
+  {id:'ClO-',  label:'ClO',  name:'hipoclorito', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'ClO2-', label:'ClO\u2082', name:'clorito', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'ClO3-', label:'ClO\u2083', name:'clorato', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'ClO4-', label:'ClO\u2084', name:'perclorato', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'BrO-',  label:'BrO',  name:'hipobromito', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'BrO3-', label:'BrO\u2083', name:'bromato', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'IO-',   label:'IO',   name:'hipoiodito', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'IO3-',  label:'IO\u2083', name:'iodato', charge:-1, type:'an', poly:true, family:'hal'},
+  {id:'IO4-',  label:'IO\u2084', name:'periodato', charge:-1, type:'an', poly:true, family:'hal'},
+
+  // Carbono
+  {id:'CN-',    label:'CN', name:'cianeto', charge:-1, type:'an', poly:true, family:'carb'},
+  {id:'CNO-',   label:'CNO', name:'cianato', charge:-1, type:'an', poly:true, family:'carb'},
+  {id:'CNS-',   label:'CNS', name:'tiocianato', charge:-1, type:'an', poly:true, family:'carb'},
+  {id:'CH3COO-', label:'CH\u2083COO', name:'acetato', charge:-1, type:'an', poly:true, family:'carb'},
+  {id:'CO3_2-',  label:'CO\u2083', name:'carbonato', charge:-2, type:'an', poly:true, family:'carb'},
+  {id:'HCOO-',   label:'HCOO', name:'formiato', charge:-1, type:'an', poly:true, family:'carb'},
+  {id:'C2O4_2-', label:'C\u2082O\u2084', name:'oxalato', charge:-2, type:'an', poly:true, family:'carb'},
+  {id:'FeCN6_3-', label:'Fe(CN)\u2086', name:'ferricianeto', charge:-3, type:'an', poly:true, family:'carb'},
+  {id:'FeCN6_4-', label:'Fe(CN)\u2086', name:'ferrocianeto', charge:-4, type:'an', poly:true, family:'carb'},
+  {id:'C4-',    label:'C', name:'carbeto', charge:-4, type:'an', family:'carb'},
+  {id:'C2_2-',  label:'C\u2082', name:'acetileto', charge:-2, type:'an', poly:true, family:'carb'},
+
+  // Outros
+  {id:'MnO4-',   label:'MnO\u2084', name:'permanganato', charge:-1, type:'an', poly:true, family:'out'},
+  {id:'MnO4_2-', label:'MnO\u2084', name:'manganato', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'OH-',     label:'OH', name:'hidróxido', charge:-1, type:'an', poly:true, family:'out'},
+  {id:'H_-',     label:'H',  name:'hidreto',   charge:-1, type:'an', family:'out'},
+  {id:'O2-',     label:'O',  name:'óxido',     charge:-2, type:'an', family:'out'},
+  {id:'SnO2_2-', label:'SnO\u2082', name:'estanito', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'SnO3_2-', label:'SnO\u2083', name:'estanato', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'SiO3_2-', label:'SiO\u2083', name:'metassilicato', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'SiO4_4-', label:'SiO\u2084', name:'ortossilicato', charge:-4, type:'an', poly:true, family:'out'},
+  {id:'CrO4_2-', label:'CrO\u2084', name:'cromato', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'Cr2O7_2-', label:'Cr\u2082O\u2087', name:'dicromato', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'PbO2_2-', label:'PbO\u2082', name:'plumbito', charge:-2, type:'an', poly:true, family:'out'},
+  {id:'B4O7_2-', label:'B\u2084O\u2087', name:'tetraborato', charge:-2, type:'an', poly:true, family:'out'},
+
+  // -------- SÍMBOLOS / OPERADORES --------
+  {id:'PLUS',  label:'+',  name:'mais',       charge:0, type:'op', family:'sym'},
+  {id:'ARROW', label:'\u2192', name:'reação', charge:0, type:'op', family:'sym'},
+  {id:'EQL',   label:'\u21CC', name:'equilíbrio', charge:0, type:'op', family:'sym'}
+];
+
+
+
+
+/*** UTIL ***/
+const el = (q,root=document)=>root.querySelector(q);
+const els=(q,root=document)=>[...root.querySelectorAll(q)];
+const rnd = (a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+
+function chargeText(q){
+  const s = Math.abs(q).toString() + (q>0?'+':'-');
+  const sup = {'0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079','+':'\u207A','-':'\u207B'};
+  return [...s].map(ch=>sup[ch]||ch).join('');
+}
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const lcm=(a,b)=>Math.abs(a*b)/gcd(a,b);
+
+function buildFormula(items){
+  // items: apenas íons do cluster
+  if(!items.length) return '—';
+  const cats={}, ans={};
+  for(const t of items){
+    const key = t.data.id;
+    if(t.data.type==='cat') cats[key]=(cats[key]||0)+1;
+    else if(t.data.type==='an') ans[key]=(ans[key]||0)+1;
+  }
+  const order = (a,b)=> (IONS.find(i=>i.id===a).type==='cat'? -1:1) - (IONS.find(i=>i.id===b).type==='cat'? -1:1);
+  const fmt=(map)=>Object.entries(map)
+    .sort((a,b)=>order(a[0],b[0]))
+    .map(([id,n])=>{
+      const ion = IONS.find(i=>i.id===id);
+      const base = ion.label;
+      const count = n*1;
+      return (ion.type==='an' && ion.poly && (count>1) ? `(${base})` : base) + (count>1 ? sub(count):'');
+    }).join('');
+  function sub(n){return [...String(n)].map(d=>({'0':'\u2080','1':'\u2081','2':'\u2082','3':'\u2083','4':'\u2084','5':'\u2085','6':'\u2086','7':'\u2087','8':'\u2088','9':'\u2089'})[d]).join('')}
+  const left = fmt(cats)+fmt(ans);
+  return left || '—';
+}
+
+
+// --- Solubilidade (regras simplificadas) ---
+const ALKALI = new Set(['Li+','Na+','K+','Rb+','Cs+']);
+const NH4 = 'NH4+';
+const HALIDES = new Set(['Cl-','Br-','I-']);
+const HEAVY_H_HALIDE_CATS = new Set(['Ag+','Pb2+','Hg2_2+']);
+const SULFATE = 'SO4_2-';
+const SULFATE_EXC = new Set(['Ba2+','Sr2+','Pb2+','Ca2+']);
+const ALWAYS_SOL_ANIONS = new Set(['NO3-','ClO3-','ClO4-']);
+const INSOLUBLE_ANIONS = new Set(['CO3_2-','PO4_3-','C2O4_2-','CrO4_2-','SiO3_2-','SiO4_4-','O2-']); // exceto álcalis/NH4
+const HYDROXIDE = 'OH-';
+
+function clusterCharge(g){
+  return g.filter(t=>t.data.type==='cat'||t.data.type==='an').reduce((s,t)=>s+t.data.charge,0);
+}
+
+function predictSolubility(cats, ans){
+  if(ans.size===0 || cats.size===0) return null;
+  if([...ans].some(a=>ALWAYS_SOL_ANIONS.has(a))) return 'aq';
+  if([...cats].some(c=>ALKALI.has(c) || c===NH4)) return 'aq';
+
+  if([...ans].some(a=>HALIDES.has(a)) && [...cats].some(c=>HEAVY_H_HALIDE_CATS.has(c))) return 's';
+
+  if(ans.has(SULFATE) && [...cats].some(c=>SULFATE_EXC.has(c))) return 's';
+
+  if(ans.has(HYDROXIDE)){
+    if([...cats].some(c=>ALKALI.has(c) || ['Ba2+','Sr2+','Ca2+'].includes(c))) return 'aq';
+    return 's';
+  }
+
+  if([...ans].some(a=>INSOLUBLE_ANIONS.has(a))) return 's';
+
+  if(ans.has('S2-')){
+    if([...cats].some(c=>ALKALI.has(c) || ['Mg2+','Ca2+','Sr2+','Ba2+'].includes(c) || c===NH4)) return 'aq';
+    return 's';
+  }
+
+  return 'aq';
+}
+
+
+function cleanNamePT(n){ return (n||'').replace(/\s*\(.*?\)/,'').trim(); }
+
+function speciesName(ions){
+  // Retorna nome em PT-BR; suporta múltiplos cátions (ex.: "tetraborato de potássio e lítio").
+  const cats = ions.filter(t=>t.data.type==='cat').map(t=>t.data);
+  const ans  = ions.filter(t=>t.data.type==='an').map(t=>t.data);
+  if(!cats.length || !ans.length) return null;
+
+  // agrupa por id para obter nomes únicos
+  const uniqById = (arr)=>{
+    const map = new Map();
+    for(const a of arr){ map.set(a.id, a); }
+    return [...map.values()];
+  };
+  const catUniq = uniqById(cats);
+  const anUniq  = uniqById(ans);
+
+  // se houver mais de 1 tipo de ânion, mantemos nulo (fora do escopo didático)
+  if(anUniq.length !== 1) return null;
+
+  // nomes "limpos" (sem parênteses) e em minúsculas para a parte literal
+  const clean = (x)=> cleanNamePT((x && (x.name||x.label)) || '');
+  const anName = clean(anUniq[0]);
+  if(!anName) return null;
+
+  const catNames = catUniq.map(clean).filter(Boolean);
+  if(!catNames.length) return null;
+
+  // junta cátions com " e " (ordem alfabética por nome para estabilidade)
+  catNames.sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const catsJoined = catNames.join(' e ');
+
+  return anName + ' de ' + catsJoined;
+}
+
+
+// === Busca de íons por nome/label/id (com remoção de acentos) ===
+let filterTerm = '';
+function _norm(s){ return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+const _searchBox = document.getElementById('searchBox');
+if(_searchBox){
+  _searchBox.addEventListener('input', ()=>{ filterTerm = _norm(_searchBox.value); renderLibrary(); });
+}
+
+/*** UI: biblioteca ***/
+const LIB = el('#library');
+const BOARD_WRAP = el('#boardWrap');
+const BOARD = el('#board');
+const LEG = el('#legend');
+const outCharge = el('#charge');
+const outCount = el('#count');
+const outFormula = el('#formulaOut');
+
+function renderLibrary(){
+  LIB.innerHTML='';
+  for(const ion of IONS){
+    const q = _norm(ion.name||'') + ' ' + _norm(ion.label||'') + ' ' + _norm(ion.id||'');
+    if(filterTerm && !q.includes(filterTerm)) continue;
+    const div = document.createElement('div');
+    const kind = ion.type==='cat' ? 'cat' : (ion.type==='an' ? 'an' : 'op');
+    div.className = 'chip '+kind+' fam-'+(ion.family||'out');
+    div.draggable=true; div.dataset.ion=ion.id;
+    const charge = (ion.type==='cat'||ion.type==='an') ? `<sup class="sup">${chargeText(ion.charge)}</sup>` : '';
+    div.innerHTML = `
+      <span class=\"sym\">${ion.label}${charge}</span>
+      <span class=\"name\">${ion.name||''}</span>
+      <span class=\"val\">${ion.type==='cat'?'cátion': ion.type==='an'?'ânion':'símbolo'}</span>
+    `;
+    div.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', ion.id); });
+    div.addEventListener('dblclick',()=>spawnTile(ion, rnd(40, 280), rnd(40, 220)));
+    LIB.appendChild(div);
+  }
+  LEG.innerHTML = `
+    <div class="mini">Duplo-clique em qualquer item para enviar à mesa</div>
+  `;
+}
+
+/*** MESA ***/
+let tiles=[]; // {el, x,y, data:{id,label,charge,type,poly}, links:Set, ports:[{el, mate:null}]}
+let selected=null;
+
+function spawnTile(ion, x=60, y=60){
+  const t = document.createElement('div');
+  const kind = ion.type==='cat' ? 'cat' : (ion.type==='an' ? 'an' : 'op');
+  t.className='tile '+kind+' fam-'+(ion.family||'out');
+  const charge = (ion.type==='cat'||ion.type==='an') ? `<sup class="sup">${chargeText(ion.charge)}</sup>` : '';
+  t.innerHTML=`<div class=\"halo\"></div><div class=\"sym\">${ion.label}${charge}</div>${(ion.type==='cat'||ion.type==='an')?'<div class=\"tag\">'+(ion.name||'')+'</div>':''}`;
+  t.style.left=x+'px'; t.style.top=y+'px';
+  BOARD.appendChild(t);
+  const obj={el:t, x, y, data:ion, links:new Set(), ports:[]}; t.title = (ion.name? ion.name+' — ' : '') + ion.label + ((ion.type==='cat'||ion.type==='an')? (ion.charge>0? '⁺':'⁻') : '');
+  tiles.push(obj);
+
+  // criar portas conforme a carga (somente íons)
+  if(ion.type==='cat' || ion.type==='an'){
+    const n = Math.abs(ion.charge);
+    const sideClass = ion.type; // 'cat' -> direita (reentrância), 'an' -> esquerda (saliência)
+    for(let i=0;i<n;i++){
+      const p = document.createElement('i');
+      p.className = `port ${sideClass}`;
+      // distribuir verticalmente: (i+1)/(n+1)
+      const pct = ((i+1)/(n+1))*100;
+      p.style.top = pct+'%';
+      t.appendChild(p);
+      obj.ports.push({el:p, mate:null});
+    }
+  }
+
+  makeDraggable(obj);
+  t.addEventListener('pointerdown',()=>selectTile(obj));
+  updateReadout();
+  return obj;
+}
+
+function selectTile(obj){
+  tiles.forEach(o=>o.el.classList.remove('ghost'));
+  selected=obj; obj.el.classList.add('ghost');
+}
+
+// vínculos e clusters
+function linkTiles(a,b){ if(!a.links) a.links=new Set(); if(!b.links) b.links=new Set(); if(!a.links.has(b)){ a.links.add(b); b.links.add(a); } }
+function unlinkTileAll(a){
+  if(a.links){ a.links.forEach(m=>{ m.links&&m.links.delete(a); }); a.links.clear&&a.links.clear(); }
+  // libera portas ocupadas
+  if(a.ports){ a.ports.forEach(pt=>{ if(pt.mate){ pt.mate.mate=null; pt.mate=null; } }); }
+}
+function getCluster(start){ const seen=new Set(); const out=[]; const stack=[start]; while(stack.length){ const n=stack.pop(); if(seen.has(n)) continue; seen.add(n); out.push(n); n.links&&n.links.forEach(m=>{ if(!seen.has(m)) stack.push(m); }); } return out; }
+function getAllClusters(){
+  const seen=new Set(); const groups=[];
+  for(const t of tiles){
+    if(seen.has(t)) continue;
+    const g = getCluster(t);
+    g.forEach(x=>seen.add(x));
+    groups.push(g);
+  }
+  return groups;
+}
+
+function makeDraggable(obj){
+  let dragging=false, startMouseX=0, startMouseY=0; let dragCluster=[];
+  obj.el.addEventListener('pointerdown',e=>{
+    dragging=true; obj.el.setPointerCapture(e.pointerId); obj.el.classList.add('dragging');
+    selectTile(obj); startMouseX=e.clientX; startMouseY=e.clientY; dragCluster = getCluster(obj);
+    dragCluster.forEach(t=>{ t._startX=t.x; t._startY=t.y; });
+  });
+  obj.el.addEventListener('pointermove',e=>{
+    if(!dragging) return; const dx = e.clientX - startMouseX; const dy = e.clientY - startMouseY;
+    dragCluster.forEach(t=>{ t.x = t._startX + dx; t.y = t._startY + dy; t.el.style.left=t.x+'px'; t.el.style.top=t.y+'px'; });
+  });
+  const end=e=>{ if(!dragging) return; dragging=false; obj.el.classList.remove('dragging'); trySnap(obj); validateGroup(); };
+  obj.el.addEventListener('pointerup', end); obj.el.addEventListener('pointercancel', end);
+}
+
+function currentGroup(){ return tiles; }
+
+// obter centro absoluto de uma porta
+function portCenterAbs(tile, portEl){
+  const r = portEl.getBoundingClientRect();
+  return {x:r.left + r.width/2 + window.scrollX, y:r.top + r.height/2 + window.scrollY};
+}
+
+function validateGroup(){
+  const ions = tiles.filter(t=>t.data.type==='cat'||t.data.type==='an');
+  const q = ions.reduce((s,t)=>s+t.data.charge,0);
+  outCharge.textContent = q>0? `+${q}` : `${q}`;
+  outCount.textContent  = tiles.length;
+
+  // clusters ordenados por posição X mínima
+  const clusters = getAllClusters();
+  const clustersWithX = clusters.map(g=>({g, x: Math.min(...g.map(t=>t.x))})).sort((a,b)=>a.x-b.x).map(o=>o.g);
+
+  const parts = clustersWithX.map(g=>{
+    const ionsOnly = g.filter(t=>t.data.type==='cat'||t.data.type==='an');
+    if(ionsOnly.length){
+      const f = buildFormula(ionsOnly);
+      const q = clusterCharge(ionsOnly);
+      const cats = new Set(ionsOnly.filter(t=>t.data.type==='cat').map(t=>t.data.id));
+      const ans  = new Set(ionsOnly.filter(t=>t.data.type==='an').map(t=>t.data.id));
+      const sol = predictSolubility(cats, ans);
+      const top = `<span class='exprSpecies'>${f} [${q>0? '+'+q : q}]${sol? ' ' + (sol==='s'?'(s)':'(aq)'):''}</span>`;
+      const nm = speciesName(ionsOnly);
+      const name = (q===0 ? `<span class='exprName'>${nm || 'não existe'}</span>` : '');
+      return `<span class='exprItem'>${top}${name}</span>`;
+    }
+    // símbolos / operadores permanecem inline
+    return `<span class='exprOp'>${g.map(t=>t.data.label).join('')}</span>`;
+  }).filter(Boolean);
+
+  outFormula.innerHTML = parts.length ? parts.join(' ') : '—';
+
+  const isZero = q===0 && ions.length>0;
+  tiles.forEach(o=>o.el.classList.toggle('valid', isZero));
+}
+
+function updateReadout(){ validateGroup(); }
+
+// procura par de portas livres (opostas) mais próximo e alinha centros
+function trySnap(obj){
+  if(!(obj.data.type==='cat' || obj.data.type==='an')) return; // símbolos não encaixam
+  const myFree = (obj.ports||[]).filter(p=>!p.mate);
+  if(!myFree.length) return;
+
+  const oppTiles = tiles.filter(o=>o!==obj && (o.data.type==='cat'||o.data.type==='an') && o.data.type!==obj.data.type);
+  let best=null, bestDist=1e9, bestMyPort=null, bestOppPort=null, bestOppTile=null;
+
+  for(const opp of oppTiles){
+    const oppFree = (opp.ports||[]).filter(p=>!p.mate);
+    if(!oppFree.length) continue;
+    for(const p of myFree){
+      const pc = portCenterAbs(obj, p.el);
+      for(const q of oppFree){
+        const qc = portCenterAbs(opp, q.el);
+        const dx = pc.x - qc.x, dy = pc.y - qc.y;
+        const d = Math.hypot(dx,dy);
+        if(d < bestDist){ bestDist=d; best={dx,dy}; bestMyPort=p; bestOppPort=q; bestOppTile=opp; }
+      }
+    }
+  }
+
+  // tolerância: precisa sobrepor praticamente centro a centro
+  const THR = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--port'))/2; // ~15px
+  if(best && bestDist < THR){
+    // move cluster do obj para alinhar os centros das portas
+    const dx = best.dx, dy = best.dy;
+    const cluster = getCluster(obj);
+    cluster.forEach(t=>{
+      t.x = Math.round(t.x - dx);
+      t.y = Math.round(t.y - dy);
+      t.el.style.left = t.x+'px';
+      t.el.style.top  = t.y+'px';
+    });
+    // marca ligação 1:1 entre portas
+    bestMyPort.mate = bestOppPort;
+    bestOppPort.mate = bestMyPort;
+    linkTiles(obj, bestOppTile);
+    toast('Encaixe feito (1:1 por porta).', 'ok');
+  }
+  validateGroup();
+}
+
+// comandos UI
+function removeSelected(){
+  if(!selected){ toast('Selecione uma peça para remover.', 'info'); return; }
+  unlinkTileAll(selected);
+  selected.el.remove();
+  tiles=tiles.filter(t=>t!==selected);
+  selected=null; updateReadout();
+}
+
+el('#check').addEventListener('click', ()=>{
+  const ions = tiles.filter(t=>t.data.type==='cat'||t.data.type==='an');
+  if(!ions.length){ toast('Nada na mesa ainda 🤏', 'err'); return; }
+  const q = ions.reduce((s,t)=>s+t.data.charge,0);
+  const expr = outFormula.textContent || '—';
+  if(q===0){ toast('Eletroneutro! Expressão: '+expr, 'ok'); }
+  else if(q>0){ toast('Ainda falta carga negativa (ânions).', 'err'); }
+  else { toast('Ainda falta carga positiva (cátions).', 'err'); }
+});
+
+el('#deleteSel').addEventListener('click', removeSelected);
+el('#clearBoard').addEventListener('click', ()=>{ tiles.forEach(t=>t.el.remove()); tiles=[]; selected=null; updateReadout(); });
+
+// atalhos para adicionar símbolos
+function addSymbol(id){ const ion = IONS.find(i=>i.id===id); if(!ion) return; spawnTile(ion, rnd(80, BOARD_WRAP.clientWidth-160), rnd(60, BOARD_WRAP.clientHeight-120)); }
+el('#addPlus').addEventListener('click', ()=>addSymbol('PLUS'));
+el('#addArrow').addEventListener('click', ()=>addSymbol('ARROW'));
+el('#addEq').addEventListener('click', ()=>addSymbol('EQL'));
+
+// toast
+let toastTimer=null;
+function toast(msg, kind='info'){
+  clearTimeout(toastTimer);
+  let t = el('#__toast');
+  if(!t){
+    t=document.createElement('div'); t.id='__toast';
+    Object.assign(t.style,{ position:'fixed', left:'50%', bottom:'18px', transform:'translateX(-50%)',
+      padding:'10px 14px', borderRadius:'10px', border:'1px solid var(--grid)',
+      background:'#fff', boxShadow:'0 10px 30px #00000018', zIndex:20, fontWeight:'700' });
+    document.body.appendChild(t);
+  }
+  t.className=''; t.textContent=msg;
+  if(kind==='ok'){ t.style.color = '#065f46'; t.style.background = '#ecfdf5'; }
+  else if(kind==='err'){ t.style.color = '#7f1d1d'; t.style.background = '#fef2f2'; }
+  else { t.style.color = '#1f2937'; t.style.background = '#eef2ff'; }
+  t.style.opacity='1';
+  toastTimer=setTimeout(()=>{ t.style.opacity='0'; }, 2200);
+}
+
+// inicialização
+renderLibrary();
+
+// demo Pb(NO3)2 + 2 KI com símbolos
+
+// (self-tests removidos)
+;
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const btn = document.getElementById('toggleSide');
+  function sync(){
+    const off = document.body.classList.contains('right-off');
+    if(btn) btn.textContent = off ? 'Mostrar Leitura & Dicas' : 'Esconder Leitura & Dicas';
+  }
+  if(btn){
+    btn.addEventListener('click', ()=>{ document.body.classList.toggle('right-off'); sync(); });
+    sync();
+  }
+});
+</script>
+</body>
+</html>
+</template>
+
+<template id="tpl-cov">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quebra-cabeça Covalente</title>
+<style>
+  :root{
+    --left:360px; --right:360px;
+    --bg:#f7f7f8; --panel:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --snap:#22c55e33; --grid:#e5e7eb;
+    --e: 8px;
+    --pair-gap: 7px;
+    --multi-gap: 10px;
+    --bond-len: 150px; /* distância (centro-a-centro) ao criar ligações */
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:500 16px/1.3 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
+  }
+  header{
+    padding:14px 18px; display:flex; gap:12px; align-items:center;
+    border-bottom:1px solid var(--grid); background:var(--panel); position:sticky; top:0; z-index:5;
+  }
+  header h1{font-size:16px; margin:0; letter-spacing:.2px}
+  header .spacer{flex:1}
+  header .toggleSide{ appearance:none; border:1px solid var(--grid); padding:8px 12px; border-radius:10px; background:white; cursor:pointer; font:600 13px }
+  main{display:grid; grid-template-columns: var(--left,360px) 1fr var(--right,360px); gap:14px; padding:14px;}
+  body.hideSide main{ grid-template-columns: var(--left,360px) 1fr; }
+  .col{background:var(--panel); border:1px solid var(--grid); border-radius:14px; overflow:clip}
+  .col h2{margin:0; padding:10px 14px; font-size:14px; border-bottom:1px solid var(--grid); color:#111827; display:flex; align-items:center; justify-content:space-between; gap:10px}
+  #library{display:grid; grid-template-rows: auto; max-height:68vh; overflow:auto}
+  .lib-section{padding:10px 12px; border-bottom:1px dashed var(--grid)}
+  .lib-title{font:700 12px/1 ui-sans-serif; color:#0f172a; text-transform:uppercase; letter-spacing:.4px; margin-bottom:8px}
+  .grid{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px;}
+  .chip{
+    user-select:none; border:1.5px solid var(--grid); border-radius:12px; padding:10px 8px;
+    background:white; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:66px; cursor:grab; position:relative; box-shadow:0 1px 0 #00000008; overflow:visible; min-width:100px;
+  }
+  .chip .sym{font-weight:800; font-size:18px; padding:0 10px}
+  .chip .name{font-size:11px; color:#475569; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%}
+  .chip .val{position:static; font-size:11px; color:#94a3b8; margin-top:4px}
+  .chip.symb{ min-height:54px; }
+  .chip.symb .sym{ font-size:20px; }
+  
+
+  #board{
+    position:relative; background:
+      linear-gradient(var(--panel),var(--panel)),
+      linear-gradient(90deg,var(--grid) 1px, transparent 1px),
+      linear-gradient(0deg,var(--grid) 1px, transparent 1px);
+    background-size: auto, 24px 24px, 24px 24px;
+    min-height:72vh;
+  }
+  #board .tile{
+    position:absolute; left:40px; top:40px; padding:10px 12px; border-radius:12px; border:1.5px solid var(--grid);
+    background:linear-gradient(#fff,#f9fafb); cursor:grab; user-select:none; box-shadow:0 6px 24px #00000010;
+    min-width:92px; text-align:center; overflow:visible;
+  }
+  #board .tile.dragging{opacity:.95; box-shadow:0 12px 32px #00000022; z-index:20}
+  #board .tile .tag{position:static; margin-top:2px; font-size:13px; font-weight:700; color:#0f172a; opacity:.9; line-height:1.1; max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center}
+  #board .halo{position:absolute; inset:-8px; border-radius:14px; background:var(--snap); pointer-events:none; display:none}
+  #board .tile.valid .halo{display:block}
+
+  /* elétrons (Lewis) */
+  .e{
+    position:absolute; width:var(--e); height:var(--e); border-radius:999px; background:#0ea5e9;
+    box-shadow:0 0 0 1px #0284c7;
+    pointer-events:auto; cursor:pointer; transition:transform .08s ease, outline-color .15s;
+  }
+  .e.arm{ transform:scale(1.35); outline:2px solid #2563eb77; }
+  .e.target{ outline:2px solid #10b981; }
+
+  /* pares compartilhados */
+  .pairDot{
+    position:absolute; width:var(--e); height:var(--e); border-radius:999px;
+    background:#111827; box-shadow:0 0 0 1px #0f172a22; pointer-events:none;
+    transition:transform .08s ease;
+  }
+  body.removing .pairDot{ pointer-events:auto; cursor:pointer; }
+  body.removing .pairDot:hover{ transform:scale(1.12); }
+
+  /* guia de arraste */
+  #guide{ position:fixed; inset:0; pointer-events:none; display:none; z-index:20; }
+  #guide canvas{ width:100%; height:100%; display:block; }
+
+  .toolbar{display:flex; flex-wrap:wrap; gap:8px; padding:10px; border-top:1px solid var(--grid)}
+  button{ appearance:none; border:1px solid var(--grid); padding:9px 12px; border-radius:10px; background:white; cursor:pointer; font:600 14px ui-sans-serif; transition:.15s transform }
+  button:active{transform:translateY(1px)}
+  .danger{color:#7f1d1d; background:#fef2f2; border-color:#fecaca}
+  .danger.active{ box-shadow:0 0 0 3px #fecaca88; }
+  .ghostBtn{ color:#374151; background:#f3f4f6; border-color:#e5e7eb }
+
+  #calc{padding:12px; display:grid; gap:10px}
+  .row{display:flex; justify-content:space-between; align-items:center; gap:8px; color:#64748b}
+  .big{font-size:12px; font-weight:700; letter-spacing:.2px; color:#111827; white-space:normal; line-height:1.15; word-break:break-word; overflow:auto; max-height:7em}
+  .hr{height:1px; background:var(--grid); margin:6px 0}
+  .badge{background:#00000008; padding:2px 8px; border-radius:999px; font-size:12px}
+
+  .bigSym{ font-weight:800; font-size:22px; letter-spacing:.5px; padding:4px 10px; }
+
+  /* Sidebar visibility */
+  body.hideSide aside#side{ display:none; }
+
+  /* Board tiles: centralizar texto e aumentar tamanho */
+  #board .tile{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
+  #board .tile .sym{font-size:24px; padding:0; line-height:1.1;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧪 Quebra-cabeça Covalente</h1>
+  <span class="spacer"></span>
+  <button id="toggleSide" class="toggleSide">Esconder Leitura & Dicas</button>
+</header>
+
+<main>
+  <section class="col" id="leftCol">
+    <h2><span>Biblioteca</span><input id="searchBox" type="search" placeholder="Pesquisar..." aria-label="Pesquisar" /></h2>
+    <div id="library">
+      <div class="lib-section" id="atomsSec">
+        <div class="lib-title">Átomos</div>
+        <div class="grid" id="atomsGrid"></div>
+      </div>
+      <div class="lib-section" id="symbolsSec">
+        <div class="lib-title">Símbolos de reação</div>
+        <div class="grid" id="symbolsGrid"></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button id="rmBond" class="danger">Remover ligação</button>
+      <button id="clearBoard" class="ghostBtn">Limpar</button>
+    </div>
+  </section>
+
+  <section class="col">
+    <h2>Mesa de montagem</h2>
+    <div id="boardWrap" class="boardWrap"><div id="board" aria-label="Área de montagem"></div></div>
+    <div class="toolbar"><!-- vazio --></div>
+  </section>
+
+  <aside class="col" id="side">
+    <h2>Leitura & Dicas</h2>
+    <div id="calc">
+      <div class="row"><span>Pares (ligações)</span><span id="bondCount" class="badge">0</span></div>
+      <div class="row"><span>Peças na mesa</span><span id="count" class="badge">0</span></div>
+      <div class="hr"></div>
+
+      <div>
+        <div class="lib-title" style="margin-bottom:6px">Espécies (clusters)</div>
+        <div class="row" style="justify-content:flex-start; gap:10px; align-items:center; flex-wrap:wrap;">
+          <span id="formulaOut" class="big">—</span>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="row" style="font-size:12.5px; color:#374151">
+        <div>
+          • Qualquer átomo (exceto gases nobres, removidos) pode ligar com qualquer outro.<br/>
+• Para ligar: <b>duplo clique</b> em um elétron para armar o arraste, <b>arraste</b> até o elétron de outro átomo e solte.<br/>
+          • Para desfazer: ative <b>Remover ligação</b> e clique na ligação; o modo desativa em seguida.
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- guia de arraste -->
+<div id="guide"><canvas></canvas></div>
+
+<script>
+/*** DADOS ***/
+const NAMES = new Map(Object.entries({
+  H:'hidrogênio', He:'hélio', Li:'lítio', Be:'berílio', B:'boro', C:'carbono', N:'nitrogênio', O:'oxigênio', F:'flúor', Ne:'neônio',
+  Na:'sódio', Mg:'magnésio', Al:'alumínio', Si:'silício', P:'fósforo', S:'enxofre', Cl:'cloro', Ar:'argônio', K:'potássio', Ca:'cálcio',
+  Sc:'escândio', Ti:'titânio', V:'vanádio', Cr:'cromo', Mn:'manganês', Fe:'ferro', Co:'cobalto', Ni:'níquel', Cu:'cobre', Zn:'zinco',
+  Ga:'gálio', Ge:'germânio', As:'arsênio', Se:'selênio', Br:'bromo', Kr:'criptônio', Rb:'rubídio', Sr:'estrôncio', Y:'ítrio', Zr:'zircônio',
+  Nb:'nióbio', Mo:'molibdênio', Tc:'tecnécio', Ru:'rutênio', Rh:'ródio', Pd:'paládio', Ag:'prata', Cd:'cádmio', In:'índio', Sn:'estanho',
+  Sb:'antimônio', Te:'telúrio', I:'iodo', Xe:'xenônio', Cs:'césio', Ba:'bário', La:'lantânio', Ce:'cério', Pr:'praseodímio', Nd:'neodímio',
+  Pm:'promécio', Sm:'samário', Eu:'európio', Gd:'gadolínio', Tb:'térbio', Dy:'disprósio', Ho:'hólmio', Er:'érbio', Tm:'túlio', Yb:'itérbio',
+  Lu:'lutécio', Hf:'háfnio', Ta:'tântalo', W:'tungstênio', Re:'rênio', Os:'ósmio', Ir:'irídio', Pt:'platina', Au:'ouro', Hg:'mercúrio',
+  Tl:'tálio', Pb:'chumbo', Bi:'bismuto', Po:'polônio', At:'astato', Rn:'radônio', Fr:'frâncio', Ra:'rádio', Ac:'actínio', Th:'tório'
+}));
+
+const FIRST_90 = ['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Ga','Ge','As','Se','Br','Kr','Rb','Sr','Y','Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd','In','Sn','Sb','Te','I','Xe','Cs','Ba','La','Ce','Pr','Nd','Pm','Sm','Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','Lu','Hf','Ta','W','Re','Os','Ir','Pt','Au','Hg','Tl','Pb','Bi','Po','At','Rn','Fr','Ra','Ac','Th'];
+
+const NOBLES = new Set(['He','Ne','Ar','Kr','Xe','Rn']);
+const ELEMENTS = FIRST_90.filter(sym => !NOBLES.has(sym)); // remove gases nobres
+
+/* grupos para valência/capacidade */
+const G1  = new Set(['H','Li','Na','K','Rb','Cs','Fr']);
+const G2  = new Set(['Be','Mg','Ca','Sr','Ba','Ra']);
+const G13 = new Set(['B','Al','Ga','In','Tl']);
+const G14 = new Set(['C','Si','Ge','Sn','Pb']);
+const G15 = new Set(['N','P','As','Sb','Bi']);
+const G16 = new Set(['O','S','Se','Te','Po']);
+const G17 = new Set(['F','Cl','Br','I','At']);
+const D4  = new Set(['V','Cr','Mo','Tc','Ru','Os','Re','W']);
+
+function valenceElectrons(sym){
+  if(sym==='He') return 2; // não aparece mais, mas deixamos para consistência
+  if(G1.has(sym)) return 1;
+  if(G2.has(sym)) return 2;
+  if(G13.has(sym)) return 3;
+  if(G14.has(sym)) return 4;
+  if(sym==='P') return 5; // idem
+  if(G15.has(sym)) return 5;
+  if(sym==='S') return 6;
+  if(G16.has(sym)) return 6;
+  if(G17.has(sym)) return 7;
+  if(NOBLES.has(sym)) return 8;
+  return -1;
+}
+function capacity(sym){
+  if(sym==='H') return 1;
+  if(NOBLES.has(sym)) return 0;
+  if(G1.has(sym)) return 1;
+  if(G2.has(sym)) return 2;
+  if(G13.has(sym)) return 3;
+  if(G14.has(sym)) return 4;
+  if(sym==='P') return 5;      // exceção
+  if(G15.has(sym)) return 3;
+  if(sym==='S') return 6;      // exceção
+  if(G16.has(sym)) return 2;
+  if(G17.has(sym)) return 1;
+  if(D4.has(sym)) return 4;
+  if(sym==='La'||sym==='Ce'||sym==='Pr'||sym==='Nd'||sym==='Pm'||sym==='Sm'||sym==='Eu'||sym==='Gd'||sym==='Tb'||sym==='Dy'||sym==='Ho'||sym==='Er'||sym==='Tm'||sym==='Yb'||sym==='Lu') return 3;
+  if(sym==='Ac') return 3;
+  if(sym==='Th') return 4;
+  return 2;
+}
+
+/*** SÍMBOLOS (na lateral) ***/
+const SYMBOLS = [
+  {id:'sym_plus', label:'+','name':'adição'},
+  {id:'sym_arrow', label:'\u2192','name':'reação'},
+  {id:'sym_eq', label:'\u21CC','name':'equilíbrio'},
+];
+
+/*** UTIL ***/
+const el = (q,root=document)=>root.querySelector(q);
+const atomsGrid = el('#atomsGrid');
+const symbolsGrid = el('#symbolsGrid');
+const BOARD_WRAP = el('#boardWrap');
+const BOARD = el('#board');
+const outBonds = el('#bondCount');
+const outCount = el('#count');
+const outFormula = el('#formulaOut');
+const toggleSideBtn = el('#toggleSide');
+
+function symbolLabelById(id){ const s = SYMBOLS.find(x=>x.id===id); return s? s.label : id; }
+
+function sub(n){return [...String(n)].map(d=>({'0':'\u2080','1':'\u2081','2':'\u2082','3':'\u2083','4':'\u2084','5':'\u2085','6':'\u2086','7':'\u2087','8':'\u2088','9':'\u2089'})[d]).join('')}
+const normalize = s => (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+/*** LIBRARY / SIDEBAR RENDER ***/
+let filterTerm = '';
+const _searchBox = document.getElementById('searchBox');
+if(_searchBox){
+  _searchBox.addEventListener('input', ()=>{ filterTerm = normalize(_searchBox.value); renderLibrary(); });
+}
+function renderLibrary(){
+  atomsGrid.innerHTML='';
+  for(const sym of ELEMENTS){
+    const name = NAMES.get(sym) || sym;
+    const cap = capacity(sym);
+    const ve = valenceElectrons(sym);
+    const showE = (ve<0? cap : ve);
+    const div = document.createElement('div');
+    div.className = 'chip';
+    div.draggable=true;
+    div.dataset.atom = sym;
+    const query = normalize(sym+' '+name);
+    if(filterTerm && !query.includes(filterTerm)) continue;
+    div.innerHTML = `
+      <span class="sym">${sym}</span>
+      <span class="name">${name}</span>
+      <span class="val">valência: ${showE}</span>
+    `;
+    div.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', JSON.stringify({type:'atom', id:sym})); });
+    div.addEventListener('dblclick',()=>spawnAtom(sym, name, cap, showE, 50+Math.random()*240, 60+Math.random()*220));
+    atomsGrid.appendChild(div);
+  }
+  // symbols in left menu
+  symbolsGrid.innerHTML = '';
+  for(const s of SYMBOLS){
+    const div = document.createElement('div'); div.className='chip symb'; div.draggable=true;
+    div.dataset.symbol = s.id;
+    div.innerHTML = `<span class="sym">${s.label}</span><span class="name">${s.name}</span>`;
+    div.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', JSON.stringify({type:'symbol', id:s.id})); });
+    div.addEventListener('dblclick',()=>spawnSymbol(s, 120+Math.random()*220, 140+Math.random()*220));
+    symbolsGrid.appendChild(div);
+  }
+}
+renderLibrary();
+
+/*** TOGGLE SIDE ***/
+toggleSideBtn.addEventListener('click', ()=>{
+  const on = !document.body.classList.contains('hideSide');
+  document.body.classList.toggle('hideSide', on);
+  toggleSideBtn.textContent = on ? 'Mostrar Leitura & Dicas' : 'Esconder Leitura & Dicas';
+});
+
+/*** BOARD ***/
+let tiles=[]; // {type:'atom'|'symbol', isSymbol, el,x,y,sym,name, cap, freeE, electronsEls:[]}
+let bonds=[]; // {a,b,el1,el2}
+let selected=null;
+
+BOARD.addEventListener('dragover',e=>{ e.preventDefault(); });
+BOARD.addEventListener('drop',e=>{
+  e.preventDefault();
+  const raw = (e.dataTransfer.getData('text/plain')||'').trim();
+  let payload=null; try{ payload = JSON.parse(raw); }catch(_){}
+  const rect = BOARD.getBoundingClientRect();
+  const x = e.clientX-rect.left-50, y = e.clientY-rect.top-20;
+  if(payload && payload.type==='atom'){
+    const sym = payload.id; const name = NAMES.get(sym) || sym;
+    if(NOBLES.has(sym)) { toast('Gás nobre removido.', 'bad'); return; }
+    const cap = capacity(sym); const ve = valenceElectrons(sym); const showE = (ve<0? cap : ve);
+    spawnAtom(sym, name, cap, showE, x, y);
+  } else if(payload && payload.type==='symbol'){
+    const s = SYMBOLS.find(x=>x.id===payload.id); if(s) spawnSymbol(s, x, y);
+  }
+});
+
+function spawnSymbol(sym, x=60, y=60){
+  const t = document.createElement('div');
+  t.className = 'tile symb';
+  t.innerHTML = `<div class="halo"></div><div class="bigSym">${sym.label}</div><div class="tag">${sym.name}</div>`;
+  t.style.left=x+'px'; t.style.top=y+'px';
+  BOARD.appendChild(t);
+  const obj = {type:'symbol', isSymbol:true, el:t, x,y, sym:sym.id, name:sym.name, cap:0, freeE:0, electronsEls:[]};
+  tiles.push(obj);
+  makeDraggable(obj);
+  t.addEventListener('pointerdown',()=>selectTile(obj));
+  updateReadout();
+  return obj;
+}
+
+function spawnAtom(sym, name, cap, electrons, x=60, y=60){
+  const t = document.createElement('div');
+  t.className = 'tile';
+  t.innerHTML = `<div class="halo"></div><div class="sym">${sym}</div><div class="tag">${name}</div>`;
+  t.style.left=x+'px'; t.style.top=y+'px';
+  BOARD.appendChild(t);
+  const obj={type:'atom', isSymbol:false, el:t, x, y, sym, name, cap, freeE:electrons, bonds:new Set(), electronsEls:[]};
+  tiles.push(obj);
+  renderElectrons(obj);
+  makeDraggable(obj);
+  t.addEventListener('pointerdown',()=>selectTile(obj));
+  updateReadout();
+  return obj;
+}
+
+function selectTile(obj){
+  tiles.forEach(o=>o.el.classList.remove('ghost'));
+  selected=obj; obj.el.classList.add('ghost');
+}
+
+function makeDraggable(obj){
+  let dragging=false, startMouseX=0, startMouseY=0; let dragCluster=[];
+  obj.el.addEventListener('pointerdown',e=>{
+    if(obj.type==='atom' && e.target && e.target.classList && e.target.classList.contains('e')) return;
+    dragging=true; obj.el.setPointerCapture(e.pointerId); obj.el.classList.add('dragging');
+    selectTile(obj); startMouseX=e.clientX; startMouseY=e.clientY; dragCluster = getCluster(obj);
+    dragCluster.forEach(t=>{ t._startX=t.x; t._startY=t.y; });
+  });
+  obj.el.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    const dx = e.clientX - startMouseX; const dy = e.clientY - startMouseY;
+    dragCluster.forEach(t=>{ t.x = t._startX + dx; t.y = t._startY + dy; t.el.style.left=t.x+'px'; t.el.style.top=t.y+'px'; });
+    renderAllBonds();
+  });
+  const end=()=>{ if(!dragging) return; dragging=false; obj.el.classList.remove('dragging'); updateReadout(); };
+  obj.el.addEventListener('pointerup', end); obj.el.addEventListener('pointercancel', end);
+}
+
+function getCenter(t){
+  const r = t.el.getBoundingClientRect();
+  return {x:r.left + r.width/2 + window.scrollX, y:r.top + r.height/2 + window.scrollY};
+}
+
+function getCluster(start){
+  if(start.isSymbol) return [start];
+  const seen=new Set(); const out=[]; const stack=[start];
+  while(stack.length){ const n=stack.pop(); if(seen.has(n)) continue; seen.add(n); out.push(n);
+    // unite by adjacency via bonds only
+    bonds.forEach(b=>{ if(b.a===n) outPush(b.b); if(b.b===n) outPush(b.a); });
+  }
+  function outPush(o){ if(!seen.has(o)) stack.push(o); }
+  return out;
+}
+
+function bondsOf(t){ return bonds.filter(b=>b.a===t || b.b===t); }
+function bondsBetween(a,b){ return bonds.filter(x=> (x.a===a && x.b===b) || (x.a===b && x.b===a)); }
+
+/*** CAPACIDADES ***/
+function canBondAtom(t){
+  if(t.type!=='atom') return false;
+  return t.freeE>0 && bondsOf(t).length < t.cap;
+}
+function canAddBondBetween(a,b){
+  if(a===b) return false;
+  return canBondAtom(a) && canBondAtom(b); // sem limite por par
+}
+
+/*** DRAG POR DUPLO CLIQUE NO ELÉTRON ***/
+let drag = null; // {tile, eEl, ghost, targetEl, targetTile}
+const guide = el('#guide'); const canvas = guide.querySelector('canvas'); const gctx = canvas.getContext('2d');
+const HIT_THR = 26; // px
+function attachElectronHandlers(tile, eEl){
+  eEl.addEventListener('pointerdown', ev=>{ ev.stopPropagation(); }, {passive:true});
+  eEl.addEventListener('dblclick', (ev)=>{
+    startDrag(tile, eEl, ev.clientX, ev.clientY);
+  });
+}
+
+function startDrag(tile, eEl, clientX, clientY){
+  if(!canBondAtom(tile)){ blink(eEl); return; }
+  drag = { tile, eEl, ghost:makeGhostDot(), targetEl:null, targetTile:null };
+  eEl.classList.add('arm');
+  showGuide(true);
+  document.addEventListener('pointermove', onDragMove);
+  document.addEventListener('pointerup', onDragEnd, {once:true});
+  drag.ghost.style.left = (clientX - 6) + 'px'; drag.ghost.style.top = (clientY - 6) + 'px';
+}
+
+function makeGhostDot(){
+  const d = document.createElement('div');
+  d.className='e arm'; d.style.position='fixed'; d.style.left='-100px'; d.style.top='-100px'; d.style.pointerEvents='none'; d.style.zIndex=21;
+  document.body.appendChild(d); return d;
+}
+
+function onDragMove(e){
+  if(!drag) return;
+  const px = e.clientX, py = e.clientY;
+  drag.ghost.style.left = (px - 6) + 'px'; drag.ghost.style.top = (py - 6) + 'px';
+  const hit = findClosestElectronFromOtherTile(px, py, drag.tile);
+  highlightTarget(hit);
+  drawGuide(px, py, hit?.center);
+}
+
+function onDragEnd(e){
+  if(!drag) return;
+  const px=e.clientX, py=e.clientY;
+  const hit = findClosestElectronFromOtherTile(px, py, drag.tile);
+  if(hit && canAddBondBetween(drag.tile, hit.tile)){
+    createBond(drag.tile, hit.tile);
+  }else{
+    toast('Solte sobre um elétron de outro átomo.','info');
+  }
+  cleanupDrag();
+}
+
+function cleanupDrag(){
+  if(!drag) return;
+  drag.eEl.classList.remove('arm');
+  drag.ghost.remove(); drag=null;
+  clearHighlights(); showGuide(false);
+  document.removeEventListener('pointermove', onDragMove);
+}
+
+function findClosestElectronFromOtherTile(px, py, tile){
+  let best=null, bestD=1e9;
+  for(const t of tiles){
+    if(t===tile || t.isSymbol) continue;
+    if(!canBondAtom(t)) continue;
+    for(const eEl of t.electronsEls){
+      const r = eEl.getBoundingClientRect();
+      const cx = r.left + r.width/2; const cy = r.top + r.height/2;
+      const d = Math.hypot(px - cx, py - cy);
+      if(d < bestD){ bestD=d; best={tile:t, el:eEl, center:{x:cx, y:cy}}; }
+    }
+  }
+  return (best && bestD <= HIT_THR)? best : null;
+}
+
+function highlightTarget(hit){
+  clearHighlights();
+  if(hit && hit.el) hit.el.classList.add('target');
+  if(drag){ drag.targetEl = hit? hit.el:null; drag.targetTile = hit? hit.tile:null; }
+}
+function clearHighlights(){ document.querySelectorAll('.e.target').forEach(x=>x.classList.remove('target')); }
+
+function showGuide(on){
+  if(on){
+    guide.style.display='block';
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  } else {
+    guide.style.display='none'; gctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+function drawGuide(px, py, target){
+  gctx.clearRect(0,0,canvas.width,canvas.height);
+  if(!target) return;
+  gctx.lineWidth=2; gctx.strokeStyle='rgba(37,99,235,.35)';
+  gctx.beginPath(); gctx.moveTo(px, py); gctx.lineTo(target.x, target.y); gctx.stroke();
+}
+function blink(node){ node.classList.add('target'); setTimeout(()=>node.classList.remove('target'), 280); }
+
+/*** LIGAÇÕES ***/
+function bondLenPx(a,b){
+  const css = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bond-len'));
+  let D = (css && isFinite(css)) ? css : 150;
+  const aw = (a && a.el ? a.el.offsetWidth : 100);
+  const bw = (b && b.el ? b.el.offsetWidth : 100);
+  const minD = (aw + bw)/2 + 26; // evita sobreposição visual dos cards
+  if(D < minD) D = minD;
+  return D;
+}
+
+function shiftCluster(cluster, dx, dy){
+  if(!cluster || !cluster.length) return;
+  cluster.forEach(t=>{
+    t.x += dx; t.y += dy;
+    t.el.style.left = t.x + 'px';
+    t.el.style.top  = t.y + 'px';
+  });
+}
+
+function snapBondDistanceOnCreate(a, b, preA, preB){
+  if(!preA || !preB) return;
+  // se já estavam no mesmo cluster, não dá pra "encurtar" só um lado sem mexer no resto
+  if(preA.includes(b) || preB.includes(a)) return;
+
+  const A = getCenter(a), B = getCenter(b);
+  const dx = (B.x - A.x), dy = (B.y - A.y);
+  const len = Math.hypot(dx, dy);
+  if(len < 0.5) return;
+
+  const D = bondLenPx(a,b);
+  const ux = dx / len, uy = dy / len;
+  const delta = (len - D);
+
+  // move o cluster menor (menos "pulo" visual). Em empate, move o do átomo de origem.
+  const moveA = (preA.length <= preB.length);
+  const sx = ux * delta, sy = uy * delta;
+
+  if(moveA) shiftCluster(preA,  sx,  sy);
+  else      shiftCluster(preB, -sx, -sy);
+}
+function createBond(a,b){
+  if(!canAddBondBetween(a,b)) return;
+
+  // antes de unir, guarda os clusters atuais (pra poder mover só "um lado")
+  const preA = getCluster(a);
+  const preB = getCluster(b);
+
+  a.freeE -= 1; b.freeE -= 1;
+  renderElectrons(a); renderElectrons(b);
+  const el1 = document.createElement('i'); el1.className='pairDot';
+  const el2 = document.createElement('i'); el2.className='pairDot';
+  BOARD.appendChild(el1); BOARD.appendChild(el2);
+  const unit = {a,b,el1,el2};
+  bonds.push(unit);
+  el1.addEventListener('click', ()=> maybeRemoveUnit(unit));
+  el2.addEventListener('click', ()=> maybeRemoveUnit(unit));
+
+  // 👉 Snap: deixa a distância entre os átomos "padrão" assim que a ligação nasce
+  snapBondDistanceOnCreate(a, b, preA, preB);
+
+  renderAllBonds();
+  toast('Ligação criada.', 'ok');
+  updateReadout();
+}
+
+function maybeRemoveUnit(unit){
+  if(!removeMode) return;
+  removeBondUnit(unit);
+  setRemoveMode(false);
+}
+
+function removeBondUnit(unit){
+  unit.a.freeE += 1; unit.b.freeE += 1;
+  unit.el1.remove(); unit.el2.remove();
+  bonds = bonds.filter(x=>x!==unit);
+  renderElectrons(unit.a); renderElectrons(unit.b);
+  renderAllBonds(); updateReadout();
+  toast('Ligação removida.', 'info');
+}
+
+function renderAllBonds(){
+  const groups = new Map();
+  for(const b of bonds){
+    const k = pairKey(b.a, b.b);
+    if(!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(b);
+  }
+  for(const [k, arr] of groups){
+    const a = arr[0].a, b = arr[0].b;
+    const A=getCenter(a), B=getCenter(b);
+    const ux = (B.x-A.x), uy=(B.y-A.y);
+    const len = Math.hypot(ux,uy) || 1;
+    const vx = ux/len, vy = uy/len;
+    const nx = -vy, ny = vx;
+    const mid = {x:(A.x+B.x)/2, y:(A.y+B.y)/2};
+    const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pair-gap')) || 7;
+    const distAxis = gap/2 + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--e'))/2);
+    const multi = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--multi-gap')) || 10;
+    const n = arr.length; const offsets = Array.from({length:n}, (_,i)=> (i - (n-1)/2) * multi);
+    arr.forEach((unit, i)=>{
+      const off = offsets[i];
+      const cx = mid.x + nx*off, cy = mid.y + ny*off;
+      const p1 = {x: cx - vx*distAxis, y: cy - vy*distAxis};
+      const p2 = {x: cx + vx*distAxis, y: cy + vy*distAxis};
+      positionDot(unit.el1, p1); positionDot(unit.el2, p2);
+    });
+  }
+}
+
+function positionDot(elm, p){
+  const br = BOARD.getBoundingClientRect();
+  const size = (elm.offsetWidth||8)/2;
+  elm.style.left = (p.x - br.left - window.scrollX - size) + 'px';
+  elm.style.top  = (p.y - br.top  - window.scrollY - size) + 'px';
+}
+
+function pairKey(a,b){
+  const ai = tiles.indexOf(a), bi = tiles.indexOf(b);
+  return ai<bi ? ai+'|'+bi : bi+'|'+ai;
+}
+
+/*** ELETRONS (LEWIS) ***/
+function renderElectrons(t){
+  for(const e of t.electronsEls) e.remove();
+  t.electronsEls.length=0;
+  if(t.isSymbol) return;
+  const pad=6; const w = t.el.offsetWidth; const h=t.el.offsetHeight;
+  const pos = {
+    'T1': {x:w/2, y:pad},              'T2': {x:w/2+12, y:pad},
+    'R1': {x:w-6, y:h/2},              'R2': {x:w-6, y:h/2+12},
+    'B1': {x:w/2, y:h-6},              'B2': {x:w/2-12, y:h-6},
+    'L1': {x:6, y:h/2},                'L2': {x:6, y:h/2-12},
+  };
+  const fillOrder = ['T1','R1','B1','L1','T2','R2','B2','L2'];
+  const n = Math.max(0, Math.min(8, t.freeE));
+  for(let i=0;i<n && i<fillOrder.length;i++){
+    const p = pos[fillOrder[i]]; if(!p) continue;
+    const d = document.createElement('i'); d.className='e';
+    d.style.left = (p.x - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--e'))/2)) + 'px';
+    d.style.top  = (p.y - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--e')||8)/2)) + 'px';
+    t.el.appendChild(d); t.electronsEls.push(d);
+    attachElectronHandlers(t, d);
+  }
+}
+
+/*** FÓRMULA ***/
+function currentClusters(){
+  const atoms = tiles.filter(t=>!t.isSymbol);
+  const seen=new Set(); const groups=[];
+  for(const t of atoms){
+    if(seen.has(t)) continue;
+    const g = getCluster(t);
+    g.forEach(x=>seen.add(x)); groups.push(g);
+  }
+  return groups;
+}
+function buildFormulaForCluster(group){
+  const map = new Map();
+  for(const t of group){ const id = t.sym; map.set(id, (map.get(id)||0)+1); }
+  const order = (a,b)=>{
+    if(a==='C' && b!=='C') return -1;
+    if(b==='C' && a!=='C') return 1;
+    if(a==='H' && b!=='H' && b!=='C') return -1;
+    if(b==='H' && a!=='H' && a!=='C') return 1;
+    return a.localeCompare(b,'pt-BR');
+  };
+  const parts = [...map.entries()].sort((x,y)=>order(x[0],y[0])).map(([sym,n])=> sym + (n>1? sub(n):''));
+  return parts.join('') || '—';
+}
+
+function updateReadout(){
+  outBonds.textContent = bonds.length;
+  outCount.textContent = tiles.length;
+
+  // Build species clusters (atoms only), with leftmost X as anchor
+  const clusters = currentClusters().map(g=>({type:'species', text: buildFormulaForCluster(g), x: Math.min(...g.map(t=>t.x))}));
+
+  // Placed symbols on the board
+  const syms = tiles.filter(t=>t.type==='symbol').map(t=>({type:'symbol', text: symbolLabelById(t.sym), x: t.x}));
+
+  // Merge and sort by X
+  const tokens = clusters.concat(syms).sort((a,b)=> a.x - b.x);
+
+  // Render inline "Be + H" style
+  if(tokens.length){
+    const parts = tokens.map(tok => tok.type==='symbol'
+      ? `<span class='exprItem' style="padding:0 6px; font-weight:800">${tok.text}</span>`
+      : `<span class='exprItem'><span class='exprSpecies'>${tok.text}</span></span>`);
+    outFormula.innerHTML = parts.join(' ');
+  } else {
+    outFormula.innerHTML = '—';
+  }
+
+  tiles.forEach(o=>o.el.classList.toggle('valid', true));
+}
+
+/*** REMOVER LIGAÇÃO (modo) ***/
+let removeMode = false;
+const btnRm = document.getElementById('rmBond');
+btnRm.addEventListener('click', ()=> setRemoveMode(!removeMode));
+function setRemoveMode(on){
+  removeMode = on;
+  document.body.classList.toggle('removing', on);
+  btnRm.classList.toggle('active', on);
+  if(on) toast('Clique em uma ligação para remover.', 'bad');
+}
+
+/*** TOAST ***/
+let toastTimer=null;
+function toast(msg, kind='info'){
+  clearTimeout(toastTimer);
+  let t = document.getElementById('__toast');
+  if(!t){
+    t=document.createElement('div'); t.id='__toast';
+    Object.assign(t.style,{ position:'fixed', left:'50%', bottom:'18px', transform:'translateX(-50%)',
+      padding:'10px 14px', borderRadius:'10px', border:'1px solid var(--grid)',
+      background:'#fff', boxShadow:'0 10px 30px #00000018', zIndex:30, fontWeight:'700' });
+    document.body.appendChild(t);
+  }
+  if(kind==='ok'){ t.style.color = '#065f46'; t.style.background = '#ecfdf5'; }
+  else if(kind==='bad'){ t.style.color = '#7f1d1d'; t.style.background = '#fef2f2'; }
+  else { t.style.color = '#1f2937'; t.style.background = '#eef2ff'; }
+  t.textContent=msg; t.style.opacity='1';
+  toastTimer=setTimeout(()=>{ t.style.opacity='0'; }, 2200);
+}
+</script>
+</body>
+</html>
+
+</template>
+
+<script>
+const $ = (q,root=document)=>root.querySelector(q);
+const frameIons = $('#frame-ions');
+const frameCov  = $('#frame-cov');
+const tabs = [...document.querySelectorAll('.tab')];
+const tabCov = document.querySelector('.tab[data-view="cov"]');
+const title = $('#title');
+const openNew = $('#openNew');
+const dl = $('#download');
+
+function patchIonsHTML(html){ return '<style>#addPlus,#addArrow,#addEq{display:none!important}</style>' + html; }
+
+const TPL = {
+  ions: $('#tpl-ions').innerHTML,
+  cov:  $('#tpl-cov').innerHTML
+};
+
+function setView(view){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.view===view));
+  frameIons.classList.toggle('active', view==='ions');
+  frameCov.classList.toggle('active', view==='cov');
+
+  const htmlDoc = TPL[view];
+  const frame = (view==='ions')? frameIons : frameCov;
+
+  // Cov tab text must be visible always
+  if(tabCov){ tabCov.textContent = 'Covalente'; tabCov.title = 'Covalente'; tabCov.style.minWidth = ''; }
+
+  if(view==='ions'){
+    if(!frame.srcdoc) frame.srcdoc = patchIonsHTML(htmlDoc);
+    title.textContent = 'Íons';
+    openNew.style.display = 'none';
+    dl.style.display = 'none';
+    const hint = document.querySelector('.hint'); if(hint) hint.style.display = 'none';
+  } else { // covalente
+    if(!frame.srcdoc) frame.srcdoc = htmlDoc;
+    title.textContent = ''; // remove texto "Covalente"
+    openNew.style.display = 'none';
+    dl.style.display = 'none';
+    const hint = document.querySelector('.hint'); if(hint) hint.style.display = ''; // pode manter no covalente
+  }
+
+  // Update blob links (even if hidden)
+  const blob = new Blob([view==='ions' ? (patchIonsHTML(htmlDoc)) : htmlDoc], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  openNew.href = url;
+  dl.href = url;
+  dl.download = (view==='ions' ? 'quebra_cabeca_ions_embutido.html' : 'quebra_cabeca_covalente_embutido.html');
+}
+
+tabs.forEach(t=>t.addEventListener('click', ()=> setView(t.dataset.view)));
+
+// inicializa
+setView('ions');
+</script>
+</body>
+</html>

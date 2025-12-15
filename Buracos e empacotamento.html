@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Empacotamento, Buracos e Camadas</title>
+<style>
+  :root{ --bg:#0b0f14; --panel:#0f141a; --ink:#e6f0ff; --muted:#9bb3cc; --accent:#7aa2ff }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; background:radial-gradient(1200px 600px at 70% -10%, #16202b 0%, var(--bg) 60%); color:var(--ink); font:500 14px/1.3 ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial}
+  header{position:sticky; top:0; z-index:2; backdrop-filter:saturate(1.2) blur(8px); background:linear-gradient( to bottom, rgba(17,23,31,.92), rgba(17,23,31,.65)); border-bottom:1px solid #1e2935}
+  .wrap{max-width:1120px; margin:0 auto; padding:14px 18px}
+  h1{margin:0 0 6px 0; font-size:18px}
+  .sub{font-size:12px; color:var(--muted)}
+  .panel{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px 0}
+  .panel label{display:flex; gap:8px; align-items:center; background:var(--panel); border:1px solid #1d2633; padding:8px 10px; border-radius:12px}
+  .panel select,.panel input[type="range"]{accent-color:var(--accent)}
+  .panel input[type="number"], .panel button{background:#0b121a; color:#e6f0ff; border:1px solid #1e2937; border-radius:8px; padding:8px 10px}
+  #stage{position:relative; height:calc(100vh - 240px); min-height:520px}
+  canvas{display:block; width:100%; height:100%; background: radial-gradient(900px 500px at 30% 20%, #0e151d, #0a0f15 60%); border-top:1px solid #101825}
+  .legend{position:absolute; left:16px; bottom:16px; color:#cfe1ff; font-size:12px; padding:8px 10px; border-radius:10px; background:rgba(11,15,20,.6); border:1px solid #1b2431; white-space:pre-wrap}
+  #testResults{left:auto; right:16px; bottom:16px}
+  #legend, #testResults{display:none !important}
+  .hidden{display:none}
+  .badge{display:inline-block; padding:2px 6px; border:1px solid #203044; border-radius:8px; font-size:11px; background:#111824}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Empacotamento de Esferas • buracos <span class="badge">tetraédricos</span> & <span class="badge">octaédricos</span></h1>
+    <div class="sub"></div>
+    <div class="panel" id="panel">
+      <label>Modo
+        <select id="mode">
+          <option value="oct">Buraco Octaédrico</option>
+          <option value="tetra">Buraco Tetraédrico</option>
+          <option value="hex2d">Camada Hexagonal</option>
+          <option value="aaa_tri">AAA Triangular</option>
+          <option value="abc_tri">ABC Triangular</option>
+          <option value="aba_tri">ABA Triangular</option>
+          <option value="aaa_cub">AAA Cúbica</option>
+          <option value="aba_cub">ABA Cúbica</option>
+          <option value="abc_cub">ABC Cúbica</option>
+        </select>
+      </label>
+      <label>Zoom
+        <input type="range" id="radius" min="28" max="90" value="56" />
+      </label>
+      <label>Distância entre as esferas (px)
+        <input type="range" id="gap" min="0" max="250" step="1" value="0" />
+        <input type="number" id="gapNum" min="0" max="250" step="1" value="0" />
+      </label>
+      <label>Opacidade
+        <input type="range" id="alpha" min="0" max="100" value="70" />
+      </label>
+      <label><input type="checkbox" id="solid"/> Sólidas (sem translucidez)</label>
+      <label id="layerSizeWrap">Largura da camada (N)
+        <input type="range" id="layerSize" min="4" max="9" step="1" value="4" />
+      </label>
+      <label><input type="checkbox" id="edges" checked /> Arestas</label>
+      <button id="btnAdd" class="">Adicionar camada</button>
+      <button id="btnReset" class="">Reset</button>
+    </div>
+  </div>
+</header>
+
+<div id="stage">
+  <canvas id="cv"></canvas>
+  <div class="legend" id="legend"></div>
+  <div class="legend" id="testResults"></div>
+</div>
+
+<script>
+(function(){
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const modeSel = document.getElementById('mode');
+  const rSlider = document.getElementById('radius');
+  const aSlider = document.getElementById('alpha');
+  const gapSlider = document.getElementById('gap');
+  const gapNum = document.getElementById('gapNum');
+  const solidCb = document.getElementById('solid');
+  const layerSize = document.getElementById('layerSize');
+  const edgesCb = document.getElementById('edges');
+  const btnAdd = document.getElementById('btnAdd');
+  const btnReset = document.getElementById('btnReset');
+  const layerSizeWrap = document.getElementById('layerSizeWrap');
+  function isStackingMode(m){ return m==='aaa_tri'||m==='aba_tri'||m==='abc_tri'||m==='aaa_cub'||m==='aba_cub'||m==='abc_cub'; }
+  function updateControlsVisibility(){
+    const m = modeSel.value;
+    document.body.dataset.mode = m;
+    const showStack = isStackingMode(m);
+
+    // "Largura da camada (N)" só existe nos modos de empilhamento (tri/cúbico).
+    const showN = showStack;
+
+    if(layerSizeWrap){
+      layerSizeWrap.classList.toggle('hidden', !showN);
+      const inp = layerSizeWrap.querySelector('#layerSize');
+      if(inp) inp.disabled = !showN;
+    }
+    if(btnAdd) btnAdd.classList.toggle('hidden', !showStack);
+    if(btnReset) btnReset.classList.toggle('hidden', !showStack);
+  }
+
+  const legend = document.getElementById('legend');
+  const testResults = document.getElementById('testResults');
+
+  let W=0,H=0, DPR=Math.min(2,(window.devicePixelRatio||1));
+  let rotX=-0.6, rotY=0.6; let dragging=false, lx=0, ly=0;
+
+  // ===== Helpers desenho =====
+  function proj([x0,y0,z0]){
+    const cy=Math.cos(rotX), sy=Math.sin(rotX);
+    const y1=y0*cy - z0*sy, z1=y0*sy + z0*cy;
+    const cx=Math.cos(rotY), sx=Math.sin(rotY);
+    const x2=x0*cx + z1*sx, z2=-x0*sx + z1*cx;
+    return {x:W/2+x2, y:H/2+y1, z:z2};
+  }
+  function sphere(x,y,R,alpha,tint, solid){
+    const g = ctx.createRadialGradient(x - R*0.35, y - R*0.35, R*0.1, x, y, R);
+    const c0 = tint || [200,200,200];
+    const c1 = tint || [220,220,220];
+    const a0 = solid ? 1 : alpha;
+    const a1 = solid ? 1 : alpha*0.9;
+    const a2 = solid ? 1 : alpha*0.55;
+    g.addColorStop(0, `rgba(${c0[0]},${c0[1]},${c0[2]},${a0})`);
+    g.addColorStop(0.6, `rgba(${c1[0]},${c1[1]},${c1[2]},${a1})`);
+    g.addColorStop(1, `rgba(${c1[0]},${c1[1]},${c1[2]},${a2})`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x,y,R,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle = solid ? 'rgba(255,255,255,1)' : `rgba(255,255,255,${alpha*0.09})`;
+    ctx.lineWidth = 1.2; ctx.stroke();
+  }
+  function edge(a,b,w=1.4,alp=0.75){
+    ctx.lineCap='round'; ctx.strokeStyle=`rgba(210,225,255,${alp})`; ctx.lineWidth=w;
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+  }
+
+  // ===== Geometrias base =====
+  function buildHexEdges(d){
+    const pts=[[0,0,0]]; for(let k=0;k<6;k++){const a=Math.PI/3*k; pts.push([d*Math.cos(a), d*Math.sin(a), 0]);}
+    const E=[]; for(let i=1;i<=6;i++){E.push([0,i]);} for(let i=1;i<=6;i++){const j=(i%6)+1; E.push([i,j]);}
+    return {pts,E};
+  }
+
+  // Triangular lattice basis
+  const e1 = d => [d,0,0];
+  const e2 = d => [d/2, Math.sqrt(3)*d/2, 0];
+  const triB = d => [d/2, Math.sqrt(3)*d/6, 0];         // interstício de A
+  const triC = d => [d,   Math.sqrt(3)*d/3,  0];         // interstício de B (2*triB)
+  const triHeight = d => d*Math.sqrt(2/3);
+
+  function triMakeSets(d, side=4){
+    // A: {(a,b) | 0<=a<=side-1, 0<=b<=side-1-a}
+    const A=[]; for(let a=0;a<=side-1;a++){ for(let b=0;b<=side-1-a;b++){ const p=vecAdd(vecScale(e1(d),a), vecScale(e2(d),b)); A.push(p); } }
+    // B: centros válidos (side-1)
+    const B=[]; if(side>=2){ for(let a=0;a<=side-2;a++){ for(let b=0;b<=side-2-a;b++){ const base=vecAdd(vecScale(e1(d),a), vecScale(e2(d),b)); B.push(vecAdd(base, triB(d))); }}}
+    // C: centros válidos (side-2)
+    const C=[]; if(side>=3){ for(let a=0;a<=side-3;a++){ for(let b=0;b<=side-3-a;b++){ const base=vecAdd(vecScale(e1(d),a), vecScale(e2(d),b)); C.push(vecAdd(base, triC(d))); } } }
+    // centraliza pelo centroide de A
+    const allA = A.map(p=>[p[0],p[1],0]); const cx=(Math.min(...allA.map(p=>p[0]))+Math.max(...allA.map(p=>p[0])))/2; const cy=(Math.min(...allA.map(p=>p[1]))+Math.max(...allA.map(p=>p[1])))/2;
+    const shift=[-cx,-cy,0];
+    return { A: A.map(p=>vecAdd(p,shift)), B: B.map(p=>vecAdd(p,shift)), C: C.map(p=>vecAdd(p,shift)) };
+  }
+
+  // Square lattice (cúbica) helpers
+  const cubeHeight = d => d/Math.SQRT2;
+  function sqMakeSets(d, n=4){
+    const A=[], B=[], C=[];
+    for(let i=0;i<n;i++){ const y=(i-(n-1)/2)*d; for(let j=0;j<n;j++){ const x=(j-(n-1)/2)*d; A.push([x,y,0]); } }
+    if(n>=2){ for(let i=0;i<n-1;i++){ const y=(i-(n-2)/2)*d; for(let j=0;j<n-1;j++){ const x=(j-(n-2)/2)*d; B.push([x,y,0]); } } }
+    if(n>=3){ for(let i=0;i<n-2;i++){ const y=(i-(n-3)/2)*d; for(let j=0;j<n-2;j++){ const x=(j-(n-3)/2)*d; C.push([x,y,0]); } } }
+    return {A,B,C};
+  }
+
+  // Vetor helpers
+  function vecAdd(a,b){ return [a[0]+b[0], a[1]+b[1], (a[2]||0)+(b[2]||0)]; }
+  function vecScale(a,k){ return [a[0]*k, a[1]*k, (a[2]||0)*k]; }
+
+  // Cores & letras
+  const tintFor = L => (L==='A')?[255,60,60] : (L==='B')?[255, 235, 190] : [60,140,255];
+
+  // Sequências
+  function nextLetterABC(idx){ return ['B','C','A'][(idx-1)%3]; } // idx=1->B, 2->C, 3->A...
+  function nextLetterABA(idx){ return (idx%2===1)?'B':'A'; }      // idx=1->B, 2->A, 3->B...
+  function nextLetterAAA(idx){ return 'A'; }
+
+  // Estados
+  let triAAA={d:0, side:4, sets:null, placed:[], levels:0};
+  let triABC={d:0, side:4, sets:null, placed:[], levels:0};
+  let triABA={d:0, side:4, sets:null, placed:[], levels:0};
+  let cubAAA={d:0, n:4, sets:null, placed:[], levels:0};
+  let cubABA={d:0, n:4, sets:null, placed:[], levels:0};
+  let cubABC={d:0, n:4, sets:null, placed:[], levels:0};
+
+  function resetStates(d){
+    // Tri
+    triAAA.d=d; triAAA.sets=triMakeSets(d, +layerSize.value); triAAA.placed=[...triAAA.sets.A.map(p=>({pos:p, letter:'A'}))]; triAAA.levels=1;
+    triABC.d=d; triABC.sets=triMakeSets(d, +layerSize.value); triABC.placed=[...triABC.sets.A.map(p=>({pos:p, letter:'A'}))]; triABC.levels=1;
+    triABA.d=d; triABA.sets=triMakeSets(d, +layerSize.value); triABA.placed=[...triABA.sets.A.map(p=>({pos:p, letter:'A'}))]; triABA.levels=1;
+    // Cub
+    cubAAA.d=d; cubAAA.sets=sqMakeSets(d, +layerSize.value);  cubAAA.placed=[...cubAAA.sets.A.map(p=>({pos:p, letter:'A'}))]; cubAAA.levels=1;
+    cubABA.d=d; cubABA.sets=sqMakeSets(d, +layerSize.value);  cubABA.placed=[...cubABA.sets.A.map(p=>({pos:p, letter:'A'}))]; cubABA.levels=1;
+    cubABC.d=d; cubABC.sets=sqMakeSets(d, +layerSize.value);  cubABC.placed=[...cubABC.sets.A.map(p=>({pos:p, letter:'A'}))]; cubABC.levels=1;
+  }
+
+  function rebuildStates(d, keepLevels=true){
+    const side = +layerSize.value;
+
+    const triLevAAA = Math.max(1, keepLevels ? (triAAA.levels||1) : 1);
+    const triLevABC = Math.max(1, keepLevels ? (triABC.levels||1) : 1);
+    const triLevABA = Math.max(1, keepLevels ? (triABA.levels||1) : 1);
+    const cubLevAAA = Math.max(1, keepLevels ? (cubAAA.levels||1) : 1);
+    const cubLevABA = Math.max(1, keepLevels ? (cubABA.levels||1) : 1);
+    const cubLevABC = Math.max(1, keepLevels ? (cubABC.levels||1) : 1);
+
+    // Tri
+    triAAA.d=d; triAAA.side=side; triAAA.sets=triMakeSets(d, side); triAAA.placed=[]; triAAA.levels=triLevAAA;
+    triABC.d=d; triABC.side=side; triABC.sets=triMakeSets(d, side); triABC.placed=[]; triABC.levels=triLevABC;
+    triABA.d=d; triABA.side=side; triABA.sets=triMakeSets(d, side); triABA.placed=[]; triABA.levels=triLevABA;
+
+    for(let L=0; L<triAAA.levels; L++){
+      const letter = (L===0)?'A': nextLetterAAA(L);
+      const set = (letter==='A')? triAAA.sets.A : (letter==='B'? triAAA.sets.B : triAAA.sets.C);
+      const z = L*triHeight(d);
+      for(const p of set){ triAAA.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+    for(let L=0; L<triABC.levels; L++){
+      const letter = (L===0)?'A': nextLetterABC(L);
+      const set = (letter==='A')? triABC.sets.A : (letter==='B'? triABC.sets.B : triABC.sets.C);
+      const z = L*triHeight(d);
+      for(const p of set){ triABC.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+    for(let L=0; L<triABA.levels; L++){
+      const letter = (L===0)?'A': nextLetterABA(L);
+      const set = (letter==='A')? triABA.sets.A : (letter==='B'? triABA.sets.B : triABA.sets.C);
+      const z = L*triHeight(d);
+      for(const p of set){ triABA.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+
+    // Cub
+    cubAAA.d=d; cubAAA.n=side; cubAAA.sets=sqMakeSets(d, side); cubAAA.placed=[]; cubAAA.levels=cubLevAAA;
+    cubABA.d=d; cubABA.n=side; cubABA.sets=sqMakeSets(d, side); cubABA.placed=[]; cubABA.levels=cubLevABA;
+    cubABC.d=d; cubABC.n=side; cubABC.sets=sqMakeSets(d, side); cubABC.placed=[]; cubABC.levels=cubLevABC;
+
+    for(let L=0; L<cubAAA.levels; L++){
+      const letter = (L===0)?'A': nextLetterAAA(L);
+      const set = (letter==='A')? cubAAA.sets.A : (letter==='B'? cubAAA.sets.B : cubAAA.sets.C);
+      const z = L*cubeHeight(d);
+      for(const p of set){ cubAAA.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+    for(let L=0; L<cubABA.levels; L++){
+      const letter = (L===0)?'A': nextLetterABA(L);
+      const set = (letter==='A')? cubABA.sets.A : (letter==='B'? cubABA.sets.B : cubABA.sets.C);
+      const z = L*cubeHeight(d);
+      for(const p of set){ cubABA.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+    for(let L=0; L<cubABC.levels; L++){
+      const letter = (L===0)?'A': nextLetterABC(L);
+      const set = (letter==='A')? cubABC.sets.A : (letter==='B'? cubABC.sets.B : cubABC.sets.C);
+      const z = L*cubeHeight(d);
+      for(const p of set){ cubABC.placed.push({pos:[p[0],p[1],z], letter}); }
+    }
+  }
+
+
+  function addLayer(mode){
+    const R=+rSlider.value, GAP=+gapSlider.value; const d=2*R+GAP;
+    if(Math.abs(d - triABC.d)>1e-6){ rebuildStates(d, true); }
+
+    if(mode==='aaa_tri' || mode==='abc_tri' || mode==='aba_tri'){
+      const st = (mode==='aaa_tri')? triAAA : (mode==='abc_tri')? triABC : triABA;
+      const idx = st.levels;
+      const letter = (mode==='aaa_tri')? nextLetterAAA(idx) : (mode==='abc_tri')? nextLetterABC(idx) : nextLetterABA(idx);
+      const set = (letter==='A')? st.sets.A : (letter==='B'? st.sets.B : st.sets.C);
+      const z = idx*triHeight(st.d);
+      for(const p of set){ st.placed.push({pos:[p[0],p[1],z], letter}); }
+      st.levels++;
+    } else if(mode==='aaa_cub' || mode==='aba_cub' || mode==='abc_cub'){
+      const st = (mode==='aaa_cub')? cubAAA : (mode==='aba_cub')? cubABA : cubABC;
+      const idx = st.levels;
+      const letter = (mode==='aaa_cub')? nextLetterAAA(idx) : (mode==='aba_cub')? nextLetterABA(idx) : nextLetterABC(idx);
+      const set = (letter==='A')? st.sets.A : (letter==='B'? st.sets.B : st.sets.C);
+      const z = idx*cubeHeight(st.d);
+      for(const p of set){ st.placed.push({pos:[p[0],p[1],z], letter}); }
+      st.levels++;
+    }
+    draw();
+  }
+
+  function resize(){ const rect=cv.getBoundingClientRect(); W=Math.max(600,rect.width); H=Math.max(520,rect.height); cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); draw(); }
+  new ResizeObserver(resize).observe(cv);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    updateControlsVisibility();
+    const R=+rSlider.value, alpha=(+aSlider.value)/100, GAP=+gapSlider.value; const d=2*R+GAP; const mode=modeSel.value;
+
+    let spheres=[], edgesList=[], label='';
+
+    if(mode==='hex2d'){
+      const {pts,E}=buildHexEdges(d);
+      spheres=pts.map(p=>({x:p[0],y:p[1],z:0,r:R,tint:[146,154,255]})); edgesList=E;
+      label='Camada Hexagonal — distância entre vizinhos = d.';
+    } else if(mode==='tetra'){
+      const s=d/(2*Math.SQRT2); const verts=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(v=>v.map(c=>c*s));
+      spheres=verts.map(v=>({x:v[0],y:v[1],z:v[2],r:R,tint:[165,140,255]})); edgesList=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+      label='Buraco tetraédrico.';
+    } else if(mode==='oct'){
+      const s=d/Math.SQRT2; const verts=[[s,0,0],[-s,0,0],[0,s,0],[0,-s,0],[0,0,s],[0,0,-s]];
+      spheres=verts.map(v=>({x:v[0],y:v[1],z:v[2],r:R,tint:[122,162,255]})); edgesList=[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]];
+      label='Buraco octaédrico.';
+    } else {
+      // Modos de empilhamento
+      const ensure = ()=>{ if(triABC.d===0 || Math.abs(triABC.d - d)>1e-6) rebuildStates(d, true); };
+      ensure();
+      let placed=[];
+      if(mode==='aaa_tri'){ placed=triAAA.placed; label='AAA Triangular — todas as camadas A (repetição)'; }
+      if(mode==='abc_tri'){ placed=triABC.placed; label='ABC Triangular — A repete; B=Cts(A); C=Cts(B)'; }
+      if(mode==='aba_tri'){ placed=triABA.placed; label='ABA Triangular — A repete; B=Cts(A)'; }
+      if(mode==='aaa_cub'){ placed=cubAAA.placed; label='AAA Cúbica — todas as camadas A (repetição)'; }
+      if(mode==='aba_cub'){ placed=cubABA.placed; label='ABA Cúbica — A repete; B=Cts(A)'; }
+      if(mode==='abc_cub'){ placed=cubABC.placed; label='ABC Cúbica — A repete; B=Cts(A); C=Cts(B)'; }
+
+      const items=[];
+      for(const s of placed){
+        const p=proj(s.pos);
+        const tint = tintFor(s.letter); // A=vermelho, B=branco, C=azul
+        items.push({x:p.x,y:p.y,z:p.z,R:R,tint});
+      }
+      items.sort((A,B)=>A.z-B.z);
+      for(const it of items){ sphere(it.x,it.y,it.R,alpha,it.tint,solidCb.checked); }
+    }
+
+    // Edges para modos clássicos
+    if(mode==='hex2d'||mode==='tetra'||mode==='oct'){
+      const P=spheres.map(s=>proj([s.x,s.y,s.z]));
+      if(edgesCb.checked && edgesList.length){
+        const pairs=edgesList.map(([i,j])=>({a:P[i],b:P[j],z:(P[i].z+P[j].z)/2})).sort((u,v)=>u.z-v.z);
+        for(const e of pairs) edge(e.a,e.b,1.4,0.8);
+      }
+      const items=[]; for(const s of spheres){ const p=proj([s.x,s.y,s.z]); items.push({x:p.x,y:p.y,z:p.z,R:s.r,tint:s.tint}); }
+      items.sort((A,B)=>A.z-B.z); for(const it of items){ sphere(it.x,it.y,it.R,alpha,it.tint,solidCb.checked); }
+    }
+}
+
+  // interação
+  cv.addEventListener('pointerdown',e=>{dragging=true; lx=e.clientX; ly=e.clientY; cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{ if(!dragging) return; const dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY; rotY+=dx*0.006; rotX+=dy*0.006; draw(); });
+  cv.addEventListener('pointerup',()=>{dragging=false});
+  cv.addEventListener('dblclick',()=>{
+    rotX=-0.6; rotY=0.6;
+    const d=2*+rSlider.value + +gapSlider.value; rebuildStates(d, true); draw();
+  });
+
+  [modeSel,rSlider,aSlider,gapSlider,gapNum,solidCb,edgesCb].forEach(el=> el.addEventListener('input', draw));
+  modeSel.addEventListener('input', updateControlsVisibility);
+  modeSel.addEventListener('change', updateControlsVisibility);
+  modeSel.addEventListener('change', draw);
+
+  layerSize.addEventListener('input', ()=>{ const d=2*+rSlider.value + +gapSlider.value; rebuildStates(d, true); draw(); });
+
+  btnAdd.addEventListener('click',()=>{
+    const m=modeSel.value;
+    if(m==='aaa_tri' || m==='abc_tri' || m==='aba_tri' || m==='aaa_cub' || m==='aba_cub' || m==='abc_cub'){ addLayer(m); }
+    else { rotX=-0.6; rotY=0.6; draw(); }
+  });
+  btnReset.addEventListener('click',()=>{
+    const d=2*+rSlider.value + +gapSlider.value; resetStates(d); draw();
+  });
+
+  // Tests
+  function approxEq(a,b,eps=1e-6){return Math.abs(a-b)<=eps}
+  function runSelfTests(){
+    let ok=true; const d0=100;
+    // Tri sets sizes (side=4): A=10,B=6,C=3
+    const tri=triMakeSets(d0,4); ok = ok && (tri.A.length===10 && tri.B.length===6 && tri.C.length===3);
+    // C = 2*B offset (magnitude-wise)
+    ok = ok && approxEq(triC(d0)[0], 2*triB(d0)[0]) && approxEq(triC(d0)[1], 2*triB(d0)[1]);
+    // AAA Tri: segunda camada deve alinhar com A no plano acima
+    triAAA.sets=tri; triAAA.placed=[...tri.A.map(p=>({pos:p,letter:'A'}))]; triAAA.levels=1;
+    let z=triHeight(d0); for(const p of tri.A){ if(!ok) break; const q=[p[0],p[1],z]; /*same XY*/ ok = ok && approxEq(q[0]-p[0],0) && approxEq(q[1]-p[1],0); }
+    // Cúbica n=4: A=16,B=9,C=4
+    const sq=sqMakeSets(d0,4); ok = ok && (sq.A.length===16 && sq.B.length===9 && sq.C.length===4);
+    // AAA Cub: segunda camada alinha com A no plano acima (z=h)
+    const h=cubeHeight(d0); for(const p of sq.A){ if(!ok) break; const q=[p[0],p[1],h]; ok = ok && approxEq(q[0]-p[0],0) && approxEq(q[1]-p[1],0); }
+    testResults.textContent = '';
+  }
+
+  // init
+  function syncGapNumber(){ gapNum.value=gapSlider.value; }
+  function initStates(){ const d=2*+rSlider.value + +gapSlider.value; resetStates(d); }
+  function resizeInit(){ const rect=cv.getBoundingClientRect(); W=Math.max(600,rect.width); H=Math.max(520,rect.height); cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); }
+  resizeInit(); runSelfTests(); initStates(); syncGapNumber(); updateControlsVisibility(); draw();
+  gapSlider.addEventListener('input', syncGapNumber);
+  gapNum.addEventListener('input',()=>{
+    const min=+gapSlider.min,max=+gapSlider.max;
+    let v=parseFloat(gapNum.value); if(Number.isNaN(v)) v=0;
+    v=Math.max(min,Math.min(max,v)); gapSlider.value=v; gapNum.value=v; const d=2*+rSlider.value + +gapSlider.value; draw();
+  });
+})();
+</script>
+</body>
+</html>

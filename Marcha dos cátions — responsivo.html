@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Marcha dos Cátions — (Professor Pedro B. de Andrade - Adaptado. Revista Medicamenta, vol. III, no 29, maio de 1924)</title>
+<style>
+  :root{ --bg:#0f1117; --panel:#161a22; --ink:#e5e7eb; --accent:#fbbf24;}
+  *{box-sizing:border-box}
+  body{margin:0; background: radial-gradient(1200px 800px at 70% -20%, #1f2430 0%, var(--bg) 38%, #0b0d12 100%);
+       color:var(--ink); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial;}
+  .wrap{max-width: 1420px; margin: 18px auto; padding: 12px;}
+  .tabs{display:flex; gap:10px; flex-wrap:wrap; margin: 4px 0 12px 0;}
+  .tab{appearance:none; border:none; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700;
+        background: linear-gradient(180deg, #e9edf7, #cfd7e6); color:#0b0d12;
+        box-shadow: 0 12px 26px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.8);}
+  .tab:hover{filter:brightness(1.02)}
+  .tab.active{outline:2px solid rgba(251,191,36,.7);}
+  .stage{position:relative; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+          border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:8px; }
+  iframe{width:100%; height: min(900px, calc(var(--vh, 1vh) * 100 - 170px)); min-height: 520px; border:none; border-radius:12px; display:none; background:#0f1117}
+  iframe.active{display:block}
+  h1.small{font-size:20px; font-weight:800; margin:0 0 6px 2px; letter-spacing:.2px;}
+</style>
+<style>
+/* === RESP-KIT v1 — viewport height fix + mobile-friendly defaults === */
+:root{ --vh: 1vh; }
+html, body{ width:100%; height:100%; margin:0; }
+body{ min-height: calc(var(--vh, 1vh) * 100); }
+*{ -webkit-tap-highlight-color: transparent; }
+@media (max-width: 520px){
+  /* avoid accidental horizontal scroll on small devices */
+  body{ overflow-x:hidden; }
+}
+/* === END RESP-KIT v1 === */
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="small">Marcha dos Cátions — (Professor Pedro B. de Andrade - Adaptado. Revista Medicamenta, vol. III, no 29, maio de 1924)</h1>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-target="s1">Estrofe 1 e 2</button>
+      <button class="tab" data-target="s2">Estrofe 3</button>
+      <button class="tab" data-target="s3">Estrofe 4</button>
+      <button class="tab" data-target="s4">Estrofe 5 e 6</button>
+</div>
+    <div class="stage">
+      <iframe id="s1" class="active" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+&lt;title&gt;Marcha dos Cátions — Estrofe 1 (v4: NH₃ em Pb → Ag → Hg, centrado)&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --bg:#0f1117; --panel:#161a22; --ink:#e5e7eb; --muted:#9aa4b2;
+    --acid:#5eead4; /* HCl */
+    --ammonia:#60a5fa; /* NH3 */
+    --unknown:#8b5cf6;
+    --white:#ffffff; --black:#0b0b0b;
+    --accent:#fbbf24;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, Arial;
+    background: radial-gradient(1200px 800px at 70% -20%, #1f2430 0%, var(--bg) 38%, #0b0d12 100%);
+    color:var(--ink); min-height:100vh; display:grid; place-items:center; padding:20px;
+  }
+  .wrap{display:grid; gap:18px; width:min(1350px, 97vw);}
+  .top{display:grid; grid-template-columns:  0.9fr 1.3fr; gap:16px;}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:16px 18px; backdrop-filter: blur(6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  h1{font-size:20px;margin:0 0 8px 0; letter-spacing:.3px}
+  .poem{line-height:1.6; font-size:15.5px; white-space:pre-line}
+  .line{
+    color:var(--muted); transition: color .25s, text-shadow .25s, background .25s;
+    padding:2px 6px; border-radius:8px; margin:1px 0; cursor:pointer;
+  }
+  .line:hover{ background: rgba(251,191,36,.1); color:#fef3c7 }
+  .line.active{color:var(--ink); text-shadow: 0 0 12px rgba(255,255,255,.18)}
+  .hint{font-size:12px;color:#aab3bf;margin-top:6px}
+  .controls{display:flex;gap:10px; flex-wrap:wrap}
+  button{
+    appearance:none; border:none; color:#0b0d12; font-weight:600;
+    padding:10px 14px; border-radius:12px; cursor:pointer;
+    background: linear-gradient(180deg, #e9edf7, #cfd7e6);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .ghost{ background:transparent; color:#e5e7eb; border:1px solid rgba(255,255,255,.2); box-shadow:none }
+  button:active{transform:translateY(1px)}
+  #lab{ width:100%; height:640px; display:block; border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* SVG styling */
+  .glass{fill:rgba(255,255,255,0.06); stroke:rgba(255,255,255,0.25); stroke-width:2}
+  .liquid{fill:var(--unknown); opacity:.9}
+  .liquid.hcl{fill:var(--acid)}
+  .liquid.nh3{fill:var(--ammonia)}
+  .label{font-size:12px; fill:#c7cfdb}
+  .small{font-size:10px}
+  .hidden{opacity:0; pointer-events:none}
+  .fade{transition:opacity .6s ease}
+  .grow{transition:all .6s ease}
+  .tube{filter: drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+  .pipette{filter: drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+  .drop{opacity:0}
+  .fall{animation:dropFall 1.0s ease-in forwards}
+  @keyframes dropFall{
+    0%{opacity:1; transform: translateY(-6px)}
+    80%{opacity:1; transform: translateY(165px)}
+    100%{opacity:0; transform: translateY(175px)}
+  }
+
+  /* energy bars to show dissolve/blacken */
+  .pulse-clear{animation:pulseClear 1.0s ease-in-out 2}
+  @keyframes pulseClear{
+    0%{opacity:.6} 50%{opacity:.15} 100%{opacity:.6}
+  }
+  .pulse-dark{animation:pulseDark .9s ease-in-out 2}
+  @keyframes pulseDark{
+    0%{filter:brightness(1)} 50%{filter:brightness(.3)} 100%{filter:brightness(1)}
+  }
+  .legend{font-size:11px; fill:#b7c0ce}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+
+    &lt;div class=&quot;top&quot;&gt;
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;h1&gt;Estrofe 1 e 2 — Poema da Marcha dos Cátions&lt;/h1&gt;
+        &lt;div class=&quot;poem&quot; id=&quot;poem&quot;&gt;
+&lt;span class=&quot;line&quot;&gt;Sendo-vos dado um sal a examinar&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Primeiro indagar&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Se o sal em questão&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;É solúvel ou não.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Se for solúvel&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Lançai sobre ele&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Algumas gotas&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;De agaceele.&lt;/span&gt;
+
+&lt;span class=&quot;line&quot;&gt;Se branco se formar precipitado&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Chumbo, ou prata, ou mercúrio está detectado.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E, enquanto que o de chumbo não se move&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O de prata na amônia se dissolve;&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E o de mercúrio à amônia percebendo,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Vai-se no mesmo instante enegrecendo.&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;hint&quot;&gt;Agora o conta-gotas de NH₃ pinga em &lt;b&gt;Pb&lt;/b&gt; (nada muda), &lt;b&gt;Ag&lt;/b&gt; (dissolve) e &lt;b&gt;Hg&lt;/b&gt; (escurece) &lt;/div&gt;
+        &lt;div class=&quot;controls&quot; style=&quot;margin-top:10px;&quot;&gt;
+          &lt;button id=&quot;play&quot;&gt;▶ Play&lt;/button&gt;
+          &lt;button id=&quot;pause&quot;&gt;⏸ Pausar&lt;/button&gt;
+          &lt;button id=&quot;reset&quot; class=&quot;ghost&quot;&gt;⟲ Reset&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;!-- LAB SCENE --&gt;
+        &lt;svg id=&quot;lab&quot; viewBox=&quot;0 0 780 420&quot; aria-labelledby=&quot;title desc&quot; role=&quot;img&quot;&gt;
+          &lt;title id=&quot;title&quot;&gt;Cena de laboratório — Marcha dos Cátions&lt;/title&gt;
+          &lt;desc id=&quot;desc&quot;&gt;Pipeta de HCl no becker; três tubos (Pb, Ag, Hg). Pipeta de NH3 se move e pinga centralizada em Pb, Ag e Hg.&lt;/desc&gt;
+
+          &lt;!-- bench --&gt;
+          &lt;rect x=&quot;0&quot; y=&quot;300&quot; width=&quot;780&quot; height=&quot;120&quot; fill=&quot;url(#bench)&quot;/&gt;
+          &lt;defs&gt;
+            &lt;linearGradient id=&quot;bench&quot; x1=&quot;0&quot; y1=&quot;300&quot; x2=&quot;0&quot; y2=&quot;420&quot;&gt;
+              &lt;stop offset=&quot;0%&quot; stop-color=&quot;#1b202b&quot;/&gt;
+              &lt;stop offset=&quot;100%&quot; stop-color=&quot;#12151c&quot;/&gt;
+            &lt;/linearGradient&gt;
+          &lt;/defs&gt;
+
+          &lt;!-- beaker --&gt;
+          &lt;g id=&quot;beaker&quot; transform=&quot;translate(60,50)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;180&quot; height=&quot;10&quot; rx=&quot;4&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;10&quot; width=&quot;180&quot; height=&quot;230&quot; rx=&quot;12&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect id=&quot;unknownLiquid&quot; x=&quot;7&quot; y=&quot;140&quot; width=&quot;166&quot; height=&quot;92&quot; rx=&quot;8&quot; class=&quot;liquid&quot;/&gt;
+            &lt;text x=&quot;90&quot; y=&quot;260&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Amostra (sal desconhecido)&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- pipette HCl --&gt;
+          &lt;g id=&quot;pipHCl&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(130,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot; /&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; class=&quot;liquid hcl&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropHCl&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--acid)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;HCl&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- Group of three test tubes --&gt;
+          &lt;g id=&quot;tubes&quot; class=&quot;fade hidden&quot; transform=&quot;translate(340,20)&quot;&gt;
+            &lt;!-- Pb --&gt;
+            &lt;g class=&quot;tube&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;90&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;90&quot; height=&quot;235&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqPb&quot; x=&quot;10&quot; y=&quot;190&quot; width=&quot;70&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptPb&quot; class=&quot;grow&quot; x=&quot;10&quot; y=&quot;228&quot; width=&quot;70&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#ffffff&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;45&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Pb²⁺&lt;/text&gt;
+              &lt;text x=&quot;45&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;label small&quot;&gt;“não se move”&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Ag --&gt;
+            &lt;g class=&quot;tube&quot; transform=&quot;translate(130,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;90&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;90&quot; height=&quot;235&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqAg&quot; x=&quot;10&quot; y=&quot;190&quot; width=&quot;70&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptAg&quot; class=&quot;grow&quot; x=&quot;10&quot; y=&quot;228&quot; width=&quot;70&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#ffffff&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;45&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Ag⁺&lt;/text&gt;
+              &lt;text x=&quot;45&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;label small&quot;&gt;“dissolve em NH₃”&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Hg(I) --&gt;
+            &lt;g class=&quot;tube&quot; transform=&quot;translate(260,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;90&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;90&quot; height=&quot;235&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqHg&quot; x=&quot;10&quot; y=&quot;190&quot; width=&quot;70&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptHg&quot; class=&quot;grow&quot; x=&quot;10&quot; y=&quot;228&quot; width=&quot;70&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#ffffff&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;45&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Hg(I)&lt;/text&gt;
+              &lt;text x=&quot;45&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;label small&quot;&gt;“fica preto”&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;text x=&quot;135&quot; y=&quot;320&quot; text-anchor=&quot;middle&quot; class=&quot;legend&quot;&gt;Após HCl: precipitado branco (Cloretos). NH₃ pinga em Pb, Ag e Hg (centralizado).&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- pipette NH3 --&gt;
+          &lt;g id=&quot;pipNH3&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(385,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot; /&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; class=&quot;liquid nh3&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropNH3&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--ammonia)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;NH₃&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot; style=&quot;font-size:13px; color:#9fb0c8&quot;&gt;
+      HCl (“agaceele”) ⇒ precipitado branco (AgCl, PbCl₂, Hg₂Cl₂).  
+      Em amônia: &lt;b&gt;PbCl₂&lt;/b&gt; permanece (sem efeito), &lt;b&gt;AgCl&lt;/b&gt; dissolve (complexo [Ag(NH₃)₂]⁺), &lt;b&gt;Hg₂Cl₂&lt;/b&gt; escurece (Hg⁰ + HgNH₂Cl).
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  const lines = Array.from(document.querySelectorAll(&#x27;.line&#x27;));
+  const showLine = (idx) =&gt; {
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    if (idx&gt;=0 &amp;&amp; idx&lt;lines.length) lines[idx].classList.add(&#x27;active&#x27;);
+  };
+
+  // Elements
+  const pipHCl = document.getElementById(&#x27;pipHCl&#x27;);
+  const dropHCl = document.getElementById(&#x27;dropHCl&#x27;);
+  const tubes = document.getElementById(&#x27;tubes&#x27;);
+  const pipNH3 = document.getElementById(&#x27;pipNH3&#x27;);
+  const dropNH3 = document.getElementById(&#x27;dropNH3&#x27;);
+
+  const pptPb = document.getElementById(&#x27;pptPb&#x27;);
+  const pptAg = document.getElementById(&#x27;pptAg&#x27;);
+  const pptHg = document.getElementById(&#x27;pptHg&#x27;);
+
+  const liqAg = document.getElementById(&#x27;liqAg&#x27;);
+  const liqHg = document.getElementById(&#x27;liqHg&#x27;);
+
+  const playBtn = document.getElementById(&#x27;play&#x27;);
+  const pauseBtn = document.getElementById(&#x27;pause&#x27;);
+  const resetBtn = document.getElementById(&#x27;reset&#x27;);
+
+  let playing = false;
+  let current = -1;       // step index
+  let timer = null;
+
+  // Tube center X positions for NH3 pipette (already absolute)
+  const X_PB = 385;  // 340 + 0 + 45
+  const X_AG = 515;  // 340 + 130 + 45
+  const X_HG = 645;  // 340 + 260 + 45
+
+  function setOpacity(el, v){ el.style.opacity = String(v); }
+  function reveal(el){ el.classList.remove(&#x27;hidden&#x27;); setOpacity(el,1); }
+  function hide(el){ setOpacity(el,0); el.classList.add(&#x27;hidden&#x27;); }
+
+  function moveNH3(x, y){ pipNH3.setAttribute(&#x27;transform&#x27;, `translate(${x},${y})`); }
+  function dropOnce(el){
+    setOpacity(el,1);
+    el.classList.remove(&#x27;fall&#x27;); void el.offsetWidth; el.classList.add(&#x27;fall&#x27;);
+    setTimeout(()=&gt; setOpacity(el,0), 1000);
+  }
+
+  // Hard reset of visuals
+  function resetScene(){
+    if (timer) { clearTimeout(timer); timer=null; }
+    playing = false; current = -1;
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    hide(pipHCl); hide(pipNH3); hide(tubes);
+    [dropHCl, dropNH3].forEach(d =&gt; { d.classList.remove(&#x27;fall&#x27;); setOpacity(d,0); });
+
+    [pptPb,pptAg,pptHg].forEach(p =&gt; {
+      p.setAttribute(&#x27;height&#x27;,&#x27;12&#x27;); p.setAttribute(&#x27;y&#x27;,&#x27;228&#x27;); setOpacity(p,0);
+      p.style.fill=&#x27;#ffffff&#x27;; p.classList.remove(&#x27;pulse-clear&#x27;,&#x27;pulse-dark&#x27;);
+    });
+    [liqAg,liqHg].forEach(l =&gt; { setOpacity(l,0.85); l.style.filter=&#x27;&#x27;; });
+    moveNH3(X_PB,5);
+    pauseBtn.textContent = &#x27;⏸ Pausar&#x27;;
+  }
+
+  // Idempotent state appliers for each step (instant means no falling drop, just final state)
+  const steps = [
+    {line:0, delay:1000, fn:(instant)=&gt;{ showLine(0); }},
+    {line:1, delay:800,  fn:(instant)=&gt;{ showLine(1); }},
+    {line:2, delay:800,  fn:(instant)=&gt;{ showLine(2); }},
+    {line:3, delay:900,  fn:(instant)=&gt;{ showLine(3); }},
+    {line:4, delay:700,  fn:(instant)=&gt;{ showLine(4); }},
+    {line:5, delay:700,  fn:(instant)=&gt;{ showLine(5); }},
+    {line:6, delay:700,  fn:(instant)=&gt;{ showLine(6); }},
+    // HCl drop
+    {line:7, delay:1200, fn:(instant)=&gt;{
+      showLine(7); reveal(pipHCl);
+      if (!instant) dropOnce(dropHCl);
+    }},
+    // reveal tubes + white ppt in all
+    {line:8, delay:1200, fn:(instant)=&gt;{
+      reveal(tubes); showLine(8);
+      [pptPb,pptAg,pptHg].forEach(p =&gt; { setOpacity(p,1); p.setAttribute(&#x27;y&#x27;,&#x27;208&#x27;); p.setAttribute(&#x27;height&#x27;,&#x27;32&#x27;); });
+    }},
+    {line:9, delay:900,  fn:(instant)=&gt;{ showLine(9); }},
+    // NH3 over Pb (no effect)
+    {line:10, delay:900, fn:(instant)=&gt;{
+      showLine(10); reveal(pipNH3); moveNH3(X_PB,5); if(!instant) dropOnce(dropNH3);
+    }},
+    // NH3 over Ag (dissolve)
+    {line:11, delay:1000, fn:(instant)=&gt;{
+      showLine(11); moveNH3(X_AG,5); if(!instant) dropOnce(dropNH3);
+      liqAg.classList.add(&#x27;pulse-clear&#x27;); setOpacity(pptAg,0);
+    }},
+    // NH3 over Hg (drop)
+    {line:12, delay:500, fn:(instant)=&gt;{
+      showLine(12); moveNH3(X_HG,5); if(!instant) dropOnce(dropNH3);
+    }},
+    // Hg blackens
+    {line:13, delay:1100, fn:(instant)=&gt;{
+      showLine(13);
+      liqHg.classList.add(&#x27;pulse-dark&#x27;);
+      pptHg.style.fill=&#x27;#0b0b0b&#x27;; setOpacity(pptHg,1);
+    }},
+  ];
+
+  // Map each poem line index to the step index that best represents it
+  const cueForLine = (lineIdx)=&gt; Math.min(lineIdx, steps.length-1);
+
+  function applyUpTo(targetStep){
+    resetScene(); // clears to baseline
+    for(let i=0;i&lt;=targetStep;i++){
+      steps[i].fn(true); // instant
+    }
+    current = targetStep;
+  }
+
+  function playFromCurrent(){
+    if (playing) return;
+    playing = true;
+    function runNext(){
+      if (!playing) return;
+      const next = current + 1;
+      if (next &gt;= steps.length){ playing=false; return; }
+      current = next;
+      const s = steps[current];
+      s.fn(false);
+      timer = setTimeout(runNext, s.delay);
+    }
+    runNext();
+  }
+
+  function pause(){
+    playing = false;
+    if (timer){ clearTimeout(timer); timer=null; }
+  }
+
+  // UI events
+  document.getElementById(&#x27;play&#x27;).addEventListener(&#x27;click&#x27;, playFromCurrent);
+  document.getElementById(&#x27;pause&#x27;).addEventListener(&#x27;click&#x27;, ()=&gt;{
+    if (playing){
+      pause();
+      pauseBtn.textContent = &#x27;▶ Retomar&#x27;;
+    } else {
+      pauseBtn.textContent = &#x27;⏸ Pausar&#x27;;
+      playFromCurrent();
+    }
+  });
+  document.getElementById(&#x27;reset&#x27;).addEventListener(&#x27;click&#x27;, resetScene);
+
+  // Click-to-seek on lines
+  lines.forEach((el, idx)=&gt;{
+    el.title = &#x27;Clique para pular para esta parte&#x27;;
+    el.addEventListener(&#x27;click&#x27;, ()=&gt;{
+      pause();
+      const target = cueForLine(idx);
+      applyUpTo(target);
+    });
+  });
+
+  // bootstrap
+  resetScene();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+      <iframe id="s2" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+&lt;title&gt;Marcha dos Cátions — Estrofe 2 (H₂S + (NH₄)₂S)&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --bg:#0f1117; --ink:#e5e7eb; --muted:#9aa4b2;
+    --acid:#5eead4;   /* HCl (não usado aqui) */
+    --h2s:#34d399;    /* H2S */
+    --ammS:#60a5fa;   /* (NH4)2S */
+    --unknown:#8b5cf6;
+    --white:#ffffff; --black:#0b0b0b;
+    --orange:#f59e0b; --amber:#d97706; --yellow:#fbbf24; --lemon:#fde047;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, Arial;
+    background: radial-gradient(1200px 800px at 70% -20%, #1f2430 0%, var(--bg) 38%, #0b0d12 100%);
+    color:var(--ink); min-height:100vh; display:grid; place-items:center; padding:20px;
+  }
+  .wrap{display:grid; gap:18px; width:min(1350px, 97vw);}
+  .top{display:grid; grid-template-columns:  0.9fr 1.3fr; gap:16px;}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:16px 18px; backdrop-filter: blur(6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  h1{font-size:20px;margin:0 0 8px 0; letter-spacing:.3px}
+  .poem{line-height:1.6; font-size:15.5px; white-space:pre-line}
+  .line{
+    color:var(--muted); transition: color .25s, text-shadow .25s, background .25s;
+    padding:2px 6px; border-radius:8px; margin:1px 0; cursor:pointer;
+  }
+  .line:hover{ background: rgba(251,191,36,.1); color:#fef3c7 }
+  .line.active{color:var(--ink); text-shadow: 0 0 12px rgba(255,255,255,.18)}
+  .hint{font-size:12px;color:#aab3bf;margin-top:6px}
+  .controls{display:flex;gap:10px; flex-wrap:wrap}
+  button{
+    appearance:none; border:none; color:#0b0d12; font-weight:600;
+    padding:10px 14px; border-radius:12px; cursor:pointer;
+    background: linear-gradient(180deg, #e9edf7, #cfd7e6);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .ghost{ background:transparent; color:#e5e7eb; border:1px solid rgba(255,255,255,.2); box-shadow:none }
+  button:active{transform:translateY(1px)}
+  #lab{ width:100%; height:640px; display:block; border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* SVG styling */
+  .glass{fill:rgba(255,255,255,0.06); stroke:rgba(255,255,255,0.25); stroke-width:2}
+  .liquid{fill:var(--unknown); opacity:.9}
+  .label{font-size:12px; fill:#c7cfdb}
+  .small{font-size:10px}
+  .hidden{opacity:0; pointer-events:none}
+  .fade{transition:opacity .6s ease}
+  .grow{transition:all .6s ease}
+  .tube{filter: drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+  .pipette{filter: drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+  .drop{opacity:0}
+  .fall{animation:dropFall 1.0s ease-in forwards}
+  @keyframes dropFall{
+    0%{opacity:1; transform: translateY(-6px)}
+    80%{opacity:1; transform: translateY(165px)}
+    100%{opacity:0; transform: translateY(175px)}
+  }
+
+  /* H2S bubbling */
+  .bubble{opacity:0}
+  @keyframes rise{
+    0%{opacity:0; transform:translateY(60px)}
+    10%{opacity:1}
+    80%{opacity:1}
+    100%{opacity:0; transform:translateY(-40px)}
+  }
+  .bubbling .b1{ animation: rise 1.2s ease-in-out 1 both; }
+  .bubbling .b2{ animation: rise 1.2s ease-in-out 1 both; animation-delay:.2s;}
+  .bubbling .b3{ animation: rise 1.2s ease-in-out 1 both; animation-delay:.4s;}
+
+  /* effects */
+  .pulse-clear{animation:pulseClear 1.0s ease-in-out 2}
+  @keyframes pulseClear{ 0%{opacity:.6} 50%{opacity:.15} 100%{opacity:.6} }
+  .legend{font-size:11px; fill:#b7c0ce}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+
+    &lt;div class=&quot;top&quot;&gt;
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;h1&gt;Estrofe 3 — Poema da Marcha dos Cátions&lt;/h1&gt;
+        &lt;div class=&quot;poem&quot; id=&quot;poem&quot;&gt;
+&lt;span class=&quot;line&quot;&gt;Se feito o tratamento precedente&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Nenhum precipitado ali se desse,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Faz-se no líquido passar uma corrente&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;De um gás denominado agadoiesse.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Bismuto, ouro, platina e mais o cobre&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Cada um por precipitado negro se descobre;&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Também do chumbo e do mercúrio aqui figura&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Como só o piolho na costura.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Antimônio dá precipitado alaranjado,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Estanoso, amarelo-acastanhado;&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E é de cor amarela mui garrida&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Do cádmio, estânico e raticida.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Do estanho, platina e ouro&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Antimônio e mata-rato&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O precipitado é muito volúvel&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Da amônia no ácido sulfídrico.&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;hint&quot;&gt;H₂S (“agadoiesse”) gera sulfetos: negros (Bi, Cu, Au, Pt), coloridos (Sb laranja; Sn(II) amarelo-acastanhado; Cd/As/Sn(IV) amarelos). (NH₄)₂S dissolve Sb/Sn/As/Au/Pt; Bi/Cu/Cd ficam.&lt;/div&gt;
+        &lt;div class=&quot;controls&quot; style=&quot;margin-top:10px;&quot;&gt;
+          &lt;button id=&quot;play&quot;&gt;▶ Play&lt;/button&gt;
+          &lt;button id=&quot;pause&quot;&gt;⏸ Pausar&lt;/button&gt;
+          &lt;button id=&quot;reset&quot; class=&quot;ghost&quot;&gt;⟲ Reset&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;!-- LAB SCENE --&gt;
+        &lt;svg id=&quot;lab&quot; viewBox=&quot;0 0 880 450&quot; aria-labelledby=&quot;title desc&quot; role=&quot;img&quot;&gt;
+          &lt;title id=&quot;title&quot;&gt;Cena — Estrofe 2: H₂S e (NH₄)₂S&lt;/title&gt;
+          &lt;desc id=&quot;desc&quot;&gt;H₂S borbulhando no becker; rack com 8 tubos (Bi, Cu, Au/Pt, Cd, Sb, Sn(II), Sn(IV), As); pipeta de (NH₄)₂S dissolve seletivamente.&lt;/desc&gt;
+
+          &lt;!-- bench --&gt;
+          &lt;rect x=&quot;0&quot; y=&quot;320&quot; width=&quot;880&quot; height=&quot;130&quot; fill=&quot;url(#bench)&quot;/&gt;
+          &lt;defs&gt;
+            &lt;linearGradient id=&quot;bench&quot; x1=&quot;0&quot; y1=&quot;320&quot; x2=&quot;0&quot; y2=&quot;450&quot;&gt;
+              &lt;stop offset=&quot;0%&quot; stop-color=&quot;#1b202b&quot;/&gt;
+              &lt;stop offset=&quot;100%&quot; stop-color=&quot;#12151c&quot;/&gt;
+            &lt;/linearGradient&gt;
+          &lt;/defs&gt;
+
+          &lt;!-- beaker with hose --&gt;
+          &lt;g id=&quot;beaker&quot; transform=&quot;translate(20,60)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;180&quot; height=&quot;10&quot; rx=&quot;4&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;10&quot; width=&quot;180&quot; height=&quot;230&quot; rx=&quot;12&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect id=&quot;unknownLiquid&quot; x=&quot;7&quot; y=&quot;140&quot; width=&quot;166&quot; height=&quot;92&quot; rx=&quot;8&quot; class=&quot;liquid&quot;/&gt;
+            &lt;text x=&quot;90&quot; y=&quot;260&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Amostra (sem ppt anterior)&lt;/text&gt;
+            &lt;!-- hose --&gt;
+            &lt;g id=&quot;hose&quot; transform=&quot;translate(150,0)&quot;&gt;
+              &lt;rect x=&quot;-10&quot; y=&quot;-20&quot; width=&quot;6&quot; height=&quot;160&quot; rx=&quot;3&quot; fill=&quot;#a5f3fc&quot; stroke=&quot;#67e8f9&quot;/&gt;
+              &lt;circle class=&quot;bubble b1&quot; cx=&quot;-7&quot; cy=&quot;120&quot; r=&quot;5&quot; fill=&quot;var(--h2s)&quot;/&gt;
+              &lt;circle class=&quot;bubble b2&quot; cx=&quot;-14&quot; cy=&quot;130&quot; r=&quot;4&quot; fill=&quot;var(--h2s)&quot;/&gt;
+              &lt;circle class=&quot;bubble b3&quot; cx=&quot;-3&quot; cy=&quot;135&quot; r=&quot;3&quot; fill=&quot;var(--h2s)&quot;/&gt;
+              &lt;text x=&quot;-34&quot; y=&quot;-28&quot; class=&quot;label&quot;&gt;H₂S&lt;/text&gt;
+            &lt;/g&gt;
+          &lt;/g&gt;
+
+          &lt;!-- rack of tubes --&gt;
+          &lt;g id=&quot;tubes&quot; class=&quot;fade hidden&quot; transform=&quot;translate(230,30)&quot;&gt;
+            &lt;!-- columns 8 tubes, width 70, step 80 --&gt;
+            &lt;!-- Bi (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tBi&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqBi&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptBi&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;#0b0b0b&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Bi³⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Cu (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tCu&quot; transform=&quot;translate(80,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqCu&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptCu&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;#0b0b0b&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Cu²⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Au/Pt (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tAuPt&quot; transform=&quot;translate(160,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqAuPt&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptAuPt&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;#0b0b0b&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Au/Pt&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Cd (yellow; stays) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tCd&quot; transform=&quot;translate(240,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqCd&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptCd&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--lemon)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Cd²⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Sb (orange; dissolves in (NH4)2S) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tSb&quot; transform=&quot;translate(320,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqSb&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptSb&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--orange)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Sb³⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Sn(II) amber; dissolves --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tSnII&quot; transform=&quot;translate(400,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqSnII&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptSnII&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--amber)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Sn²⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- Sn(IV) yellow; dissolves --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tSnIV&quot; transform=&quot;translate(480,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqSnIV&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptSnIV&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--yellow)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Sn⁴⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- As (yellow; dissolves) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tAs&quot; transform=&quot;translate(560,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqAs&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptAs&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--yellow)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;As³⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;text x=&quot;280&quot; y=&quot;320&quot; text-anchor=&quot;middle&quot; class=&quot;legend&quot;&gt;Após H₂S: negros (Bi, Cu, Au/Pt); amarelos (Cd, Sn⁴⁺, As); âmbar/laranja (Sn²⁺, Sb).&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- pipette (NH4)2S --&gt;
+          &lt;g id=&quot;pipAmm&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(300,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot; /&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--ammS)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropAmm&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--ammS)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;(NH₄)₂S&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot; style=&quot;font-size:13px; color:#9fb0c8&quot;&gt;
+      H₂S precipita o &lt;b&gt;Grupo II&lt;/b&gt;. Negros: Bi, Cu, Au, Pt (Pb/Hg aparecem raramente aqui). Amarelos/laranja: Sb, Sn(II), Sn(IV), Cd, As.  
+      Em &lt;b&gt;(NH₄)₂S&lt;/b&gt; (sulfeto de amônio): &lt;u&gt;dissolvem&lt;/u&gt; Sb/Sn/As/Au/Pt (tiocomplexos); &lt;u&gt;permanecem&lt;/u&gt; Bi/Cu/Cd.
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  const lines = Array.from(document.querySelectorAll(&#x27;.line&#x27;));
+  const showLine = (idx) =&gt; {
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    if (idx&gt;=0 &amp;&amp; idx&lt;lines.length) lines[idx].classList.add(&#x27;active&#x27;);
+  };
+
+  // Elements
+  const hose = document.getElementById(&#x27;hose&#x27;);
+  const beaker = document.getElementById(&#x27;beaker&#x27;);
+  const tubes = document.getElementById(&#x27;tubes&#x27;);
+  const pipAmm = document.getElementById(&#x27;pipAmm&#x27;);
+  const dropAmm = document.getElementById(&#x27;dropAmm&#x27;);
+
+  // ppt rects
+  const ppt = {
+    Bi: document.getElementById(&#x27;pptBi&#x27;),
+    Cu: document.getElementById(&#x27;pptCu&#x27;),
+    AuPt: document.getElementById(&#x27;pptAuPt&#x27;),
+    Cd: document.getElementById(&#x27;pptCd&#x27;),
+    Sb: document.getElementById(&#x27;pptSb&#x27;),
+    SnII: document.getElementById(&#x27;pptSnII&#x27;),
+    SnIV: document.getElementById(&#x27;pptSnIV&#x27;),
+    As: document.getElementById(&#x27;pptAs&#x27;)
+  };
+
+  const playBtn = document.getElementById(&#x27;play&#x27;);
+  const pauseBtn = document.getElementById(&#x27;pause&#x27;);
+  const resetBtn = document.getElementById(&#x27;reset&#x27;);
+
+  let playing = false;
+  let current = -1;
+  let timer = null;
+
+  // Absolute X centers for tubes (tubes group at x=280; each step 80, center at +35)
+  const baseX = 230, step = 80, center = 35, topY = 5;
+  const X = {
+    Bi: baseX + 0*step + center,
+    Cu: baseX + 1*step + center,
+    AuPt: baseX + 2*step + center,
+    Cd: baseX + 3*step + center,
+    Sb: baseX + 4*step + center,
+    SnII: baseX + 5*step + center,
+    SnIV: baseX + 6*step + center,
+    As: baseX + 7*step + center
+  };
+
+  function setOpacity(el,v){ el.style.opacity=String(v); }
+  function reveal(el){ el.classList.remove(&#x27;hidden&#x27;); setOpacity(el,1); }
+  function hide(el){ setOpacity(el,0); el.classList.add(&#x27;hidden&#x27;); }
+  function movePip(x,y){ pipAmm.setAttribute(&#x27;transform&#x27;,`translate(${x},${y})`); }
+  function dropOnce(){
+    setOpacity(dropAmm,1);
+    dropAmm.classList.remove(&#x27;fall&#x27;); void dropAmm.offsetWidth; dropAmm.classList.add(&#x27;fall&#x27;);
+    setTimeout(()=&gt; setOpacity(dropAmm,0), 1000);
+  }
+
+  function resetScene(){
+    if (timer) { clearTimeout(timer); timer=null; }
+    playing=false; current=-1;
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    hose.classList.remove(&#x27;bubbling&#x27;);
+    hide(tubes); hide(pipAmm);
+    setOpacity(dropAmm,0); dropAmm.classList.remove(&#x27;fall&#x27;);
+    for(const k in ppt){
+      const r = ppt[k];
+      r.setAttribute(&#x27;height&#x27;,&#x27;14&#x27;); r.setAttribute(&#x27;y&#x27;,&#x27;236&#x27;); setOpacity(r,0);
+    }
+    movePip(X.Sb, topY);
+    pauseBtn.textContent=&#x27;⏸ Pausar&#x27;;
+  }
+
+  // Steps aligned with lines
+  const steps = [
+    {line:0, delay:800, fn:(instant)=&gt;{ showLine(0); }},
+    {line:1, delay:800, fn:(instant)=&gt;{ showLine(1); }},
+    {line:2, delay:900, fn:(instant)=&gt;{ showLine(2); }},
+    // Start H2S bubbling
+    {line:3, delay:1200, fn:(instant)=&gt;{
+      showLine(3);
+      hose.classList.add(&#x27;bubbling&#x27;);
+    }},
+    // Blacks appear: Bi, Au/Pt, Cu
+    {line:4, delay:800, fn:(instant)=&gt;{
+      reveal(tubes); showLine(4);
+      [ppt.Bi, ppt.AuPt, ppt.Cu].forEach(p=&gt;{ setOpacity(p,1); p.setAttribute(&#x27;y&#x27;,&#x27;214&#x27;); p.setAttribute(&#x27;height&#x27;,&#x27;36&#x27;); });
+    }},
+    {line:5, delay:600, fn:(instant)=&gt;{ showLine(5); }},
+    // Note Pb/Hg (raros) — we just highlight line
+    {line:6, delay:700, fn:(instant)=&gt;{ showLine(6); }},
+    {line:7, delay:700, fn:(instant)=&gt;{ showLine(7); }},
+    // Sb orange
+    {line:8, delay:600, fn:(instant)=&gt;{ showLine(8); setOpacity(ppt.Sb,1); pGrow(ppt.Sb); }},
+    // Sn(II) amber
+    {line:9, delay:600, fn:(instant)=&gt;{ showLine(9); setOpacity(ppt.SnII,1); pGrow(ppt.SnII); }},
+    // Cd + Sn(IV) + As yellows
+    {line:10, delay:800, fn:(instant)=&gt;{
+      showLine(10);
+      [ppt.Cd, ppt.SnIV, ppt.As].forEach(p=&gt;{ setOpacity(p,1); pGrow(p); });
+    }},
+    // Aparece (NH4)2S
+    {line:11, delay:500, fn:(instant)=&gt;{ showLine(11); reveal(pipAmm); movePip(X.SnII, topY); }},
+    {line:12, delay:400, fn:(instant)=&gt;{ showLine(12); movePip(X.Sb, topY); if(!instant) dropOnce(); }},
+    // dissolve hint
+    {line:13, delay:600, fn:(instant)=&gt;{ showLine(13); setOpacity(ppt.Sb,0); }},
+    // (NH4)2S dissolve others: Sn(II), Sn(IV), As, Au/Pt
+    {line:14, delay:1200, fn:(instant)=&gt;{
+      showLine(14);
+      [ [&#x27;SnII&#x27;,X.SnII], [&#x27;SnIV&#x27;,X.SnIV], [&#x27;As&#x27;,X.As], [&#x27;AuPt&#x27;,X.AuPt] ].forEach(([k,x],i)=&gt;{
+        setTimeout(()=&gt;{ movePip(x, topY); if(!instant) dropOnce(); setOpacity(ppt[k],0); }, i*250);
+      });
+    }},
+  ];
+
+  function pGrow(r){ r.setAttribute(&#x27;y&#x27;,&#x27;214&#x27;); r.setAttribute(&#x27;height&#x27;,&#x27;36&#x27;); }
+
+  const cueForLine = (idx)=&gt; Math.min(idx, steps.length-1);
+
+  function applyUpTo(target){
+    resetScene();
+    for(let i=0;i&lt;=target;i++){ steps[i].fn(true); }
+    current = target;
+  }
+
+  function runFromCurrent(){
+    if (playing) return;
+    playing = true;
+    function next(){
+      if (!playing) return;
+      const n = current + 1;
+      if (n &gt;= steps.length){ playing=false; return; }
+      current = n;
+      const s = steps[current];
+      s.fn(false);
+      timer = setTimeout(next, s.delay);
+    }
+    next();
+  }
+
+  function pause(){ playing=false; if (timer){ clearTimeout(timer); timer=null; } }
+
+  // UI events
+  playBtn.addEventListener(&#x27;click&#x27;, runFromCurrent);
+  pauseBtn.addEventListener(&#x27;click&#x27;, ()=&gt;{
+    if (playing){ pause(); pauseBtn.textContent=&#x27;▶ Retomar&#x27;; }
+    else { pauseBtn.textContent=&#x27;⏸ Pausar&#x27;; runFromCurrent(); }
+  });
+  resetBtn.addEventListener(&#x27;click&#x27;, resetScene);
+
+  // Click-to-seek
+  lines.forEach((el, idx)=&gt;{
+    el.title=&#x27;Clique para pular para esta parte&#x27;;
+    el.addEventListener(&#x27;click&#x27;, ()=&gt;{ pause(); applyUpTo(cueForLine(idx)); });
+  });
+
+  // bootstrap
+  resetScene();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+      <iframe id="s3" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+&lt;title&gt;Marcha dos Cátions — Estrofe 3 ((NH₄)₂S no sobrenadante neutralizado)&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --bg:#0f1117; --ink:#e5e7eb; --muted:#9aa4b2;
+    --ammS:#60a5fa;   /* (NH4)2S */
+    --unknown:#8b5cf6;
+    --white:#ffffff; --black:#0b0b0b;
+    --apple:#86efac; --rose:#f9a8d4;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, Arial;
+    background: radial-gradient(1200px 800px at 70% -20%, #1f2430 0%, var(--bg) 38%, #0b0d12 100%);
+    color:var(--ink); min-height:100vh; display:grid; place-items:center; padding:20px;
+  }
+  .wrap{display:grid; gap:18px; width:min(1400px, 98vw);}
+  .top{display:grid; grid-template-columns: 0.95fr 1.25fr; gap:16px;}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:16px 18px; backdrop-filter: blur(6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  h1{font-size:20px;margin:0 0 8px 0; letter-spacing:.3px}
+  .poem{line-height:1.6; font-size:15.5px; white-space:pre-line}
+  .line{
+    color:var(--muted); transition: color .25s, text-shadow .25s, background .25s;
+    padding:2px 6px; border-radius:8px; margin:1px 0; cursor:pointer;
+  }
+  .line:hover{ background: rgba(251,191,36,.1); color:#fef3c7 }
+  .line.active{color:var(--ink); text-shadow: 0 0 12px rgba(255,255,255,.18)}
+  .hint{font-size:12px;color:#aab3bf;margin-top:6px}
+  .controls{display:flex;gap:10px; flex-wrap:wrap}
+  button{
+    appearance:none; border:none; color:#0b0d12; font-weight:600;
+    padding:10px 14px; border-radius:12px; cursor:pointer;
+    background: linear-gradient(180deg, #e9edf7, #cfd7e6);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .ghost{ background:transparent; color:#e5e7eb; border:1px solid rgba(255,255,255,.2); box-shadow:none }
+  button:active{transform:translateY(1px)}
+  #lab{ width:100%; height:680px; display:block; border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* SVG styling */
+  .glass{fill:rgba(255,255,255,0.06); stroke:rgba(255,255,255,0.25); stroke-width:2}
+  .liquid{fill:var(--unknown); opacity:.9}
+  .label{font-size:12px; fill:#c7cfdb}
+  .small{font-size:10px}
+  .hidden{opacity:0; pointer-events:none}
+  .fade{transition:opacity .6s ease}
+  .grow{transition:all .6s ease}
+  .tube{filter: drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+  .pipette{filter: drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+  .drop{opacity:0}
+  .fall{animation:dropFall 1.0s ease-in forwards}
+  @keyframes dropFall{
+    0%{opacity:1; transform: translateY(-6px)}
+    80%{opacity:1; transform: translateY(165px)}
+    100%{opacity:0; transform: translateY(175px)}
+  }
+
+  .legend{font-size:11px; fill:#b7c0ce}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+
+    &lt;div class=&quot;top&quot;&gt;
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;h1&gt;Estrofe 4 — Poema da Marcha dos Cátions&lt;/h1&gt;
+        &lt;div class=&quot;poem&quot; id=&quot;poem&quot;&gt;
+&lt;span class=&quot;line&quot;&gt;Se nem agaceele ou agadoiesse&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Vos der ainda algum precipitado,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Sulfeto de amônia adicionai&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Ao sobrenadante que tereis neutralizado.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Cromo, alumínio, ferro e mais o zinco,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O níquel, o cobalto e o manganês,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Desta fora, tratados com certeza,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Serão precipitados desta vez.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Ferro, níquel e cobalto&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Precipitam em negro franco;&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Do alumínio ou zinco,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O precipitado é branco.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;De cor verde maçã&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;É do cromo;&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Porém, o do manganês&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;É da cor rósea da pele.&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;hint&quot;&gt;(NH₄)₂S no sobrenadante neutro: precipitam os “do grupo” — Fe/Ni/Co pretos, Al/Zn brancos, Cr verde-maçã, Mn rosa.&lt;/div&gt;
+        &lt;div class=&quot;controls&quot; style=&quot;margin-top:10px;&quot;&gt;
+          &lt;button id=&quot;play&quot;&gt;▶ Play&lt;/button&gt;
+          &lt;button id=&quot;pause&quot;&gt;⏸ Pausar&lt;/button&gt;
+          &lt;button id=&quot;reset&quot; class=&quot;ghost&quot;&gt;⟲ Reset&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;!-- LAB SCENE --&gt;
+        &lt;svg id=&quot;lab&quot; viewBox=&quot;0 0 820 450&quot; aria-labelledby=&quot;title desc&quot; role=&quot;img&quot;&gt;
+          &lt;title id=&quot;title&quot;&gt;Cena — Estrofe 3: (NH₄)₂S&lt;/title&gt;
+          &lt;desc id=&quot;desc&quot;&gt;Sobrenadante neutralizado no becker; rack com 7 tubos (Cr, Al, Fe, Zn, Ni, Co, Mn); pipeta de (NH₄)₂S move e pinga centralizada.&lt;/desc&gt;
+
+          &lt;!-- bench --&gt;
+          &lt;rect x=&quot;0&quot; y=&quot;320&quot; width=&quot;820&quot; height=&quot;130&quot; fill=&quot;url(#bench)&quot;/&gt;
+          &lt;defs&gt;
+            &lt;linearGradient id=&quot;bench&quot; x1=&quot;0&quot; y1=&quot;320&quot; x2=&quot;0&quot; y2=&quot;450&quot;&gt;
+              &lt;stop offset=&quot;0%&quot; stop-color=&quot;#1b202b&quot;/&gt;
+              &lt;stop offset=&quot;100%&quot; stop-color=&quot;#12151c&quot;/&gt;
+            &lt;/linearGradient&gt;
+          &lt;/defs&gt;
+
+          &lt;!-- beaker --&gt;
+          &lt;g id=&quot;beaker&quot; transform=&quot;translate(20,60)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;180&quot; height=&quot;10&quot; rx=&quot;4&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;10&quot; width=&quot;180&quot; height=&quot;230&quot; rx=&quot;12&quot; class=&quot;glass&quot;/&gt;
+            &lt;rect id=&quot;unknownLiquid&quot; x=&quot;7&quot; y=&quot;140&quot; width=&quot;166&quot; height=&quot;92&quot; rx=&quot;8&quot; class=&quot;liquid&quot;/&gt;
+            &lt;text x=&quot;90&quot; y=&quot;260&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Sobrenadante neutralizado&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- rack of tubes in poem order: Cr, Al, Fe, Zn, Ni, Co, Mn --&gt;
+          &lt;g id=&quot;tubes&quot; class=&quot;fade hidden&quot; transform=&quot;translate(230,30)&quot;&gt;
+            &lt;!-- A helper for each tube --&gt;
+            &lt;!-- Cr (green apple) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tCr&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqCr&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptCr&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--apple)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Cr³⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Al (white) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tAl&quot; transform=&quot;translate(80,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqAl&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptAl&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Al³⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Fe (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tFe&quot; transform=&quot;translate(160,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqFe&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptFe&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--black)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Fe³⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Zn (white) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tZn&quot; transform=&quot;translate(240,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqZn&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptZn&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Zn²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Ni (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tNi&quot; transform=&quot;translate(320,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqNi&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptNi&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--black)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Ni²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Co (black) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tCo&quot; transform=&quot;translate(400,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqCo&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptCo&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--black)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Co²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Mn (rose) --&gt;
+            &lt;g class=&quot;tube&quot; id=&quot;tMn&quot; transform=&quot;translate(480,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;70&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;70&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqMn&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;56&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptMn&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;56&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--rose)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;35&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Mn²⁺&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;text x=&quot;280&quot; y=&quot;320&quot; text-anchor=&quot;middle&quot; class=&quot;legend&quot;&gt;Grupo “(NH₄)₂S”: Fe/Ni/Co negros; Al/Zn brancos; Cr verde; Mn rosa.&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- pipette (NH4)2S --&gt;
+          &lt;g id=&quot;pipAmm&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(265,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot; /&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--ammS)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropAmm&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--ammS)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;(NH₄)₂S&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot; style=&quot;font-size:13px; color:#9fb0c8&quot;&gt;
+      Se HCl/H₂S não deram ppt, adiciona-se &lt;b&gt;(NH₄)₂S&lt;/b&gt; ao sobrenadante neutro.  
+      Precipitados esperados: &lt;b&gt;Fe/Ni/Co&lt;/b&gt; negros; &lt;b&gt;Al/Zn&lt;/b&gt; brancos; &lt;b&gt;Cr&lt;/b&gt; verde-maçã; &lt;b&gt;Mn&lt;/b&gt; rosa.
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  const lines = Array.from(document.querySelectorAll(&#x27;.line&#x27;));
+  const showLine = (idx) =&gt; {
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    if (idx&gt;=0 &amp;&amp; idx&lt;lines.length) lines[idx].classList.add(&#x27;active&#x27;);
+  };
+
+  // Elements
+  const tubes = document.getElementById(&#x27;tubes&#x27;);
+  const pip = document.getElementById(&#x27;pipAmm&#x27;);
+  const drop = document.getElementById(&#x27;dropAmm&#x27;);
+
+  const ppt = {
+    Cr: document.getElementById(&#x27;pptCr&#x27;),
+    Al: document.getElementById(&#x27;pptAl&#x27;),
+    Fe: document.getElementById(&#x27;pptFe&#x27;),
+    Zn: document.getElementById(&#x27;pptZn&#x27;),
+    Ni: document.getElementById(&#x27;pptNi&#x27;),
+    Co: document.getElementById(&#x27;pptCo&#x27;),
+    Mn: document.getElementById(&#x27;pptMn&#x27;)
+  };
+
+  const playBtn = document.getElementById(&#x27;play&#x27;);
+  const pauseBtn = document.getElementById(&#x27;pause&#x27;);
+  const resetBtn = document.getElementById(&#x27;reset&#x27;);
+
+  let playing=false, current=-1, timer=null;
+
+  // Tube centers (group at x=280; step 80; center +35)
+  const baseX = 230, step=80, c=35, topY=5;
+  const X={ Cr:baseX+0*step+c, Al:baseX+1*step+c, Fe:baseX+2*step+c, Zn:baseX+3*step+c, Ni:baseX+4*step+c, Co:baseX+5*step+c, Mn:baseX+6*step+c };
+
+  function setOpacity(el,v){ el.style.opacity=String(v); }
+  function reveal(el){ el.classList.remove(&#x27;hidden&#x27;); setOpacity(el,1); }
+  function hide(el){ setOpacity(el,0); el.classList.add(&#x27;hidden&#x27;); }
+  function move(x,y){ pip.setAttribute(&#x27;transform&#x27;,`translate(${x},${y})`); }
+  function dropOnce(){
+    setOpacity(drop,1);
+    drop.classList.remove(&#x27;fall&#x27;); void drop.offsetWidth; drop.classList.add(&#x27;fall&#x27;);
+    setTimeout(()=&gt; setOpacity(drop,0), 900);
+  }
+  function grow(r){ r.setAttribute(&#x27;y&#x27;,&#x27;214&#x27;); r.setAttribute(&#x27;height&#x27;,&#x27;36&#x27;); }
+
+  function resetScene(){
+    if (timer){ clearTimeout(timer); timer=null; }
+    playing=false; current=-1;
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    hide(tubes); hide(pip); setOpacity(drop,0); drop.classList.remove(&#x27;fall&#x27;);
+    Object.values(ppt).forEach(r=&gt;{ r.setAttribute(&#x27;y&#x27;,&#x27;236&#x27;); r.setAttribute(&#x27;height&#x27;,&#x27;14&#x27;); setOpacity(r,0); });
+    move(X.Cr, topY);
+    pauseBtn.textContent=&#x27;⏸ Pausar&#x27;;
+  }
+
+  const steps=[
+    {line:0, delay:700, fn:(i)=&gt;{ showLine(0); }},
+    {line:1, delay:700, fn:(i)=&gt;{ showLine(1); reveal(tubes); }},
+    {line:2, delay:1200, fn:(i)=&gt;{ showLine(2); reveal(pip); move(X.Cr, topY); if(!i) dropOnce(); }},
+    {line:3, delay:1000, fn:(i)=&gt;{ showLine(3); }},
+    {line:4, delay:600, fn:(i)=&gt;{ showLine(4); }},
+    {line:5, delay:600, fn:(i)=&gt;{ showLine(5); }},
+    {line:6, delay:600, fn:(i)=&gt;{ showLine(6); }},
+    {line:7, delay:1300, fn:(i)=&gt;{ showLine(7); Object.values(ppt).forEach(r=&gt;{ setOpacity(r,1); grow(r); }); }},
+    // Fe, Ni, Co → black (already black fill; just ensure visible)
+    {line:8, delay:2300, fn:(i)=&gt;{
+      showLine(8); // move over Fe, Ni, Co with drops
+      [[&#x27;Fe&#x27;,X.Fe],[&#x27;Ni&#x27;,X.Ni],[&#x27;Co&#x27;,X.Co]].forEach(([k,x],idx)=&gt;{
+        setTimeout(()=&gt;{ move(x, topY); if(!i) dropOnce(); setOpacity(ppt[k],1); grow(ppt[k]); }, idx*250);
+      });
+    }},
+    {line:9, delay:750, fn:(i)=&gt;{ showLine(9);} },
+    // Al &amp; Zn → white
+    {line:10, delay:1400, fn:(i)=&gt;{ showLine(10); move(X.Al, topY); if(!i) dropOnce(); setOpacity(ppt.Al,1); grow(ppt.Al); }},
+    {line:11, delay:1400, fn:(i)=&gt;{ showLine(11); move(X.Zn, topY); if(!i) dropOnce(); setOpacity(ppt.Zn,1); grow(ppt.Zn); }},
+    // Cr green
+    {line:12, delay:600, fn:(i)=&gt;{ showLine(12);} },
+    {line:13, delay:1400, fn:(i)=&gt;{ showLine(13); move(X.Cr, topY); if(!i) dropOnce(); setOpacity(ppt.Cr,1); grow(ppt.Cr); }},
+    // Mn pink
+    {line:14, delay:600, fn:(i)=&gt;{ showLine(14);} },
+    {line:15, delay:1400, fn:(i)=&gt;{ showLine(15); move(X.Mn, topY); if(!i) dropOnce(); setOpacity(ppt.Mn,1); grow(ppt.Mn); }},
+  ];
+
+  const cueForLine=(idx)=&gt; Math.min(idx, steps.length-1);
+
+  function applyUpTo(target){
+    resetScene();
+    for(let i=0;i&lt;=target;i++){ steps[i].fn(true); }
+    current=target;
+  }
+
+  function runFromCurrent(){
+    if (playing) return;
+    playing=true;
+    function next(){
+      if (!playing) return;
+      const n=current+1;
+      if (n&gt;=steps.length){ playing=false; return; }
+      current=n;
+      const s=steps[current];
+      s.fn(false);
+      timer=setTimeout(next, s.delay);
+    }
+    next();
+  }
+  function pause(){ playing=false; if (timer){ clearTimeout(timer); timer=null; } }
+
+  // UI
+  document.getElementById(&#x27;play&#x27;).addEventListener(&#x27;click&#x27;, runFromCurrent);
+  document.getElementById(&#x27;pause&#x27;).addEventListener(&#x27;click&#x27;, ()=&gt;{
+    if (playing){ pause(); pauseBtn.textContent=&#x27;▶ Retomar&#x27;; }
+    else { pauseBtn.textContent=&#x27;⏸ Pausar&#x27;; runFromCurrent(); }
+  });
+  document.getElementById(&#x27;reset&#x27;).addEventListener(&#x27;click&#x27;, resetScene);
+
+  // Click-to-seek
+  lines.forEach((el, idx)=&gt;{
+    el.title=&#x27;Clique para pular para esta parte&#x27;;
+    el.addEventListener(&#x27;click&#x27;, ()=&gt;{ pause(); applyUpTo(cueForLine(idx)); });
+  });
+
+  // bootstrap
+  resetScene();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+      <iframe id="s4" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;pt-BR&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+&lt;title&gt;Marcha dos Cátions — Estrofe 4 (v2: teste de chama embaixo)&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --bg:#0f1117; --ink:#e5e7eb; --muted:#9aa4b2;
+    --unknown:#8b5cf6;
+    --white:#ffffff; --black:#0b0b0b;
+    --green:#84cc16; --red:#ef4444; --orange:#f59e0b; --lilac:#a78bfa; --yellow:#fbbf24; --crimson:#f43f5e; --gray:#cbd5e1;
+    --ammS:#60a5fa; --sulf:#34d399; --carb:#7dd3fc; --pt:#fde68a; --pyro:#93c5fd;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, &quot;Helvetica Neue&quot;, Arial;
+    background: radial-gradient(1200px 800px at 70% -20%, #1f2430 0%, var(--bg) 38%, #0b0d12 100%);
+    color:var(--ink); min-height:100vh; display:grid; place-items:center; padding:20px;
+  }
+  .wrap{display:grid; gap:18px; width:min(1400px, 98vw);}
+  .top{display:grid; grid-template-columns: 0.95fr 1.25fr; gap:16px;}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:16px 18px; backdrop-filter: blur(6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  h1{font-size:20px;margin:0 0 8px 0; letter-spacing:.3px}
+  .poem{line-height:1.6; font-size:15.5px; white-space:pre-line}
+  .line{
+    color:var(--muted); transition: color .25s, text-shadow .25s, background .25s;
+    padding:2px 6px; border-radius:8px; margin:1px 0; cursor:pointer;
+  }
+  .line:hover{ background: rgba(251,191,36,.1); color:#fef3c7 }
+  .line.active{color:var(--ink); text-shadow: 0 0 12px rgba(255,255,255,.18)}
+  .hint{font-size:12px;color:#aab3bf;margin-top:6px}
+  .controls{display:flex;gap:10px; flex-wrap:wrap}
+  button{
+    appearance:none; border:none; color:#0b0d12; font-weight:600;
+    padding:10px 14px; border-radius:12px; cursor:pointer;
+    background: linear-gradient(180deg, #e9edf7, #cfd7e6);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .ghost{ background:transparent; color:#e5e7eb; border:1px solid rgba(255,255,255,.2); box-shadow:none }
+  button:active{transform:translateY(1px)}
+  #lab{
+    width:100%; height:680px; display:block; border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* SVG styling */
+  .glass{fill:rgba(255,255,255,0.06); stroke:rgba(255,255,255,0.25); stroke-width:2}
+  .liquid{fill:var(--unknown); opacity:.9}
+  .label{font-size:12px; fill:#c7cfdb}
+  .small{font-size:10px}
+  .hidden{opacity:0; pointer-events:none}
+  .fade{transition:opacity .6s ease}
+  .grow{transition:all .6s ease}
+  .tube{filter: drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+  .pipette{filter: drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+  .drop{opacity:0}
+  .fall{animation:dropFall 1.0s ease-in forwards}
+  @keyframes dropFall{
+    0%{opacity:1; transform: translateY(-6px)}
+    80%{opacity:1; transform: translateY(165px)}
+    100%{opacity:0; transform: translateY(175px)}
+  }
+
+  /* flames row */
+  .flame{opacity:0; transition:opacity .5s ease; filter: drop-shadow(0 10px 16px rgba(0,0,0,.35)); transform-origin: 30px 26px}
+  .flicker{ animation:flick 1.15s ease-in-out infinite alternate }
+  @keyframes flick{
+    0%{ transform: translateY(0) scaleY(1.00) scaleX(1.00); }
+    100%{ transform: translateY(-3px) scaleY(1.15) scaleX(.95); }
+  }
+  .flameWrap{ transform: translate(30px,26px) scale(1.45) translate(-30px,-26px); }
+  .burner text{ font-size:11px; fill:#9fb0c8 }
+  .legend{font-size:11px; fill:#b7c0ce}
+
+  /* === Spectro panel (abaixo dos bicos) === */
+  #specWrap{ margin-top:-120px; padding:0 18px 6px }
+  #spectro{ width:100%; height:190px; display:block }
+  .axis text{ font-size:10.5px; fill:#c7cfdb }
+  .specLine{ stroke-width:2.5; opacity:.95 }
+  .ionLabel{ font-size:11px; fill:#e5e7eb; display:none }
+  .legendNote{ font-size:11px; fill:#9fb0c8 }
+
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+
+    &lt;div class=&quot;top&quot;&gt;
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;h1&gt;Estrofe 4 e 5 — Poema da Marcha dos Cátions&lt;/h1&gt;
+        &lt;div class=&quot;poem&quot; id=&quot;poem&quot;&gt;
+&lt;span class=&quot;line&quot;&gt;Estrôncio, bário, cálcio e magnésio&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Ficam mudos e quietos.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Porém, com os carbonatos alcalinos,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Ou sulfatos solúveis destas bases&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Não querem ter brinquedos.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Só o magnésio por anomalia,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Com os sulfatos, fica em harmonia,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Na chama, a cor do bário esverdeada,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;A do estrôncio, que é muito avermelhada.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O cálcio tem a chama alaranjada&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E o sulfato é solúvel na água fria.&lt;/span&gt;
+
+&lt;span class=&quot;line&quot;&gt;Por nenhum dos reagentes precedentes,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Amônia, ou sódio ou potássio precipita.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E nem dos seus sais o lítio&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Que dá chama tão bonita.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Porém, o cloreto de platina,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O potássio e a amônia elimina.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O potássio na chama é cor lilás,&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;A amônio na chama nada faz.&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Com o piroantimoniato de potássio&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;O sódio não quer graça&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;E mesmo cai na armadilha&lt;/span&gt;
+&lt;span class=&quot;line&quot;&gt;Por ter a chama amarela.&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;controls&quot; style=&quot;margin-top:10px;&quot;&gt;
+          &lt;button id=&quot;play&quot;&gt;▶ Play&lt;/button&gt;
+          &lt;button id=&quot;pause&quot;&gt;⏸ Pausar&lt;/button&gt;
+          &lt;button id=&quot;reset&quot; class=&quot;ghost&quot;&gt;⟲ Reset&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;!-- LAB SCENE --&gt;
+        &lt;svg id=&quot;lab&quot; viewBox=&quot;0 0 860 560&quot; aria-labelledby=&quot;title desc&quot; role=&quot;img&quot;&gt;
+          &lt;title id=&quot;title&quot;&gt;Cena — Estrofe 4 (v2)&lt;/title&gt;
+          &lt;desc id=&quot;desc&quot;&gt;Rack de terrosos e alcalinos sem chamas no topo; fileira inferior exclusiva para o teste de chama.&lt;/desc&gt;
+
+          &lt;!-- bench --&gt;
+          &lt;rect x=&quot;0&quot; y=&quot;350&quot; width=&quot;860&quot; height=&quot;210&quot; fill=&quot;url(#bench)&quot;/&gt;
+          &lt;defs&gt;
+            &lt;linearGradient id=&quot;bench&quot; x1=&quot;0&quot; y1=&quot;350&quot; x2=&quot;0&quot; y2=&quot;560&quot;&gt;
+              &lt;stop offset=&quot;0%&quot; stop-color=&quot;#1b202b&quot;/&gt;
+              &lt;stop offset=&quot;100%&quot; stop-color=&quot;#12151c&quot;/&gt;
+            &lt;/linearGradient&gt;
+          
+          &lt;!-- flame gradients --&gt;
+          &lt;radialGradient id=&quot;gBa&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;35%&quot; stop-color=&quot;#eaffd5&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--green)&quot;/&gt;
+          &lt;/radialGradient&gt;
+          &lt;radialGradient id=&quot;gSr&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;40%&quot; stop-color=&quot;#ffd2d2&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--red)&quot;/&gt;
+          &lt;/radialGradient&gt;
+          &lt;radialGradient id=&quot;gCa&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;35%&quot; stop-color=&quot;#ffe8c7&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--orange)&quot;/&gt;
+          &lt;/radialGradient&gt;
+          &lt;radialGradient id=&quot;gK&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;40%&quot; stop-color=&quot;#e7dcff&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--lilac)&quot;/&gt;
+          &lt;/radialGradient&gt;
+          &lt;radialGradient id=&quot;gNa&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;35%&quot; stop-color=&quot;#fff1b3&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--yellow)&quot;/&gt;
+          &lt;/radialGradient&gt;
+          &lt;radialGradient id=&quot;gLi&quot; cx=&quot;50%&quot; cy=&quot;55%&quot; r=&quot;70%&quot;&gt;
+            &lt;stop offset=&quot;0%&quot; stop-color=&quot;#ffffff&quot;/&gt;
+            &lt;stop offset=&quot;40%&quot; stop-color=&quot;#ffd1da&quot;/&gt;
+            &lt;stop offset=&quot;100%&quot; stop-color=&quot;var(--crimson)&quot;/&gt;
+          &lt;/radialGradient&gt;
+    
+          &lt;/defs&gt;
+
+          &lt;!-- left rack: earth alkali --&gt;
+          &lt;g id=&quot;rackTerroso&quot; transform=&quot;translate(20,40)&quot;&gt;
+            &lt;text x=&quot;180&quot; y=&quot;-52&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Terrosos&lt;/text&gt;
+            &lt;g id=&quot;tSr&quot; class=&quot;tube&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqSr&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptSr&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;rect id=&quot;so4Sr&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;222&quot; width=&quot;66&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#e5e7eb&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Sr²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tBa&quot; class=&quot;tube&quot; transform=&quot;translate(100,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqBa&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptBa&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;rect id=&quot;so4Ba&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;222&quot; width=&quot;66&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#e5e7eb&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Ba²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tCa&quot; class=&quot;tube&quot; transform=&quot;translate(200,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqCa&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptCa&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;rect id=&quot;so4Ca&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;222&quot; width=&quot;66&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#e5e7eb&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Ca²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tMg&quot; class=&quot;tube&quot; transform=&quot;translate(300,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqMg&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptMg&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;rect id=&quot;so4Mg&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;222&quot; width=&quot;66&quot; height=&quot;12&quot; rx=&quot;6&quot; fill=&quot;#e5e7eb&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Mg²⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;text x=&quot;170&quot; y=&quot;310&quot; text-anchor=&quot;middle&quot; class=&quot;legend&quot;&gt;Carbonato: ppts em Sr/Ba/Ca/Mg. Sulfato: ppts em Sr/Ba/Ca; MgSO₄ fica solúvel.&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- right rack: alkali and ammonium --&gt;
+          &lt;g id=&quot;rackAlk&quot; transform=&quot;translate(450,40)&quot;&gt;
+            &lt;text x=&quot;160&quot; y=&quot;-52&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Alcalinos &amp; NH₄⁺&lt;/text&gt;
+            &lt;g id=&quot;tNH4&quot; class=&quot;tube&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqNH4&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptNH4&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;NH₄⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tNa&quot; class=&quot;tube&quot; transform=&quot;translate(100,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqNa&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptNa&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Na⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tK&quot; class=&quot;tube&quot; transform=&quot;translate(200,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqK&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptK&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;K⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;g id=&quot;tLi&quot; class=&quot;tube&quot; transform=&quot;translate(300,0)&quot;&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;80&quot; height=&quot;16&quot; rx=&quot;6&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect x=&quot;0&quot; y=&quot;16&quot; width=&quot;80&quot; height=&quot;240&quot; rx=&quot;18&quot; class=&quot;glass&quot;/&gt;
+              &lt;rect id=&quot;liqLi&quot; x=&quot;7&quot; y=&quot;200&quot; width=&quot;66&quot; height=&quot;50&quot; rx=&quot;10&quot; fill=&quot;#93c5fd&quot; opacity=&quot;0.85&quot;/&gt;
+              &lt;rect id=&quot;pptLi&quot; class=&quot;grow&quot; x=&quot;7&quot; y=&quot;236&quot; width=&quot;66&quot; height=&quot;14&quot; rx=&quot;6&quot; fill=&quot;var(--white)&quot; opacity=&quot;0&quot;/&gt;
+              &lt;text x=&quot;40&quot; y=&quot;270&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Li⁺&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;text x=&quot;160&quot; y=&quot;310&quot; text-anchor=&quot;middle&quot; class=&quot;legend&quot;&gt;Sem ppt com reagentes anteriores; provas específicas abaixo.&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;!-- bottom flame row --&gt;
+          &lt;g id=&quot;flameRow&quot; transform=&quot;translate(40,405)&quot;&gt;
+            &lt;text x=&quot;400&quot; y=&quot;-12&quot; text-anchor=&quot;middle&quot; class=&quot;label&quot;&gt;Teste de chama&lt;/text&gt;
+
+            &lt;!-- Burners helper --&gt;
+            &lt;!-- Ba --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bBa&quot; transform=&quot;translate(0,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flBa&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gBa)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;Ba&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Sr --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bSr&quot; transform=&quot;translate(80,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flSr&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gSr)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;Sr&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Ca --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bCa&quot; transform=&quot;translate(160,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flCa&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gCa)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;Ca&lt;/text&gt;
+            &lt;/g&gt;
+
+            &lt;!-- spacer --&gt;
+            &lt;g transform=&quot;translate(260,0)&quot;&gt;&lt;text x=&quot;0&quot; y=&quot;60&quot; class=&quot;label&quot;&gt;|&lt;/text&gt;&lt;/g&gt;
+
+            &lt;!-- K --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bK&quot; transform=&quot;translate(300,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flK&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gK)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;K&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- NH4 --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bNH4&quot; transform=&quot;translate(400,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flNH4&quot; class=&quot;flame&quot; stroke=&quot;var(--gray)&quot; stroke-dasharray=&quot;3 3&quot; fill=&quot;transparent&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;NH₄&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Na --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bNa&quot; transform=&quot;translate(460,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flNa&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gNa)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;Na&lt;/text&gt;
+            &lt;/g&gt;
+            &lt;!-- Li --&gt;
+            &lt;g class=&quot;burner&quot; id=&quot;bLi&quot; transform=&quot;translate(540,0)&quot;&gt;
+              &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;36&quot; height=&quot;10&quot; rx=&quot;3&quot; fill=&quot;#64748b&quot;/&gt;
+              &lt;g class=&quot;flameWrap&quot;&gt;
+              &lt;path id=&quot;flLi&quot; class=&quot;flame flicker&quot; fill=&quot;url(#gLi)&quot; d=&quot;M30,10 C36,18 35,26 30,38 C25,26 24,18 30,10 Z&quot;/&gt;
+            &lt;/g&gt;
+              &lt;text x=&quot;30&quot; y=&quot;64&quot; text-anchor=&quot;middle&quot;&gt;Li&lt;/text&gt;
+            &lt;/g&gt;
+          &lt;/g&gt;
+
+          &lt;!-- pipettes --&gt;
+          &lt;g id=&quot;pipCO3&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(160,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot;/&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--carb)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropCO3&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--carb)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;Na₂CO₃&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;g id=&quot;pipSO4&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(260,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot;/&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--sulf)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropSO4&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--sulf)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;Na₂SO₄&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;g id=&quot;pipPt&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(590,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot;/&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--pt)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropPt&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--pt)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;H₂PtCl₆&lt;/text&gt;
+          &lt;/g&gt;
+
+          &lt;g id=&quot;pipPyro&quot; class=&quot;pipette fade hidden&quot; transform=&quot;translate(690,5)&quot;&gt;
+            &lt;rect x=&quot;0&quot; y=&quot;0&quot; width=&quot;14&quot; height=&quot;90&quot; rx=&quot;6&quot; fill=&quot;#dbeafe&quot; stroke=&quot;#a0b8e6&quot;/&gt;
+            &lt;rect x=&quot;2&quot; y=&quot;8&quot; width=&quot;10&quot; height=&quot;66&quot; rx=&quot;4&quot; fill=&quot;var(--pyro)&quot;/&gt;
+            &lt;polygon points=&quot;7,90 14,120 0,120&quot; fill=&quot;#cdd5e1&quot;/&gt;
+            &lt;circle id=&quot;dropPyro&quot; class=&quot;drop&quot; cx=&quot;7&quot; cy=&quot;120&quot; r=&quot;6&quot; fill=&quot;var(--pyro)&quot;/&gt;
+            &lt;text x=&quot;26&quot; y=&quot;40&quot; class=&quot;label&quot;&gt;K–piroantimoniato&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+
+        &lt;!-- Painel de Espectro (abaixo dos bicos) --&gt;
+        &lt;div id=&quot;specWrap&quot;&gt;
+          &lt;svg id=&quot;spectro&quot; viewBox=&quot;0 0 860 190&quot; aria-label=&quot;Espectro visível com linhas marcadas&quot;&gt;
+            &lt;defs&gt;
+              &lt;linearGradient id=&quot;vis&quot; x1=&quot;0%&quot; y1=&quot;0%&quot; x2=&quot;100%&quot; y2=&quot;0%&quot;&gt;
+                &lt;stop offset=&quot;0%&quot;  stop-color=&quot;#4b00a7&quot;/&gt;
+                &lt;stop offset=&quot;10%&quot; stop-color=&quot;#3d2bd3&quot;/&gt;
+                &lt;stop offset=&quot;20%&quot; stop-color=&quot;#2a67ff&quot;/&gt;
+                &lt;stop offset=&quot;30%&quot; stop-color=&quot;#20b4ff&quot;/&gt;
+                &lt;stop offset=&quot;40%&quot; stop-color=&quot;#1be4ff&quot;/&gt;
+                &lt;stop offset=&quot;50%&quot; stop-color=&quot;#12ff9f&quot;/&gt;
+                &lt;stop offset=&quot;60%&quot; stop-color=&quot;#7bff33&quot;/&gt;
+                &lt;stop offset=&quot;70%&quot; stop-color=&quot;#f5ff1a&quot;/&gt;
+                &lt;stop offset=&quot;80%&quot; stop-color=&quot;#ffd21a&quot;/&gt;
+                &lt;stop offset=&quot;90%&quot; stop-color=&quot;#ff7a1a&quot;/&gt;
+                &lt;stop offset=&quot;100%&quot; stop-color=&quot;#ff1a1a&quot;/&gt;
+              &lt;/linearGradient&gt;
+              &lt;!-- glow p/ linhas --&gt;
+              &lt;filter id=&quot;specGlow&quot; x=&quot;-50%&quot; y=&quot;-50%&quot; width=&quot;200%&quot; height=&quot;200%&quot;&gt;
+                &lt;feGaussianBlur stdDeviation=&quot;2.2&quot; result=&quot;blur&quot;/&gt;
+                &lt;feMerge&gt;
+                  &lt;feMergeNode in=&quot;blur&quot;/&gt;
+                  &lt;feMergeNode in=&quot;SourceGraphic&quot;/&gt;
+                &lt;/feMerge&gt;
+              &lt;/filter&gt;
+    
+            &lt;/defs&gt;
+            &lt;rect x=&quot;40&quot; y=&quot;24&quot; width=&quot;780&quot; height=&quot;26&quot; rx=&quot;8&quot; fill=&quot;url(#vis)&quot; opacity=&quot;.85&quot; /&gt;
+            &lt;g class=&quot;axis&quot; transform=&quot;translate(40,52)&quot;&gt;
+              &lt;!-- ticks 400..700 nm --&gt;
+              &lt;g transform=&quot;translate(0,0)&quot;&gt;&lt;line y1=&quot;0&quot; y2=&quot;8&quot; stroke=&quot;#c7cfdb&quot;/&gt;&lt;text y=&quot;22&quot; x=&quot;-8&quot;&gt;400&lt;/text&gt;&lt;/g&gt;
+              &lt;g transform=&quot;translate(183.75,0)&quot;&gt;&lt;line y1=&quot;0&quot; y2=&quot;8&quot; stroke=&quot;#c7cfdb&quot;/&gt;&lt;text y=&quot;22&quot; x=&quot;-8&quot;&gt;500&lt;/text&gt;&lt;/g&gt;
+              &lt;g transform=&quot;translate(367.5,0)&quot;&gt;&lt;line y1=&quot;0&quot; y2=&quot;8&quot; stroke=&quot;#c7cfdb&quot;/&gt;&lt;text y=&quot;22&quot; x=&quot;-8&quot;&gt;620&lt;/text&gt;&lt;/g&gt;
+              &lt;g transform=&quot;translate(780,0)&quot;&gt;&lt;line y1=&quot;0&quot; y2=&quot;8&quot; stroke=&quot;#c7cfdb&quot;/&gt;&lt;text y=&quot;22&quot; x=&quot;-8&quot;&gt;700&lt;/text&gt;&lt;/g&gt;
+            &lt;/g&gt;
+
+            &lt;!-- grupos por íon (linhas serão posicionadas via JS) --&gt;
+            &lt;g id=&quot;grpBa&quot; data-ion=&quot;Ba&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;40&quot; y=&quot;140&quot;&gt;Ba&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpSr&quot; data-ion=&quot;Sr&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;110&quot; y=&quot;140&quot;&gt;Sr&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpCa&quot; data-ion=&quot;Ca&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;180&quot; y=&quot;140&quot;&gt;Ca&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpK&quot;  data-ion=&quot;K&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;250&quot; y=&quot;140&quot;&gt;K&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpNa&quot; data-ion=&quot;Na&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;320&quot; y=&quot;140&quot;&gt;Na&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpLi&quot; data-ion=&quot;Li&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;390&quot; y=&quot;140&quot;&gt;Li&lt;/text&gt;&lt;/g&gt;
+            &lt;g id=&quot;grpNH4&quot; data-ion=&quot;NH4&quot;&gt;&lt;text class=&quot;ionLabel&quot; x=&quot;460&quot; y=&quot;140&quot;&gt;NH₄⁺&lt;/text&gt;&lt;/g&gt;
+&lt;/svg&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card&quot; style=&quot;font-size:13px; color:#9fb0c8&quot;&gt;
+      Terrosos — Na₂CO₃: carbonatos ↓ (todos). Na₂SO₄: sulfatos ↓ em Sr/Ba/Ca; MgSO₄ fica em solução.  
+      Alcalinos/NH₄⁺ — nenhum ppt com os anteriores; K⁺ ↓ com H₂PtCl₆ (cloroplatinato), Na⁺ ↓ com K-piroantimoniato.  
+      Faixa inferior: teste de chama — Ba verde, Sr vermelho, Ca laranja, K lilás, Na amarelo, Li carmim; NH₄⁺ sem cor (mostro cinza discreto só para marcar “sem chama”).
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  const lines = Array.from(document.querySelectorAll(&#x27;.line&#x27;));
+  const showLine = (idx) =&gt; { lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;)); if (idx&gt;=0 &amp;&amp; idx&lt;lines.length) lines[idx].classList.add(&#x27;active&#x27;); };
+
+  // Terrosos
+  const pptSr = document.getElementById(&#x27;pptSr&#x27;), pptBa = document.getElementById(&#x27;pptBa&#x27;), pptCa = document.getElementById(&#x27;pptCa&#x27;), pptMg = document.getElementById(&#x27;pptMg&#x27;);
+  const so4Sr = document.getElementById(&#x27;so4Sr&#x27;), so4Ba = document.getElementById(&#x27;so4Ba&#x27;), so4Ca = document.getElementById(&#x27;so4Ca&#x27;), so4Mg = document.getElementById(&#x27;so4Mg&#x27;);
+  const pipCO3 = document.getElementById(&#x27;pipCO3&#x27;), dropCO3 = document.getElementById(&#x27;dropCO3&#x27;);
+  const pipSO4 = document.getElementById(&#x27;pipSO4&#x27;), dropSO4 = document.getElementById(&#x27;dropSO4&#x27;);
+
+  // Alcalinos
+  const pptNH4 = document.getElementById(&#x27;pptNH4&#x27;), pptNa = document.getElementById(&#x27;pptNa&#x27;), pptK = document.getElementById(&#x27;pptK&#x27;), pptLi = document.getElementById(&#x27;pptLi&#x27;);
+  const pipPt = document.getElementById(&#x27;pipPt&#x27;), dropPt = document.getElementById(&#x27;dropPt&#x27;);
+  const pipPyro = document.getElementById(&#x27;pipPyro&#x27;), dropPyro = document.getElementById(&#x27;dropPyro&#x27;);
+
+  // Flames (bottom row)
+  const flBa = document.getElementById(&#x27;flBa&#x27;), flSr = document.getElementById(&#x27;flSr&#x27;), flCa = document.getElementById(&#x27;flCa&#x27;);
+  const flK = document.getElementById(&#x27;flK&#x27;), flNH4 = document.getElementById(&#x27;flNH4&#x27;), flNa = document.getElementById(&#x27;flNa&#x27;), flLi = document.getElementById(&#x27;flLi&#x27;);
+
+  const playBtn = document.getElementById(&#x27;play&#x27;), pauseBtn = document.getElementById(&#x27;pause&#x27;), resetBtn = document.getElementById(&#x27;reset&#x27;);
+  let playing=false, current=-1, timer=null;
+
+  function setOpacity(el,v){ el.style.opacity=String(v); }
+  function reveal(el){ el.classList.remove(&#x27;hidden&#x27;); setOpacity(el,1); }
+  function hide(el){ setOpacity(el,0); el.classList.add(&#x27;hidden&#x27;); }
+  function dropOnce(el){ setOpacity(el,1); el.classList.remove(&#x27;fall&#x27;); void el.offsetWidth; el.classList.add(&#x27;fall&#x27;); setTimeout(()=&gt;setOpacity(el,0), 900); }
+  function grow(r){ r.setAttribute(&#x27;y&#x27;,&#x27;214&#x27;); r.setAttribute(&#x27;height&#x27;,&#x27;36&#x27;); }
+  function resetFlames(){ [flBa,flSr,flCa,flK,flNH4,flNa,flLi].forEach(f=&gt; setOpacity(f,0)); }
+
+  function resetScene(){
+    if (timer){ clearTimeout(timer); timer=null; }
+    playing=false; current=-1;
+    lines.forEach(el =&gt; el.classList.remove(&#x27;active&#x27;));
+    hide(pipCO3); hide(pipSO4); hide(pipPt); hide(pipPyro);
+    [dropCO3,dropSO4,dropPt,dropPyro].forEach(d=&gt;{ d.classList.remove(&#x27;fall&#x27;); setOpacity(d,0); });
+    [pptSr,pptBa,pptCa,pptMg,so4Sr,so4Ba,so4Ca,so4Mg,pptNH4,pptNa,pptK,pptLi].forEach(r=&gt;{ setOpacity(r,0); r.setAttribute(&#x27;y&#x27;,&#x27;236&#x27;); r.setAttribute(&#x27;height&#x27;,&#x27;14&#x27;); });
+    resetFlames(); [&#x27;Ba&#x27;,&#x27;Sr&#x27;,&#x27;Ca&#x27;,&#x27;K&#x27;,&#x27;Na&#x27;,&#x27;Li&#x27;,&#x27;NH4&#x27;].forEach(ion=&gt; highlightIon(ion, false));
+    pauseBtn.textContent=&#x27;⏸ Pausar&#x27;;
+  }
+
+  // Steps tied to lines (same timings; flames now appear on bottom row)
+  
+  // === Espectro (linhas) ===
+  const spectro = document.getElementById(&#x27;spectro&#x27;);
+  function nmToX(nm){
+    
+    const nmMin = 400, nmMax = 700;
+    const xMin = 40, xMax = 820; // matches rect width 780 at x=40
+    const clamped = Math.max(nmMin, Math.min(nm, nmMax));
+    return xMin + (xMax - xMin) * (clamped - nmMin) / (nmMax - nmMin);
+  }
+  function wavelengthToRGB(nm){
+    // Dan Bruton-ish approximation (clamped 400-700 nm), gamma 0.8
+    let R=0, G=0, B=0, S=1.0;
+    if (nm &lt; 400) nm = 400; if (nm &gt; 700) nm = 700;
+    if (nm &gt;= 400 &amp;&amp; nm &lt; 440){ R = -(nm - 440)/(440-400); G = 0; B = 1; }
+    else if (nm &lt; 490){ R = 0; G = (nm - 440)/(490-440); B = 1; }
+    else if (nm &lt; 510){ R = 0; G = 1; B = -(nm - 510)/(510-490); }
+    else if (nm &lt; 580){ R = (nm - 510)/(580-510); G = 1; B = 0; }
+    else if (nm &lt; 645){ R = 1; G = -(nm - 645)/(645-580); B = 0; }
+    else { R = 1; G = 0; B = 0; }
+    // intensity factor at edges
+    if (nm &gt;= 400 &amp;&amp; nm &lt; 420){ S = 0.3 + 0.7*(nm-400)/(420-400); }
+    else if (nm &gt; 645 &amp;&amp; nm &lt;= 700){ S = 0.3 + 0.7*(700-nm)/(700-645); }
+    const gamma = 0.8;
+    const to255 = v =&gt; Math.round(255 * (v&lt;=0 ? 0 : (S * (v ** gamma))));
+    return `rgb(${to255(R)}, ${to255(G)}, ${to255(B)})`;
+  }
+  const ionLines = {
+    &#x27;Na&#x27;: [589.0, 589.6],
+    &#x27;K&#x27;:  [404.4, 404.7],
+    &#x27;Li&#x27;: [670.8],
+    &#x27;Sr&#x27;: [606.0, 671.0],
+    &#x27;Ba&#x27;: [516.0, 524.0],
+    &#x27;Ca&#x27;: [422.7, 622.0],
+    &#x27;NH4&#x27;: []
+  };
+  
+  function layoutSpectro(){
+    [&#x27;Ba&#x27;,&#x27;Sr&#x27;,&#x27;Ca&#x27;,&#x27;K&#x27;,&#x27;Na&#x27;,&#x27;Li&#x27;,&#x27;NH4&#x27;].forEach(ion=&gt;{
+      const g = spectro?.querySelector(&#x27;#grp&#x27;+ion); if (!g) return;
+      // remove old lines
+      Array.from(g.querySelectorAll(&#x27;line&#x27;)).forEach(n=&gt;g.removeChild(n));
+      const lines = ionLines[ion]||[];
+      lines.forEach(wl=&gt;{
+        const ln = document.createElementNS(&#x27;http://www.w3.org/2000/svg&#x27;,&#x27;line&#x27;);
+        ln.setAttribute(&#x27;class&#x27;,&#x27;specLine&#x27;);
+        ln.setAttribute(&#x27;x1&#x27;, nmToX(wl)); ln.setAttribute(&#x27;x2&#x27;, nmToX(wl));
+        ln.setAttribute(&#x27;y1&#x27;,&#x27;30&#x27;); ln.setAttribute(&#x27;y2&#x27;,&#x27;90&#x27;);
+        ln.setAttribute(&#x27;stroke&#x27;, wavelengthToRGB(wl));
+        ln.setAttribute(&#x27;filter&#x27;, &#x27;url(#specGlow)&#x27;);
+        g.insertBefore(ln, g.firstChild);
+      });
+    });
+  }
+  function highlightIon(ion, on){
+    const g = spectro?.querySelector(&#x27;#grp&#x27;+ion); if (!g) return;
+    g.style.display = on ? &#x27;block&#x27; : &#x27;none&#x27;;
+  }
+
+  // Mostra só o íon atual: apaga chamas/linhas anteriores e liga a atual
+  
+  // Liga o íon atual e mantém os anteriores acesos (persistente até reset)
+  
+  // Acende só a chama (sem mostrar linhas do espectro)
+  function onlyFlame(ion){
+    const map = { Ba: flBa, Sr: flSr, Ca: flCa, K: flK, Na: flNa, Li: flLi, NH4: flNH4 };
+    const el = map[ion];
+    if (el){ setOpacity(el, 1); }
+    // não mexe em highlightIon -&gt; espectro fica como está
+  }
+
+  function onlyIon(ion){
+    const map = { Ba: flBa, Sr: flSr, Ca: flCa, K: flK, Na: flNa, Li: flLi, NH4: flNH4 };
+    const el = map[ion];
+    if (el){ setOpacity(el, 1); }
+    if (ion !== &#x27;NH4&#x27;){ highlightIon(ion, true); } // NH4 não tem linhas
+  }
+
+
+  layoutSpectro();
+  [&#x27;Ba&#x27;,&#x27;Sr&#x27;,&#x27;Ca&#x27;,&#x27;K&#x27;,&#x27;Na&#x27;,&#x27;Li&#x27;,&#x27;NH4&#x27;].forEach(ion=&gt; highlightIon(ion, false));
+
+  const steps = [
+    {line:0, delay:700, fn:(i)=&gt;{ showLine(0); }},
+    {line:1, delay:600, fn:(i)=&gt;{ showLine(1); }},
+    {line:2, delay:600, fn:(i)=&gt;{ showLine(2); reveal(pipCO3); }},
+    {line:3, delay:600, fn:(i)=&gt;{ showLine(3); }},
+    {line:4, delay:1600, fn:(i)=&gt;{ showLine(4); dropOnce(dropCO3); [pptSr,pptBa,pptCa,pptMg].forEach(p=&gt;{ setOpacity(p,1); grow(p); }); }},
+    {line:5, delay:700, fn:(i)=&gt;{ showLine(5); }},
+    {line:6, delay:1500, fn:(i)=&gt;{ showLine(6); reveal(pipSO4); dropOnce(dropSO4); [so4Sr,so4Ba,so4Ca].forEach(p=&gt;{ setOpacity(p,1); grow(p); }); }},
+    {line:7, delay:700, fn:(i)=&gt;{ showLine(7); }},
+    {line:8, delay:800, fn:(i)=&gt;{ showLine(8); onlyFlame(&#x27;Ba&#x27;); }},
+    {line:9, delay:800, fn:(i)=&gt;{ showLine(9); onlyFlame(&#x27;Sr&#x27;); }},
+    {line:10, delay:800, fn:(i)=&gt;{ showLine(10); onlyFlame(&#x27;Ca&#x27;); }},
+    {line:11, delay:1200, fn:(i)=&gt;{ showLine(11); so4Ca.style.transition=&#x27;opacity .6s ease&#x27;; setOpacity(so4Ca,0); }},
+
+    // Second stanza
+    {line:12, delay:700, fn:(i)=&gt;{ showLine(12); }},
+    {line:13, delay:700, fn:(i)=&gt;{ showLine(13); }},
+    {line:14, delay:700, fn:(i)=&gt;{ showLine(14); }},
+    {line:15, delay:700, fn:(i)=&gt;{ showLine(15); onlyIon(&#x27;Li&#x27;); }},
+    {line:16, delay:700, fn:(i)=&gt;{ showLine(16); reveal(pipPt); }},
+    {line:17, delay:1500, fn:(i)=&gt;{ showLine(17); dropOnce(dropPt); setOpacity(pptK,1); grow(pptK); onlyIon(&#x27;K&#x27;); }},
+    {line:18, delay:700, fn:(i)=&gt;{ showLine(18); }},
+    {line:19, delay:700, fn:(i)=&gt;{ showLine(19); onlyIon(&#x27;NH4&#x27;); }},
+    {line:20, delay:700, fn:(i)=&gt;{ showLine(20); reveal(pipPyro); }},
+    {line:21, delay:1500, fn:(i)=&gt;{ showLine(21); dropOnce(dropPyro); setOpacity(pptNa,1); grow(pptNa); }},
+    {line:22, delay:700, fn:(i)=&gt;{ showLine(22); onlyIon(&#x27;Na&#x27;); }},
+  ];
+
+  const cueForLine = (idx)=&gt; Math.min(idx, steps.length-1);
+  function applyUpTo(target){ resetScene(); for(let i=0;i&lt;=target;i++){ steps[i].fn(true); } current=target; }
+  function runFromCurrent(){
+    if (playing) return; playing=true;
+    const next = ()=&gt;{
+      if (!playing) return;
+      const n = current + 1; if (n&gt;=steps.length){ playing=false; return; }
+      current = n; const s = steps[current]; s.fn(false); timer = setTimeout(next, s.delay);
+    };
+    next();
+  }
+  function pause(){ playing=false; if (timer){ clearTimeout(timer); timer=null; } }
+
+  document.getElementById(&#x27;play&#x27;).addEventListener(&#x27;click&#x27;, runFromCurrent);
+  document.getElementById(&#x27;pause&#x27;).addEventListener(&#x27;click&#x27;, ()=&gt;{ if (playing){ pause(); pauseBtn.textContent=&#x27;▶ Retomar&#x27;; } else { pauseBtn.textContent=&#x27;⏸ Pausar&#x27;; runFromCurrent(); } });
+  document.getElementById(&#x27;reset&#x27;).addEventListener(&#x27;click&#x27;, resetScene);
+
+  // Click-to-seek
+  lines.forEach((el, idx)=&gt;{ el.title=&#x27;Clique para pular para esta parte&#x27;; el.addEventListener(&#x27;click&#x27;, ()=&gt;{ pause(); applyUpTo(cueForLine(idx)); }); });
+
+  resetScene();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+      </div>
+  </div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const frames = document.querySelectorAll('iframe');
+  tabs.forEach(btn => btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    frames.forEach(f => f.classList.remove('active'));
+    document.getElementById(btn.dataset.target).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }));
+</script>
+<script id="resp-kit-v1">
+(()=>{ 
+  const setVH=()=>{ 
+    const vh = (window.innerHeight||document.documentElement.clientHeight||0) * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  };
+  setVH();
+  window.addEventListener('resize', setVH, {passive:true});
+  window.addEventListener('orientationchange', ()=>setTimeout(setVH, 250), {passive:true});
+})();
+</script>
+</body>
+</html>

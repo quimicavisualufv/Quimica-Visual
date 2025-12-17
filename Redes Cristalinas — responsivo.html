@@ -1,0 +1,4034 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Redes Cristalinas</title>
+<style>
+  :root{ --bg:#0e0f13; --panel:#171922; --accent:#7dd3fc; --text:#e5e7eb; --muted:#9ca3af; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0c10 0%,#0e0f13 60%,#0b0c10 100%);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+  .wrap{display:grid;grid-template-columns: 1fr 360px;gap:14px;height: calc(var(--vh, 1vh) * 100);padding:12px}
+  .panel{background:var(--panel);border:1px solid #232636;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+  #right{display:flex;flex-direction:column}
+  header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #232636}
+  header h1{font-size:16px;margin:0;letter-spacing:.2px}
+  header small{color:var(--muted)}
+  #canvas{width:100%;height:calc(100% - 56px);display:block;background: radial-gradient(1200px 600px at 60% 10%, rgba(125,211,252,.08), transparent 50%)}
+  .controls{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1 1 auto;overflow-y:auto;min-height:0}
+  .controls label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+  .controls select,.controls input[type="range"], .controls button{width:100%;background:#0f1118;border:1px solid #222638;color:var(--text);border-radius:10px;padding:8px 10px;outline:none}
+  .controls button{cursor:pointer}
+  .controls .row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .controls .row3{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .check{display:flex;align-items:center;gap:8px;background:#0f1118;border:1px solid #222638;border-radius:10px;padding:8px 10px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;grid-column:1/-1}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:#0f1118;border:1px solid #222638;border-radius:999px;padding:6px 10px;color:var(--muted)}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .footer{padding:10px 14px;border-top:1px solid #232636;color:var(--muted);font-size:12px}
+  .value{font-size:12px;color:#cbd5e1}
+  #introBox{display:none;border:1px dashed #2a2f45;border-radius:12px;padding:10px 10px 2px 10px;grid-column:1/-1;margin-top:6px}
+  #introBox h3{margin:0 0 8px 0;font-size:12px;color:#cbd5e1;font-weight:600;letter-spacing:.2px}
+  .btnRow{display:grid;grid-template-columns:1fr auto auto;gap:10px}
+  @media (max-width: 980px){ .wrap{grid-template-columns: 1fr} #canvas{height:50vh} .controls .row3{grid-template-columns:1fr} }
+
+/* Intro: hide sequence & layers UI */
+[data-panel="intro"] .seq-row,
+[data-panel="intro"] .layers-row,
+[data-panel="intro"] .layers-buttons { display:none !important; }
+
+
+/* Lower label positions in Intro */
+canvas[data-layer='intro'] + .labels .label { transform: translateY(8px); }
+
+
+/* Hide sequence & layers controls inside Intro box */
+#introBox label[for="introSeq"],
+#introBox #introSeq,
+#introBox label[for="introLayers"],
+#introBox #introLayers,
+#introBox .btnRow { display:none !important; }
+
+
+/* Export All always visible */
+#exportAllTxt{ display:inline-block !important; }
+
+  .alert-steric{
+    margin: 6px 0 0 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(239,68,68,0.12);
+    color: #fecaca;
+    font-weight: 600;
+    border: 1px solid rgba(239,68,68,0.35);
+  }
+
+
+/* === Patch: ensure all angle sliders are visible === */
+.controls label:has(#angleX), .controls label:has(#angleY), .controls label:has(#angleZ) { display:flex !important; }
+
+</style>
+<style>
+/* === RESP-KIT v1 — viewport height fix + mobile-friendly defaults === */
+:root{ --vh: 1vh; }
+html, body{ width:100%; height:100%; margin:0; }
+body{ min-height: calc(var(--vh, 1vh) * 100); }
+*{ -webkit-tap-highlight-color: transparent; }
+@media (max-width: 520px){
+  /* avoid accidental horizontal scroll on small devices */
+  body{ overflow-x:hidden; }
+}
+/* === END RESP-KIT v1 === */
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel" id="left">
+      <header>
+        <h1>Visualização — Estruturas & Intro (camadas)</h1>
+        <small>Scroll = zoom • D = reset</small>
+      </header>
+      <div id="stericAlert" class="alert-steric" style="display:none;">
+        Alerta! Estrutura improvável com alta repulsão estérica.
+      </div>
+
+      <canvas id="canvas" style="touch-action:none; overscroll-behavior: contain;" width="1400" height="800"></canvas>
+    </div>
+    <div class="panel" id="right">
+      <header>
+        <h1>Controles</h1>
+        <small>Metálicos, Iônicos, Óxidos e Intro</small>
+      </header>
+      <div class="controls">
+        
+    
+        <label class="check" style="display:flex;align-items:center;gap:8px;margin:6px 0 10px 0;">
+          <input type="checkbox" id="projOrtho" checked>
+          Projeção ortográfica (sem perspectiva)
+        </label>
+
+        <label>
+          Estrutura
+          <select id="structure">
+            
+              <option value="INTRO2">Intro (buracos)</option>
+<option value="SC">Simples Cúbica (SC)</option>
+              <option value="BCC">Corporado Centrado (BCC)</option>
+              <option value="FCC" selected>Face Centrada (FCC)</option><option value="WS_BCC">Célula de Wigner‑Seitz (BCC)</option><option value="WS_FCC">Célula de Wigner‑Seitz (FCC)</option>
+              <option value="HEX_ABC">Hexagonal (ABA/ABC)</option>
+            
+            
+                            <option value="TETRA_P">Tetragonal (P)</option>
+              <option value="TETRA_I">Tetragonal (I)</option>
+              <option value="ORTHO_P">Ortorrômbico (P)</option>
+              <option value="ORTHO_I">Ortorrômbico (I)</option>
+              <option value="ORTHO_F">Ortorrômbico (F)</option>
+              <option value="ORTHO_C">Ortorrômbico (C)</option>
+              <option value="MONO_P">Monoclínico (P)</option>
+              <option value="MONO_C">Monoclínico (C)</option>
+              <option value="TRICLINIC_P">Triclínico (P)</option>
+              <option value="TRIGONAL_R">Romboédrico (R)</option>
+            
+
+            
+            
+              <option value="NaCl">NaCl (rocha-sal)</option>
+              <option value="CsCl">CsCl</option>
+              <option value="ZnS">ZnS (blenda)</option>
+            
+            
+              <option value="RUTILIO">RUTÍLIO (TiO₂)</option>
+            
+          
+              <option value="DIY">Faça você mesmo (DIY)</option>
+</select>
+        </label>
+
+        <label>
+          Tamanho (células / lado do triângulo)
+          <input type="range" id="cells" min="2" max="6" step="1" value="4" />
+        </label>
+
+        <label>
+          Raio das esferas
+          <input type="range" id="radius" min="2" max="40" step="1" value="12" />
+        </label>
+
+        <div class="row">
+          <label>Distância entre nós
+            <input type="range" id="spacing" min="40" max="300" step="2" value="140" />
+          </label>
+          <label>Brilho
+            <input type="range" id="light" min="0" max="1" step="0.01" value="0.65" />
+          </label>
+        </div>
+
+        <!-- Controles extras para INTRO -->
+        
+
+        <label class="check">
+          <input type="checkbox" id="ucOnly" checked> Recortar à célula unitária
+        </label>
+        <label class="check">
+          <input type="checkbox" id="faceOnly"> Mostrar apenas uma face da célula
+        </label>
+        <div class="row" id="faceRow" style="display:flex;gap:8px;align-items:center;margin:-6px 0 6px 0;">
+          <label style="flex:1 1 auto">Face
+            <select id="faceSelect">
+              <option value="+Z">Frontal (+Z)</option>
+              <option value="-Z">Traseira (-Z)</option>
+              <option value="+X">Direita (+X)</option>
+              <option value="-X">Esquerda (-X)</option>
+              <option value="+Y">Topo (+Y)</option>
+              <option value="-Y">Base (-Y)</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="unitcell" checked> Mostrar arestas da célula
+        </label>
+        <!-- removido: Poliedro de coordenação -->
+        <label class="check">
+          <input type="checkbox" id="schottky" disabled> Schottky (iônico)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="frenkel" disabled> Frenkel (iônico)
+        </label>
+
+        
+        <label class="check">
+          <input type="checkbox" id="editBonds"> Adicionar ligações (clique 2 átomos)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="delBonds"> Remover ligações (clique 2 átomos)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="showBonds" checked> Mostrar ligações
+        </label>
+        <div class="row">
+          <button id="exportBonds">Exportar ligações (código)</button>
+          <button id="clearBonds">Limpar ligações desta estrutura</button>
+        </div>
+        <!-- removido: editCoord -->
+        <!-- removido: delCoord -->
+        <label class="check">
+          <input type="checkbox" id="delAtom"> Remover átomo (clique no átomo)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="addAtom"> Adicionar átomo (clique para escolher posição)
+        </label>
+        <div class="row small">
+          <label for="addAtomType" style="min-width:140px">Tipo do átomo:</label>
+          <select id="addAtomType"></select>
+        </div>
+    
+        <div class="row">
+          <!-- removido: exportCoord -->
+          <!-- removido: clearCoord -->
+          <button id="exportAllTxt" class="btn">Exportar TUDO (txt)</button>
+        </div>
+        <textarea id="exportArea" style="display:none;width:100%;height:110px"></textarea>
+
+        <div class="legend">
+          <span class="pill"><span class="dot" style="background:#ef4444"></span> Eixo X</span>
+          <span class="pill"><span class="dot" style="background:#22c55e"></span> Eixo Y</span>
+          <span class="pill"><span class="dot" style="background:#3b82f6"></span> Eixo Z</span>
+          <span class="pill"><span class="dot" style="background:#ff6b6b"></span> Camada A</span>
+          <span class="pill"><span class="dot" style="background:#cfd4dc"></span> Camada B</span>
+          <span class="pill"><span class="dot" style="background:#60a5fa"></span> Camada C</span>
+        </div>
+
+        <!-- Sliders de rotação: X, Y e Z -->
+        <div class="row3">
+          <label>
+            Rotação (X): <span id="angleXValue" class="value">52°</span>
+            <input type="range" id="angleX" min="-180" max="180" step="1" value="52" />
+          </label>
+          <label>
+            Rotação (Y): <span id="angleYValue" class="value">-34°</span>
+            <input type="range" id="angleY" min="-180" max="180" step="1" value="-34" />
+          </label>
+          <label>
+            Rotação (Z): <span id="angleZValue" class="value">0°</span>
+            <input type="range" id="angleZ" min="-180" max="180" step="1" value="0" />
+          </label>
+        </div>
+
+      </div>
+      <div class="footer">
+        Dica: use os sliders de rotação para controle fino do ângulo. O mouse continua funcionando para ajustes rápidos (X/Y).
+      </div>
+    </div>
+  </div>
+
+<script>
+
+// --- Remoção local de ligações/coord embutidas (Hex) ---
+let REMOVED_EMBED_BONDS = JSON.parse(localStorage.getItem('REMOVED_EMBED_BONDS')||'[]');
+let REMOVED_EMBED_COORDS = JSON.parse(localStorage.getItem('REMOVED_EMBED_COORDS')||'[]');
+function saveRemovedEmbeds(){
+  localStorage.setItem('REMOVED_EMBED_BONDS', JSON.stringify(REMOVED_EMBED_BONDS));
+  localStorage.setItem('REMOVED_EMBED_COORDS', JSON.stringify(REMOVED_EMBED_COORDS));
+}
+function removedEmbedBondHas(key,cells,id){
+  return REMOVED_EMBED_BONDS.some(e=>e.key===key && e.cells===cells && e.id===id);
+}
+function markRemovedEmbedBond(key,cells,id){
+  if(!removedEmbedBondHas(key,cells,id)){
+    REMOVED_EMBED_BONDS.push({key,cells,id}); saveRemovedEmbeds();
+  }
+}
+function clearRemovedEmbedsFor(key,cells){
+  REMOVED_EMBED_BONDS = REMOVED_EMBED_BONDS.filter(e=>!(e.key===key && e.cells===cells));
+  REMOVED_EMBED_COORDS = REMOVED_EMBED_COORDS.filter(e=>!(e.key===key && e.cells===cells));
+  saveRemovedEmbeds();
+}
+
+// === Ligações embutidas (topo/hexágono/base) ===
+let EMBEDDED_BONDS =   [{"key": "HEX_ABC", "a": {"type": "X", "uc": [0.5000000000000001, 0.28867513459481287, 0.816496580927726]}, "b": {"type": "X", "uc": [-0.5000000000000001, 0.28867513459481287, 0.816496580927726]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-0.5000000000000001, 0.28867513459481287, 0.816496580927726]}, "b": {"type": "X", "uc": [-1.0605752387249069e-16, -0.5773502691896258, 0.816496580927726]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-1.0605752387249069e-16, -0.5773502691896258, 0.816496580927726]}, "b": {"type": "X", "uc": [0.5000000000000001, 0.28867513459481287, 0.816496580927726]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [1.0, 0.0, 0.0]}, "b": {"type": "X", "uc": [0.5000000000000001, 0.8660254037844386, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [0.5000000000000001, 0.8660254037844386, 0.0]}, "b": {"type": "X", "uc": [-0.4999999999999998, 0.8660254037844387, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-0.4999999999999998, 0.8660254037844387, 0.0]}, "b": {"type": "X", "uc": [-1.0, 1.2246467991473532e-16, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-1.0, 1.2246467991473532e-16, 0.0]}, "b": {"type": "X", "uc": [-0.5000000000000004, -0.8660254037844384, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-0.5000000000000004, -0.8660254037844384, 0.0]}, "b": {"type": "X", "uc": [0.5000000000000001, -0.8660254037844386, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [0.5000000000000001, -0.8660254037844386, 0.0]}, "b": {"type": "X", "uc": [1.0, 0.0, 0.0]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [3.53525079574969e-17, 0.5773502691896258, -0.816496580927726]}, "b": {"type": "X", "uc": [-0.5, -0.288675134594813, -0.816496580927726]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [-0.5, -0.288675134594813, -0.816496580927726]}, "b": {"type": "X", "uc": [0.4999999999999999, -0.2886751345948132, -0.816496580927726]}}, {"key": "HEX_ABC", "a": {"type": "X", "uc": [0.4999999999999999, -0.2886751345948132, -0.816496580927726]}, "b": {"type": "X", "uc": [3.53525079574969e-17, 0.5773502691896258, -0.816496580927726]}}];
+
+
+// === Ligações embutidas (além do localStorage) ===
+
+
+
+// --- helper: fix intro camera and disable rotation ---
+function setIntroFixedView(controls, camera){
+  try{
+    if (controls) {
+      if ('enableRotate' in controls) controls.enableRotate = false;
+      if ('enabled' in controls) controls.enabled = true; // keep zoom/pan if available
+    }
+    if (camera && camera.position){
+      // A pleasant isometric-like view
+      camera.position.set(6, 7, 8);
+      if (camera.lookAt) camera.lookAt(0,0,0);
+    }
+  }catch(e){}
+}
+
+const TAU=Math.PI*2, clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const deg2rad=d=>d*Math.PI/180, rad2deg=r=>r*180/Math.PI;
+function rotX(p,a){const s=Math.sin(a),c=Math.cos(a);return [p[0],c*p[1]-s*p[2],s*p[1]+c*p[2]];}
+function rotY(p,a){const s=Math.sin(a),c=Math.cos(a);return [c*p[0]+s*p[2],p[1],-s*p[0]+c*p[2]];}
+function rotZ(p,a){const s=Math.sin(a),c=Math.cos(a);return [c*p[0]-s*p[1],s*p[0]+c*p[1],p[2]];}
+
+
+// --- Lattice matrix helpers (support non-orthogonal cells) ---
+function matMulVec(M, v){
+  return [
+    M[0][0]*v[0] + M[0][1]*v[1] + M[0][2]*v[2],
+    M[1][0]*v[0] + M[1][1]*v[1] + M[1][2]*v[2],
+    M[2][0]*v[0] + M[2][1]*v[1] + M[2][2]*v[2],
+  ];
+}
+function diag3(a,b,c){ return [[a,0,0],[0,b,0],[0,0,c]]; }
+
+// General cell matrix from a,b,c and angles (deg): alpha=∠(b,c), beta=∠(a,c), gamma=∠(a,b)
+function cellMatrix(a,b,c, alphaDeg, betaDeg, gammaDeg){
+  const A = alphaDeg*Math.PI/180, B = betaDeg*Math.PI/180, G = gammaDeg*Math.PI/180;
+  const ca=Math.cos(A), cb=Math.cos(B), cg=Math.cos(G), sg=Math.sin(G);
+  // From crystallography conversion (fractional -> Cartesian)
+  const vx = [a, b*cg, c*cb];
+  const vy = [0, b*sg, c*(ca - cb*cg)/sg];
+  const V = (1 - ca*ca - cb*cb - cg*cg + 2*ca*cb*cg) ** 0.5;
+  const vz = [0, 0, c*V/sg];
+  return [vx, vy, vz];
+}
+const canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d');
+function resize(){const dpr=window.devicePixelRatio||1;canvas.width=canvas.clientWidth*dpr;canvas.height=canvas.clientHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+window.addEventListener('resize',resize); resize();
+
+const ui={
+  projOrtho:document.getElementById('projOrtho'),
+
+  structure:document.getElementById('structure'),
+  cells:document.getElementById('cells'),
+  radius:document.getElementById('radius'),
+  spacing:document.getElementById('spacing'),
+  light:document.getElementById('light'),
+  unitcell:document.getElementById('unitcell'),
+  ucOnly:document.getElementById('ucOnly'),
+  faceOnly:document.getElementById('faceOnly'),
+  faceSelect:document.getElementById('faceSelect'),
+  bonds:document.getElementById('bonds'),
+  coordpoly:document.getElementById('coordpoly'),
+  schottky:document.getElementById('schottky'),
+  frenkel:document.getElementById('frenkel'),
+  angleX:document.getElementById('angleX'),
+  angleY:document.getElementById('angleY'),
+  angleZ:document.getElementById('angleZ'),
+  angleXValue:document.getElementById('angleXValue'),
+  angleYValue:document.getElementById('angleYValue'),
+  angleZValue:document.getElementById('angleZValue'),
+  introBox:document.getElementById('introBox'),
+  introSeq:document.getElementById('introSeq'),
+  introLayers:document.getElementById('introLayers'),
+  introLayersValue:document.getElementById('introLayersValue'),
+  addLayer:document.getElementById('addLayer'),
+  removeLayer:document.getElementById('removeLayer'),
+  editBonds:document.getElementById('editBonds'),
+  exportBonds:document.getElementById('exportBonds'),
+  showBonds:document.getElementById('showBonds'),
+  clearBonds:document.getElementById('clearBonds'),
+  delBonds:document.getElementById('delBonds'),
+  exportArea:document.getElementById('exportArea'),
+  editCoord:document.getElementById('editCoord'),
+  exportCoord:document.getElementById('exportCoord'),
+  exportAllTxt:document.getElementById('exportAllTxt'),
+  exportAllTxt:document.getElementById('exportAllTxt'),
+  clearCoord:document.getElementById('clearCoord'),
+  delCoord:document.getElementById('delCoord'),
+  delAtom:document.getElementById('delAtom'),
+  addAtom:document.getElementById('addAtom'),
+  addAtomType:document.getElementById('addAtomType'),
+};
+
+// --- Patch guard for hidden Y slider ---
+try {
+  if (!ui.angleY) { ui.angleY = { value: 0, addEventListener: ()=>{}, closest: ()=>null, style:{} }; }
+  if (!ui.angleYValue) { ui.angleYValue = { textContent:'', style:{} }; }
+} catch(e) {}
+
+// ==== REMOÇÃO: Poliedros de coordenação desativados ====
+try {
+  if (!ui.coordpoly) ui.coordpoly = {checked:false, disabled:true, addEventListener: ()=>{}};
+  if (!ui.editCoord) ui.editCoord = {checked:false, disabled:true, addEventListener: ()=>{}};
+  if (!ui.delCoord)  ui.delCoord  = {checked:false, disabled:true, addEventListener: ()=>{}};
+} catch(e) {}
+
+try {
+  // Garantir variáveis e funções neutras
+  if (typeof EMBEDDED_COORDS === 'undefined') { window.EMBEDDED_COORDS = []; }
+  if (typeof ALL_COORDS === 'undefined') { window.ALL_COORDS = []; }
+  // No-ops
+  window.coordsForCurrent = function(){ return []; };
+  window.toggleCoord = function(){ /* removido */ };
+  window.clearCoordsCurrent = function(){ /* removido */ };
+  window.saveLocalCoord = function(){ /* removido */ };
+  window.syncPolyToCoord = function(){ /* removido */ };
+} catch(e) {}
+// ==== FIM REMOÇÃO ====
+
+// ==== REMOÇÃO EXTRA: stubs para elementos de coordenação que foram removidos da UI ====
+try {
+  if (!ui.clearCoord) ui.clearCoord = { addEventListener: ()=>{} };
+  if (!ui.exportCoord) ui.exportCoord = { addEventListener: ()=>{} };
+  if (!ui.exportArea) ui.exportArea = { style: { display: 'none' }, value: '', select: ()=>{} };
+} catch(e) {}
+// ==== FIM REMOÇÃO EXTRA ====
+
+
+
+// Garantir objeto dummy para 'bonds' (removido da UI)
+if(!ui.bonds){ ui.bonds = {checked:false, disabled:true, addEventListener:()=>{}}; }
+
+
+// --- Estruturas ---
+// Para RUTÍLIO: célula tetragonal (P4_2/mnm), c/a ~ 0.644 e parâmetro interno u ~ 0.305
+const STRUCTURES={
+  SC:{species:[{type:"M",pos:[0,0,0]}]},
+  BCC:{species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0.5,0.5,0.5]}]},
+  FCC:{species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0,0.5,0.5]},{type:"M",pos:[0.5,0,0.5]},{type:"M",pos:[0.5,0.5,0]}]},
+  NaCl:{species:[{type:"A",pos:[0,0,0]},{type:"A",pos:[0,0.5,0.5]},{type:"A",pos:[0.5,0,0.5]},{type:"A",pos:[0.5,0.5,0]},{type:"C",pos:[0.5,0,0]},{type:"C",pos:[0,0.5,0]},{type:"C",pos:[0,0,0.5]},{type:"C",pos:[0.5,0.5,0.5]}]},
+  CsCl:{species:[{type:"A",pos:[0,0,0]},{type:"C",pos:[0.5,0.5,0.5]}]},
+  ZnS:{species:[{type:"A",pos:[0,0,0]},{type:"A",pos:[0,0.5,0.5]},{type:"A",pos:[0.5,0,0.5]},{type:"A",pos:[0.5,0.5,0]},{type:"C",pos:[0.25,0.25,0.25]},{type:"C",pos:[0.75,0.75,0.25]},{type:"C",pos:[0.75,0.25,0.75]},{type:"C",pos:[0.25,0.75,0.75]}]},
+  RUTILIO:(()=>{
+    const u=0.305; // parâmetro interno aproximado
+    const metric=[1,1,0.644]; // c/a ~ 0.644
+    const species=[
+      {type:"T",pos:[0.0,0.0,0.0]},           // Ti (2a)
+      {type:"T",pos:[0.5,0.5,0.5]},           // Ti (2a)
+      {type:"O",pos:[ u,  u,  0.0]},          // O (4f)
+      {type:"O",pos:[-u, -u,  0.0]},
+      {type:"O",pos:[0.5+u, 0.5-u, 0.5]},
+      {type:"O",pos:[0.5-u, 0.5+u, 0.5]},
+    ];
+    return {species, metric};
+  })()
+  ,
+  
+// ===== Bravais lattices (b–f from the figure) =====
+  // (b) Tetragonal: a=a ≠ c
+  TETRA_P:{ species:[{type:"M",pos:[0,0,0]}], metricM: diag3(1,1,1.6) },
+  TETRA_I:{ species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0.5,0.5,0.5]}], metricM: diag3(1,1,1.6) },
+
+  // (c) Orthorhombic: a≠b≠c, all 90°
+  ORTHO_P:{ species:[{type:"M",pos:[0,0,0]}], metricM: diag3(1.0,1.25,1.6) },
+  ORTHO_I:{ species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0.5,0.5,0.5]}], metricM: diag3(1.0,1.25,1.6) },
+  ORTHO_F:{ species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0,0.5,0.5]},{type:"M",pos:[0.5,0,0.5]},{type:"M",pos:[0.5,0.5,0]}], metricM: diag3(1.0,1.25,1.6) },
+  ORTHO_C:{ species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0,0.5,0.5]}], metricM: diag3(1.0,1.25,1.6) },
+
+  // (d) Monoclinic (unique axis b): β ≠ 90°
+  MONO_P:(()=>{ const a=1.0,b=1.2,c=1.6,beta=110;
+    return { species:[{type:"M",pos:[0,0,0]}], metricM: cellMatrix(a,b,c, 90,beta,90) };
+  })(),
+  MONO_C:(()=>{ const a=1.0,b=1.2,c=1.6,beta=110;
+    return { species:[{type:"M",pos:[0,0,0]},{type:"M",pos:[0,0.5,0.5]}], metricM: cellMatrix(a,b,c, 90,beta,90) };
+  })(),
+
+  // (e) Triclinic: α≠β≠γ, a≠b≠c
+  TRICLINIC_P:(()=>{ const a=1.0,b=1.15,c=1.35,alpha=80,beta=110,gamma=95;
+    return { species:[{type:"M",pos:[0,0,0]}], metricM: cellMatrix(a,b,c, alpha,beta,gamma) };
+  })(),
+  // 
+  HEX_P:(()=>{
+    // Vértices do prisma hexagonal centrado (6 base + 6 topo)
+    const verts = [
+      [ 0.5,   0.0,  -0.5], [ 0.5,  0.5,  -0.5], [ 0.0,  0.5,  -0.5],
+      [-0.5,   0.0,  -0.5], [-0.5, -0.5,  -0.5], [ 0.0, -0.5,  -0.5],
+      [ 0.5,   0.0,   0.5], [ 0.5,  0.5,   0.5], [ 0.0,  0.5,   0.5],
+      [-0.5,   0.0,   0.5], [-0.5, -0.5,   0.5], [ 0.0, -0.5,   0.5]
+    ];
+    const species = verts.map(v=>({type:"M", pos:v}));
+    const a=1.0, c=1.6;
+    return { species, metricM: cellMatrix(a,a,c, 90,90,120) };
+  })(),
+
+
+  // (f) Trigonal (Rhombohedral): a=b=c, α=β=γ≠90°
+  TRIGONAL_R:(()=>{ const a=1.0,alpha=70; 
+    return { species:[{type:"M",pos:[0,0,0]}], metricM: cellMatrix(a,a,a, alpha,alpha,alpha) };
+  })()
+
+};
+
+
+
+
+function refreshAddAtomTypes(){
+  if(!ui.addAtomType) return;
+  const options = [
+    {v:'A', label:'A (Grande, vermelho)'},
+    {v:'B', label:'B (Normal, cinza)'},
+    {v:'C', label:'C (Pequeno, verde)'}
+  ];
+  ui.addAtomType.innerHTML = options.map(o=>`<option value="${o.v}">${o.label}</option>`).join('');
+}
+
+function addAtomStyleFor(t){
+  switch(String(t||'').toUpperCase()){
+    case 'A': return { color:'#ef4444', rScale:1.30 }; // vermelho, grande
+    case 'B': return { color:'#9ca3af', rScale:1.00 }; // cinza, normal
+    case 'C': return { color:'#10b981', rScale:0.75 }; // verde, pequeno
+    default:  return { color:'#9ca3af', rScale:1.00 };
+  }
+}
+
+const COLORS={
+  M:"#9aa3b2", C:"#60a5fa", A:"#ff6b6b", B:"#cfd4dc", V:"#fbbf24",
+  T:"#d0d6e1", // Ti (cinza claro)
+  O:"#ef4444"  // Oxigênio (vermelho)
+};
+function isIonic(k){return (k==="NaCl"||k==="CsCl"||k==="ZnS");}
+
+// Constrói n×n×n células; aplica métrica anisotrópica se existir
+function buildLattice(k,n){
+  if(k==="INTRO" || k==="INTRO2"){ return []; }
+  const def=STRUCTURES[k]||{};
+  const basis=def.species||[], metric=def.metric||[1,1,1];
+  const M = def.metricM ? def.metricM : diag3(metric[0],metric[1],metric[2]);
+  const atoms=[];
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++) for(let l=0;l<n;l++){
+    for(const b of basis){
+      atoms.push({type:b.type, color:b.color, rScale:(b.rScale??b.rscale), fpos:[(b.pos[0]||0)+i,(b.pos[1]||0)+j,(b.pos[2]||0)+l]});
+    }
+  }
+  // Center lattice so that the unit-cell crop is stable for any "cells" value (avoids even/odd shifting)
+  const center = (n/2) - ((n % 2 === 0) ? 0.5 : 0);
+  for(const a of atoms){
+    const uc=[a.fpos[0]-center,a.fpos[1]-center,a.fpos[2]-center];
+    a.uc = uc;
+    a.pos = matMulVec(M, uc);
+  }
+  return atoms;
+}
+
+// ---------- INTRO (camadas A/B/C) ----------
+function buildIntroBase(side){
+  const e1=[1,0,0], e2=[0.5, Math.sqrt(3)/2, 0];
+  const pts=[];
+  for(let r=0;r<side;r++){
+    for(let c=0;c<side-r;c++){
+      const x = c*e1[0] + r*e2[0];
+      const y = c*e1[1] + r*e2[1];
+      pts.push([x,y,0]);
+    }
+  }
+  return {pts,e1,e2};
+}
+function layerShift(frac, e1, e2){ return [(e1[0]+e2[0])*frac, (e1[1]+e2[1])*frac, 0]; }
+function layerShiftABC(idx, e1, e2){
+  // idx: 0=A, 1=B, 2=C  -> shifts along (e1+e2) by 0, 1/3, 2/3
+  const frac = idx===0 ? 0 : (idx===1 ? 1/3 : 2/3);
+  return [ (e1[0]+e2[0])*frac, (e1[1]+e2[1])*frac, 0 ];
+}
+
+function buildIntroLayers(side, layers, seq){
+  const {pts, e1, e2} =buildIntroBase(side);
+  const h = Math.sqrt(2/3);
+  const gap = 0.02; // minimal clearance above contact (in world units, ~2% of diameter)
+  const atoms=[];
+  for(let k=0;k<layers;k++){
+    let frac=0, type='A';
+    if(seq==="ABC"){
+      const m=k%3;
+      frac = m/3;
+      type = m===0?'A':(m===1?'B':'C');
+    }else{
+      const m=k%2;
+      frac = m===0?0:1/3;
+      type = m===0?'A':'B';
+    }
+    const sh = layerShift(frac, e1, e2);
+    for(const p of pts){
+      const pos=[p[0]+sh[0], p[1]+sh[1], k*h];
+      atoms.push({type, pos, uc:[pos[0],pos[1],pos[2]]});
+    }
+  }
+  let cx=0,cy=0,cz=0;
+  for(const a of atoms){cx+=a.pos[0]; cy+=a.pos[1]; cz+=a.pos[2];}
+  const n=atoms.length||1; cx/=n; cy/=n; cz/=n;
+  for(const a of atoms){ a.pos[0]-=cx; a.pos[1]-=cy; a.pos[2]-=cz; a.uc=[a.pos[0],a.pos[1],a.pos[2]]; }
+  return atoms;
+}
+
+// === Intro camadas (A -> B) ===
+function buildIntroBaseTriangle(side){
+  const e1=[1,0,0], e2=[0.5, Math.sqrt(3)/2, 0];
+  const pts=[];
+  for(let r=0;r<side;r++){
+    for(let c=0;c<side-r;c++){
+      const x = c*e1[0] + r*e2[0];
+      const y = c*e1[1] + r*e2[1];
+      pts.push([x,y,0]);
+    }
+  }
+  return {pts,e1,e2};
+}
+function introCamadasInit(side){
+  const {pts,e1,e2} = buildIntroBaseTriangle(side);
+  const cx = (Math.max(...pts.map(p=>p[0])) + Math.min(...pts.map(p=>p[0])))/2;
+  const cy = (Math.max(...pts.map(p=>p[1])) + Math.min(...pts.map(p=>p[1])))/2;
+  const A = pts.map(p=>({type:'A', pos:[p[0]-cx, p[1]-cy, 0], uc:[p[0]-cx,p[1]-cy,0]}));
+  const h = Math.sqrt(2/3);
+  const gap = 0.02; // minimal clearance above contact (in world units, ~2% of diameter)
+  const shift=[(e1[0]+e2[0])/3, (e1[1]+e2[1])/3, 0];
+  
+  // compute triangle centers only where p, p+e1 and p+e2 exist (true intersections)
+  const key = (x,y)=> (x.toFixed(6)+','+y.toFixed(6));
+  const set = new Set(pts.map(p=>key(p[0],p[1])));
+  const Btargets = [];
+  for (const p of pts){
+    const q1x = p[0]+e1[0], q1y = p[1]+e1[1];
+    const q2x = p[0]+e2[0], q2y = p[1]+e2[1];
+    if (set.has(key(q1x,q1y)) && set.has(key(q2x,q2y))){
+      const x = p[0] + (e1[0]+e2[0])/3 - cx;
+      const y = p[1] + (e1[1]+e2[1])/3 - cy;
+      Btargets.push({type:'B', pos:[x,y,h+gap], uc:[x,y,h+gap]});
+    }
+  }
+  // === third layer (ABA): positions directly above subset of A, computed from B lattice (down triangles) ===
+  const setB = new Set(Btargets.map(t=>key(t.pos[0], t.pos[1])));
+  const A3targets = [];
+  for (const t of Btargets){
+    const qx = t.pos[0], qy = t.pos[1];
+    // Down-pointing triangle in the B lattice: q, q - e1, q - e2
+    if (setB.has(key(qx - e1[0], qy - e1[1])) && setB.has(key(qx - e2[0], qy - e2[1]))){
+      const x = qx - (e1[0]+e2[0])/3;
+      const y = qy - (e1[1]+e2[1])/3;
+      A3targets.push({type:'A', pos:[x,y,2*h+2*gap], uc:[x,y,2*h+2*gap]});
+    }
+  }
+  return {A, Btargets, Bplaced:[], Bfalling:[], A3targets, A3placed:[], A3falling:[], running:false, h, side};
+}
+function introCamadasComposeAtoms(ic){
+  return [
+    ...ic.A.map(a=>({type:'A', uc:a.uc.slice(), pos:a.pos.slice()})),
+    ...ic.Bplaced.map(b=>({type:'B', uc:b.uc.slice(), pos:b.pos.slice()})),
+    ...ic.Bfalling.map(b=>({type:'B', uc:b.uc.slice(), pos:b.pos.slice()})),
+    ...(ic.A3placed||[]).map(a=>({type:'A', uc:a.uc.slice(), pos:a.pos.slice()})),
+    ...(ic.A3falling||[]).map(a=>({type:'A', uc:a.uc.slice(), pos:a.pos.slice()})),
+  ];
+}
+function introCamadasStart(ic, onDone){
+  if(ic.running) return;
+  ic.running=true;
+  const queue = ic.Btargets.filter(t => !ic.Bplaced.some(p=>p.uc.join(',')===t.uc.join(',')));
+  let i=0;
+  function dropNext(){
+    if(i>=queue.length){ ic.running=false; if(onDone) onDone(); return; }
+    const t = queue[i++];
+    const startZ = t.pos[2] + 2.0;
+    const f = {type:'B', uc:[t.uc[0], t.uc[1], startZ], pos:[t.pos[0], t.pos[1], startZ], target:t, vz:-0.10};
+    ic.Bfalling.push(f);
+    setTimeout(dropNext, 350);
+  }
+  dropNext();
+}
+function introCamadasStartTopA(ic, onDone){
+  if(ic.running) return;
+  ic.running=true;
+  if(!ic.A3targets) { if(onDone){ onDone(); } ic.running=false; return; }
+  const queue = ic.A3targets.filter(t => !(ic.A3placed||[]).some(p=>p.uc.join(',')===t.uc.join(',')));
+  let i=0;
+  function dropNext(){
+    if(i>=queue.length){ ic.running=false; if(onDone) onDone(); return; }
+    const t = queue[i++];
+    const startZ = t.pos[2] + 2.0;
+    const f = {type:'A', uc:[t.uc[0], t.uc[1], startZ], pos:[t.pos[0], t.pos[1], startZ], target:t, vz:-0.10};
+    ic.A3falling = ic.A3falling || [];
+    ic.A3placed  = ic.A3placed  || [];
+    ic.A3falling.push(f);
+    setTimeout(dropNext, 350);
+  }
+  dropNext();
+}
+function introCamadasTick(ic){
+  let moving=false;
+  // B layer falling
+  for(let k=(ic.Bfalling||[]).length-1; k>=0; k--){
+    const f=ic.Bfalling[k];
+    f.pos[2] += f.vz;
+    f.uc[2] = f.pos[2];
+    if(f.pos[2] <= f.target.pos[2]){
+      f.pos[2] = f.target.pos[2];
+      f.uc[2]  = f.target.uc[2];
+      ic.Bplaced.push({type:'B', pos:f.pos.slice(), uc:f.uc.slice()});
+      ic.Bfalling.splice(k,1);
+    } else {
+      moving=true;
+    }
+  }
+  // Top A (third layer) falling
+  if(ic.A3falling){
+    for(let k=ic.A3falling.length-1; k>=0; k--){
+      const f=ic.A3falling[k];
+      f.pos[2] += f.vz;
+      f.uc[2] = f.pos[2];
+      if(f.pos[2] <= f.target.pos[2]){
+        f.pos[2] = f.target.pos[2];
+        f.uc[2]  = f.target.uc[2];
+        ic.A3placed.push({type:'A', pos:f.pos.slice(), uc:f.uc.slice()});
+        ic.A3falling.splice(k,1);
+      } else {
+        moving=true;
+      }
+    }
+  }
+  return moving;
+}
+
+const state={key:"FCC",n:+ui.cells.value,atoms:[],angleX:0.9,angleY:-0.6,angleZ:0,distance:7,zoom:1,drag:false,last:{x:0,y:0}};
+// Guard: if previous sessions had HEX_P, remap to HEX_ABC
+try{ if(state && false /* HEX_P removed */) state.key='HEX_ABC'; }catch(e){}
+
+window.state = state; // make state globally accessible for intro mouse handlers
+if (state.key==='INTRO') { state.key='FCC'; try{ if(ui && ui.structure) ui.structure.value='FCC'; }catch(e){} }
+
+function rebuild(){
+  // Reset rotation labels visibility by default (will be adjusted per-mode)
+  (function(){
+    const x = document.getElementById('angleX'); const y = document.getElementById('angleY'); const z = document.getElementById('angleZ');
+    const xl = x ? (x.closest('label')||x.parentElement) : null;
+    const yl = y ? (y.closest('label')||y.parentElement) : null;
+    const zl = z ? (z.closest('label')||z.parentElement) : null;
+    if(xl) xl.style.display='';
+    if(yl) yl.style.display='';
+    if(zl) zl.style.display='';
+    const rotGroup = document.querySelector('.row3'); if(rotGroup) rotGroup.style.display='';
+  })();
+
+  // Reset lock flag by default; will be set inside INTRO_CAMADAS branch
+  state._introCamadasLocked = false;
+
+  // -- INTRO_CAMADAS setup --
+  if (state.key==='INTRO_CAMADAS') {
+    // Lock angles to screenshot values for Intro Camadas AB
+
+    state._introCamadasLocked = false;
+    // Hide all rotation controls; hide X and Z for Intro Camadas
+    const rotGroup = document.querySelector('.row3'); if(rotGroup) rotGroup.style.display = '';
+    const xInput = document.getElementById('angleX'); const yInput = document.getElementById('angleY'); const zInput = document.getElementById('angleZ');
+    const xLabel = xInput ? (xInput.closest('label') || xInput.parentElement) : null;
+    const yLabel = yInput ? (yInput.closest('label') || yInput.parentElement) : null;
+    const zLabel = zInput ? (zInput.closest('label') || zInput.parentElement) : null;
+    if (xLabel) xLabel.style.display = '';
+    if (zLabel) zLabel.style.display = '';
+    if (yLabel) yLabel.style.display = '';
+    
+
+    state.angleX = Math.PI;
+    state.angleY = (-180*Math.PI)/180;
+    state.angleZ = (-117*Math.PI)/180;
+    state.zoom   = 0.55;
+    state.distance = 6.6;
+    
+    // Put radius slider at max by default (Intro Camadas AB)
+    if (ui.radius) { ui.radius.value = ui.radius.max || 40; }
+if (ui.ucOnly) { ui.ucOnly.checked = false; ui.ucOnly.disabled = true; }
+    const rotRow = document.getElementById('angleX')?.closest('.row3');
+    if (rotRow) rotRow.style.display = '';
+    const legend = document.querySelector('.legend');
+    if (legend) legend.style.display = 'none';
+    const side = +ui.cells.value;
+    if (!state.ic || state.ic.side!==side) {
+      state.ic = introCamadasInit(side);
+    }
+    state.atoms = introCamadasComposeAtoms(state.ic);
+  }
+
+  try{ ensureRemovedAtomsOutsideUC_Current(); }catch(e){}
+ 
+  // Rebuild lattice and (re)apply UI states per structure
+  const isIntro = (state.key==='INTRO2' || state.key==='INTRO_TESTE' || state.key==='HEX_ABC');
+  state.atoms = isIntro ? [] : buildLattice(state.key, +ui.cells.value);
+
+  // Defect toggles depend on ionic vs covalent
+  ui.schottky.disabled = !isIonic(state.key);
+  ui.frenkel.disabled  = !isIonic(state.key);
+  if(!isIonic(state.key)){ ui.schottky.checked=false; ui.frenkel.checked=false; }
+
+  const intro = (state.key==='INTRO2' || state.key==='INTRO_TESTE');
+  const introFixed = (state.key==='INTRO2'); // INTRO_TESTE: sliders ON
+
+  // Controls common to the 3D structures
+  ui.unitcell.disabled = intro;
+  ui.faceOnly.disabled = intro;
+  ui.faceSelect.disabled = intro || !ui.faceOnly.checked;
+  const faceRow = document.getElementById('faceRow');
+  if (faceRow) faceRow.style.display = intro ? 'none' : 'flex';
+
+  // Show/Hide Intro box
+  if (ui.introBox) ui.introBox.style.display = intro ? 'block' : 'none';
+  // Hide sequence & layers options inside Intro
+  if (intro && ui.introBox){
+    const seq = ui.introSeq ? (ui.introSeq.closest('label') || ui.introSeq.parentElement) : null;
+    if (seq) seq.style.display = 'none';
+    const lay = ui.introLayers ? (ui.introLayers.closest('label') || ui.introLayers.parentElement) : null;
+    if (lay) lay.style.display = 'none';
+    const btnRow = document.querySelector('#introBox .btnRow');
+    if (btnRow) btnRow.style.display = 'none';
+    const wrow = document.getElementById('waterRow');
+    if (wrow) wrow.style.display = (state.key==='INTRO_TESTE') ? '' : 'none';
+    const erow = document.getElementById('edgesRow');
+    if (erow) erow.style.display = (state.key==='INTRO_TESTE') ? '' : 'none';
+  }
+
+
+  if (introFixed) {
+    // Fixed camera & framing for Intro
+    state.angleX = Math.PI;                // 180°
+    state.angleY = (90*Math.PI)/180;       // 16°
+    state.angleZ = (8*Math.PI)/180;        // 8°
+    state.zoom   = 0.5;                    // as requested
+    state.distance = 6.6;                  // framing
+
+    // Crop off in Intro
+    if (ui.ucOnly) { ui.ucOnly.checked = false; ui.ucOnly.disabled = true; }
+
+    // Hide rotation UI in Intro
+    const rotRow = document.getElementById('angleX')?.closest('.row3');
+    if (rotRow) rotRow.style.display = '';
+    const legend = document.querySelector('.legend');
+    if (legend) legend.style.display = 'none';
+  } else {
+    // Outside Intro: keep crop ON by default
+    if (ui.ucOnly) { ui.ucOnly.disabled = false; ui.ucOnly.checked = true; }
+
+    // Show rotation UI back
+    const rotRow = document.getElementById('angleX')?.closest('.row3');
+    if (rotRow) rotRow.style.display = '';
+    const legend = document.querySelector('.legend');
+    if (legend) legend.style.display = '';
+  }
+
+  if (typeof syncAngleSlidersFromState === 'function') syncAngleSlidersFromState();
+}
+ui.structure.addEventListener('change',()=>{state.key=ui.structure.value;  const erow = document.getElementById('edgesRow');
+  if (erow) erow.style.display = (ui.structure.value==='INTRO_TESTE') ? '' : 'none';
+
+// Toggle water row visibility whenever a estrutura changes
+const wrow = document.getElementById('waterRow');
+if (wrow) wrow.style.display = (ui.structure.value==='INTRO_TESTE') ? '' : 'none';
+
+
+// Água (modo Intro Teste)
+const addBtn = document.getElementById('addWater');
+const clearBtn = document.getElementById('clearWater');
+if (!state.water) state.water = [];
+if (addBtn) addBtn.onclick = ()=>{
+  const n = 120;
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const centerX = w*0.5;
+  for(let i=0;i<n;i++){
+    state.water.push({ x: centerX + (Math.random()*2 - 1)*120, y: h*0.1 + Math.random()*10, vx: 0, vy: 0.2 + Math.random()*0.2, life: 0 });
+}
+};
+if (clearBtn) clearBtn.onclick = ()=>{ state.water = []; };
+ const rowIC = document.getElementById('introCamadasRow'); if(rowIC) rowIC.style.display = (ui.structure.value==='INTRO_CAMADAS') ? '' : 'none'; rebuild();});
+ui.faceOnly.addEventListener('change',()=>{ ui.faceSelect.disabled = !ui.faceOnly.checked || ui.faceOnly.disabled; });
+ui.faceSelect.addEventListener('change',()=>{});
+
+ui.spacing.addEventListener('input', ()=>{ if(state.key==='INTRO2') { /* immediate draw tick */ } });
+ui.cells.addEventListener('input',rebuild);
+['radius','spacing','light','unitcell','ucOnly','bonds','coordpoly','schottky','frenkel','faceOnly','faceSelect'].forEach(id=>ui[id].addEventListener('input',()=>{}));
+
+ui.schottky.addEventListener('change', ()=>{ draw(); });
+ui.frenkel.addEventListener('change', ()=>{ draw(); });
+
+// Exclusão/edição — garantir exclusividade e limpar seleção
+ui.editBonds.addEventListener('change', ()=>{ if(ui.editBonds.checked){ ui.delBonds.checked=false; } state.pickA=null; });
+ui.delBonds.addEventListener('change', ()=>{ if(ui.delBonds.checked){ ui.editBonds.checked=false; } state.pickA=null; });
+ui.editCoord.addEventListener('change', ()=>{ if(ui.editCoord.checked){ ui.delCoord.checked=false; } state.coordCenterRef=null; });
+ui.delCoord.addEventListener('change', ()=>{ if(ui.delCoord.checked){ ui.editCoord.checked=false; } state.coordCenterRef=null; });
+
+// === Exclusividade das ferramentas de edição ===
+function deactivateOtherEditors(except){
+  const ids=['editBonds','delBonds','editCoord','delCoord','delAtom','addAtom'];
+  for(const id of ids){
+    if(ui[id] && id!==except){ ui[id].checked=false; }
+  }
+  state.pickA=null; state.coordCenterRef=null;
+}
+if(ui.editBonds) ui.editBonds.addEventListener('change', ()=>{ if(ui.editBonds.checked) deactivateOtherEditors('editBonds'); });
+if(ui.delBonds)  ui.delBonds.addEventListener('change',  ()=>{ if(ui.delBonds.checked)  deactivateOtherEditors('delBonds');  });
+if(ui.editCoord) ui.editCoord.addEventListener('change', ()=>{ if(ui.editCoord.checked) deactivateOtherEditors('editCoord'); });
+if(ui.delCoord)  ui.delCoord.addEventListener('change',  ()=>{ if(ui.delCoord.checked)  deactivateOtherEditors('delCoord');  });
+if(ui.delAtom)   ui.delAtom.addEventListener('change',   ()=>{ if(ui.delAtom.checked)   deactivateOtherEditors('delAtom');   });
+if(ui.addAtom)  ui.addAtom.addEventListener('change', ()=>{ if(ui.addAtom.checked)  deactivateOtherEditors('addAtom');  });
+
+// === Exportar todas as estruturas (TXT) ===
+
+ui.exportAllTxt.addEventListener('click', ()=>{
+  function addedForKey(k){
+    try{
+      const adds = JSON.parse(localStorage.getItem('custom_atoms_added_v1')||'[]');
+      return adds.filter(r=>r.key===k && r.cells===cells);
+    }catch(e){ return []; }
+  }
+
+  const cells = +ui.cells.value;
+  // Todas as estruturas (exceto intros)
+  const keys = Object.keys(STRUCTURES).filter(k=>!k.startsWith('INTRO'));
+  // Fontes de dados persistentes
+  const lsBonds  = JSON.parse(localStorage.getItem('custom_bonds_v1') || '[]');
+  const lsCoords = JSON.parse(localStorage.getItem('custom_coords_v1') || '[]');
+  const embedsB  = Array.isArray(window.EMBEDDED_BONDS)  ? window.EMBEDDED_BONDS  : [];
+  const embedsC  = Array.isArray(window.EMBEDDED_COORDS) ? window.EMBEDDED_COORDS : [];
+  const removedEmb = JSON.parse(localStorage.getItem('REMOVED_EMBED_BONDS')||'[]');
+  const removedIds = new Set(removedEmb.filter(r=>r.cells===cells).map(r=> (r.id || (r.key+'|'+r.cells+'|'+(r.a?.type+'@'+(r.a?.uc||[]).join(','))+'|'+(r.b?.type+'@'+(r.b?.uc||[]).join(',')))) ));
+
+  function bondId(rec){
+    const A=`${rec.a.type}@${rec.a.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+    const B=`${rec.b.type}@${rec.b.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+    return [A,B].sort().join(' | ');
+  }
+  function bondsForKey(k){
+    // embutidas desse key + locais (ambas filtradas por key + cells)
+    const imb = embedsB.filter(e=>(e.key===k && (+e.cells||cells)===cells));
+    const loc = lsBonds.filter(e=>(e.key===k && e.cells===cells));
+    const all = [...imb, ...loc];
+    return all.filter(b=>!removedIds.has(bondId(b)));
+  }
+  function coordsForKey(k){
+    const imb = embedsC.filter(e=>(e.key===k && (+e.cells||cells)===cells));
+    const loc = lsCoords.filter(e=>(e.key===k && e.cells===cells));
+    return [...imb, ...loc];
+  }
+
+  let out = [];
+  for(const k of keys){
+    const atomsAll = (typeof buildLattice === 'function' && buildLattice.length>=3)
+      ? buildLattice(state, k, cells)    // versão (state,key,n)
+      : buildLattice(k, cells);
+// === PATCH: apply persisted removals BEFORE unit-cell clipping ===
+let atoms = atomsAll.slice();
+try {
+  const _raw = localStorage.getItem(STORAGE_KEY_RM_ATOMS) || localStorage.getItem('custom_atoms_removed_v1') || '[]';
+  const _list = JSON.parse(_raw).filter(e => e && e.key === k && e.cells === cells);
+  const _rmset = new Set(_list.map(e => atomKeyId(e)));
+  const _refOf = (a) => ({ key: k, cells, type: a.type, uc: [ +a.uc[0], +a.uc[1], +a.uc[2] ] });
+  atoms = atoms.filter(a => !_rmset.has(atomKeyId(_refOf(a))));
+} catch (_e) {
+  // swallow parse errors but do not break export
+}
+const atomsUC = atoms.filter(a => inUnitCell(a));
+          // versão (key,n)
+    
+    out.push(`# ${k}`);
+    out.push(`ADDED_ATOMS count=${addedForKey(k).length}`);
+    try{
+      const def = STRUCTURES[k]||{};
+      const metric = def.metric || [1,1,1];
+      const M = def.metricM ? def.metricM : diag3(metric[0],metric[1],metric[2]);
+      for(const r of addedForKey(k)){
+        const pos = matMulVec(M, r.uc);
+        out.push(`ADDED_ATOM TYPE=${r.type}  UC(${r.uc.map(v=>(+v).toFixed(6)).join(' ')})  POS(${pos.map(v=>v.toFixed(6)).join(' ')})`);
+      }
+    }catch(e){ out.push('ADDED_ATOMS_ERROR ' + (e.message||e)); }
+    out.push('');
+
+    // REMOVED_ATOMS (fora da UC) — garante fora antes de exportar (especialmente HEX_P)
+    try{
+      const removedList = ensureRemovedOutsideForKey(k, cells, 0.02);
+      out.push(`REMOVED_ATOMS (fora da UC) count=${removedList.length}`);
+      for(const it of removedList){
+        out.push(`REMOVED ${it.type}  UC(${it.uc.map(v=>(+v).toFixed(6)).join(' ')})  UC_OUT(${it.uc_out.map(v=>(+v).toFixed(6)).join(' ')})  POS(${it.pos_out.map(v=>v.toFixed(6)).join(' ')})`);
+      }
+
+    } catch(e){ out.push('REMOVED_ATOMS_ERROR ' + (e.message||e)); }
+
+    out.push(`ATOMS (unit cell, cells=${cells})  count=${atomsUC.length}`);
+    for(const a of atomsUC){
+      const p=a.pos||[0,0,0], u=a.uc||[0,0,0];
+      out.push(`ATOM ${a.type}  UC(${u.map(v=>(+v).toFixed(6)).join(' ')})  POS(${p[0].toFixed(6)} ${p[1].toFixed(6)} ${p[2].toFixed(6)})`);
+    }
+    const bonds = bondsForKey(k);
+    out.push(`BONDS count=${bonds.length}`);
+    for(const b of bonds){
+      const A=b.a, C=b.b;
+      out.push(`BOND ${A.type} ${A.uc.map(v=>+v).join(',')}  --  ${C.type} ${C.uc.map(v=>+v).join(',')}`);
+    }
+    const coords = coordsForKey(k);
+    out.push(`COORDINATIONS count=${coords.length}`);
+    for(const c of coords){
+      const C=c.center, N=c.neighbor;
+      out.push(`COORD ${C.type} ${C.uc.map(v=>+v).join(',')}  ->  ${N.type} ${N.uc.map(v=>+v).join(',')}`);
+    }
+    out.push(''); // separador
+  }
+
+  const blob = new Blob([out.join('\\n')], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `estruturas_todas_cells${cells}.txt`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 500);
+});
+
+// Intro controls (may be absent depending on Intro mode/UI)
+if (ui.introSeq && ui.introSeq.addEventListener) ui.introSeq.addEventListener('change', rebuild);
+if (ui.introLayers && ui.introLayers.addEventListener) {
+  ui.introLayers.addEventListener('input', ()=>{
+    if (ui.introLayersValue) ui.introLayersValue.textContent = ui.introLayers.value;
+    rebuild();
+  });
+}
+if (ui.addLayer && ui.addLayer.addEventListener) {
+  ui.addLayer.addEventListener('click', ()=>{
+    if (!ui.introLayers) return;
+    const maxV = Number(ui.introLayers.max || 6);
+    const v = Math.min(maxV, (Number(ui.introLayers.value)||0) + 1);
+    ui.introLayers.value = v;
+    if (ui.introLayersValue) ui.introLayersValue.textContent = v;
+    rebuild();
+  });
+}
+if (ui.removeLayer && ui.removeLayer.addEventListener) {
+  ui.removeLayer.addEventListener('click', ()=>{
+    if (!ui.introLayers) return;
+    const minV = Number(ui.introLayers.min || 1);
+    const v = Math.max(minV, (Number(ui.introLayers.value)||0) - 1);
+    ui.introLayers.value = v;
+    if (ui.introLayersValue) ui.introLayersValue.textContent = v;
+    rebuild();
+  });
+}
+
+
+// Sliders de rotação X/Y/Z
+function deg(v){return Math.round(v)+'°';}
+function syncAngleSlidersFromState(){
+  ui.angleX.value = Math.round(rad2deg(state.angleX));
+  ui.angleY.value = Math.round(rad2deg(state.angleY));
+  ui.angleZ.value = Math.round(rad2deg(state.angleZ));
+  ui.angleXValue.textContent = deg(ui.angleX.value);
+  ui.angleYValue.textContent = deg(ui.angleY.value);
+  ui.angleZValue.textContent = deg(ui.angleZ.value);
+}
+ui.angleX.addEventListener('input', ()=>{ state.angleX = deg2rad(+ui.angleX.value); ui.angleXValue.textContent = deg(ui.angleX.value); });
+ui.angleY.addEventListener('input', ()=>{ state.angleY = deg2rad(+ui.angleY.value); ui.angleYValue.textContent = deg(ui.angleY.value); });
+ui.angleZ.addEventListener('input', ()=>{ state.angleZ = deg2rad(+ui.angleZ.value); ui.angleZValue.textContent = deg(ui.angleZ.value); });
+syncAngleSlidersFromState();
+// --- Ligações manuais (clique-para-criar) ---
+const STORAGE_KEY = 'custom_bonds_v1';
+// Esta variável pode ser substituída pelo exportador para "salvar no código":
+
+(function(){
+  if (!Array.isArray(EMBEDDED_BONDS)) { window.EMBEDDED_BONDS = []; }
+  EMBEDDED_BONDS = EMBEDDED_BONDS.concat([
+
+  ]);
+})();
+ 
+let ALL_BONDS = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  // EMBEDDED_BONDS tem prioridade inicial (caso o arquivo venha com ligações embutidas)
+  ALL_BONDS = [...EMBEDDED_BONDS, ...stored];
+} catch(e){ ALL_BONDS = []; }
+
+function saveLocal(){ 
+  // salva apenas o que não veio embutido (evita duplicar)
+  const onlyLocal = ALL_BONDS.filter(x=>!EMBEDDED_BONDS.some(y=>bondId(y)===bondId(x)));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(onlyLocal)); 
+}
+function bondsForCurrent(){ return ALL_BONDS.filter(x=>x.key===state.key && x.cells===+ui.cells.value); }
+function atomRef(a){ return {type:a.type, uc:[+a.uc[0], +a.uc[1], +a.uc[2]], key:state.key, cells:+ui.cells.value}; }
+function eqRef(r1,r2){ 
+  return r1.type===r2.type && Math.abs(r1.uc[0]-r2.uc[0])<1e-6 && Math.abs(r1.uc[1]-r2.uc[1])<1e-6 && Math.abs(r1.uc[2]-r2.uc[2])<1e-6; 
+}
+function bondId(rec){ 
+  const A=`${rec.a.type}@${rec.a.uc.map(v=>v.toFixed(5)).join(',')}`;
+  const B=`${rec.b.type}@${rec.b.uc.map(v=>v.toFixed(5)).join(',')}`;
+  return [A,B].sort().join(' | '); 
+}
+
+
+
+
+function removeBond(aRef,bRef){
+  const rec={key:state.key,cells:+ui.cells.value,a:aRef,b:bRef};
+  const id=bondId(rec);
+  const before=ALL_BONDS.length;
+  ALL_BONDS = ALL_BONDS.filter(x=>!(x.key===state.key && x.cells===+ui.cells.value && bondId(x)===id));
+  if(ALL_BONDS.length!==before){ saveLocal(); return; }
+  // se não achou em ALL_BONDS, marca como removido dentre os embutidos (se houver)
+  markRemovedEmbedBond(state.key, +ui.cells.value, id);
+}
+
+
+function removeCoord(centerRef, neighRef){
+  // Remove par na orientação salva OU invertida
+  const id1 = coordId({center:centerRef, neighbor:neighRef});
+  const id2 = coordId({center:neighRef, neighbor:centerRef});
+  const before = ALL_COORDS.length;
+  ALL_COORDS = ALL_COORDS.filter(x=>!(
+    x.key===state.key && x.cells===+ui.cells.value && (coordId(x)===id1 || coordId(x)===id2)
+  ));
+  if(ALL_COORDS.length!==before){ saveLocalCoord(); }
+}
+function addBond(aRef,bRef){ 
+  const rec={key:state.key,cells:+ui.cells.value,a:aRef,b:bRef}; 
+  const id=bondId(rec);
+  const exists = bondsForCurrent().some(x=>bondId(x)===id);
+  if(!exists){ ALL_BONDS.push(rec); saveLocal(); }
+}
+function clearBondsCurrent(){ 
+  ALL_BONDS = ALL_BONDS.filter(x=>!(x.key===state.key && x.cells===+ui.cells.value)); 
+  saveLocal();
+  clearRemovedEmbedsFor(state.key, +ui.cells.value); 
+}
+function findAtomByRef(ref, atomsArr){ 
+  let best=null, bestd=1e9;
+  for(const a of atomsArr){ 
+    if(a.type!==ref.type) continue; 
+    const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
+    if(d<bestd){ best=a; bestd=d; } 
+  }
+  if(bestd<1e-5) return best; 
+  return null;
+}
+
+state.pickA = null;
+
+// Clique no canvas para selecionar dois átomos e criar ligação
+
+if(!window.__CANVAS_CLICK_BOUND__){ window.__CANVAS_CLICK_BOUND__=true;
+canvas.addEventListener('click', (e)=>{ if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const arr=state.projectedVisible||[];
+  let best=null, bestD=Infinity;
+  for(const item of arr){
+    const dx=item.p.x + w/2 - mx;
+    const dy=item.p.y + h/2 - my;
+    const d=Math.hypot(dx,dy);
+    const r=+ui.radius.value;
+    const clickR = Math.max(14, r+6);
+    if(d<bestD && d<=clickR){ best=item; bestD=d; }
+  }
+  
+// Permitir "Adicionar átomo" mesmo sem clicar sobre um átomo existente
+  if(ui.addAtom && ui.addAtom.checked){
+    let ucGuess = (best ? atomRef(best).uc.slice() : [0,0,0]);
+    try {
+      const last = JSON.parse(localStorage.getItem('last_add_uc')||'null');
+      if(last && Array.isArray(last) && last.length===3) ucGuess = last;
+    } catch(e){}
+    const s = prompt('Coordenadas fracionárias UC (x y z):', ucGuess.map(v=>(+v).toFixed(3)).join(' '));
+    if(s){
+      const parts = s.trim().split(/[,\s]+/).map(Number);
+      if(parts.length===3 && parts.every(n=>Number.isFinite(n))){
+        localStorage.setItem('last_add_uc', JSON.stringify(parts));
+        const typ = (ui.addAtomType && ui.addAtomType.value) || ((STRUCTURES[state.key]?.species?.[0]?.type) || 'X');
+        ADD_ATOMS.push({ key:state.key, cells:+ui.cells.value, type:typ, uc:parts });
+        saveAddedAtoms();
+      }
+    }
+    return;
+  }
+  if(!best) return;
+
+  if(ui.addAtom && ui.addAtom.checked){
+    // Padrão: usar UC do átomo mais próximo como chute inicial
+    let ucGuess = best ? atomRef(best).uc.slice() : [0,0,0];
+    let s = prompt('Coordenadas fracionárias UC (x y z):', ucGuess.map(v=>v.toFixed(3)).join(' '));
+    if(s){
+      const parts = s.trim().split(/[,\s]+/).map(Number);
+      if(parts.length===3 && parts.every(n=>Number.isFinite(n))){
+        const typ = (ui.addAtomType && ui.addAtomType.value) || ((STRUCTURES[state.key]?.species?.[0]?.type) || 'X');
+        ADD_ATOMS.push({ key:state.key, cells:+ui.cells.value, type:typ, uc:parts });
+        saveAddedAtoms();
+      }
+    }
+    return;
+  }
+
+  if(ui.delAtom && ui.delAtom.checked){
+    const ref = atomRef(best);
+    toggleRemoveAtom(ref); // clique novamente para desfazer
+    return;
+  }
+
+  
+if(ui.delBonds && ui.delBonds.checked){
+  if(state.pickA===null){
+    state.pickA = atomRef(best);
+  } else {
+    const aRef=state.pickA, bRef=atomRef(best);
+    if(!eqRef(aRef,bRef)){ removeBond(aRef,bRef); }
+    state.pickA=null;
+  }
+  return;
+}
+
+if(ui.editBonds && ui.editBonds.checked){
+  if(state.pickA===null){
+    state.pickA = atomRef(best);
+  } else {
+    const aRef=state.pickA, bRef=atomRef(best);
+    if(!eqRef(aRef,bRef)){ addBond(aRef,bRef); }
+    state.pickA=null;
+  }
+  return;
+}
+
+if(ui.delCoord && ui.delCoord.checked){
+  if(state.coordCenterRef===null){
+    state.coordCenterRef = atomRef(best);
+  } else {
+    const cRef = state.coordCenterRef, nRef = atomRef(best);
+    if(!eqRef(cRef,nRef)){ removeCoord(cRef, nRef); }
+    // mantém o mesmo centro para remover vários vizinhos
+  }
+  return;
+}
+if(ui.editBonds && ui.editBonds.checked){
+    if(state.pickA===null){
+      state.pickA = atomRef(best);
+    } else {
+      const aRef=state.pickA, bRef=atomRef(best);
+      if(!eqRef(aRef,bRef)){ addBond(aRef,bRef); }
+      state.pickA=null;
+    }
+    return;
+  }
+
+  if(ui.editCoord && ui.editCoord.checked){
+    if(state.coordCenterRef===null){
+      state.coordCenterRef = atomRef(best); // define o centro
+    } else {
+      const cRef = state.coordCenterRef, nRef = atomRef(best);
+      if(!eqRef(cRef,nRef)){ toggleCoord(cRef, nRef); }
+      // permanece no mesmo centro para adicionar vários vizinhos rapidamente
+    }
+    return;
+  }
+});
+}
+
+
+ui.clearBonds.addEventListener('click', ()=>{
+  clearBondsCurrent();
+});
+ui.exportBonds.addEventListener('click', ()=>{
+  const list=bondsForCurrent();
+  const snippet = `// Cole esta linha no topo do <script> deste arquivo.\n`+
+                  `// Ela embute as ligações no código (além do localStorage).\n`+
+                  `let EMBEDDED_BONDS = ${JSON.stringify(list, null, 2)};`;
+  ui.exportArea.style.display='block';
+  ui.exportArea.value=snippet;
+  ui.exportArea.select();
+  document.execCommand('copy');
+  setTimeout(()=>{ ui.exportArea.style.display='none'; }, 1200);
+});
+
+
+canvas.addEventListener('mousedown', e=>{ if(state.key==='INTRO2'){ return; } state.drag=true; state.last.x=e.clientX; state.last.y=e.clientY; });
+// --- Coordenação manual (centro -> vizinhos) ---
+const STORAGE_KEY_COORD = 'custom_coords_v1';
+let EMBEDDED_COORDS = [];
+let ALL_COORDS = [];
+// === Remoção de átomos (armazenamento) ===
+
+// === Adição de átomos (armazenamento) ===
+const STORAGE_KEY_ADD_ATOMS = 'custom_atoms_added_v1';
+let ADD_ATOMS = [];
+try { ADD_ATOMS = JSON.parse(localStorage.getItem(STORAGE_KEY_ADD_ATOMS) || '[]'); } catch(e){ ADD_ATOMS = []; }
+function saveAddedAtoms(){ localStorage.setItem(STORAGE_KEY_ADD_ATOMS, JSON.stringify(ADD_ATOMS)); }
+function addedForCurrent(){
+  const cells = +ui.cells.value;
+  return ADD_ATOMS.filter(r=>r.key===state.key && r.cells===cells);
+}
+const STORAGE_KEY_RM_ATOMS = 'custom_atoms_removed_v1';
+let REMOVED_ATOMS = [];
+try { REMOVED_ATOMS = JSON.parse(localStorage.getItem(STORAGE_KEY_RM_ATOMS) || '[]'); } catch(e){ REMOVED_ATOMS=[]; }
+function saveRemovedAtoms(){ localStorage.setItem(STORAGE_KEY_RM_ATOMS, JSON.stringify(REMOVED_ATOMS)); }
+function atomKeyId(ref){ return `${ref.key}|${ref.cells}|${ref.type}@${ref.uc.map(v=>v.toFixed(5)).join(',')}`; }
+function removedSetForCurrent(){
+  const set = new Set();
+  for(const r of REMOVED_ATOMS){
+    if(r.key===state.key && r.cells===+ui.cells.value) set.add(atomKeyId(r));
+  }
+  return set;
+}
+
+function toggleRemoveAtom(ref){
+  const id = atomKeyId(ref);
+  // 1) Se o alvo for um átomo ADICIONADO manualmente, removê-lo de ADD_ATOMS
+  try{
+    if(Array.isArray(ADD_ATOMS)){
+      const idxAdd = ADD_ATOMS.findIndex(r => 
+        r.key===ref.key && r.cells===ref.cells && r.type===ref.type &&
+        Array.isArray(r.uc) && Array.isArray(ref.uc) &&
+        r.uc.length===3 && ref.uc.length===3 &&
+        Math.abs(r.uc[0]-ref.uc[0])<1e-6 && Math.abs(r.uc[1]-ref.uc[1])<1e-6 && Math.abs(r.uc[2]-ref.uc[2])<1e-6
+      );
+      if(idxAdd>=0){
+        ADD_ATOMS.splice(idxAdd,1);
+        if(typeof saveAddedAtoms==='function') saveAddedAtoms();
+        return; // pronto
+      }
+    }
+  }catch(e){}
+  // 2) Caso contrário, alterna na lista de removidos dos átomos "de base"
+  const idx = REMOVED_ATOMS.findIndex(r=>atomKeyId(r)===id);
+  if(idx>=0){ REMOVED_ATOMS.splice(idx,1); } else { REMOVED_ATOMS.push(ref); }
+  saveRemovedAtoms();
+}
+
+try {
+  const storedC = JSON.parse(localStorage.getItem(STORAGE_KEY_COORD) || '[]');
+  ALL_COORDS = [...EMBEDDED_COORDS, ...storedC];
+} catch(e){ ALL_COORDS = []; }
+
+function saveLocalCoord(){
+  const onlyLocal = ALL_COORDS.filter(x=>!EMBEDDED_COORDS.some(y=>coordId(y)===coordId(x)));
+  localStorage.setItem(STORAGE_KEY_COORD, JSON.stringify(onlyLocal));
+}
+function coordsForCurrent(){ return ALL_COORDS.filter(x=>x.key===state.key && x.cells===+ui.cells.value); }
+function coordId(rec){
+  const C=`${rec.center.type}@${rec.center.uc.map(v=>v.toFixed(5)).join(',')}`;
+  const N=`${rec.neighbor.type}@${rec.neighbor.uc.map(v=>v.toFixed(5)).join(',')}`;
+  return C + ' -> ' + N;
+}
+function toggleCoord(centerRef, neighRef){
+  const rec={key:state.key, cells:+ui.cells.value, center:centerRef, neighbor:neighRef};
+  const id=coordId(rec);
+  const list=coordsForCurrent();
+  const idx=list.findIndex(x=>coordId(x)===id);
+  if(idx===-1){ ALL_COORDS.push(rec); } else {
+    // remove this coord
+    const globalIdx = ALL_COORDS.findIndex(x=>coordId(x)===id && x.key===state.key && x.cells===+ui.cells.value);
+    if(globalIdx>=0) ALL_COORDS.splice(globalIdx,1);
+  }
+  saveLocalCoord();
+}
+function clearCoordsCurrent(){
+  ALL_COORDS = ALL_COORDS.filter(x=>!(x.key===state.key && x.cells===+ui.cells.value));
+  saveLocalCoord();
+}
+// --- Sincronizar "Poliedro de coordenação" com "Coordenação" ---
+function syncPolyToCoord(){
+  try{
+    const hasCoords = coordsForCurrent().length > 0;
+    // "Mesmo conceito": poliedro segue o estado da coordenação
+    ui.coordpoly.checked=false;
+  }catch(e){ /* no-op */ }
+}
+
+// Sincroniza ao alternar edição/remoção de coordenação
+ui.editCoord.addEventListener('change', ()=>{ // syncPolyToCoord removido
+});
+ui.delCoord.addEventListener('change',  ()=>{ // syncPolyToCoord removido
+});
+
+// Sincroniza ao limpar/adicionar/remover coords
+const _toggleCoord_orig = toggleCoord;
+toggleCoord = function(centerRef, neighRef){
+  _toggleCoord_orig(centerRef, neighRef);
+  // syncPolyToCoord removido
+};
+const _clearCoordsCurrent_orig = clearCoordsCurrent;
+clearCoordsCurrent = function(){
+  _clearCoordsCurrent_orig();
+  // syncPolyToCoord removido
+};
+
+// Chamada inicial (garante consistência ao carregar)
+// syncPolyToCoord removido
+state.coordCenterRef = null;
+
+// Mutua exclusividade entre edição de ligações e coordenação
+ui.editBonds.addEventListener('change', ()=>{ if(ui.editBonds.checked){ ui.editCoord.checked=false; state.coordCenterRef=null; } });
+ui.editCoord.addEventListener('change', ()=>{ if(ui.editCoord.checked){ ui.editBonds.checked=false; state.pickA=null; } });
+
+ui.clearCoord.addEventListener('click', ()=>{ clearCoordsCurrent(); });
+ui.exportCoord.addEventListener('click', ()=>{
+  const list=coordsForCurrent();
+  const snippet = `// Cole esta linha no topo do <script> deste arquivo.\\n`+
+                  `// Ela embute a coordenação no código (além do localStorage).\\n`+
+                  `let EMBEDDED_COORDS = ${JSON.stringify(list, null, 2)};`;
+  ui.exportArea.style.display='block';
+  ui.exportArea.value=snippet;
+  ui.exportArea.select();
+  document.execCommand('copy');
+  setTimeout(()=>{ ui.exportArea.style.display='none'; }, 1200);
+});
+
+window.addEventListener('mouseup',()=>state.drag=false);
+window.addEventListener('mousemove', e=>{
+  if(state.key==='INTRO2') return;
+  if(!state.drag) return;
+  const dx=e.clientX-state.last.x, dy=e.clientY-state.last.y;
+  state.last.x=e.clientX; state.last.y=e.clientY;
+  state.angleY+=dx*0.01;
+  state.angleX+=dy*0.01;
+  syncAngleSlidersFromState();
+// --- Ligações manuais (clique-para-criar) ---
+const STORAGE_KEY = 'custom_bonds_v1';
+// Esta variável pode ser substituída pelo exportador para "salvar no código":
+
+(function(){
+  if (!Array.isArray(EMBEDDED_BONDS)) { window.EMBEDDED_BONDS = []; }
+  EMBEDDED_BONDS = EMBEDDED_BONDS.concat([
+
+  ]);
+})();
+ 
+let ALL_BONDS = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  // EMBEDDED_BONDS tem prioridade inicial (caso o arquivo venha com ligações embutidas)
+  ALL_BONDS = [...EMBEDDED_BONDS, ...stored];
+} catch(e){ ALL_BONDS = []; }
+
+function saveLocal(){ 
+  // salva apenas o que não veio embutido (evita duplicar)
+  const onlyLocal = ALL_BONDS.filter(x=>!EMBEDDED_BONDS.some(y=>bondId(y)===bondId(x)));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(onlyLocal)); 
+}
+function bondsForCurrent(){ return ALL_BONDS.filter(x=>x.key===state.key && x.cells===+ui.cells.value); }
+function atomRef(a){ return {type:a.type, uc:[+a.uc[0], +a.uc[1], +a.uc[2]], key:state.key, cells:+ui.cells.value}; }
+function eqRef(r1,r2){ 
+  return r1.type===r2.type && Math.abs(r1.uc[0]-r2.uc[0])<1e-6 && Math.abs(r1.uc[1]-r2.uc[1])<1e-6 && Math.abs(r1.uc[2]-r2.uc[2])<1e-6; 
+}
+function bondId(rec){ 
+  const A=`${rec.a.type}@${rec.a.uc.map(v=>v.toFixed(5)).join(',')}`;
+  const B=`${rec.b.type}@${rec.b.uc.map(v=>v.toFixed(5)).join(',')}`;
+  return [A,B].sort().join(' | '); 
+}
+function addBond(aRef,bRef){ 
+  const rec={key:state.key,cells:+ui.cells.value,a:aRef,b:bRef}; 
+  const id=bondId(rec);
+  const exists = bondsForCurrent().some(x=>bondId(x)===id);
+  if(!exists){ ALL_BONDS.push(rec); saveLocal(); }
+}
+function clearBondsCurrent(){ 
+  ALL_BONDS = ALL_BONDS.filter(x=>!(x.key===state.key && x.cells===+ui.cells.value)); 
+  saveLocal(); 
+}
+function findAtomByRef(ref, atomsArr){ 
+  let best=null, bestd=1e9;
+  for(const a of atomsArr){ 
+    if(a.type!==ref.type) continue; 
+    const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
+    if(d<bestd){ best=a; bestd=d; } 
+  }
+  if(bestd<1e-5) return best; 
+  return null;
+}
+
+state.pickA = null;
+
+// Clique no canvas para selecionar dois átomos e criar ligação
+
+canvas.addEventListener('click', (e)=>{ if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const arr=state.projectedVisible||[];
+  let best=null, bestD=Infinity;
+  for(const item of arr){
+    const dx=item.p.x + w/2 - mx;
+    const dy=item.p.y + h/2 - my;
+    const d=Math.hypot(dx,dy);
+    const r=+ui.radius.value;
+    const clickR = Math.max(14, r+6);
+    if(d<bestD && d<=clickR){ best=item; bestD=d; }
+  }
+  if(!best) return;
+
+  if(ui.editBonds && ui.editBonds.checked){
+    if(state.pickA===null){
+      state.pickA = atomRef(best);
+    } else {
+      const aRef=state.pickA, bRef=atomRef(best);
+      if(!eqRef(aRef,bRef)){ addBond(aRef,bRef); }
+      state.pickA=null;
+    }
+    return;
+  }
+
+  if(ui.editCoord && ui.editCoord.checked){
+    if(state.coordCenterRef===null){
+      state.coordCenterRef = atomRef(best); // define o centro
+    } else {
+      const cRef = state.coordCenterRef, nRef = atomRef(best);
+      if(!eqRef(cRef,nRef)){ toggleCoord(cRef, nRef); }
+      // permanece no mesmo centro para adicionar vários vizinhos rapidamente
+    }
+    return;
+  }
+});
+
+
+ui.clearBonds.addEventListener('click', ()=>{
+  clearBondsCurrent();
+});
+ui.exportBonds.addEventListener('click', ()=>{
+  const list=bondsForCurrent();
+  const snippet = `// Cole esta linha no topo do <script> deste arquivo.\n`+
+                  `// Ela embute as ligações no código (além do localStorage).\n`+
+                  `let EMBEDDED_BONDS = ${JSON.stringify(list, null, 2)};`;
+  ui.exportArea.style.display='block';
+  ui.exportArea.value=snippet;
+  ui.exportArea.select();
+  document.execCommand('copy');
+  setTimeout(()=>{ ui.exportArea.style.display='none'; }, 1200);
+});
+
+});
+window.addEventListener('wheel', e=>{ if(state.key==='INTRO2'){ e.preventDefault(); return; } e.preventDefault(); state.zoom = clamp(state.zoom*(e.deltaY<0?1.12:0.9),0.5,8.0);},{passive:false});
+window.addEventListener('keydown',e=>{
+  if(e.key.toLowerCase()==='d'){
+    state.angleX=0.9; state.angleY=-0.6; state.angleZ=0; state.zoom=1;
+    syncAngleSlidersFromState();
+// --- Ligações manuais (clique-para-criar) ---
+const STORAGE_KEY = 'custom_bonds_v1';
+// Esta variável pode ser substituída pelo exportador para "salvar no código":
+
+(function(){
+  if (!Array.isArray(EMBEDDED_BONDS)) { window.EMBEDDED_BONDS = []; }
+  EMBEDDED_BONDS = EMBEDDED_BONDS.concat([
+
+  ]);
+})();
+ 
+let ALL_BONDS = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  // EMBEDDED_BONDS tem prioridade inicial (caso o arquivo venha com ligações embutidas)
+  ALL_BONDS = [...EMBEDDED_BONDS, ...stored];
+} catch(e){ ALL_BONDS = []; }
+
+function saveLocal(){ 
+  // salva apenas o que não veio embutido (evita duplicar)
+  const onlyLocal = ALL_BONDS.filter(x=>!EMBEDDED_BONDS.some(y=>bondId(y)===bondId(x)));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(onlyLocal)); 
+}
+function bondsForCurrent(){ return ALL_BONDS.filter(x=>x.key===state.key && x.cells===+ui.cells.value); }
+function atomRef(a){ return {type:a.type, uc:[+a.uc[0], +a.uc[1], +a.uc[2]], key:state.key, cells:+ui.cells.value}; }
+function eqRef(r1,r2){ 
+  return r1.type===r2.type && Math.abs(r1.uc[0]-r2.uc[0])<1e-6 && Math.abs(r1.uc[1]-r2.uc[1])<1e-6 && Math.abs(r1.uc[2]-r2.uc[2])<1e-6; 
+}
+function bondId(rec){ 
+  const A=`${rec.a.type}@${rec.a.uc.map(v=>v.toFixed(5)).join(',')}`;
+  const B=`${rec.b.type}@${rec.b.uc.map(v=>v.toFixed(5)).join(',')}`;
+  return [A,B].sort().join(' | '); 
+}
+function addBond(aRef,bRef){ 
+  const rec={key:state.key,cells:+ui.cells.value,a:aRef,b:bRef}; 
+  const id=bondId(rec);
+  const exists = bondsForCurrent().some(x=>bondId(x)===id);
+  if(!exists){ ALL_BONDS.push(rec); saveLocal(); }
+}
+function clearBondsCurrent(){ 
+  ALL_BONDS = ALL_BONDS.filter(x=>!(x.key===state.key && x.cells===+ui.cells.value)); 
+  saveLocal(); 
+}
+function findAtomByRef(ref, atomsArr){ 
+  let best=null, bestd=1e9;
+  for(const a of atomsArr){ 
+    if(a.type!==ref.type) continue; 
+    const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
+    if(d<bestd){ best=a; bestd=d; } 
+  }
+  if(bestd<1e-5) return best; 
+  return null;
+}
+
+state.pickA = null;
+
+// Clique no canvas para selecionar dois átomos e criar ligação
+
+canvas.addEventListener('click', (e)=>{ if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const arr=state.projectedVisible||[];
+  let best=null, bestD=Infinity;
+  for(const item of arr){
+    const dx=item.p.x + w/2 - mx;
+    const dy=item.p.y + h/2 - my;
+    const d=Math.hypot(dx,dy);
+    const r=+ui.radius.value;
+    const clickR = Math.max(14, r+6);
+    if(d<bestD && d<=clickR){ best=item; bestD=d; }
+  }
+  if(!best) return;
+
+  if(ui.editBonds && ui.editBonds.checked){
+    if(state.pickA===null){
+      state.pickA = atomRef(best);
+    } else {
+      const aRef=state.pickA, bRef=atomRef(best);
+      if(!eqRef(aRef,bRef)){ addBond(aRef,bRef); }
+      state.pickA=null;
+    }
+    return;
+  }
+
+  if(ui.editCoord && ui.editCoord.checked){
+    if(state.coordCenterRef===null){
+      state.coordCenterRef = atomRef(best); // define o centro
+    } else {
+      const cRef = state.coordCenterRef, nRef = atomRef(best);
+      if(!eqRef(cRef,nRef)){ toggleCoord(cRef, nRef); }
+      // permanece no mesmo centro para adicionar vários vizinhos rapidamente
+    }
+    return;
+  }
+});
+
+
+ui.clearBonds.addEventListener('click', ()=>{
+  clearBondsCurrent();
+});
+ui.exportBonds.addEventListener('click', ()=>{
+  const list=bondsForCurrent();
+  const snippet = `// Cole esta linha no topo do <script> deste arquivo.\n`+
+                  `// Ela embute as ligações no código (além do localStorage).\n`+
+                  `let EMBEDDED_BONDS = ${JSON.stringify(list, null, 2)};`;
+  ui.exportArea.style.display='block';
+  ui.exportArea.value=snippet;
+  ui.exportArea.select();
+  document.execCommand('copy');
+  setTimeout(()=>{ ui.exportArea.style.display='none'; }, 1200);
+});
+
+  }
+});
+
+// --- Vizinhança ---
+function shellsByDistance(target, atoms, maxShells=3){
+  // Calcula vizinhos agrupados por "cascas" de distância
+  const arr=[];
+  for(const a of atoms){
+    if(a===target) continue;
+    const dx=a.pos[0]-target.pos[0], dy=a.pos[1]-target.pos[1], dz=a.pos[2]-target.pos[2];
+    const d=Math.hypot(dx,dy,dz);
+    if(d>1e-6) arr.push({a, d});
+  }
+  arr.sort((p,q)=>p.d-q.d);
+  const shells=[]; let current=[]; let base=null;
+  const tol=0.10; // 10% de tolerância entre distâncias da mesma casca
+  for(const item of arr){
+    if(base===null){ base=item.d; current=[item]; }
+    else if(Math.abs(item.d-base)/base <= tol){ current.push(item); }
+    else{
+      shells.push(current.map(e=>e.a));
+      if(shells.length>=maxShells) break;
+      base=item.d; current=[item];
+    }
+  }
+  if(current.length && shells.length<maxShells) shells.push(current.map(e=>e.a));
+  return shells;
+}
+
+// Projeto 3D
+function project(p3, L){
+  let p = rotY(p3, state.angleY);
+  p = rotX(p, state.angleX);
+  p = rotZ(p, state.angleZ);
+  const z = p[2] + state.distance;
+  if (ui.projOrtho && ui.projOrtho.checked) {
+    // Orthographic: scale independent of depth
+    return { x: p[0]*L*state.zoom, y: p[1]*L*state.zoom, z, s: 1 };
+  } else {
+    const fov = 3.5, s = fov/(fov+z);
+    return { x: p[0]*L*state.zoom*s, y: p[1]*L*state.zoom*s, z, s };
+  }
+
+
+// --- Steric overlap detector ---
+function checkStericOverlap(circles){
+  if(!Array.isArray(circles) || circles.length<2) return false;
+  for(let i=0;i<circles.length;i++){
+    const a = circles[i];
+    for(let j=i+1;j<circles.length;j++){
+      const b = circles[j];
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const d2 = dx*dx + dy*dy;
+      const R = a.r + b.r - 0.5; // small tolerance
+      if(d2 < R*R) return true;
+    }
+
+
+// --- Steric alert UI helpers ---
+state.steric = false;
+function updateStericAlert(flag){
+  state.steric = !!flag;
+  try{
+    const el = document.getElementById('stericAlert');
+    if(el) el.style.display = state.steric ? 'block' : 'none';
+  }catch(e){}
+}
+function drawStericOverlay(){
+  if(!state.steric) return;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const msg = 'Alerta! Estrutura improvável com alta repulsão estérica.';
+  ctx.save();
+  ctx.translate(0,0);
+  ctx.font = '600 14px system-ui, -apple-system, Segoe UI, Roboto';
+  const m = ctx.measureText(msg);
+  const padX = 16, padY = 8;
+  const bx = (w - m.width)/2 - padX, by = h - 40 - padY;
+  ctx.fillStyle = 'rgba(239,68,68,0.85)';
+  ctx.fillRect(bx, by, m.width + padX*2, 26 + padY*2);
+  ctx.strokeStyle = 'rgba(248,113,113,0.9)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(bx, by, m.width + padX*2, 26 + padY*2);
+  ctx.fillStyle = '#fff';
+  ctx.fillText(msg, (w - m.width)/2, by + 26);
+  ctx.restore();
+}
+
+  }
+  return false;
+}
+
+}
+// Recortes
+
+// === HEX_P clipping fix (inline) ===
+function __hexP_inUnitCell_fromFrac(x, y, z, eps){
+  const inHex = Math.abs(x) <= 0.5 + eps && Math.abs(y) <= 0.5 + eps && Math.abs(x + y) <= 0.5 + eps;
+  return inHex && z >= -0.5 - eps && z <= 0.5 + eps;
+}
+function inUnitCell(a){
+  const eps = 1e-6;
+  // tolerate different atom shapes; prefer fractional coords in a.uc
+  const x = (a.uc && a.uc[0]!==undefined) ? a.uc[0] : (a.x_uc ?? a.x ?? 0);
+  const y = (a.uc && a.uc[1]!==undefined) ? a.uc[1] : (a.y_uc ?? a.y ?? 0);
+  const z = (a.uc && a.uc[2]!==undefined) ? a.uc[2] : (a.z_uc ?? a.z ?? 0);
+  const isHex = (window.state && (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal'));
+  if (isHex) return __hexP_inUnitCell_fromFrac(x,y,z,eps);
+  return (x>=-0.5-eps && x<=0.5+eps && y>=-0.5-eps && y<=0.5+eps && z>=-0.5-eps && z<=0.5+eps);
+}
+function inUnitCellUC(uc){
+  const eps = 1e-6;
+  const x=uc[0], y=uc[1], z=uc[2];
+  const isHex = (window.state && (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal'));
+  if (isHex) return __hexP_inUnitCell_fromFrac(x,y,z,eps);
+  return (x>=-0.5-eps && x<=0.5+eps && y>=-0.5-eps && y<=0.5+eps && z>=-0.5-eps && z<=0.5+eps);
+}
+// === end HEX_P clipping fix (inline) ===
+
+function inFace(a, which){
+  const eps=1e-6;
+  const x=a.uc[0], y=a.uc[1], z=a.uc[2];
+  switch(which){
+    case "+X": return Math.abs(x-0.5)<=eps;
+    case "-X": return Math.abs(x+0.5)<=eps;
+    case "+Y": return Math.abs(y-0.5)<=eps;
+    case "-Y": return Math.abs(y+0.5)<=eps;
+    case "+Z": return Math.abs(z-0.5)<=eps;
+    case "-Z": return Math.abs(z+0.5)<=eps;
+    default: return true;
+  }
+}
+
+
+// ---------- Auxiliares de Vizinhança com PBC (ligações atravessando a célula) ----------
+function metricOf(key){ const def=STRUCTURES[key]||{}; if(def.metricM) return def.metricM; const v=(def.metric||[1,1,1]); return diag3(v[0],v[1],v[2]); }
+
+
+function inFaceUC(uc, which){
+  const eps=1e-6;
+  const x=uc[0], y=uc[1], z=uc[2];
+  switch(which){
+    case "+X": return Math.abs(x-0.5)<=eps;
+    case "-X": return Math.abs(x+0.5)<=eps;
+    case "+Y": return Math.abs(y-0.5)<=eps;
+    case "-Y": return Math.abs(y+0.5)<=eps;
+    case "+Z": return Math.abs(z-0.5)<=eps;
+    case "-Z": return Math.abs(z+0.5)<=eps;
+    default: return true;
+  }
+}
+
+// Encontra a 1ª casca de vizinhos usando imagens periódicas (±1)
+function firstShellNeighborsPBC(target, atomsAll, metricM, opts){
+  const tol=0.10; // 10% window for 1st shell
+  const candidates=[];
+  const ux = target.uc[0], uy = target.uc[1], uz = target.uc[2];
+  for(const b of atomsAll){
+    if(b===target) continue;
+    let best=null;
+    for(let dx=-1; dx<=1; dx++){
+      for(let dy=-1; dy<=1; dy++){
+        for(let dz=-1; dz<=1; dz++){
+          const ucw=[b.uc[0]+dx, b.uc[1]+dy, b.uc[2]+dz];
+          if(opts.ucOnly && !inUnitCellUC(ucw)) continue;
+          if(opts.faceOnly && !inFaceUC(ucw, opts.faceSel)) continue;
+          const delta=[ucw[0]-ux, ucw[1]-uy, ucw[2]-uz];
+          const dd = matMulVec(metricM, delta);
+          const d=Math.hypot(dd[0],dd[1],dd[2]);
+          if(d<=1e-6) continue;
+          if(!best || d<best.d) best={d, ucw};
+        }
+      }
+    }
+    if(best){
+      const real = matMulVec(metricM, best.ucw);
+      candidates.push({ b, d:best.d, ucw:best.ucw, pos:real });
+    }
+  }
+  // sort and keep first shell (within 10% of shortest distance)
+  candidates.sort((p,q)=>p.d-q.d);
+  const first=[];
+  if(candidates.length){
+    const base=candidates[0].d;
+    for(const c of candidates){
+      if(Math.abs(c.d-base)/base <= tol) first.push(c);
+      else break;
+    }
+  }
+  return first; // {b, d, ucw, pos}
+}
+function rutileNeighbors(target, atomsAll, metricM, opts){
+  const ux = target.uc[0], uy = target.uc[1], uz = target.uc[2];
+  const wantType = (target.type==="O") ? "T" : "O";
+  const need = (target.type==="O") ? 3 : 6;
+  const candidates=[];
+  for(const b of atomsAll){
+    if(b===target) continue;
+    if(b.type!==wantType) continue;
+    let best=null;
+    for(let dx=-1; dx<=1; dx++){
+      for(let dy=-1; dy<=1; dy++){
+        for(let dz=-1; dz<=1; dz++){
+          const ucw=[b.uc[0]+dx, b.uc[1]+dy, b.uc[2]+dz];
+          if(opts.ucOnly && !inUnitCellUC(ucw)) continue;
+          if(opts.faceOnly && !inFaceUC(ucw, opts.faceSel)) continue;
+          const delta=[ucw[0]-ux, ucw[1]-uy, ucw[2]-uz];
+          const dd = matMulVec(metricM, delta);
+          const d=Math.hypot(dd[0],dd[1],dd[2]);
+          if(d<=1e-6) continue;
+          if(!best || d<best.d) best={d, ucw};
+        }
+      }
+    }
+    if(best){
+      const real = matMulVec(metricM, best.ucw);
+      candidates.push({ b, d:best.d, ucw:best.ucw, pos:real });
+    }
+  }
+  candidates.sort((p,q)=>p.d-q.d);
+  return candidates.slice(0, need);
+}
+
+function drawAxes(L){
+  const axes = [
+    {to:[1.2,0,0], color:"#ef4444", label:"X"},
+    {to:[0,1.2,0], color:"#22c55e", label:"Y"},
+    {to:[0,0,1.2], color:"#3b82f6", label:"Z"},
+  ];
+  const originProj = project([0,0,0], L);
+  for(const ax of axes){
+    const p2 = project(ax.to, L);
+    ctx.lineWidth=2;
+    ctx.strokeStyle=ax.color;
+    ctx.beginPath();
+    ctx.moveTo(originProj.x+canvas.clientWidth/2, originProj.y+canvas.clientHeight/2);
+    ctx.lineTo(p2.x+canvas.clientWidth/2, p2.y+canvas.clientHeight/2);
+    ctx.stroke();
+    const dir=[p2.x-originProj.x, p2.y-originProj.y];
+    const len=Math.hypot(dir[0],dir[1])||1;
+    const ux=dir[0]/len, uy=dir[1]/len;
+    const ax1=[p2.x-ux*10 - uy*6, p2.y-uy*10 + ux*6];
+    const ax2=[p2.x-ux*10 + uy*6, p2.y-uy*10 - ux*6];
+    ctx.beginPath();
+    ctx.moveTo(p2.x+canvas.clientWidth/2, p2.y+canvas.clientHeight/2);
+    ctx.lineTo(ax1[0]+canvas.clientWidth/2, ax1[1]+canvas.clientHeight/2);
+    ctx.lineTo(ax2[0]+canvas.clientWidth/2, ax2[1]+canvas.clientHeight/2);
+    ctx.closePath();
+    ctx.fillStyle=ax.color;
+    ctx.fill();
+    ctx.fillStyle=ax.color;
+    ctx.font="12px system-ui, -apple-system, Segoe UI, Roboto";
+    ctx.fillText(ax.label, p2.x+canvas.clientWidth/2 + 6, p2.y+canvas.clientHeight/2 + 4);
+  }
+}
+
+// Desenho principal
+
+
+// --- Intro storyboard (A -> AB -> ABC/ABA) ---
+function drawIntroStoryboard(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  const spacing=+ui.spacing.value; let radius = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+
+  // Base triangular layer
+  const side = +ui.cells.value;
+  const {pts, e1, e2} = buildIntroBase(side);
+  const hZ = Math.sqrt(2/3);
+
+  function makeLayer(type, fracShift, k){
+    const sh = layerShift(fracShift, e1, e2);
+    const z = k*hZ;
+    return pts.map(p => {
+      const pos=[p[0]+sh[0], p[1]+sh[1], z];
+      return {type, pos, uc:[...pos]};
+    });
+  }
+
+  // Layers
+  const A = makeLayer('A', 0, 0);
+  const B = makeLayer('B', 1/3, 1);
+  const C = makeLayer('C', 2/3, 2);
+  const A2 = makeLayer('A', 0, 2); // para ABA (terceira camada alinhada à A)
+
+  function centerAtoms(arr){
+    let cx=0,cy=0,cz=0;
+    for(const a of arr){ cx+=a.pos[0]; cy+=a.pos[1]; cz+=a.pos[2]; }
+    if(!arr.length){ return; }
+    cx/=arr.length; cy/=arr.length; cz/=arr.length;
+    for(const a of arr){ a.pos[0]-=cx; a.pos[1]-=cy; a.pos[2]-=cz; a.uc=[...a.pos]; }
+  }
+
+  const groupA   = [...A];                centerAtoms(groupA);
+  const groupAB  = [...A, ...B];          centerAtoms(groupAB);
+  const groupABC = [...A, ...B, ...C];    centerAtoms(groupABC);
+  const groupABA = [...A, ...B, ...A2];   centerAtoms(groupABA);
+
+  function drawGroup(atoms, cx, cy, labelLines){
+    const L = spacing * 0.95;
+    const projected = atoms.map(a=>{
+      const p=project(a.pos, L);
+      return {...a, p:{x:p.x+cx, y:p.y+cy, z:p.z}};
+    }).sort((A,B)=>A.p.z-B.p.z);
+
+    for(const a of projected){
+      let r = (typeof a.r==='number' && !Number.isNaN(a.r) && a.r>0) ? a.r : (radius * (a.rScale ? (+a.rScale) : 1));
+      ctx.beginPath(); ctx.arc(a.p.x, a.p.y, r+2, 0, TAU); ctx.fillStyle="rgba(0,0,0,0.45)"; ctx.fill();
+      ctx.beginPath(); ctx.arc(a.p.x, a.p.y, r, 0, TAU); ctx.fillStyle=(a.color || COLORS[a.type] || "#fff"); ctx.fill();
+      const r2=Math.max(2, r*0.45);
+      ctx.beginPath(); ctx.arc(a.p.x - r*0.35, a.p.y - r*0.35, r2, 0, TAU); ctx.fillStyle="rgba(255,255,255,0.35)"; ctx.fill();
+    }
+
+    // Label
+    ctx.fillStyle="#cbd5e1";
+    ctx.font="12px system-ui, -apple-system, Segoe UI, Roboto";
+    let y = cy + radius*4.2 + 12;
+    for(const line of labelLines){
+      const metrics = ctx.measureText(line);
+      ctx.fillText(line, cx - metrics.width/2, y);
+      y += 14;
+    }
+  }
+
+  function arrow(fromX, fromY, toX, toY){
+    ctx.strokeStyle="rgba(229,231,235,0.8)";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
+    const dx=toX-fromX, dy=toY-fromY;
+    const len=Math.hypot(dx,dy)||1;
+    const ux=dx/len, uy=dy/len;
+    const ax=toX-ux*10, ay=toY-uy*10;
+    // arrow head
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(ax - uy*6, ay + ux*6);
+    ctx.lineTo(ax + uy*6, ay - ux*6);
+    ctx.closePath();
+    ctx.fillStyle="rgba(229,231,235,0.8)";
+    ctx.fill();
+  }
+
+  // Desenho de "buracos" (tetraédrico e octaédrico) com barras de conexão
+  function drawBuracos(A, B, cx, cy){
+    const spacing = +ui.spacing.value;
+    let radius = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+    const L = spacing * 0.95;
+    // Projeta e aplica deslocamento
+    const PA = A.map(a=>{ const p=project(a.pos, L); return {...a, p:{x:p.x+cx, y:p.y+cy, z:p.z}}; });
+    const PB = B.map(a=>{ const p=project(a.pos, L); return {...a, p:{x:p.x+cx, y:p.y+cy, z:p.z}}; });
+
+    // Esferas menores
+    const rSmall = radius*0.72;
+    for(const a of PA){ drawSphere(a.p.x, a.p.y, rSmall, '#ef4444'); }
+    for(const b of PB){ drawSphere(b.p.x, b.p.y, rSmall, '#cfd4dc'); }
+
+    // Linhas intracamadas (triângulos) - conecta vizinhos próximos em cada plano
+    function drawNeighborLines(P){
+      for(let i=0;i<P.length;i++){
+        for(let j=i+1;j<P.length;j++){
+          const d = Math.hypot(P[i].pos[0]-P[j].pos[0], P[i].pos[1]-P[j].pos[1], P[i].pos[2]-P[j].pos[2]);
+          if(d < 1.05){ // vizinhos imediatos na malha triangulada
+            ctx.strokeStyle = 'rgba(229,231,235,0.65)';
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.moveTo(P[i].p.x, P[i].p.y);
+            ctx.lineTo(P[j].p.x, P[j].p.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    drawNeighborLines(PA);
+    drawNeighborLines(PB);
+
+    // Ligações A->B (montantes) para sugerir poliedros
+    for(const a of PA){
+      // vizinho B mais próximo
+      let best=null, bestD=1e9;
+      for(const b of PB){
+        const d = Math.hypot(a.pos[0]-b.pos[0], a.pos[1]-b.pos[1], a.pos[2]-b.pos[2]);
+        if(d<bestD){ best=b; bestD=d; }
+      }
+      if(best && bestD<1.0){
+        ctx.strokeStyle = 'rgba(229,231,235,0.75)';
+        ctx.lineWidth = 1.1;
+        ctx.beginPath();
+        ctx.moveTo(a.p.x, a.p.y);
+        ctx.lineTo(best.p.x, best.p.y);
+        ctx.stroke();
+      }
+    }
+
+    // Estima centros dos buracos (usando 3 A centrais e 3 B centrais)
+    function centroid(pts){ 
+      const n=pts.length||1; 
+      return pts.reduce((acc,p)=>[acc[0]+p.pos[0],acc[1]+p.pos[1],acc[2]+p.pos[2]],[0,0,0]).map(v=>v/n);
+    }
+    function nearestN(P, n){
+      // escolhe n pontos mais perto do (0,0,z)
+      const sorted = P.slice().sort((u,v)=> (u.pos[0]**2+u.pos[1]**2+u.pos[2]**2) - (v.pos[0]**2+v.pos[1]**2+v.pos[2]**2));
+      return sorted.slice(0,n);
+    }
+    const triA = nearestN(PA,3);
+    const triB = nearestN(PB,3);
+    const cA = centroid(triA);
+    const cB = centroid(triB);
+    const centerTetra = [(cA[0]*3 + cB[0])/4, (cA[1]*3 + cB[1])/4, (cA[2]*3 + cB[2])/4]; // perto da camada A
+    const centerOct  = [(cA[0]+cB[0])/2, (cA[1]+cB[1])/2, (cA[2]+cB[2])/2];
+
+    function proj(pt){ const p=project(pt, L); return {x:p.x+cx, y:p.y+cy}; }
+    const pT = proj(centerTetra);
+    const pO = proj(centerOct);
+
+    // Marcadores
+    function drawMarker(p){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 6, 0, Math.PI*2);
+      ctx.fillStyle = 'rgb(229,231,235)';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(229,231,235,0.9)';
+      ctx.stroke();
+    }
+    drawMarker(pT);
+    drawMarker(pO);
+
+    /* kept only the later single set of labels to avoid duplication */
+}
+
+
+  // Layout inspirado na imagem: A -> AB, e de AB bifurca para ABC e ABA
+  const Apos   = {x: w*0.22, y: h*0.62};
+  const ABpos  = {x: w*0.50, y: h*0.62};
+  const ABCpos = {x: w*0.78, y: h*0.32};
+  const ABApos = {x: w*0.78, y: h*0.78};
+
+  drawGroup(groupA,   Apos.x,   Apos.y,   ["Camada A (esferas vermelhas)"]);
+  drawGroup(groupAB,  ABpos.x,  ABpos.y,  ["Camada A (esferas vermelhas)", "Camada B (esferas cinza)"]);
+  drawGroup(groupABC, ABCpos.x, ABCpos.y, ["Camada A (vermelhas)","Camada B (cinza)","Camada C (azuis)"]);
+  drawGroup(groupABA, ABApos.x, ABApos.y, ["Camada A (vermelhas)","Camada B (cinza)","Camada A (vermelhas)"]);
+
+  // Setas
+  arrow(Apos.x + spacing*0.9, Apos.y - spacing*0.1, ABpos.x - spacing*0.9, ABpos.y - spacing*0.1);
+  arrow(ABpos.x + spacing*0.9, ABpos.y - spacing*0.35, ABCpos.x - spacing*0.8, ABCpos.y + spacing*0.3);
+  arrow(ABpos.x + spacing*0.9, ABpos.y + spacing*0.35, ABApos.x - spacing*0.8, ABApos.y - spacing*0.3);
+
+  // Texto extra como no livro (opcional)
+  ctx.fillStyle="#9ca3af";
+  ctx.font="12px system-ui, -apple-system, Segoe UI, Roboto";
+  const txt = "";
+  const m = ctx.measureText(txt);
+  ctx.fillText(txt, (Apos.x+ABpos.x)/2 - m.width/2, Apos.y - spacing*0.9);
+}
+
+
+
+/* Intro (teste): estrutura cúbica simples e água passando pelos buracos */
+
+// ===== Intro Camadas (A -> B): render simples com brilho =====
+function drawIntroCamadas(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  // setup
+  const spacing = +ui.spacing.value;
+  const baseR = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+  const Acolor = 'rgb(239,68,68)';      // vermelho 500
+  const Bcolor = 'rgb(243,244,246)';    // cinza quase branco
+  const outline = 'rgba(255,255,255,0.10)';
+
+  // helper: bolinha com highlight
+  function glossy(p, r, color){
+    const R = r * (p.s ? p.s : 1);
+    // darken the base color for the rim without using transparency (no see-through)
+    function parseRGB(col){
+      const m = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(col);
+      if(!m) return [255,255,255];
+      return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
+    }
+    function toRGB(arr){ return 'rgb(' + arr.map(v=>Math.max(0,Math.min(255,Math.round(v)))).join(',') + ')'; }
+    function darken([r,g,b], k){ return [r*(1-k), g*(1-k), b*(1-k)]; }
+
+    const base = parseRGB(color);
+    const rim  = toRGB(darken(base, 0.35)); // 35% darker, fully opaque
+
+    const g = ctx.createRadialGradient(p.x-R*0.35, p.y-R*0.35, R*0.2, p.x, p.y, R);
+    g.addColorStop(0, color);
+    g.addColorStop(1, rim);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, TAU); ctx.fill();
+    const hR = Math.max(2, R*0.28);
+    const hgl = ctx.createRadialGradient(p.x-R*0.45, p.y-R*0.45, 1, p.x-R*0.45, p.y-R*0.45, hR);
+    hgl.addColorStop(0,'rgba(255,255,255,0.85)');
+    hgl.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = hgl; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, TAU); ctx.fill();
+    ctx.strokeStyle = outline; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  // compose atoms from IC state
+  if(!state.ic){ state.ic = introCamadasInit(+ui.cells.value||4); }
+  const atoms = introCamadasComposeAtoms(state.ic);
+
+  // project + depth sort
+  const proj = atoms.map(a=>{ const pp = project(a.pos, spacing); return {type:a.type, p:pp}; })
+                    .sort((A,B)=>A.p.z - B.p.z);
+
+  // center on canvas
+  const offX = w*0.5, offY = h*0.6;
+
+  // draw
+  for(const it of proj){
+    const p = {x: it.p.x+offX, y: it.p.y+offY, s: (ui.projOrtho && ui.projOrtho.checked) ? 1 : it.p.s};
+    const r = (it.type==='B'? baseR*0.92 : baseR);
+    glossy(p, r, it.type==='B'? Bcolor : Acolor);
+  }
+}
+function drawIntroTeste(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  const hideEdges = (document.getElementById('introHideEdges')?.checked === true);
+  const spacing=+ui.spacing.value; let radius = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+
+  const center = {x: w*0.5, y: h*0.62};
+
+  // Parâmetros
+  const L = spacing*1.15;
+  const r = radius*0.9;
+  const layers = 5;
+
+  // Malha cúbica 3x3 em duas camadas
+  const grid = [];
+  for(let k=0;k<layers;k++){
+    for(let i=-1;i<=1;i++){
+      for(let j=-1;j<=1;j++){
+        grid.push({pos:[i, j, k*0.9], layer:k});
+      }
+    }
+  }
+
+  function projectAt(p3, L, off){
+    const p=project(p3, L);
+    return {x:p.x+off.x, y:p.y+off.y, z:p.z, s:p.s};
+  }
+  function rotate2D(p, cx, cy, ang){
+    const s=Math.sin(ang), c=Math.cos(ang);
+    const x=p.x-cx, y=p.y-cy;
+    return {x:x*c-y*s+cx, y:x*s+y*c+cy, z:p.z, s:p.s};
+  }
+
+  const theta = -Math.PI/6;
+  const P = grid.map(a=>({pos:a.pos, p: projectAt(a.pos, L, center)}));
+  for(const a of P){ a.p = rotate2D(a.p, center.x, center.y, theta); }
+
+
+// Desenha esferas (helper local, com sombra e brilho)
+function paint(p, rr, col){
+    const scale = (ui.projOrtho && ui.projOrtho.checked) ? (state.zoom||1) : (p.s||1);
+    const R = rr * scale;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R+2, 0, Math.PI*2); ctx.fillStyle="rgba(0,0,0,0.45)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI*2); ctx.fillStyle=col; ctx.fill();
+    const r2=Math.max(2, R*0.45);
+    ctx.beginPath(); ctx.arc(p.x - R*0.35, p.y - R*0.35, r2, 0, Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.45)"; ctx.fill();
+  }
+// (adiantado para depois das gotas)
+const drawSpheresLater = true;
+
+  // Arestas na camada
+  function neighbors(i,j,k){
+    const list=[];
+    const cand=[[i+1,j,k],[i-1,j,k],[i,j+1,k],[i,j-1,k]];
+    for(const [u,v,wz] of cand){
+      if(Math.abs(u)<=1 && Math.abs(v)<=1 && wz===k) list.push([u,v,wz]);
+    }
+    return list;
+  }
+  if(!hideEdges){
+    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = 'rgba(229,231,235,0.65)';
+    for(let k=0;k<layers;k++){
+    for(let i=-1;i<=1;i++){
+      for(let j=-1;j<=1;j++){
+        const a = P.find(q=> q.pos[0]===i && q.pos[1]===j && q.pos[2]===k*0.9);
+        for(const [u,v,wz] of neighbors(i,j,k)){
+          const b = P.find(q=> q.pos[0]===u && q.pos[1]===v && q.pos[2]===wz*0.9);
+          ctx.beginPath();
+          ctx.moveTo(a.p.x, a.p.y);
+          ctx.lineTo(b.p.x, b.p.y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+
+  }
+
+// Centros dos buracos (meios dos quadrados) já em 2D
+  const holes=[];
+  for(let i=-1;i<1;i++){
+    for(let j=-1;j<1;j++){
+      const cx = i+0.5, cy = j+0.5, cz = 0.45;
+      let P2 = projectAt([cx,cy,cz], L, center);
+      P2 = rotate2D(P2, center.x, center.y, theta);
+      holes.push(P2);
+    }
+  }
+
+  
+// Atualiza gotas (simulação 2D com colisão simples)
+if (!state.water) state.water = [];
+const dr = Math.max(2, r*0.22); // raio da gota
+for(const g of state.water){
+  // gravidade
+  g.vy += 0.35;
+  g.y  += g.vy;
+  g.x  += (g.vx||0);
+
+  // atração horizontal suave para o buraco mais próximo
+  let best=null, bestd=1e9;
+  for(const h2 of holes){
+    const d = Math.abs(g.x - h2.x);
+    if(d<bestd){bestd=d; best=h2;}
+  }
+  if(best){
+    const ax = (best.x - g.x)*0.02;
+    g.vx = (g.vx||0) + ax;
+  }
+
+  // colisão 2D contra as esferas (círculos na tela)
+  for(const a of P){
+    const dx = g.x - a.p.x, dy = g.y - a.p.y;
+    const rr = r + dr;
+    const d2 = dx*dx + dy*dy;
+    if (d2 < rr*rr){
+      const d = Math.sqrt(Math.max(d2, 1e-6));
+      const nx = dx/d, ny = dy/d;
+      // empurra para fora
+      const overlap = rr - d + 0.5;
+      g.x += nx * overlap;
+      g.y += ny * overlap;
+      // reflete velocidade (coeficiente de restituição ~0.35)
+      const vx = g.vx||0, vy = g.vy;
+      const vdotn = vx*nx + vy*ny;
+      g.vx = vx - (1.7*vdotn)*nx;
+      g.vy = vy - (1.7*vdotn)*ny;
+      // amortecimento/fricção
+      g.vx *= 0.75;
+      g.vy *= 0.75;
+    }
+  }
+  g.life += 1;
+}
+state.water = state.water.filter(g => g.y < h*0.95 && g.life < 2000);
+
+// Desenha gotas (antes das esferas para parecer que passam pelos vãos)
+
+  ctx.fillStyle = 'rgb(59,130,246)';
+  for(const g of state.water){
+    ctx.beginPath();
+    ctx.arc(g.x, g.y, Math.max(2, r*0.22), 0, Math.PI*2);
+    
+  ctx.fill();
+}
+
+// Agora desenha as esferas e arestas sobre as gotas (oclusão)
+for(const a of P){ paint(a.p, r, '#ef4444'); }
+
+// Arestas na camada (repetir para ficar por cima)
+if(!hideEdges){
+ctx.lineWidth = 1.1;
+ctx.strokeStyle = 'rgba(229,231,235,0.65)';
+for(let k=0;k<layers;k++){
+  for(let i=-1;i<=1;i++){
+    for(let j=-1;j<=1;j++){
+      const a = P.find(q=> q.pos[0]===i && q.pos[1]===j && q.pos[2]===k*0.9);
+      for(const [u,v,wz] of neighbors(i,j,k)){
+        const b = P.find(q=> q.pos[0]===u && q.pos[1]===v && q.pos[2]===wz*0.9);
+        ctx.beginPath();
+        ctx.moveTo(a.p.x, a.p.y);
+        ctx.lineTo(b.p.x, b.p.y);
+        ctx.stroke();
+      }
+}
+    }
+  }
+}
+
+// Rótulo
+  ctx.fillStyle='#334155';
+  ctx.font='600 14px system-ui, -apple-system, Segoe UI, Roboto';
+  const tb = `(teste) Água atravessando os "buracos" de uma malha cúbica`;
+  const mb = ctx.measureText(tb);
+  ctx.fillText(tb, center.x - mb.width/2, center.y + spacing*2.2);
+}
+
+/* -------- Hexagonal Close-Pack (visual cluster) ---------- */
+
+function drawHexCommon(seqLabel){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  const spacing=+ui.spacing.value; let radius=+ui.radius.value;
+  // DIY: ignore global radius slider and lock to default
+  if(state.key==='DIY'){
+    if(typeof window._radiusDefault==='undefined') window._radiusDefault = radius;
+    radius = window._radiusDefault;
+    if(ui.radius){ ui.radius.disabled = true; ui.radius.parentElement && (ui.radius.parentElement.style.opacity='0.5'); }
+  } else {
+    if(ui.radius){ ui.radius.disabled = false; ui.radius.parentElement && (ui.radius.parentElement.style.opacity=''); }
+  }
+
+  // 1) Constrói um pequeno cluster de empacotamento compacto
+  const side = 4; // malha suficientemente grande para ter 12 vizinhos
+  const layers = 3; // apenas o necessário para ABA/ABC local
+  const atomsAll = buildIntroLayers(side, layers, (seqLabel==='ABA'?'ABA':'ABC'));
+
+  // 2) Escolhe o átomo central como o mais próximo do (0,0,0)
+  let cIdx = 0, best = 1e9;
+  for(let i=0;i<atomsAll.length;i++){
+    const p = atomsAll[i].pos;
+    const d = Math.hypot(p[0], p[1], p[2]);
+    if(d < best){ best = d; cIdx = i; }
+  }
+  const centerAtom = atomsAll[cIdx];
+
+  // 3) Seleciona os 12 vizinhos mais próximos do centro
+  const neigh = [];
+  for(let i=0;i<atomsAll.length;i++){
+    if(i===cIdx) continue;
+    const p = atomsAll[i].pos;
+    const d = Math.hypot(p[0]-centerAtom.pos[0], p[1]-centerAtom.pos[1], p[2]-centerAtom.pos[2]);
+    neigh.push({i, pos: atomsAll[i].pos.slice(), d});
+  }
+  neigh.sort((a,b)=>a.d-b.d);
+  const first12 = neigh.slice(0,12).map(o=>o.pos);
+
+  // 4) Projeção e leve rotação para a tela
+  const C2 = {x:w*0.5, y:h*0.62};
+  const L = spacing*1.15;
+  const theta = -Math.PI/6;
+  function projectAt(p3, L, off){
+    const p=project(p3, L);
+    return {x:p.x+off.x, y:p.y+off.y, z:p.z, s:p.s};
+  }
+  function rotate2D(p, cx, cy, ang){
+    const s=Math.sin(ang), c=Math.cos(ang);
+    const x=p.x-cx, y=p.y-cy;
+    return {x:x*c-y*s+cx, y:x*s+y*c+cy, z:p.z, s:p.s};
+  }
+
+  const Pc = rotate2D(projectAt(centerAtom.pos, L, C2), C2.x, C2.y, theta);
+  const Pn = first12.map(v => rotate2D(projectAt(v, L, C2), C2.x, C2.y, theta));
+
+// ---- Suporte a "Adicionar ligações" ----
+const atomsEdit = [{type:'X', uc:centerAtom.pos, pos:centerAtom.pos}, ...first12.map(v=>({type:'X', uc:v, pos:v}))];
+state.projectedVisible = [
+    {type:'X', uc:centerAtom.pos, p:{x:Pc.x - w/2, y:Pc.y - h/2, z:Pc.z}},
+    ...Pn.map((p,i)=>({type:'X', uc:first12[i], p:{x:p.x - w/2, y:p.y - h/2, z:p.z}}))
+  ];
+
+// Destaque dourado do primeiro clique (modo Hex) — igual ao global
+if(state.pickA){
+  const arr = state.projectedVisible || [];
+  const ref = state.pickA;
+  let chosen = null, bestd=1e9;
+  for(const it of arr){
+    if(it.type!==ref.type) continue;
+    const d=Math.hypot(it.uc[0]-ref.uc[0], it.uc[1]-ref.uc[1], it.uc[2]-ref.uc[2]);
+    if(d<bestd){ bestd=d; chosen=it; }
+  }
+  if(chosen){
+    const R = ((ui.radius && +ui.radius.value) || (window._radiusDefault || 12)) + 6;
+    ctx.lineWidth=2;
+    ctx.strokeStyle="rgba(251,191,36,0.95)";
+    ctx.beginPath(); ctx.arc(chosen.p.x + w/2, chosen.p.y + h/2, R, 0, Math.PI*2); ctx.stroke();
+  }
+  drawStericOverlay();
+
+}
+
+
+{
+  const arr = state.projectedVisible || [];
+  const embeds = (Array.isArray(EMBEDDED_BONDS)?EMBEDDED_BONDS:[]).filter(e=>e.key==='HEX_ABC' && (!e.cells || e.cells==+ui.cells.value));
+    const list = [...embeds, ...bondsForCurrent()];
+  
+  const __drawBonds = (ui.showBonds && ui.showBonds.checked);
+const findByRef = (ref)=>{
+    let best=null, bestd=1e9;
+    for(const it of arr){
+      if(it.type!==ref.type) continue;
+      const d=Math.hypot(it.uc[0]-ref.uc[0], it.uc[1]-ref.uc[1], it.uc[2]-ref.uc[2]);
+      if(d<bestd){best=it; bestd=d;}
+    }
+    return best;
+  };
+  if(__drawBonds){
+    for(const rec of list){
+    const A = findByRef(rec.a), B=findByRef(rec.b);
+    if(!A || !B) continue;
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "rgba(96,165,250,0.95)";
+    ctx.beginPath(); ctx.moveTo(A.p.x + w/2, A.p.y + h/2); ctx.lineTo(B.p.x + w/2, B.p.y + h/2); ctx.stroke();
+  }
+}
+if(typeof bondsCoordForCurrent==='function'){
+  const arr = state.projectedVisible || [];
+  const findByRef = (ref)=>{
+    let best=null, bestd=1e9;
+    for(const it of arr){
+      if(it.type!==ref.type) continue;
+      const d=Math.hypot(it.uc[0]-ref.uc[0], it.uc[1]-ref.uc[1], it.uc[2]-ref.uc[2]);
+      if(d<bestd){best=it; bestd=d;}
+    }
+    return best;
+  };
+  const list2 = bondsCoordForCurrent();
+  for(const rec of list2){
+    const C = findByRef(rec.center), N=findByRef(rec.neighbor);
+    if(!C || !N) continue;
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "rgba(30,58,138,0.95)";
+    ctx.beginPath(); ctx.moveTo(C.p.x + w/2, C.p.y + h/2); ctx.lineTo(N.p.x + w/2, N.p.y + h/2); ctx.stroke();
+  }
+}
+
+
+  // 5) Classificação por altura (topo: 3; meio: 6; base: 3)
+  const zs = Pn.map(p=>p.z);
+  const zSorted = zs.slice().sort((a,b)=>a-b);
+  const zLow  = (zSorted[0] + zSorted[2]) / 2;
+  const zHigh = (zSorted[9] + zSorted[11]) / 2;
+  const eps = 1e-6;
+  const top = [], mid=[], bot=[];
+  for(const p of Pn){
+    if(p.z >= zHigh - eps) top.push(p);
+    else if(p.z <= zLow + eps) bot.push(p);
+    else mid.push(p);
+  }
+  function angle(p){ return Math.atan2(p.y - Pc.y, p.x - Pc.x); }
+  top.sort((a,b)=>angle(a)-angle(b));
+  bot.sort((a,b)=>angle(a)-angle(b));
+  mid.sort((a,b)=>angle(a)-angle(b));
+
+  // 6) Desenha arestas: radiais + triângulos/hexágono + haste vertical
+  const hideEdges = (document.getElementById('introHideEdges')?.checked === true);
+  if(!hideEdges){
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = 'rgba(229,231,235,0.75)';
+    for(const p of Pn){
+      ctx.beginPath(); ctx.moveTo(Pc.x,Pc.y); ctx.lineTo(p.x,p.y); ctx.stroke();
+    }
+    if(top.length===3){
+      ctx.beginPath(); ctx.moveTo(top[0].x, top[0].y);
+      ctx.lineTo(top[1].x, top[1].y); ctx.lineTo(top[2].x, top[2].y);
+      ctx.closePath(); ctx.stroke();
+    }
+    if(bot.length===3){
+      ctx.beginPath(); ctx.moveTo(bot[0].x, bot[0].y);
+      ctx.lineTo(bot[1].x, bot[1].y); ctx.lineTo(bot[2].x, bot[2].y);
+      ctx.closePath(); ctx.stroke();
+    }
+    if(mid.length===6){
+      ctx.beginPath(); ctx.moveTo(mid[0].x, mid[0].y);
+      for(let i=1;i<6;i++){ ctx.lineTo(mid[i].x, mid[i].y); }
+      ctx.closePath(); ctx.stroke();
+    }
+    let topC = top.reduce((a,b)=> a.z>b.z?a:b, top[0]||Pc);
+    let botC = bot.reduce((a,b)=> a.z<b.z?a:b, bot[0]||Pc);
+    ctx.beginPath(); ctx.moveTo(topC.x, topC.y); ctx.lineTo(botC.x, botC.y); ctx.stroke();
+  }
+
+  // 7) Desenha esferas (azuis) e centro (vermelho)
+  function paint(p, rr, col){
+    const scale = (ui.projOrtho && ui.projOrtho.checked) ? (state.zoom||1) : (p.s||1);
+    const R = rr * scale;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R+2, 0, Math.PI*2); ctx.fillStyle="rgba(0,0,0,0.45)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI*2); ctx.fillStyle=col; ctx.fill();
+    const r2=Math.max(2, R*0.45);
+    ctx.beginPath(); ctx.arc(p.x - R*0.35, p.y - R*0.35, r2, 0, Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.45)"; ctx.fill();
+  }
+  const nodes = [
+  ...Pn.map((p,i)=>({p, rr: radius*0.9, col:'#93c5fd', uc:first12[i]})),
+  {p: Pc, rr: radius*0.95, col:'#ef4444', uc:centerAtom.pos}
+];
+// draw from back to front by z
+nodes.sort((a,b)=>a.p.z-b.p.z);
+for(const n of nodes){ paint(n.p, n.rr, n.col); }
+
+// steric check for hex cluster — now 3D (camera-invariant)
+try{
+  // denom3D must match the world-space scale used by project(): L * zoom
+  const denom3D = Math.max(1e-6, (typeof L !== 'undefined' ? L : 1) * ((state && state.zoom) ? state.zoom : 1));
+
+  // Expect each node to carry its 3D unit-cell coords in n.uc = [x,y,z]. If absent, fall back to projected xy with z=0.
+  const items3D = nodes.map(n => ({
+    pos: Array.isArray(n.uc) && n.uc.length===3 ? n.uc : [n.p && n.p.x ? n.p.x/denom3D : 0, n.p && n.p.y ? n.p.y/denom3D : 0, 0],
+    r:  (n.rr || 0) / denom3D
+  }));
+
+  updateStericAlert(checkStericOverlap3D(items3D));
+}catch(e){}}
+}
+function drawHexABC(){ drawHexCommon('ABC'); }
+
+
+// === Wigner–Seitz cells (BCC / FCC) =========================================
+const WS_BCC_VERTS = [[0, -2, -1], [0, 2, -1], [0, -2, 1], [0, 2, 1], [-1, -2, 0], [-1, 2, 0], [1, -2, 0], [1, 2, 0], [-2, -1, 0], [2, -1, 0], [-2, 1, 0], [2, 1, 0], [-2, 0, -1], [2, 0, -1], [-2, 0, 1], [2, 0, 1], [0, -1, -2], [0, -1, 2], [0, 1, -2], [0, 1, 2], [-1, 0, -2], [-1, 0, 2], [1, 0, -2], [1, 0, 2]];        // integer coords (0, ±1, ±2)
+const WS_BCC_TRIS  = [[2, 9, 23], [11, 19, 23], [2, 8, 21], [10, 19, 21], [19, 21, 23], [1, 10, 20], [8, 16, 20], [9, 16, 22], [1, 11, 22], [16, 20, 22], [0, 8, 16], [0, 9, 16], [3, 10, 19], [3, 11, 19], [9, 11, 15], [11, 15, 23], [9, 15, 23], [8, 10, 14], [8, 14, 21], [10, 14, 21], [2, 17, 23], [17, 21, 23], [2, 17, 21], [8, 10, 12], [10, 12, 20], [8, 12, 20], [9, 11, 13], [9, 13, 22], [11, 13, 22], [1, 18, 20], [1, 18, 22], [18, 20, 22], [2, 4, 8], [0, 4, 8], [0, 2, 4], [2, 6, 9], [0, 2, 6], [0, 6, 9], [1, 5, 10], [3, 5, 10], [1, 3, 5], [1, 7, 11], [1, 3, 7], [3, 7, 11]];        // triangular faces (indices)
+
+const WS_FCC_VERTS = [[2, 0, 0], [-2, 0, 0], [0, 2, 0], [0, -2, 0], [0, 0, 2], [0, 0, -2], [-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]];        // integer coords (±2 axis, ±1 corners)
+const WS_FCC_TRIS  = [[1, 4, 9], [2, 4, 9], [1, 2, 9], [0, 2, 13], [2, 4, 13], [0, 4, 13], [1, 2, 8], [2, 5, 8], [1, 5, 8], [0, 2, 12], [0, 5, 12], [2, 5, 12], [0, 4, 11], [3, 4, 11], [0, 3, 11], [1, 4, 7], [1, 3, 7], [3, 4, 7], [1, 5, 6], [3, 5, 6], [1, 3, 6], [0, 5, 10], [0, 3, 10], [3, 5, 10]];        // triangular faces (indices)
+
+function __drawUnitCubeEdgesGeneric(L){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const corners=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]]
+    .map(v=>[v[0]-0.5, v[1]-0.5, v[2]-0.5]);
+  const E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  const P=corners.map(v=>project(v, L));
+  ctx.lineWidth=1.4; ctx.strokeStyle='rgba(229,231,235,0.75)';
+  for(const [i,j] of E){
+    ctx.beginPath();
+    ctx.moveTo(P[i].x+w/2, P[i].y+h/2);
+    ctx.lineTo(P[j].x+w/2, P[j].y+h/2);
+    ctx.stroke();
+  }
+}
+function __drawDotsLattice(kind, L){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  let pts = [];
+  const cc=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]].map(v=>[v[0]-0.5, v[1]-0.5, v[2]-0.5]);
+  pts = pts.concat(cc);
+  if(kind==='BCC'){ pts.push([0,0,0]); }
+  else if(kind==='FCC'){
+    const fcs = [[0.5,0.0,0.5],[0.5,1.0,0.5],[0.0,0.5,0.5],[1.0,0.5,0.5],[0.5,0.5,0.0],[0.5,0.5,1.0]]
+      .map(v=>[v[0]-0.5,v[1]-0.5,v[2]-0.5]);
+    pts = pts.concat(fcs);
+  }
+  const P=pts.map(v=>project(v, L)).sort((a,b)=>a.z-b.z);
+  for(const p of P){
+    ctx.beginPath(); ctx.arc(p.x+w/2, p.y+h/2, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#111827'; ctx.fill();
+  }
+}
+function __edgesFromTris(tris){
+  const set=new Set(); const edges=[];
+  for(const [a,b,c] of tris){
+    const es=[[a,b],[b,c],[c,a]];
+    for(let [i,j] of es){
+      const key = i<j ? i+'-'+j : j+'-'+i;
+      if(!set.has(key)){ set.add(key); edges.push([i,j]); }
+    }
+  }
+  return edges;
+}
+function __drawSolid(verts, tris, L, fillRGBA, strokeRGBA){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  const PV = verts.map(v=>project(v, L));
+  const TS = tris.map(t=>({t, z:(PV[t[0]].z+PV[t[1]].z+PV[t[2]].z)/3})).sort((a,b)=>a.z-b.z);
+  ctx.globalAlpha=1.0;
+  for(const {t} of TS){
+    const a=PV[t[0]], b=PV[t[1]], c=PV[t[2]];
+    ctx.beginPath();
+    ctx.moveTo(a.x+w/2, a.y+h/2);
+    ctx.lineTo(b.x+w/2, b.y+h/2);
+    ctx.lineTo(c.x+w/2, c.y+h/2);
+    ctx.closePath();
+    ctx.fillStyle = fillRGBA; ctx.fill();
+  }
+  const edges = __edgesFromTris(tris);
+  ctx.lineWidth=2; ctx.strokeStyle=strokeRGBA;
+  for(const [i,j] of edges){
+    const a=PV[i], b=PV[j];
+    ctx.beginPath();
+    ctx.moveTo(a.x+w/2, a.y+h/2);
+    ctx.lineTo(b.x+w/2, b.y+h/2);
+    ctx.stroke();
+  }
+}
+function drawWS(kind){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  const L=+ui.spacing.value;
+  drawAxes(L);
+  __drawUnitCubeEdgesGeneric(L);
+  let fill='rgb(100,100,100)'; let stroke='rgba(31,41,55,0.95)';
+  if(kind==='BCC'){
+    const s=0.18;
+    const V = WS_BCC_VERTS.map(v=>[v[0]*s, v[1]*s, v[2]*s]);
+    __drawSolid(V, WS_BCC_TRIS, L, fill, stroke);
+    __drawDotsLattice('BCC', L);
+  }else{
+    const s=0.23;
+    const V = WS_FCC_VERTS.map(v=>[v[0]*s, v[1]*s, v[2]*s]);
+    __drawSolid(V, WS_FCC_TRIS, L, fill, stroke);
+    __drawDotsLattice('FCC', L);
+  }
+}
+function drawWS_BCC(){ drawWS('BCC'); }
+function drawWS_FCC(){ drawWS('FCC'); }
+// ============================================================================
+
+// ---- Steric alert stubs (early) ----
+if (typeof updateStericAlert === 'undefined') {
+  function updateStericAlert(flag){
+    state.steric = !!flag;
+    try{
+      const el = document.getElementById('stericAlert');
+      if(el) el.style.display = state.steric ? 'block' : 'none';
+    }catch(e){}
+  }
+}
+if (typeof drawStericOverlay === 'undefined') {
+  function drawStericOverlay(){
+    if(!state.steric) return;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const msg = 'Alerta! Estrutura improvável com alta repulsão estérica.';
+    ctx.save();
+    ctx.font = '600 14px system-ui, -apple-system, Segoe UI, Roboto';
+    const m = ctx.measureText(msg);
+    const padX = 16, padY = 8;
+    const bx = (w - m.width)/2 - padX, by = h - 40 - padY;
+    ctx.fillStyle = 'rgba(239,68,68,0.85)';
+    ctx.fillRect(bx, by, m.width + padX*2, 26 + padY*2);
+    ctx.strokeStyle = 'rgba(248,113,113,0.9)'; ctx.lineWidth = 2;
+    ctx.strokeRect(bx, by, m.width + padX*2, 26 + padY*2);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(msg, (w - m.width)/2, by + 26);
+    ctx.restore();
+  }
+}
+
+// ---- Steric overlap stub (early) ----
+if (typeof checkStericOverlap === 'undefined') {
+  function checkStericOverlap(circles){
+    if(!Array.isArray(circles) || circles.length<2) return false;
+    for(let i=0;i<circles.length;i++){
+      const a = circles[i];
+      for(let j=i+1;j<circles.length;j++){
+        const b = circles[j];
+        const dx = (a.x||0) - (b.x||0), dy = (a.y||0) - (b.y||0);
+        const ra = Math.max(0, a.r||0), rb = Math.max(0, b.r||0);
+        const R = ra + rb - 0.5; // small tolerance
+        if(R > 0 && (dx*dx + dy*dy) < R*R) return true;
+      }
+    }
+    return false;
+  }
+}
+
+// ---- 3D steric overlap check (camera/projeção-invariante) ----
+if (typeof checkStericOverlap3D === 'undefined') {
+  function checkStericOverlap3D(items){
+    // items: array of { pos:[x,y,z], r:number } in same 3D units
+    if(!Array.isArray(items) || items.length < 2) return false;
+    const n = items.length;
+    const eps = 1e-6;
+    for(let i=0;i<n;i++){
+      const ai = items[i];
+      const xi = ai.pos[0], yi = ai.pos[1], zi = ai.pos[2], ri = Math.max(0, ai.r||0);
+      for(let j=i+1;j<n;j++){
+        const aj = items[j];
+        const dx = xi - aj.pos[0], dy = yi - aj.pos[1], dz = zi - aj.pos[2];
+        const d2 = dx*dx + dy*dy + dz*dz;
+        const R = ri + Math.max(0, aj.r||0) - 0.02; // tolerância pequena
+        if(R > 0 && d2 + eps < R*R) return true;
+      }
+    }
+    
+
+// ---- 3D steric overlap check (camera/projeção-invariante; mínimo-imagem) ----
+if (typeof checkStericOverlap3D !== 'undefined') {
+  // override with stronger physics-aware version
+  (function(){
+    const _old = checkStericOverlap3D;
+    checkStericOverlap3D = function(items){
+      try{
+        if(!Array.isArray(items) || items.length < 2) return false;
+
+        // Metric / lattice vectors
+        const M = (typeof metricOf === 'function') ? metricOf(state.key) : [[1,0,0],[0,1,0],[0,0,1]];
+        const aVec = Array.isArray(M[0]) ? [M[0][0], M[1][0], M[2][0]] : [1,0,0];
+        const bVec = Array.isArray(M[0]) ? [M[0][1], M[1][1], M[2][1]] : [0,1,0];
+        const cVec = Array.isArray(M[0]) ? [M[0][2], M[1][2], M[2][2]] : [0,0,1];
+
+        function norm(v){ return Math.hypot(v[0], v[1], v[2]); }
+        function add(a,b){ return [a[0]+b[0], a[1]+b[1], a[2]+b[2]]; }
+        function sub(a,b){ return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+        function mul(k,v){ return [k*v[0], k*v[1], k*v[2]]; }
+
+        // Nearest-neighbor theoretical distance for hex (a,a,120°) / DIY hex
+        function dnn_hex(){
+          const ab = sub(aVec, bVec);
+          return Math.min(norm(aVec), norm(bVec), norm(ab));
+        }
+
+        const isHex = (state && (state.key==='HEX_ABC' || (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal')));
+
+        // Precompute d_nn for gating
+        const dnn = isHex ? dnn_hex() : null;
+
+        // Minimum-image distance
+        function minImageDist(pi, pj){
+          const base = sub(pi, pj);
+          let best = Infinity;
+          for(let I=-1; I<=1; I++){
+            for(let J=-1; J<=1; J++){
+              for(let K=-1; K<=1; K++){
+                const shift = add(add(mul(I, aVec), mul(J, bVec)), mul(K, cVec));
+                const v = add(base, shift);
+                const d = norm(v);
+                if(d < best) best = d;
+              }
+            }
+          }
+          return best;
+        }
+
+        // Optional tolerant gating for hexagonal: ignore tiny visual overlaps
+        let maxRsum = 0;
+        for(const it of items){ maxRsum = Math.max(maxRsum, Math.max(0, it.r||0)); }
+        // max sum of two equal radii = 2*maxR
+        if(isHex && dnn && (2*maxRsum) <= 0.95*dnn){
+          return false; // radii are physically below close-packing; never alert
+        }
+
+        // Pair scan
+        const n = items.length;
+        const TOL_REL = isHex ? 0.10 : 0.02;   // 10% overlap tolerance on hex; tighter elsewhere
+        const TOL_ABS = isHex ? 0.02 : 0.005; // absolute cushion in world units
+        let viol = 0;
+        for(let i=0;i<n;i++){
+          const ai = items[i];
+          const ri = Math.max(0, ai.r||0);
+          for(let j=i+1;j<n;j++){
+            const aj = items[j];
+            const rj = Math.max(0, aj.r||0);
+            const d = minImageDist(ai.pos, aj.pos);
+            const Rsum = ri + rj;
+            const overlap = Rsum - d;
+            if(overlap > TOL_ABS && (overlap / Math.max(1e-9, Rsum)) > TOL_REL){
+              viol++;
+              if(viol >= (isHex ? 3 : 1)) return true; // require ≥3 pairs in hex to avoid flicker
+            }
+          }
+        }
+        return false;
+      }catch(e){
+        // fallback to previous implementation on any error
+        try{ return _old(items); }catch(_){ return false; }
+      }
+    }
+  })();
+}
+
+return false;
+  }
+}
+
+// --- Helpers to keep removed atoms outside the unit-cell clip (HEX_P) ---
+function pushUCOutside(uc, eps=0.02){
+  // Move the UC coordinate just beyond the nearest face of the unit cell
+  const out = [uc[0], uc[1], uc[2]];
+  let bestAxis = 0, bestMargin = Infinity;
+  for(let i=0;i<3;i++){
+    const margin = 0.5 - Math.abs(out[i]);
+    if(margin < bestMargin){ bestMargin = margin; bestAxis = i; }
+  }
+  const s = out[bestAxis] >= 0 ? 1 : -1;
+  out[bestAxis] = s * (0.5 + Math.max(1e-3, eps));
+  return out;
+}
+
+// Ensure removed atoms are outside UC for a given key/cells (used in export)
+function ensureRemovedOutsideForKey(key, cells, eps=0.02){
+  try{
+    const M = metricOf(key);
+    const removed = Array.isArray(REMOVED_ATOMS) ? REMOVED_ATOMS.filter(r=>r.key===key && r.cells===cells) : [];
+    // Build a computed list with uc_out and pos_out without mutating the registry
+    return removed.map(r=>{
+      const uc_out = inUnitCellUC(r.uc) ? pushUCOutside(r.uc, eps) : r.uc.slice();
+      const pos_out = matMulVec(M, uc_out);
+      return { type:r.type, uc: r.uc.slice(), uc_out, pos_out };
+    });
+  }catch(e){ return []; }
+}
+      
+
+function ensureRemovedAtomsOutsideUC_Current(){ /* no-op: legacy compatibility, do not mutate REMOVED_ATOMS */ }
+    
+
+
+function draw(){
+  // Enforce locked angles for Intro Camadas AB (X=180°, Y=-180°, Z=-117°)
+  // rotation unlocked: no per-frame angle lock
+
+  // [IC] tick before draw
+  if (state.key==='INTRO_CAMADAS' && state.ic){
+    const moving = introCamadasTick(state.ic);
+    state.atoms = introCamadasComposeAtoms(state.ic);
+  }
+
+  if(state.key==='INTRO_CAMADAS'){ drawIntroCamadas(); requestAnimationFrame(draw); return; }
+  if(state.key==='WS_BCC'){ drawWS_BCC(); requestAnimationFrame(draw); return; }
+  if(state.key==='WS_FCC'){ drawWS_FCC(); requestAnimationFrame(draw); return; }
+  if(false){ drawIntroStoryboard(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO2'){ drawIntroBuracoFCC(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO_TESTE'){ drawIntroTeste(); requestAnimationFrame(draw); return; }
+  if(state.key==='HEX_ABC'){ drawHexABC(); requestAnimationFrame(draw); return; }
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  const spacing=+ui.spacing.value; let radius = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+  const atomsAll = buildLattice(state.key,+ui.cells.value);
+  let atoms = atomsAll.slice();
+
+  // Remover átomos marcados (persistentes por estrutura/tamanho)
+  try {
+    const rmset = removedSetForCurrent();
+    atoms = atoms.filter(a => !rmset.has(atomKeyId(atomRef(a))));
+  } catch(e){}
+  // Adjust removal behavior for HEX_P: when ucOnly is ON, push removed atoms outside the unit cell
+  try {
+    const rmset = removedSetForCurrent();
+    if(false /* HEX_P removed */ && ui.ucOnly && ui.ucOnly.checked){
+      const M = metricOf(state.key);
+      for(const a of atoms){
+        const id = atomKeyId(atomRef(a));
+        if(rmset.has(id)){
+          const ucOut = pushUCOutside(a.uc, 0.02);
+          a.uc = ucOut;
+          a.pos = matMulVec(M, ucOut);
+        }
+      }
+      // do NOT filter them here; they will be excluded by the inUnitCell filter below
+    } else {
+      atoms = atoms.filter(a => !rmset.has(atomKeyId(atomRef(a))));
+    }
+  } catch(e){}
+  if(ui.ucOnly.checked){ atoms = atoms.filter(inUnitCell); }
+  if(ui.faceOnly && ui.faceOnly.checked){ atoms = atoms.filter(inUnitCell).filter(a=>inFace(a, ui.faceSelect.value)); }
+
+  // Adicionar átomos inseridos manualmente (guardar em UC -> converter para POS)
+  try {
+    const def = STRUCTURES[state.key] || {};
+    const metric = def.metric || [1,1,1];
+    const M = def.metricM ? def.metricM : diag3(metric[0],metric[1],metric[2]);
+    const adds = addedForCurrent();
+    for(const r of adds){
+      const pos = matMulVec(M, r.uc);
+      const st=addAtomStyleFor(r.type);
+      atoms.push({ type:r.type, color:st.color, rScale:st.rScale, uc:r.uc.slice(), pos:pos });
+    }
+  } catch(e){}
+
+  
+
+// --- Defeitos iônicos: Schottky / Frenkel ---
+if(isIonic(state.key)){
+  const pkey = p=>p.map(v=>v.toFixed(3)).join(',');
+  const rm = new Set();
+  const adds = [];
+  const nearestOfType=(t)=>{
+    let best=null, bestd=Infinity;
+    for(const a of atoms){
+      if(a.type!==t) continue;
+      const d=Math.hypot(a.pos[0],a.pos[1],a.pos[2]);
+      if(d<bestd){ bestd=d; best=a; }
+    }
+    return best;
+  };
+  if(ui.schottky.checked){
+    const aA = nearestOfType('A');
+    const aC = nearestOfType('C');
+    if(aA) rm.add(pkey(aA.pos));
+    if(aC) rm.add(pkey(aC.pos));
+  }
+  if(ui.frenkel.checked){
+    const cat = nearestOfType('C');
+    if(cat){
+      rm.add(pkey(cat.pos));
+      const ip = [cat.pos[0]+0.25, cat.pos[1]+0.25, cat.pos[2]];
+      adds.push({type:cat.type, pos:ip, interstitial:true});
+    }
+  }
+  if(rm.size || adds.length){
+    atoms = atoms.filter(a=>!rm.has(pkey(a.pos))).concat(adds);
+  }
+}
+// Eixos
+  drawAxes(spacing);
+
+  // Célula unitária (métrica geral 3x3) — com caso especial para Hexagonal (prisma)
+  if(ui.unitcell.checked && state.key!=="INTRO"){
+    const L=spacing;
+    const M=metricOf(state.key);
+
+    function add(a,b){ return [a[0]+b[0], a[1]+b[1], a[2]+b[2]]; }
+    function mul(k,v){ return [k*v[0], k*v[1], k*v[2]]; }
+    const aVec = matMulVec(M, [1,0,0]);
+    const bVec = matMulVec(M, [0,1,0]);
+    const cVec = matMulVec(M, [0,0,1]);
+
+    let edges = [];
+    let cornersProj = [];
+
+    if(false /* HEX_P removed */ || (state.key==="DIY" && window.stateDIY && window.stateDIY.format==="hexagonal")){
+      // Prisma hexagonal convencional (6 vértices na base e 6 no topo)
+      const base = [
+        mul(0.5, aVec),
+        mul(0.5, add(aVec,bVec)),
+        mul(0.5, bVec),
+        mul(-0.5, aVec),
+        mul(-0.5, add(aVec,bVec)),
+        mul(-0.5, bVec),
+      ];
+      const zDown = mul(-0.5, cVec);
+      const zUp   = mul( 0.5, cVec);
+      const verts = [];
+      for(const v of base){ verts.push(add(v, zDown)); } // 0..5 base
+      for(const v of base){ verts.push(add(v, zUp));   } // 6..11 topo
+
+      const E=[];
+      for(let i=0;i<6;i++){ E.push([i,(i+1)%6]); }          // base
+      for(let i=0;i<6;i++){ E.push([6+i,6+((i+1)%6)]); }    // topo
+      for(let i=0;i<6;i++){ E.push([i,6+i]); }              // colunas
+
+      cornersProj = verts.map(v=>project(v,L));
+      edges = E;
+    }else{
+      // Paralelepípedo padrão (8 cantos)
+      const corners=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]]
+        .map(v=>[v[0]-0.5, v[1]-0.5, v[2]-0.5])
+        .map(v=>matMulVec(M, v));
+      const E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      cornersProj = corners.map(v=>project(v,L));
+      edges = E;
+    }
+
+    
+    // DIY face shading for tetragonal & orthorhombic (visual like provided sketch)
+    try {
+      if (state.key==="DIY" && window.stateDIY && (stateDIY.format==="tetragonal" || stateDIY.format==="orthorhombic")) {
+        const P = cornersProj;
+        function facePath(ids){
+          ctx.beginPath();
+          ctx.moveTo(P[ids[0]].x+w/2, P[ids[0]].y+h/2);
+          for(let k=1;k<ids.length;k++){
+            const p=P[ids[k]];
+            ctx.lineTo(p.x+w/2, p.y+h/2);
+          }
+          ctx.closePath();
+        }
+        // front
+        ctx.fillStyle = "rgba(0,0,0,0)"; // yellow
+        facePath([0,1,5,4]); ctx.fill();
+        // right
+        ctx.fillStyle = "rgba(0,0,0,0)";
+        facePath([1,2,6,5]); ctx.fill();
+        // top
+        ctx.fillStyle = "rgba(0,0,0,0)";
+        facePath([4,5,6,7]); ctx.fill();
+      }
+    } catch(e) { /* no-op */ }
+    
+    ctx.strokeStyle="rgba(125,211,252,0.9)"; ctx.lineWidth=2;
+    for(const [a,b] of edges){
+      ctx.beginPath();
+      const pa = cornersProj[a], pb = cornersProj[b];
+      ctx.moveTo(pa.x+w/2, pa.y+h/2);
+      ctx.lineTo(pb.x+w/2, pb.y+h/2);
+      ctx.stroke();
+    }
+  }
+
+  // Ligações vizinhas removidas
+
+
+// Ligações manuais (sob controle de 'Mostrar ligações')
+  if(ui.showBonds && ui.showBonds.checked){
+    let list = bondsForCurrent();
+    if(state.key==='HEX_ABC' && Array.isArray(EMBEDDED_BONDS)){
+      const embeds = EMBEDDED_BONDS.filter(e=>(!e.cells || e.cells==+ui.cells.value));
+      const toAdd = embeds.filter(e=>!removedEmbedBondHas(state.key, +ui.cells.value, bondId(e)));
+      list = toAdd.concat(list);
+    }
+    for(const rec of list){
+      const A = findAtomByRef(rec.a, atomsAll);
+      const B = findAtomByRef(rec.b, atomsAll);
+      if(!A || !B) continue;
+
+      // Respeita recortes atuais
+      if(ui.ucOnly.checked && (!inUnitCell(A) || !inUnitCell(B))) continue;
+      if(ui.faceOnly && ui.faceOnly.checked){
+        if(!inFace(A, ui.faceSelect.value) || !inFace(B, ui.faceSelect.value)) continue;
+      }
+      const pa=project(A.pos, spacing), pb=project(B.pos, spacing);
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "rgba(96,165,250,0.95)"; // azul claro
+      ctx.beginPath(); ctx.moveTo(pa.x+w/2, pa.y+h/2); ctx.lineTo(pb.x+w/2, pb.y+h/2); ctx.stroke();
+    }
+  }
+
+// Coordenação manual (linhas centro->vizinho)
+  if(ui.coordpoly.checked || ui.editCoord.checked || ui.delCoord.checked){  {
+    const list = coordsForCurrent();
+    for(const rec of list){
+      const C = findAtomByRef(rec.center, atomsAll);
+      const N = findAtomByRef(rec.neighbor, atomsAll);
+      if(!C || !N) continue;
+      if(ui.ucOnly.checked && (!inUnitCell(C) || !inUnitCell(N))) continue;
+      if(ui.faceOnly && ui.faceOnly.checked){
+        if(!inFace(C, ui.faceSelect.value) || !inFace(N, ui.faceSelect.value)) continue;
+      }
+      const pc=project(C.pos, spacing), pn=project(N.pos, spacing);
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "rgba(30,58,138,0.95)"; // azul escuro
+      ctx.beginPath(); ctx.moveTo(pc.x+w/2, pc.y+h/2); ctx.lineTo(pn.x+w/2, pn.y+h/2); ctx.stroke();
+    }
+  }
+
+  }
+
+  // Poliedro
+
+  // Poliedro de coordenação (usando vizinhos apropriados)
+  if(ui.coordpoly.checked || ui.editCoord.checked || ui.delCoord.checked || coordsForCurrent().length>0){
+    let center=null,best=Infinity;
+
+    // Preferir centro selecionado pelo usuário, se houver
+    if(state.coordCenterRef){
+      const chosen = findAtomByRef(state.coordCenterRef, atomsAll);
+      if(chosen) center = chosen;
+    }
+    for(const a of atoms){
+      const d=Math.hypot(a.pos[0],a.pos[1],a.pos[2]);
+      if(d<best){ best=d; center=a; }
+    }
+    if(center){
+      const metric = metricOf(state.key);
+      const neigh1 = (state.key==="RUTILIO")
+        ? rutileNeighbors(center, atomsAll, metric, {
+            ucOnly: ui.ucOnly.checked,
+            faceOnly: (ui.faceOnly && ui.faceOnly.checked),
+            faceSel: ui.faceSelect.value
+          })
+        : firstShellNeighborsPBC(center, atomsAll, metric, {
+            ucOnly: ui.ucOnly.checked,
+            faceOnly: (ui.faceOnly && ui.faceOnly.checked),
+            faceSel: ui.faceSelect.value
+          });
+      ctx.lineWidth=2; ctx.strokeStyle="rgba(125,211,252,0.95)";
+      for(const nb of neigh1){
+        const pc=project(center.pos,spacing), pn=project(nb.pos,spacing);
+        ctx.beginPath(); ctx.moveTo(pc.x+w/2, pc.y+h/2); ctx.lineTo(pn.x+w/2, pn.y+h/2); ctx.stroke();
+      }
+    }
+  }
+
+  // ---- HEX_P: clip draw region to projected unit-cell hull (prevents spheres outside) ----
+  let __hexClipActive = false;
+  if (ui.ucOnly && ui.ucOnly.checked && (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal')) {
+    // Recompute hex-prism vertices from metric (independent of any prior cornersProj)
+    const M = metricOf(state.key);
+    function add(a,b){ return [a[0]+b[0], a[1]+b[1], a[2]+b[2]]; }
+    function mul(k,v){ return [k*v[0], k*v[1], k*v[2]]; }
+    const aVec = matMulVec(M, [1,0,0]);
+    const bVec = matMulVec(M, [0,1,0]);
+    const cVec = matMulVec(M, [0,0,1]);
+    const base = [
+      mul(0.5, aVec),
+      mul(0.5, add(aVec,bVec)),
+      mul(0.5, bVec),
+      mul(-0.5, aVec),
+      mul(-0.5, add(aVec,bVec)),
+      mul(-0.5, bVec),
+    ];
+    const zDown = mul(-0.5, cVec);
+    const zUp   = mul( 0.5, cVec);
+    const verts = [];
+    for (const v of base){ verts.push(add(v, zDown)); }
+    for (const v of base){ verts.push(add(v, zUp)); }
+    // Project to screen space
+    const pts = verts.map(v => {
+      const p = project(v, spacing);
+      return {x:p.x + w/2, y:p.y + h/2};
+    });
+    // Build convex hull in 2D
+    function cross(o,a,b){ return (a.x-o.x)*(b.y-o.y) - (a.y-o.y)*(b.x-o.x); }
+    function hull2D(arr){
+      const P = arr.slice().sort((a,b)=> a.x===b.x ? a.y-b.y : a.x-b.x);
+      const lower=[]; for(const p of P){ while(lower.length>=2 && cross(lower[lower.length-2], lower[lower.length-1], p) <= 0) lower.pop(); lower.push(p); }
+      const upper=[]; for(const p of P.slice().reverse()){ while(upper.length>=2 && cross(upper[upper.length-2], upper[upper.length-1], p) <= 0) upper.pop(); upper.push(p); }
+      upper.pop(); lower.pop();
+      return lower.concat(upper);
+    }
+    const H = hull2D(pts);
+    if (H.length >= 3){
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(H[0].x, H[0].y);
+      for (let i=1;i<H.length;i++){ ctx.lineTo(H[i].x, H[i].y); }
+      ctx.closePath();
+      ctx.clip();
+      __hexClipActive = true;
+    }
+  }
+
+  const projected=atoms.map(a=>{ const p=project(a.pos,spacing); return {...a,p}; }).sort((A,B)=>A.p.z-B.p.z);
+  state.projectedVisible = projected;
+
+  // Prepara checagem 3D: raio em "unidades do espaço 3D" (independente da projeção)
+  const denomBase = Math.max(1e-6, spacing * (state.zoom||1));
+  const items3D = [];
+
+  for(const a of projected){
+    let r = (typeof a.r==='number' && a.r>0) ? a.r : (radius * (a.rScale ? (+a.rScale) : 1));
+    if(state.key!=="DIY"){
+      if(state.key==="NaCl"){
+        r = (a.type === "C") ? radius * 1.35 : (a.type === "A" ? radius * 0.75 : radius);
+      } else if(state.key==="RUTILIO"){
+        r = (a.type === "T") ? radius * 0.85 : radius * 1.05;
+      }
+    }
+    // 3D radius (world units): pixel radius / pixel-per-world scaling (no perspective factor)
+    const denom = denomBase * ((ui.projOrtho && ui.projOrtho.checked) ? 1 : (a.p && a.p.s ? a.p.s : 1));
+    const r3 = r / denom;
+    items3D.push({pos:a.pos, r:r3});
+
+    // Desenho 2D (igual ao original)
+    ctx.beginPath(); ctx.arc(a.p.x+w/2, a.p.y+h/2, r+2,0,TAU); ctx.fillStyle="rgba(0,0,0,0.45)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(a.p.x+w/2, a.p.y+h/2, r,0,TAU); ctx.fillStyle=(COLORS[a.type]||"#fff"); ctx.fill();
+    const r2=Math.max(2, r*0.45);
+    ctx.beginPath(); ctx.arc(a.p.x+w/2 - r*0.35, a.p.y+h/2 - r*0.35, r2,0,TAU); ctx.fillStyle="rgba(255,255,255,0.35)"; ctx.fill();
+  }
+  
+  if (__hexClipActive) { ctx.restore(); __hexClipActive = false; }
+// Atualiza alerta com base em sobreposição 3D
+  updateStericAlert(checkStericOverlap3D(items3D));
+// Destaque do átomo selecionado (primeiro clique)
+  if(state.pickA){
+    const A = findAtomByRef(state.pickA, atomsAll);
+    if(A){
+      const p = project(A.pos, spacing);
+      const R = ((ui.radius && +ui.radius.value) || (window._radiusDefault || 12)) + 6;
+      ctx.lineWidth=2;
+      ctx.strokeStyle="rgba(251,191,36,0.95)";
+      ctx.beginPath(); ctx.arc(p.x+w/2, p.y+h/2, R, 0, TAU); ctx.stroke();
+    }
+  }
+
+  // Destaque do centro de coordenação selecionado
+  if(state.coordCenterRef){
+    const C = findAtomByRef(state.coordCenterRef, atomsAll);
+    if(C){
+      const p = project(C.pos, spacing);
+      const R = ((ui.radius && +ui.radius.value) || (window._radiusDefault || 12)) + 8;
+      ctx.lineWidth=2.5;
+      ctx.strokeStyle="rgba(30,58,138,0.95)";
+      ctx.beginPath(); ctx.arc(p.x+w/2, p.y+h/2, R, 0, TAU); ctx.stroke();
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+
+function drawIntroBuracosStoryboard(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  const spacing=+ui.spacing.value; let radius = (ui.radius && +ui.radius.value) || (window._radiusDefault || 12);
+
+  // Geometria base A/B (duas camadas compactas)
+  const side = +ui.cells.value;
+  const {pts, e1, e2} = buildIntroBase(side);
+  const hZ = Math.sqrt(2/3); // separação vertical entre camadas
+
+  function makeLayer(fracShift, z){
+    // fracShift: 0 -> A, 1/3 -> B
+    const idx = (fracShift===0)?0:1; // map to layerShiftABC indexes
+    const sh = layerShiftABC(idx, e1, e2);
+    return pts.map(p => {
+      const pos=[p[0]+sh[0], p[1]+sh[1], z];
+      return {type:(idx===0?'A':'B'), pos, uc:[...pos]};
+    });
+  }
+  const A = makeLayer(0, 0);
+  const B = makeLayer(1/3, hZ);
+
+  // Util
+  function rotate2D(p, cx, cy, ang){
+    const s=Math.sin(ang), c=Math.cos(ang);
+    const x=p.x-cx, y=p.y-cy;
+    return {x: x*c - y*s + cx, y: x*s + y*c + cy, z:p.z};
+  }
+  function projectAt(p3, L, off){ const p=project(p3, L); return {x:p.x+off.x, y:p.y+off.y, z:p.z}; }
+  function drawPoly(vertices, faces, colorFill, colorStroke){
+    ctx.lineJoin='round'; ctx.lineCap='round';
+    
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = colorStroke || 'rgba(16,185,129,0.95)';
+    ctx.fillStyle   = colorFill  || 'rgba(16,185,129,0.18)';
+    for(const f of faces){
+      ctx.beginPath();
+      ctx.moveTo(vertices[f[0]].x, vertices[f[0]].y);
+      for(let k=1;k<f.length;k++) ctx.lineTo(vertices[f[k]].x, vertices[f[k]].y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+;
+}
+
+}
+
+// Ocultar opções de coordenação pedidas (UI)
+(function(){
+  try{
+    var e=document.getElementById('editCoord'); if(e){ (e.closest('label')||e.parentElement).style.display='none'; }
+    var d=document.getElementById('delCoord'); if(d){ (d.closest('label')||d.parentElement).style.display='none'; }
+  }catch(_){}
+})();
+
+</script>
+
+<script>
+
+/* ====== Intro (buracos) — módulo com zoom e rotação + brilho ====== */
+(function(){
+  if (window.__introBuracosFCC_clean) return; window.__introBuracosFCC_clean = true;
+
+  const TAU = Math.PI*2;
+  const canvas = document.getElementById('canvas') || document.querySelector('canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const introState = {
+    angleX: Math.PI, angleY: 16*Math.PI/180, angleZ: 8*Math.PI/180,
+    distance: 3.6, zoom: 0.95,
+    dragging:false, lastX:0, lastY:0, sensitivity: 0.008
+  };
+
+  function rotX(p,a){const s=Math.sin(a),c=Math.cos(a);return [p[0],c*p[1]-s*p[2],s*p[1]+c*p[2]];}
+  function rotY(p,a){const s=Math.sin(a),c=Math.cos(a);return [ c*p[0]+s*p[2], p[1], -s*p[0]+c*p[2] ];}
+  function rotZ(p,a){const s=Math.sin(a),c=Math.cos(a);return [ c*p[0]-s*p[1], s*p[0]+c*p[1], p[2] ];}
+
+  function introIsOrtho(){
+    try { return !!(ui && ui.projOrtho && ui.projOrtho.checked); } catch(e){ return false; }
+  }
+
+  function projectIntro(p){
+    let v=[p[0]-0.5,p[1]-0.5,p[2]-0.5];
+    v=rotX(v,introState.angleX); v=rotY(v,introState.angleY); v=rotZ(v,introState.angleZ);
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    const sp = (ui.spacing && +ui.spacing.value) || 140;
+    // Map 40..300  ->  0.30..2.20 for a strong visual effect in Intro (buracos)
+    const t = Math.max(40, Math.min(300, sp));
+    const scaleFromSpacing = 0.30 + (t - 40) * ( (2.20 - 0.30) / (300 - 40) );
+    const s=Math.min(w,h)*0.9*introState.zoom*scaleFromSpacing; const d=introState.distance;
+    const z = v[2] + d;
+    const f = (ui && ui.projOrtho && ui.projOrtho.checked) ? 1 : (d / z);
+    return {x:w/2+v[0]*s*f, y:h/2-v[1]*s*f, z, f};
+  }
+
+  const HOST_FCC = [
+    [0,0,0],[1,0,0],[0,1,0],[1,1,0],[0,0,1],[1,0,1],[0,1,1],[1,1,1],
+    [0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.5,0.5,1],[0.5,1,0.5],[1,0.5,0.5]
+  ];
+  const HOLES_TETRA = [
+    [0.25,0.25,0.25],[0.25,0.75,0.75],[0.75,0.25,0.75],[0.75,0.75,0.25]
+  ];
+  const HOLES_OCTA = [
+    [0.5,0.5,0.5],
+    [0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5],
+    [0.5,0,0],[1,0.5,0],[0.5,1,0],[0,0.5,0],[0.5,0,1],[1,0.5,1],[0.5,1,1],[0,0.5,1]
+  ];
+
+  const uiIntro = {
+    radius: document.getElementById('radius') || { value: 14 },
+    holeMode: document.getElementById('holeMode') || { value: 'both' },
+    holeLabels: document.getElementById('holeLabels') || { checked: true },
+  };
+
+  function drawEdgeCube(offset){
+    offset = offset||{x:0,y:0};
+    const C=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
+    const E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    ctx.strokeStyle='rgba(148,163,184,.65)'; ctx.lineWidth=1.2;
+    for(const [i,j] of E){ const a=projectIntro(C[i]), b=projectIntro(C[j]);
+      ctx.beginPath(); ctx.moveTo(a.x+offset.x,a.y+offset.y); ctx.lineTo(b.x+offset.x,b.y+offset.y); ctx.stroke();
+    }
+  }
+
+  function glossyFillCircle(p, r, color){
+    const R = r * (introIsOrtho() ? 1 : p.f);
+    const g = ctx.createRadialGradient(p.x-R*0.35, p.y-R*0.35, R*0.2, p.x, p.y, R);
+    g.addColorStop(0, color);
+    g.addColorStop(1, 'rgba(0,0,0,0.35)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, TAU); ctx.fill();
+    const hR = Math.max(2, R*0.28);
+    const h = ctx.createRadialGradient(p.x-R*0.45, p.y-R*0.45, 1, p.x-R*0.45, p.y-R*0.45, hR);
+    h.addColorStop(0, 'rgba(255,255,255,0.85)');
+    h.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = h; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, TAU); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  function glossyFillHex(p, size, base){
+    const R = size * (introIsOrtho() ? 1 : p.f);
+    const g = ctx.createRadialGradient(p.x-R*0.35, p.y-R*0.35, R*0.15, p.x, p.y, R);
+    g.addColorStop(0, base);
+    g.addColorStop(1, 'rgba(0,0,0,0.35)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=(Math.PI/6)+i*TAU/6;
+      const x=p.x+R*Math.cos(a), y=p.y+R*Math.sin(a);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath(); ctx.fill();
+    const h = ctx.createRadialGradient(p.x-R*0.45, p.y-R*0.45, 1, p.x-R*0.45, p.y-R*0.45, R*0.35);
+    h.addColorStop(0, 'rgba(255,255,255,0.7)'); h.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle=h; ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=(Math.PI/6)+i*TAU/6;
+      const x=p.x+R*Math.cos(a), y=p.y+R*Math.sin(a);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  function drawHoleLabels(offset){
+    const ox=(offset&&offset.x)||0, oy=(offset&&offset.y)||0;
+    if(!uiIntro.holeLabels.checked) return;
+    ctx.fillStyle='rgba(248,250,252,.9)';
+    ctx.font='12px system-ui, ui-sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    const mids=[[0.5,0,0],[1,0.5,0],[0.5,1,0],[0,0.5,0],[0.5,0,1],[1,0.5,1],[0.5,1,1],[0,0.5,1]];
+    for(const m of mids){ const p=projectIntro(m); ctx.fillText('½', p.x+ox, p.y+oy); }
+    const c=projectIntro([0.5,0.5,0.5]); ctx.fillText('½', c.x+ox, c.y+oy);
+    const t=projectIntro([0.25,0.75,0.75]); ctx.fillText('(¼,¾)', t.x+16+ox, t.y-10+oy);
+    const y=projectIntro([0,1,0]); ctx.fillText('(0,1)', y.x+18+ox, y.y-4+oy);
+    const x=projectIntro([1,0,0]); ctx.fillText('(0,1)', x.x+12+ox, x.y+16+oy);
+  }
+
+  
+  // === Inset panels for FCC holes (figures a) and b)) ===
+  function drawPanelSquareFCC(x, y, size){
+    // Panel (b): top view (001) with mid-edge 1/2 labels and octa/tetra sites
+    const s = size;
+    const left = x - s/2, top = y - s/2, right = x + s/2, bottom = y + s/2;
+    // frame
+    ctx.strokeStyle='rgba(203,213,225,0.8)'; ctx.lineWidth=1.2;
+    ctx.strokeRect(left, top, s, s);
+    // grid 2x2 (edges)
+    ctx.setLineDash([6,6]);
+    ctx.beginPath();
+    ctx.moveTo((left+right)/2, top); ctx.lineTo((left+right)/2, bottom);
+    ctx.moveTo(left, (top+bottom)/2); ctx.lineTo(right, (top+bottom)/2);
+    ctx.strokeStyle='rgba(248,113,113,0.85)'; ctx.stroke();
+    ctx.setLineDash([]);
+    // atoms at corners + face centers
+    const r = (+ui.radius.value||14)*0.45;
+    function circle(px,py,fill){ 
+      const g = ctx.createRadialGradient(px-r*0.35, py-r*0.35, r*0.25, px, py, r);
+      g.addColorStop(0, fill); g.addColorStop(1,'rgba(0,0,0,0.35)'); 
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(px,py,r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    const red='rgba(239,68,68,1)'; const gray='rgba(148,163,184,1)';
+    // corners
+    circle(left+10, top+10, red); circle(right-10, top+10, red);
+    circle(left+10, bottom-10, red); circle(right-10, bottom-10, red);
+    // face centers
+    circle((left+right)/2, top+10, red); circle((left+right)/2, bottom-10, red);
+    circle(left+10, (top+bottom)/2, red); circle(right-10, (top+bottom)/2, red);
+    // octa at center
+    if((uiIntro.holeMode && (uiIntro.holeMode.value==='octa' || uiIntro.holeMode.value==='both')) || !uiIntro.holeMode){
+      circle((left+right)/2, (top+bottom)/2, 'rgba(96,165,250,1)');
+    }
+    // labels 1/2 and (0,1)
+    if(!uiIntro.holeLabels || uiIntro.holeLabels.checked){
+      ctx.fillStyle='rgba(248,250,252,.95)'; ctx.font='12px system-ui, ui-sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('½', (left+right)/2, top + 18);
+      ctx.fillText('½', (left+right)/2, bottom - 18);
+      ctx.fillText('½', left + 18, (top+bottom)/2);
+      ctx.fillText('½', right - 18, (top+bottom)/2);
+      ctx.fillText('(0,1)', right - 18, top + 16);
+      ctx.fillText('(0,1)', left + 18, bottom - 16);
+    }
+  }
+
+  function drawPanelTriFCC(x, y, size){
+    // Panel (a): (111) hexagonal plane with center labeled (1/4, 3/4)
+    const s=size;
+    const left=x-s/2, top=y-s/2, right=x+s/2, bottom=y+s/2;
+    // frame
+    ctx.strokeStyle='rgba(203,213,225,0.8)'; ctx.lineWidth=1.2;
+    ctx.strokeRect(left, top, s, s);
+
+    // generate simple hex/triangular grid inside panel
+    const r = (+ui.radius.value||14)*0.42;
+    const a = s*0.26;
+    const ox = x; const oy = y+4;
+    const pts = [];
+    for(let i=-1;i<=1;i++){
+      for(let j=-1;j<=1;j++){
+        const px = ox + (i+j*0.5)*a;
+        const py = oy + (j*Math.sqrt(3)/2)*a;
+        pts.push({x:px, y:py});
+      }
+    }
+    // draw neighbors (dashed red) from center
+    ctx.setLineDash([6,6]); ctx.strokeStyle='rgba(248,113,113,0.85)'; ctx.lineWidth=1.2;
+    for(const p of pts){
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(p.x, p.y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // draw atoms
+    function circle(px,py,fill){ 
+      const g = ctx.createRadialGradient(px-r*0.35, py-r*0.35, r*0.25, px, py, r);
+      g.addColorStop(0, fill); g.addColorStop(1,'rgba(0,0,0,0.35)'); 
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(px,py,r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    const red='rgba(239,68,68,1)'; 
+    pts.forEach(p=>circle(p.x,p.y,red));
+    // central "hole" site (tetra preferred for (111) visualization)
+    if(!uiIntro.holeMode || uiIntro.holeMode.value!=='octa'){
+      const g = ctx.createRadialGradient(ox-r*0.35, oy-r*0.35, r*0.25, ox, oy, r);
+      g.addColorStop(0, 'rgba(156,163,175,1)'); g.addColorStop(1,'rgba(0,0,0,0.35)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(ox, oy, r*0.9, 0, Math.PI*2); ctx.fill();
+    }
+    // label
+    if(!uiIntro.holeLabels || uiIntro.holeLabels.checked){
+      ctx.fillStyle='rgba(248,250,252,.95)'; ctx.font='12px system-ui, ui-sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      ctx.fillText('(¼,¾)', ox + r*1.6, oy - r*1.2);
+    }
+  }
+
+
+
+
+function drawIntroBuracoFCC(){
+    const Rbase = (+ui.radius.value || 14);
+    // Esferas um pouco maiores para "reduzir a distância entre os átomos"
+    const R = Rbase * 1.15;
+
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+
+    // --- Frame (cube edges) ---
+    const cube = [[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
+    const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    const P = cube.map(projectIntro);
+
+    // Bounding box / center
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    for(const p of P){ if(p.x<minX)minX=p.x; if(p.x>maxX)maxX=p.x; if(p.y<minY)minY=p.y; if(p.y>maxY)maxY=p.y; }
+    const cX = (minX+maxX)/2, cY = (minY+maxY)/2;
+    const off = {x: w/2 - cX, y: h/2 - cY};
+
+    // Helpers ---------------------------------------------------
+    function glossy(px, py, r, fill){
+      const g = ctx.createRadialGradient(px-r*0.35, py-r*0.35, r*0.2, px, py, r);
+      g.addColorStop(0, fill);
+      g.addColorStop(1, 'rgba(0,0,0,0.35)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    function glossyHex(px, py, r, fill){
+      // hexágono com borda para evidenciar o formato
+      const g = ctx.createRadialGradient(px-r*0.35, py-r*0.35, r*0.2, px, py, r);
+      g.addColorStop(0, fill);
+      g.addColorStop(1, 'rgba(0,0,0,0.35)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      for(let i=0;i<6;i++){
+        const ang = Math.PI/6 + i*(Math.PI/3);
+        const x = px + r*Math.cos(ang), y = py + r*Math.sin(ang);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle='rgba(251,191,36,0.9)'; // dourado mais claro na borda
+      ctx.lineWidth=1.6; ctx.stroke();
+    }
+    function drawDashed(a,b){
+      ctx.setLineDash([5,5]); ctx.lineWidth=2;
+      ctx.strokeStyle='rgba(248,113,113,0.95)';
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Apply centering + scale (increase from 1/3 -> 0.45)
+    ctx.save();
+    ctx.translate(off.x, off.y);
+    ctx.translate(cX, cY);
+    const sp = (+ui.spacing?.value || 140);
+    const scaleFromSpacing = Math.max(0.2, Math.min(1.2, sp/140));
+    ctx.scale(0.45, 0.45);
+    ctx.translate(-cX, -cY);
+
+    // Draw cube edges
+    ctx.lineWidth = 1.2;
+    ctx.strokeStyle = 'rgba(203,213,225,0.55)';
+    for(const [i,j] of edges){
+      const a=P[i], b=P[j];
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+
+    // Host FCC atoms: corners (red) + face centers (gray)
+    const corners3 = [[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
+    const faces3   = [[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.5,0.5,1],[0.5,1,0.5],[1,0.5,0.5]];
+    const reds  = corners3.map(p=>projectIntro(p)).map(p=>({p, color:'rgba(239,68,68,1)'}));
+    const grays = faces3  .map(p=>projectIntro(p)).map(p=>({p, color:'rgba(148,163,184,1)'}));
+    const all = reds.concat(grays).sort((a,b)=>a.p.z-b.p.z);
+    for (const s of all) {
+      const tZ = Math.min(1, Math.max(0, (s.p.z + 1) / 2));
+      const alpha = introIsOrtho() ? 1 : (0.35 + 0.65 * (1 - tZ));
+      const base = s.color.replace('1)', alpha.toFixed(2) + ')');
+      glossy(s.p.x, s.p.y, R * 0.95, base);
+    }
+    // Octahedral hole at center: HEXAGON (gold) + dashed guides
+    const center = projectIntro([0.5,0.5,0.5]);
+    glossyHex(center.x, center.y, R*0.95, 'rgba(217,119,6,1)');
+    const neigh = faces3.map(projectIntro);
+    for(const n of neigh){ drawDashed(center, n); }
+
+
+    // Hexágonos cinza no meio de cada aresta (12 arestas do cubo)
+    for(const [i,j] of edges){
+      const a3 = cube[i], b3 = cube[j];
+      const m3 = [(a3[0]+b3[0])/2, (a3[1]+b3[1])/2, (a3[2]+b3[2])/2];
+      const pm = projectIntro(m3);
+      glossyHex(pm.x, pm.y, Math.max(10, R*0.9), 'rgba(148,163,184,1)');
+    }
+    ctx.restore();
+}
+
+
+window.drawIntroBuracoFCC = drawIntroBuracoFCC;
+
+
+
+  const _draw = window.draw;
+  window.draw = function(){
+    if (window.state && window.state.key === 'INTRO2') {
+      try{ if(window.resize) resize(); }catch(e){}
+      drawIntroBuracoFCC();
+      requestAnimationFrame(window.draw);
+      return;
+    }
+    if (typeof _draw === 'function') return _draw();
+  };
+
+  const _rebuild = window.rebuild;
+  window.rebuild = function(){
+    try{ const c=document.getElementById('canvas'); if(c) c.style.cursor = (state && state.key==='INTRO2') ? 'grab' : ''; }catch(e){}
+
+    if (typeof _rebuild === 'function') _rebuild();
+    const row = document.getElementById('holesRow');
+    if (row) row.style.display = (state && state.key==='INTRO2') ? '' : 'none';
+  };
+
+  function onPointerDown(e){ if(!(state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS'))) return;
+    introState.dragging=true; introState.lastX=e.clientX; introState.lastY=e.clientY; canvas.setPointerCapture(e.pointerId); }
+  function onPointerMove(e){ if(!(window.state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS') && introState.dragging)) return;
+    const dx=e.clientX-introState.lastX, dy=e.clientY-introState.lastY;
+    introState.lastX=e.clientX; introState.lastY=e.clientY;
+    introState.angleY += dx*introState.sensitivity;
+    introState.angleX += dy*introState.sensitivity;
+  }
+  function onPointerUp(e){ introState.dragging=false; }
+  function onWheel(e){
+    if(!(state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS'))) return;
+    e.preventDefault();
+    const factor = (e.deltaY<0)? 1.05 : 0.95;
+    introState.zoom = Math.min(1.8, Math.max(0.35, introState.zoom*factor));
+  }
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
+  canvas.addEventListener('wheel', onWheel, { passive:false });
+})(); // fim do módulo Intro (buracos)
+// Intro Camadas: botão 'Adicionar camada' (explicit - inline)
+(function(){
+  try{
+    const btn = document.getElementById('introAddLayerBtn');
+    if(!btn) return;
+    btn.addEventListener('click', ()=>{
+      if (!window.state || state.key!=='INTRO_CAMADAS') return;
+      if(!state.ic) state.ic = introCamadasInit(+ui.cells.value);
+      btn.disabled = true;
+      const allBPlaced = state.ic.Btargets.length === state.ic.Bplaced.length;
+      const hasA3 = Array.isArray(state.ic.A3targets) && state.ic.A3targets.length>0;
+      const allA3Placed = hasA3 && state.ic.A3placed && (state.ic.A3targets.length === state.ic.A3placed.length);
+      const done = ()=>{ btn.disabled = false; btn.textContent = allBPlaced ? 'Camadas completas' : 'Adicionar 3ª camada'; };
+      if(!allBPlaced){
+        introCamadasStart(state.ic, ()=>{ btn.disabled=false; btn.textContent='Adicionar 3ª camada'; });
+      } else if(hasA3 && !allA3Placed){
+        introCamadasStartTopA(state.ic, ()=>{ btn.disabled=false; btn.textContent='Camadas completas'; });
+      } else {
+        btn.disabled=false;
+      }
+      
+      try{ requestAnimationFrame(draw); }catch(_){}
+    });
+    const rowIC = document.getElementById('introCamadasRow');
+    if (rowIC) rowIC.style.display = (document.getElementById('structure').value==='INTRO_CAMADAS') ? '' : 'none';
+  }catch(e){ /* noop */}
+})();
+</script>
+
+<script>
+// === Patch: ensure rotation across X/Y/Z and with mouse is enabled ===
+(function(){
+  try {
+    // find likely control objects
+    var candidates = [];
+    for (var k in window) {
+      try {
+        var v = window[k];
+        if (!v) continue;
+        if (v && typeof v === 'object') {
+          if ('enableRotate' in v || 'noRotate' in v) candidates.push(v);
+        }
+      } catch(e){}
+    }
+    candidates.forEach(function(c){
+      try {
+        if ('enableRotate' in c) c.enableRotate = true;
+        if ('noRotate' in c) c.noRotate = false;
+      } catch(e){}
+    });
+  } catch(e){ console.warn('rotation patch err', e); }
+})();
+</script>
+
+
+
+<script>/*guard*/
+// === DIY (Faça você mesmo) ===
+(function(){
+  try{
+    function ensureDIY(){
+      if (!window.STRUCTURES) window.STRUCTURES = {};
+      if (!STRUCTURES.DIY || !Object.getOwnPropertyDescriptor(STRUCTURES.DIY, 'species') || !Object.getOwnPropertyDescriptor(STRUCTURES.DIY, 'metricM')){
+        STRUCTURES.DIY = STRUCTURES.DIY || {};
+        Object.defineProperty(STRUCTURES.DIY, 'species', { configurable:true, get(){
+          return (window.stateDIY.atoms||[]).map((a,i)=>( { type:'D'+i, pos:[+a.x||0, +a.y||0, +a.z||0], color:a.color, rScale:+a.rScale||1} ));
+        }});
+        Object.defineProperty(STRUCTURES.DIY, 'metricM', { configurable:true, get(){
+          const c=window.stateDIY.cell||{a:1,b:1,c:1,alpha:90,beta:90,gamma:90};
+          return cellMatrix(+c.a||1, +c.b||1, +c.c||1, +c.alpha||90, +c.beta||90, +c.gamma||90);
+        }});
+      }
+    }
+
+    const sel = document.getElementById('structure');
+    if(sel && !Array.from(sel.options).some(o=>o.value==='DIY')){
+      const opt = document.createElement('option');
+      opt.value='DIY'; opt.textContent='Faça você mesmo (DIY)';
+      sel.appendChild(opt);
+    }
+    const controls = sel ? (sel.closest('.controls') || document.querySelector('.controls')) : document.querySelector('.controls');
+    const diy = document.createElement('div'); diy.id='diyBox'; diy.style.display='none';
+    diy.style.gridColumn='1 / -1'; diy.style.width='100%'; diy.style.boxSizing='border-box';
+    diy.style.borderTop='1px solid #334155'; diy.style.marginTop='10px'; diy.style.padding='10px 8px 8px 8px'; diy.style.borderRadius='10px';
+    diy.innerHTML = `
+      <div style="position:sticky; top:0; background:#0b1220; z-index:1; font-weight:700; padding:4px 2px; border-bottom:1px solid #1f2a44; margin:-10px -8px 6px -8px;">Faça você mesmo</div>
+      <div style="margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; gap:6px; align-items:end;">
+        <label style="grid-column:1 / -1;">Formato da célula
+          <select id="diy_format">
+            <option value="cubic">Cúbica (α=β=γ=90°; a=b=c)</option>
+            <option value="tetragonal">Tetragonal (α=β=γ=90°; a=b≠c)</option>
+            <option value="orthorhombic">Ortorrômbica (α=β=γ=90°; a≠b≠c)</option>
+            <option value="hexagonal">Hexagonal (α=β=90°, γ=120°; a=b≠c)</option>
+            <option value="rhombohedral">Romboédrica/Trigonal (α=β=γ≠90°; a=b=c)</option>
+            <option value="monoclinic">Monoclínica (α=γ=90°, β≠90°)</option>
+            <option value="triclinic">Triclínica (α≠β≠γ; a≠b≠c)</option>
+          </select>
+        </label>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:6px; font-size:12px; align-items:end;">
+        <label>a <input id="diy_a" type="number" step="0.01" min="0.1" value="1"></label>
+        <label>b <input id="diy_b" type="number" step="0.01" min="0.1" value="1"></label>
+        <label>c <input id="diy_c" type="number" step="0.01" min="0.1" value="1"></label>
+        <label>α <input id="diy_alpha" type="number" step="0.1" min="10" max="170" value="90"></label>
+        <label>β <input id="diy_beta" type="number" step="0.1" min="10" max="170" value="90"></label>
+        <label>γ <input id="diy_gamma" type="number" step="0.1" min="10" max="170" value="90"></label>
+      </div>
+      <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="diy_add" type="button">Adicionar átomo</button>
+        <button id="diy_clear" type="button">Limpar átomos</button>
+        <button id="diy_export" type="button">Exportar JSON</button>
+        <label style="display:inline-flex; align-items:center; gap:6px;">Importar JSON <input id="diy_import" type="file" accept="application/json" style="font-size:11px;"></label>
+      </div>
+      <div id="diy_atoms" style="margin-top:8px; display:flex; flex-direction:column; gap:6px;"></div>
+      <div style="font-size:11px; opacity:.8; margin-top:6px;">Dica: posicione em coordenadas fracionárias (0→1). O tamanho escala o raio global.</div>
+    `;
+    if(controls){
+      const footer = controls.querySelector('.footer');
+      controls.insertBefore(diy, footer || null);
+    }
+
+    const LS='DIY_CONFIG_V1';
+    const def = { format:'cubic', cell:{a:1,b:1,c:1, alpha:90,beta:90,gamma:90}, atoms:[{x:0,y:0,z:0, rScale:1, color:'#60a5fa', label:'A'}] };
+    window.stateDIY = (function(){ try{ return JSON.parse(localStorage.getItem(LS)||'null') || def; }catch(e){ return def; } })();
+
+    function saveDIY(){ try{ localStorage.setItem(LS, JSON.stringify(window.stateDIY)); }catch(e){} }
+
+    // Wire up inputs
+    const aI = diy.querySelector('#diy_a'), bI=diy.querySelector('#diy_b'), cI=diy.querySelector('#diy_c');
+    const alI = diy.querySelector('#diy_alpha'), beI=diy.querySelector('#diy_beta'), gaI=diy.querySelector('#diy_gamma');
+    function syncCellToUI(){
+      const _fmtSel = diy.querySelector('#diy_format'); if(_fmtSel && stateDIY.format) _fmtSel.value = stateDIY.format;
+      aI.value=stateDIY.cell.a; bI.value=stateDIY.cell.b; cI.value=stateDIY.cell.c;
+      alI.value=stateDIY.cell.alpha; beI.value=stateDIY.cell.beta; gaI.value=stateDIY.cell.gamma;
+    }
+    function readCellFromUI(){
+      stateDIY.cell.a=+aI.value||1; stateDIY.cell.b=+bI.value||1; stateDIY.cell.c=+cI.value||1;
+      stateDIY.cell.alpha=+alI.value||90; stateDIY.cell.beta=+beI.value||90; stateDIY.cell.gamma=+gaI.value||90;
+      saveDIY(); rebuild();
+    }
+    [aI,bI,cI,alI,beI,gaI].forEach(inp => inp.addEventListener('input', readCellFromUI));
+
+    const atomsBox = diy.querySelector('#diy_atoms');
+    function renderDIYAtoms(){
+      atomsBox.innerHTML='';
+      (stateDIY.atoms||[]).forEach((atom, idx)=>{
+        const row = document.createElement('div');
+        row.style.display='flex';
+        row.style.flexWrap='wrap';
+        row.style.gap='6px';
+        row.style.alignItems='flex-end';
+        row.style.fontSize='12px';
+        row.style.padding='6px';
+        row.style.border='1px dashed #334155';
+        row.style.borderRadius='8px';
+        row.innerHTML = `
+          <div style="opacity:.8;">#${idx+1}</div>
+          <label>x <input type="number" step="0.01" min="0" max="1" value="${atom.x??0}"></label>
+          <label>y <input type="number" step="0.01" min="0" max="1" value="${atom.y??0}"></label>
+          <label>z <input type="number" step="0.01" min="0" max="1" value="${atom.z??0}"></label>
+          <label>escala (%) <input class="diy_scale" type="number" step="1" min="20" max="400" value="${Math.round((atom.rScale||1)*100)}"></label>
+          <label>cor <input type="color" value="${atom.color || '#60a5fa'}"></label>
+          <label>rótulo <input type="text" maxlength="2" value="${atom.label || 'A'}"></label>
+          <button type="button" aria-label="remover">×</button>
+        `;
+        const [idCol, xI, yI, zI, sI, cI, tI, rmBtn] = row.children
+        // layout helpers (compact + readable)
+        idCol.style.minWidth='32px';
+        idCol.style.padding='4px 0';
+        rmBtn.style.width='32px';
+        rmBtn.style.height='32px';
+        rmBtn.style.alignSelf='flex-start';
+        row.querySelectorAll('label').forEach(l=>{
+          l.style.flex='1 1 calc(33% - 6px)';
+          l.style.minWidth='110px';
+        });
+        xI.querySelector('input').addEventListener('input', e=>{ atom.x=+e.target.value; saveDIY(); rebuild(); });
+        yI.querySelector('input').addEventListener('input', e=>{ atom.y=+e.target.value; saveDIY(); rebuild(); });
+        zI.querySelector('input').addEventListener('input', e=>{ atom.z=+e.target.value; saveDIY(); rebuild(); });
+        sI.querySelector('input').addEventListener('input', e=>{ atom.rScale=(+e.target.value)/100; if(!(atom.r>0)){} saveDIY(); rebuild(); });
+        cI.querySelector('input').addEventListener('input', e=>{ atom.color=e.target.value; saveDIY(); rebuild(); });
+        tI.querySelector('input').addEventListener('input', e=>{ atom.label=e.target.value; saveDIY(); rebuild(); });
+        rmBtn.addEventListener('click', ()=>{ stateDIY.atoms.splice(idx,1); saveDIY(); renderDIYAtoms(); rebuild(); });
+        atomsBox.appendChild(row);
+      });
+    }
+
+    diy.querySelector('#diy_add').addEventListener('click', ()=>{
+      stateDIY.atoms.push({x:0.25, y:0.25, z:0.25, rScale:1, color:'#93c5fd', label:'A'});
+      saveDIY(); renderDIYAtoms(); rebuild();
+    });
+    diy.querySelector('#diy_clear').addEventListener('click', ()=>{
+      stateDIY.atoms.length=0; saveDIY(); renderDIYAtoms(); rebuild();
+    });
+    diy.querySelector('#diy_export').addEventListener('click', ()=>{
+      // Include bonds & coords of current DIY scene
+      const cellsVal = (typeof ui!=='undefined' && ui && ui.cells) ? (+ui.cells.value||1) : 1;
+      let bonds = [];
+      try{
+        bonds = (typeof bondsForCurrent==='function') ? bondsForCurrent() : [];
+        bonds = bonds.filter(x => (x.key||state.key)==='DIY' && (+x.cells||cellsVal)===cellsVal)
+                     .map(x => ({a:x.a, b:x.b}));
+      }catch(e){ bonds = []; }
+      let coords = [];
+      try{
+        coords = (typeof coordsForCurrent==='function') ? coordsForCurrent() : [];
+        coords = coords.filter(x => (x.key||state.key)==='DIY' && (+x.cells||cellsVal)===cellsVal)
+                       .map(x => ({center:x.center, neighbor:x.neighbor}));
+      }catch(e){ coords = []; }
+      const payload = Object.assign({}, window.stateDIY || {}, { key:'DIY', cells: cellsVal, bonds, coords });
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='DIY_estrutura.json'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+    });
+    diy.querySelector('#diy_import').addEventListener('change', (ev)=>{
+      const f=ev.target.files && ev.target.files[0]; if(!f) return;
+      const rd = new FileReader();
+      rd.onload = ()=>{
+        try{
+          const data = JSON.parse(rd.result);
+          if(data && data.cell && Array.isArray(data.atoms)){
+            // Load cell & atoms
+            window.stateDIY = { format: data.format || (window.stateDIY && window.stateDIY.format) || 'cubic',
+                                 cell: data.cell, atoms: data.atoms };
+            saveDIY(); syncCellToUI(); renderDIYAtoms();
+            // Merge bonds
+            const cellsVal = +data.cells || (ui && ui.cells ? +ui.cells.value||1 : 1);
+            if(Array.isArray(data.bonds)){
+              data.bonds.forEach(rec=>{
+                try{
+                  const norm = { key:'DIY', cells: cellsVal, a:rec.a, b:rec.b };
+                  const id = bondId(norm);
+                  if(!ALL_BONDS.some(x=>x.key==='DIY' && +x.cells===cellsVal && bondId(x)===id)){
+                    ALL_BONDS.push(norm);
+                  }
+                }catch(e){}
+              });
+              saveLocal();
+            }
+            // Merge coords
+            if(Array.isArray(data.coords)){
+              data.coords.forEach(rec=>{
+                try{
+                  const norm = { key:'DIY', cells: cellsVal, center:rec.center, neighbor:rec.neighbor };
+                  const id = coordId(norm);
+                  if(!ALL_COORDS.some(x=>x.key==='DIY' && +x.cells===cellsVal && coordId(x)===id)){
+                    ALL_COORDS.push(norm);
+                  }
+                }catch(e){}
+              });
+              saveLocalCoord();
+            }
+            rebuild();
+          }else{ alert('JSON inválido.'); }
+        }catch(e){ alert('Falha ao ler JSON.'); }
+      };
+      rd.readAsText(f);
+    });
+
+    // Integrate DIY into definitions
+    if(typeof window.STRUCTURES==='object'){
+      if(!STRUCTURES.DIY) STRUCTURES.DIY = {};
+      Object.defineProperty(STRUCTURES.DIY, 'species', { configurable:true, get(){
+        return (window.stateDIY.atoms||[]).map((a,i)=>( { type:'D'+i, pos:[+a.x||0, +a.y||0, +a.z||0], color:a.color, rScale:+a.rScale||1} ));
+      }});
+      Object.defineProperty(STRUCTURES.DIY, 'metricM', { configurable:true, get(){
+        const c=window.stateDIY.cell||{a:1,b:1,c:1,alpha:90,beta:90,gamma:90};
+        return cellMatrix(+c.a||1, +c.b||1, +c.c||1, +c.alpha||90, +c.beta||90, +c.gamma||90);
+      }});
+    }
+
+    function refreshDIYColors(){
+      try{
+        (window.stateDIY.atoms||[]).forEach((a,i)=>{ COLORS['D'+i] = a.color || '#60a5fa'; });
+      }catch(e){}
+    }
+
+    // Patch buildLattice for DIY
+    if(!window._buildLatticeOrig){ window._buildLatticeOrig = window.buildLattice; }
+    window.buildLattice = function(a,b,c){ ensureDIY();
+      const useDIY = ((typeof a==='string' && a==='DIY') || (a && typeof a==='object' && a.key==='DIY'));
+      if(useDIY){
+        const cellsVal = (typeof ui!=='undefined' && ui && ui.cells) ? (+ui.cells.value||1) : 1;
+        const n = (typeof a==='object') ? (c||b||cellsVal) : (b||cellsVal);
+        const def = STRUCTURES.DIY;
+        const basis = def.species;
+        const M = def.metricM;
+        const atoms=[];
+        for(let i=0;i<n;i++) for(let j=0;j<n;j++) for(let l=0;l<n;l++){
+          for(const bb of basis){
+            const f0=(bb.pos[0]||0)+i, f1=(bb.pos[1]||0)+j, f2=(bb.pos[2]||0)+l;
+            const uc=[f0 - n/2, f1 - n/2, f2 - n/2];
+            const pos=matMulVec(M, uc);
+            atoms.push({ type:bb.type, fpos:[f0,f1,f2], uc:uc, pos:pos, color:bb.color, rScale:bb.rScale, r:bb.radius });
+          }
+        }
+        refreshDIYColors();
+        return atoms;
+      }
+      return window._buildLatticeOrig.apply(this, arguments);
+    };
+
+    function syncDiyVisibility(){ diy.style.display = (ui.structure.value==='DIY') ? '' : 'none'; }
+    if(sel) sel.addEventListener('change', syncDiyVisibility);
+    syncDiyVisibility();
+    
+    // Hide the global radius slider when DIY is active
+    function toggleRadiusVisibility(){
+      if(ui && ui.structure && ui.structure.value==='DIY' && ui.radius){ const wrap = ui.radius.closest('label')||ui.radius.parentElement; wrap && (wrap.style.display='none'); }
+      const isDIY = (ui.structure && ui.structure.value==='DIY');
+      const radiusEl = ui.radius && ui.radius.closest ? ui.radius.closest('label') || ui.radius.parentElement : null;
+      if(radiusEl){
+        if(isDIY){ radiusEl.style.display='none'; }
+        else{ radiusEl.style.display=''; }
+      }
+    }
+    if(ui && ui.structure){ ui.structure.addEventListener('change', toggleRadiusVisibility); }
+    toggleRadiusVisibility();
+
+    // Guard: ensure ui.radius exists (even if hidden) so legacy code can read a value
+    if(!ui.radius){
+      const hidden = document.createElement('input');
+      hidden.type='range'; hidden.min='1'; hidden.max='80'; hidden.value= window._radiusDefault || 12;
+      hidden.style.display='none'; hidden.id='radius_hidden_diy';
+      ui.radius = hidden;
+      controls && controls.appendChild(hidden);
+    }
+
+
+    syncCellToUI(); renderDIYAtoms(); refreshDIYColors(); ensureDIY();
+    
+    const fmtSel = diy.querySelector('#diy_format');
+    function applyFormatPreset(val){ stateDIY.format = val;
+      const c = stateDIY.cell;
+      if(val==='cubic'){ c.alpha=90; c.beta=90; c.gamma=90; c.b=c.a; c.c=c.a; } else if(val==='tetragonal'){ c.alpha=90; c.beta=90; c.gamma=90; c.b=c.a; if(!c.c||Math.abs(c.c-c.a)<1e-6){ c.c = +(c.a*1.5).toFixed(3); } } else if(val==='orthorhombic'){ c.alpha=90; c.beta=90; c.gamma=90; if(!c.b||Math.abs(c.b-c.a)<1e-6){ c.b = +(c.a*1.25).toFixed(3); } if(!c.c||Math.abs(c.c-c.a)<1e-6){ c.c = +(c.a*1.6).toFixed(3); } }
+      else if(val==='hexagonal'){ c.alpha=90; c.beta=90; c.gamma=120; c.b=c.a; }
+      else if(val==='rhombohedral'){ c.alpha=70; c.beta=70; c.gamma=70; c.b=c.a; c.c=c.a; } // equal but != 90
+      else if(val==='monoclinic'){ c.alpha=90; c.beta=110; c.gamma=90; }
+      else if(val==='triclinic'){ c.alpha=95; c.beta=105; c.gamma=100; }
+      saveDIY(); syncCellToUI(); rebuild();
+    }
+    if(fmtSel){ fmtSel.addEventListener('change', e=>applyFormatPreset(e.target.value)); if(!stateDIY.format){ stateDIY.format = fmtSel.value; saveDIY(); } }
+
+  }catch(e){ console.warn('DIY init error', e); }
+})();
+
+// Ensure A/B/C selector is populated after DOM is ready
+document.addEventListener('DOMContentLoaded', ()=>{
+  try{ refreshAddAtomTypes(); }catch(e){}
+  try{ if(ui && ui.struct){ ui.struct.addEventListener('change', ()=>{ try{ refreshAddAtomTypes(); }catch(e){} }); } }catch(e){}
+});
+
+
+    // --- HEX_P clipping fix: hex prism clip in fractional cell coords (a-b plane) + z slice ---
+    function __hexP_inUnitCell_fromFrac(x, y, z, eps){
+      // Hexagon via 3 half-planes in axial coords: |x|<=0.5, |y|<=0.5, |x+y|<=0.5
+      const inHex = Math.abs(x) <= 0.5 + eps && Math.abs(y) <= 0.5 + eps && Math.abs(x + y) <= 0.5 + eps;
+      return inHex && z >= -0.5 - eps && z <= 0.5 + eps;
+    }
+    function inUnitCell(a){
+      const eps = 1e-6;
+      const x = (a.uc && a.uc[0]!==undefined) ? a.uc[0] : (a.x_uc ?? a.x ?? 0);
+      const y = (a.uc && a.uc[1]!==undefined) ? a.uc[1] : (a.y_uc ?? a.y ?? 0);
+      const z = (a.uc && a.uc[2]!==undefined) ? a.uc[2] : (a.z_uc ?? a.z ?? 0);
+      const isHex = (window.state && (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal'));
+      if (isHex) return __hexP_inUnitCell_fromFrac(x,y,z,eps);
+      return (x>=-0.5-eps && x<=0.5+eps && y>=-0.5-eps && y<=0.5+eps && z>=-0.5-eps && z<=0.5+eps);
+    }
+    function inUnitCellUC(uc){
+      const eps = 1e-6;
+      const x=uc[0], y=uc[1], z=uc[2];
+      const isHex = (window.state && (state.key==='DIY' && window.stateDIY && stateDIY.format==='hexagonal'));
+      if (isHex) return __hexP_inUnitCell_fromFrac(x,y,z,eps);
+      return (x>=-0.5-eps && x<=0.5+eps && y>=-0.5-eps && y<=0.5+eps && z>=-0.5-eps && z<=0.5+eps);
+    }
+    // --- end HEX_P clipping fix ---
+    
+</script>
+
+<script id="resp-kit-v1">
+(()=>{ 
+  const setVH=()=>{ 
+    const vh = (window.innerHeight||document.documentElement.clientHeight||0) * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  };
+  setVH();
+  window.addEventListener('resize', setVH, {passive:true});
+  window.addEventListener('orientationchange', ()=>setTimeout(setVH, 250), {passive:true});
+})();
+</script>
+</body>
+</html>

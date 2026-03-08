@@ -100,7 +100,6 @@ canvas[data-layer='intro'] + .labels .label { transform: translateY(8px); }
           Estrutura
           <select id="structure">
             
-              <option value="INTRO2">Intro (buracos)</option>
 <option value="SC">Simples Cúbica (SC)</option>
               <option value="BCC">Corporado Centrado (BCC)</option>
               <option value="FCC" selected>Face Centrada (FCC)</option><option value="WS_BCC">Célula de Wigner‑Seitz (BCC)</option><option value="WS_FCC">Célula de Wigner‑Seitz (FCC)</option>
@@ -514,7 +513,7 @@ function isIonic(k){return (k==="NaCl"||k==="CsCl"||k==="ZnS");}
 
 // Constrói n×n×n células; aplica métrica anisotrópica se existir
 function buildLattice(k,n){
-  if(k==="INTRO" || k==="INTRO2"){ return []; }
+  if(k==="INTRO" || k==="INTRO2" || k==="INTRO_TETRA"){ return []; }
   const def=STRUCTURES[k]||{};
   const basis=def.species||[], metric=def.metric||[1,1,1];
   const M = def.metricM ? def.metricM : diag3(metric[0],metric[1],metric[2]);
@@ -715,6 +714,7 @@ try{ if(state && false /* HEX_P removed */) state.key='HEX_ABC'; }catch(e){}
 
 window.state = state; // make state globally accessible for intro mouse handlers
 if (state.key==='INTRO') { state.key='FCC'; try{ if(ui && ui.structure) ui.structure.value='FCC'; }catch(e){} }
+if(state.key==='INTRO2' || state.key==='INTRO_TETRA') { state.key='FCC'; try{ if(ui && ui.structure) ui.structure.value='FCC'; }catch(e){} }
 
 function rebuild(){
   // Reset rotation labels visibility by default (will be adjusted per-mode)
@@ -771,7 +771,7 @@ if (ui.ucOnly) { ui.ucOnly.checked = false; ui.ucOnly.disabled = true; }
   try{ ensureRemovedAtomsOutsideUC_Current(); }catch(e){}
  
   // Rebuild lattice and (re)apply UI states per structure
-  const isIntro = (state.key==='INTRO2' || state.key==='INTRO_TESTE' || state.key==='HEX_ABC');
+  const isIntro = (state.key==='INTRO2' || state.key==='INTRO_TETRA' || state.key==='INTRO_TESTE' || state.key==='HEX_ABC');
   state.atoms = isIntro ? [] : buildLattice(state.key, +ui.cells.value);
 
   // Defect toggles depend on ionic vs covalent
@@ -779,8 +779,8 @@ if (ui.ucOnly) { ui.ucOnly.checked = false; ui.ucOnly.disabled = true; }
   ui.frenkel.disabled  = !isIonic(state.key);
   if(!isIonic(state.key)){ ui.schottky.checked=false; ui.frenkel.checked=false; }
 
-  const intro = (state.key==='INTRO2' || state.key==='INTRO_TESTE');
-  const introFixed = (state.key==='INTRO2'); // INTRO_TESTE: sliders ON
+  const intro = (state.key==='INTRO2' || state.key==='INTRO_TETRA' || state.key==='INTRO_TESTE');
+  const introFixed = (state.key==='INTRO2' || state.key==='INTRO_TETRA'); // INTRO_TESTE: sliders ON
 
   // Controls common to the 3D structures
   ui.unitcell.disabled = intro;
@@ -835,7 +835,18 @@ if (ui.ucOnly) { ui.ucOnly.checked = false; ui.ucOnly.disabled = true; }
 
   if (typeof syncAngleSlidersFromState === 'function') syncAngleSlidersFromState();
 }
-ui.structure.addEventListener('change',()=>{state.key=ui.structure.value;  const erow = document.getElementById('edgesRow');
+ui.structure.addEventListener('change',()=>{state.key=ui.structure.value;  try{
+    if(typeof introState!=='undefined'){
+      if(state.key==='INTRO_TETRA'){
+        introState.angleX = 0.95; introState.angleY = -0.75; introState.angleZ = 0;
+        introState.distance = 3.6; introState.zoom = 0.95;
+      } else if(state.key==='INTRO2'){
+        introState.angleX = Math.PI; introState.angleY = 16*Math.PI/180; introState.angleZ = 8*Math.PI/180;
+        introState.distance = 3.6; introState.zoom = 0.95;
+      }
+    }
+  }catch(e){}
+  const erow = document.getElementById('edgesRow');
   if (erow) erow.style.display = (ui.structure.value==='INTRO_TESTE') ? '' : 'none';
 
 // Toggle water row visibility whenever a estrutura changes
@@ -860,7 +871,7 @@ if (clearBtn) clearBtn.onclick = ()=>{ state.water = []; };
 ui.faceOnly.addEventListener('change',()=>{ ui.faceSelect.disabled = !ui.faceOnly.checked || ui.faceOnly.disabled; });
 ui.faceSelect.addEventListener('change',()=>{});
 
-ui.spacing.addEventListener('input', ()=>{ if(state.key==='INTRO2') { /* immediate draw tick */ } });
+ui.spacing.addEventListener('input', ()=>{ if(state.key==='INTRO2' || state.key==='INTRO_TETRA') { /* immediate draw tick */ } });
 ui.cells.addEventListener('input',rebuild);
 ['radius','spacing','light','unitcell','ucOnly','bonds','coordpoly','schottky','frenkel','faceOnly','faceSelect'].forEach(id=>ui[id].addEventListener('input',()=>{}));
 
@@ -1258,7 +1269,7 @@ ui.exportBonds.addEventListener('click', ()=>{
 });
 
 
-canvas.addEventListener('mousedown', e=>{ if(state.key==='INTRO2'){ return; } state.drag=true; state.last.x=e.clientX; state.last.y=e.clientY; });
+canvas.addEventListener('mousedown', e=>{ if(state.key==='INTRO2' || state.key==='INTRO_TETRA'){ return; } state.drag=true; state.last.x=e.clientX; state.last.y=e.clientY; });
 // --- Coordenação manual (centro -> vizinhos) ---
 const STORAGE_KEY_COORD = 'custom_coords_v1';
 let EMBEDDED_COORDS = [];
@@ -1392,7 +1403,7 @@ ui.exportCoord.addEventListener('click', ()=>{
 
 window.addEventListener('mouseup',()=>state.drag=false);
 window.addEventListener('mousemove', e=>{
-  if(state.key==='INTRO2') return;
+  if(state.key==='INTRO2' || state.key==='INTRO_TETRA') return;
   if(!state.drag) return;
   const dx=e.clientX-state.last.x, dy=e.clientY-state.last.y;
   state.last.x=e.clientX; state.last.y=e.clientY;
@@ -1513,7 +1524,7 @@ ui.exportBonds.addEventListener('click', ()=>{
 });
 
 });
-window.addEventListener('wheel', e=>{ if(state.key==='INTRO2'){ e.preventDefault(); return; } e.preventDefault(); state.zoom = clamp(state.zoom*(e.deltaY<0?1.12:0.9),0.5,8.0);},{passive:false});
+window.addEventListener('wheel', e=>{ if(state.key==='INTRO2' || state.key==='INTRO_TETRA'){ e.preventDefault(); return; } e.preventDefault(); state.zoom = clamp(state.zoom*(e.deltaY<0?1.12:0.9),0.5,8.0);},{passive:false});
 window.addEventListener('keydown',e=>{
   if(e.key.toLowerCase()==='d'){
     state.angleX=0.9; state.angleY=-0.6; state.angleZ=0; state.zoom=1;
@@ -2843,6 +2854,7 @@ function draw(){
   if(state.key==='WS_FCC'){ drawWS_FCC(); requestAnimationFrame(draw); return; }
   if(false){ drawIntroStoryboard(); requestAnimationFrame(draw); return; }
   if(state.key==='INTRO2'){ drawIntroBuracoFCC(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO_TETRA'){ drawIntroTetraedro(); requestAnimationFrame(draw); return; }
   if(state.key==='INTRO_TESTE'){ drawIntroTeste(); requestAnimationFrame(draw); return; }
   if(state.key==='HEX_ABC'){ drawHexABC(); requestAnimationFrame(draw); return; }
   const w=canvas.clientWidth, h=canvas.clientHeight;
@@ -3285,7 +3297,10 @@ function drawIntroBuracosStoryboard(){
   function rotZ(p,a){const s=Math.sin(a),c=Math.cos(a);return [ c*p[0]-s*p[1], s*p[0]+c*p[1], p[2] ];}
 
   function introIsOrtho(){
-    try { return !!(ui && ui.projOrtho && ui.projOrtho.checked); } catch(e){ return false; }
+    try {
+      // Usa o toggle exatamente como está marcado (sem inversão especial por intro)
+      return !!(ui && ui.projOrtho && ui.projOrtho.checked);
+    } catch(e){ return false; }
   }
 
   function projectIntro(p){
@@ -3298,7 +3313,7 @@ function drawIntroBuracosStoryboard(){
     const scaleFromSpacing = 0.30 + (t - 40) * ( (2.20 - 0.30) / (300 - 40) );
     const s=Math.min(w,h)*0.9*introState.zoom*scaleFromSpacing; const d=introState.distance;
     const z = v[2] + d;
-    const f = (ui && ui.projOrtho && ui.projOrtho.checked) ? 1 : (d / z);
+    const f = introIsOrtho() ? 1 : (d / z);
     return {x:w/2+v[0]*s*f, y:h/2-v[1]*s*f, z, f};
   }
 
@@ -3581,15 +3596,153 @@ function drawIntroBuracoFCC(){
 }
 
 
+function drawIntroTetraedro(){
+    const Rbase = (+ui.radius.value || 14);
+    const R = Rbase * 1.12;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+
+    // Célula cúbica (arestas)
+    const cell = [[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
+    const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+
+    function glossySphere(pp, r, fill){
+      const tZ = Math.min(1, Math.max(0, (pp.z + 1) / 2));
+      const alpha = introIsOrtho() ? 1 : (0.40 + 0.60 * (1 - tZ));
+      const color = String(fill).includes('rgba(') ? fill.replace(/,\s*1\)/, ', '+alpha.toFixed(2)+')') : fill;
+      const RR = r * (introIsOrtho() ? 1 : pp.f);
+      const g = ctx.createRadialGradient(pp.x-RR*0.35, pp.y-RR*0.35, RR*0.2, pp.x, pp.y, RR);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(0,0,0,0.38)');
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,RR,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.10)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    function glossyTetra(pp, size, fill, upside){
+      const RR = size * (introIsOrtho() ? 1 : pp.f);
+      const tZ = Math.min(1, Math.max(0, (pp.z + 1) / 2));
+      const alpha = introIsOrtho() ? 1 : (0.44 + 0.56 * (1 - tZ));
+      const color = String(fill).includes('rgba(') ? fill.replace(/,\s*1\)/, ', '+alpha.toFixed(2)+')') : fill;
+
+      const tip = upside ? [pp.x, pp.y-RR] : [pp.x, pp.y+RR];
+      const baseY = upside ? pp.y+RR*0.78 : pp.y-RR*0.78;
+      const left = [pp.x-RR*0.92, baseY], right=[pp.x+RR*0.92, baseY];
+      const centroid = [(tip[0]+left[0]+right[0])/3, (tip[1]+left[1]+right[1])/3];
+
+      const g = ctx.createRadialGradient(centroid[0]-RR*0.35, centroid[1]-RR*0.35, RR*0.12, centroid[0], centroid[1], RR*1.15);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(0,0,0,0.32)');
+      ctx.fillStyle=g;
+
+      ctx.beginPath(); ctx.moveTo(...tip); ctx.lineTo(...left); ctx.lineTo(...right); ctx.closePath(); ctx.fill();
+
+      // facet highlight (fake tetra look)
+      ctx.globalAlpha = 0.30;
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      if (upside) {
+        ctx.moveTo(pp.x, pp.y-RR*0.88);
+        ctx.lineTo(pp.x-RR*0.22, pp.y+RR*0.10);
+        ctx.lineTo(pp.x+RR*0.14, pp.y+RR*0.22);
+      } else {
+        ctx.moveTo(pp.x, pp.y+RR*0.88);
+        ctx.lineTo(pp.x-RR*0.22, pp.y-RR*0.10);
+        ctx.lineTo(pp.x+RR*0.14, pp.y-RR*0.22);
+      }
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+
+      ctx.strokeStyle='rgba(20,20,20,0.48)'; ctx.lineWidth=1.15; ctx.stroke();
+    }
+
+    function line3(a3,b3, dashed){
+      const a=projectIntro(a3), b=projectIntro(b3);
+      ctx.beginPath();
+      if(dashed) ctx.setLineDash([6,6]); else ctx.setLineDash([]);
+      ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.lineWidth = dashed ? 2.2 : 2.0;
+      ctx.strokeStyle = dashed ? 'rgba(248,113,113,0.95)' : 'rgba(203,213,225,0.60)';
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // --- Geometria (replicando o print) ---
+    // 8 cantos da célula + 1 átomo interno (no "eixo" do tetra destacado)
+    const redAtoms3 = [
+      [0,0,0],[1,0,0],[1,1,0],[0,1,0],
+      [0,0,1],[1,0,1],[1,1,1],[0,1,1],
+      [0.33,0.33,0.50]
+    ];
+
+    // "Hastes" verticais (onde os tetraedros ficam encaixados)
+    const rods = [
+      [[0,0,1],[0,0,0]],             // esquerda
+      [[1,1,1],[1,1,0]]              // direita
+      // Removidas as hastes internas (azuis) para limpar a leitura dos tetraedros
+    ];
+
+    // Tetraedros (triângulos)
+    const tetraItems3 = [
+      // coluna esquerda (2 peças)
+      {p:[0,0,0.66],  up:true,  c:'rgba(207,212,220,1)'},
+      {p:[0,0,0.34],  up:false, c:'rgba(207,212,220,1)'},
+
+      // tetraedro destacado (laranja)
+      {p:[0.33,0.33,0.84], up:false, c:'rgba(217,119,6,1)', hi:true},
+
+      // coluna direita (2 peças)
+      {p:[1,1,0.66],  up:true,  c:'rgba(207,212,220,1)'},
+      {p:[1,1,0.34],  up:false, c:'rgba(207,212,220,1)'},
+    ];
+
+    // Arestas da célula (mais finas que as hastes) — mesma cor da intro tetraédrica/original
+    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = 'rgba(203,213,225,0.55)';
+    for(const [i,j] of edges){
+      const a=projectIntro(cell[i]), b=projectIntro(cell[j]);
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    }
+
+    // Hastes verticais
+    for(const [a,b] of rods){ line3(a,b,false); }
+
+    // Guias tracejadas (como no print)
+    const hi = tetraItems3.find(t=>t.hi);
+    if(hi){
+      const topTargets = [[0,0,1],[0,1,1],[1,0,1]];
+      for(const t of topTargets){ line3(hi.p, t, true); }
+      line3(hi.p, [0.33,0.33,0.50], true); // para o átomo interno
+    }
+
+    // Desenho com ordenação por profundidade
+    const items = [];
+    for(const r3 of redAtoms3){
+      const p = projectIntro(r3);
+      items.push({kind:'sphere', z:p.z, p});
+    }
+    for(const t3 of tetraItems3){
+      const p = projectIntro(t3.p);
+      items.push({kind:'tetra', z:p.z, p, t3});
+    }
+    items.sort((a,b)=>a.z-b.z);
+    for(const it of items){
+      if(it.kind==='sphere') glossySphere(it.p, R*0.98, 'rgba(239,68,68,1)');
+      else glossyTetra(it.p, (it.t3.hi?R*1.02:R*0.96), it.t3.c, !!it.t3.up);
+    }
+}
+
+window.drawIntroTetraedro = drawIntroTetraedro;
+
+
 window.drawIntroBuracoFCC = drawIntroBuracoFCC;
 
 
 
   const _draw = window.draw;
   window.draw = function(){
-    if (window.state && window.state.key === 'INTRO2') {
+    if (window.state && (window.state.key === 'INTRO2' || window.state.key === 'INTRO_TETRA')) {
       try{ if(window.resize) resize(); }catch(e){}
-      drawIntroBuracoFCC();
+      if (window.state.key === 'INTRO_TETRA') drawIntroTetraedro(); else drawIntroBuracoFCC();
       requestAnimationFrame(window.draw);
       return;
     }
@@ -3598,16 +3751,16 @@ window.drawIntroBuracoFCC = drawIntroBuracoFCC;
 
   const _rebuild = window.rebuild;
   window.rebuild = function(){
-    try{ const c=document.getElementById('canvas'); if(c) c.style.cursor = (state && state.key==='INTRO2') ? 'grab' : ''; }catch(e){}
+    try{ const c=document.getElementById('canvas'); if(c) c.style.cursor = (state && (state.key==='INTRO2' || state.key==='INTRO_TETRA')) ? 'grab' : ''; }catch(e){}
 
     if (typeof _rebuild === 'function') _rebuild();
     const row = document.getElementById('holesRow');
     if (row) row.style.display = (state && state.key==='INTRO2') ? '' : 'none';
   };
 
-  function onPointerDown(e){ if(!(state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS'))) return;
+  function onPointerDown(e){ if(!(state && (state.key==='INTRO2' || state.key==='INTRO_TETRA' || state.key==='INTRO_CAMADAS'))) return;
     introState.dragging=true; introState.lastX=e.clientX; introState.lastY=e.clientY; canvas.setPointerCapture(e.pointerId); }
-  function onPointerMove(e){ if(!(window.state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS') && introState.dragging)) return;
+  function onPointerMove(e){ if(!(window.state && (state.key==='INTRO2' || state.key==='INTRO_TETRA' || state.key==='INTRO_CAMADAS') && introState.dragging)) return;
     const dx=e.clientX-introState.lastX, dy=e.clientY-introState.lastY;
     introState.lastX=e.clientX; introState.lastY=e.clientY;
     introState.angleY += dx*introState.sensitivity;
@@ -3615,7 +3768,7 @@ window.drawIntroBuracoFCC = drawIntroBuracoFCC;
   }
   function onPointerUp(e){ introState.dragging=false; }
   function onWheel(e){
-    if(!(state && (state.key==='INTRO2' || state.key==='INTRO_CAMADAS'))) return;
+    if(!(state && (state.key==='INTRO2' || state.key==='INTRO_TETRA' || state.key==='INTRO_CAMADAS'))) return;
     e.preventDefault();
     const factor = (e.deltaY<0)? 1.05 : 0.95;
     introState.zoom = Math.min(1.8, Math.max(0.35, introState.zoom*factor));

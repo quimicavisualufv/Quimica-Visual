@@ -7,11 +7,11 @@
 <style>
   :root{ --panel:#0b1222; --panel2:#101a33; --ink:#edf4ff; --muted:#aac0e0; --accent:#7a7dff; --accent2:#4ed5ff; }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:100%; overflow:hidden}
   body{margin:0; background:#000; color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
   .app{display:grid; grid-template-columns:280px 1fr; grid-template-rows:100vh}
   aside{background:linear-gradient(180deg,var(--panel),var(--panel2)); padding:16px; border-right:1px solid rgba(120,160,255,.18); box-shadow:inset -1px 0 0 rgba(255,255,255,.02); overflow:auto}
-  main{position:relative}
+  main{position:relative; overflow:hidden}
   h1{font-size:18px; margin:0 0 8px}
   fieldset{border:1px solid #1f2a3a; border-radius:12px; padding:12px 12px 6px; margin:0 0 12px}
   legend{padding:0 6px; color:#c7ddff; font-size:12px}
@@ -24,6 +24,43 @@
   .btn:hover{background:#142746}
   #gl{display:block; width:100%; height:100%; background:#000}
   .hud{position:absolute; left:12px; bottom:12px; background:rgba(12,16,24,.45); border:1px solid rgba(36,48,68,.55); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; font-size:12px}
+  /* Mini viewer: eixos (segue a rotação do modelo) */
+  #miniAxesWrap{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    width:180px;
+    height:180px;
+    border-radius:14px;
+    border:1px solid rgba(36,48,68,.55);
+    background:rgba(12,16,24,.28);
+    backdrop-filter:blur(6px);
+    box-shadow:0 14px 36px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.03);
+    overflow:hidden;
+    pointer-events:none;
+  }
+  #miniAxes{
+    display:block;
+    width:100%;
+    height:100%;
+  }
+
+  .axesToggle{
+    position:absolute;
+    left:12px;
+    top:12px;
+    z-index:26;
+    padding:8px 10px;
+    border-radius:12px;
+    background:rgba(12,16,24,.45);
+    border:1px solid rgba(36,48,68,.55);
+    backdrop-filter:blur(6px);
+    font-size:12px;
+    color:rgba(237,244,255,.95);
+    user-select:none;
+  }
+  .axesToggle input{ vertical-align:middle; margin-right:6px; }
+
   .badge{display:inline-block; background:rgba(78,213,255,.10); color:#e7f8ff; padding:6px 10px; border-radius:999px; border:1px solid rgba(78,213,255,.28); font-size:12px}
   .badges{display:flex; gap:6px; flex-wrap:wrap}
 
@@ -40,7 +77,18 @@
     background:rgba(4,8,14,.18);
     border:1px solid rgba(255,255,255,.08);
     backdrop-filter:blur(2px);
+      color: rgba(236,244,255,.95);
   }
+  body.lightBg{ background:#f1f4f8; }
+  body.lightBg #gl{ background:#f1f4f8; }
+  body.lightBg .axisLabel{
+    color:#0b2a7a;
+    text-shadow:none;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(0,0,0,.14);
+    backdrop-filter:blur(2px);
+  }
+
 
 /* Modo simplificado: mostrar apenas escolha do arranjo */
 aside > h1{display:none !important;}
@@ -181,6 +229,18 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   .balloonMap .row{display:flex; justify-content:space-between; gap:8px; padding:4px 6px; border-radius:8px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.04)}
   .balloonMap .row.active{border-color:rgba(94,213,255,.35); background:rgba(78,213,255,.08)}
 
+
+  .tutorialZRot{margin-top:10px;padding:10px 10px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.06)}
+  .tutorialZRot .zrHead{display:flex;align-items:center;justify-content:space-between;font-size:12px;letter-spacing:.2px}
+  .tutorialZRot .zrHead span{opacity:.92}
+  .tutorialZRot input{width:100%;margin-top:8px}
+  .tutorialZRot .zrHint{margin-top:6px;font-size:11px;opacity:.75;line-height:1.25}
+  .tutorialToggles{margin-top:10px;padding:10px 10px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.06)}
+  .tutorialToggles label{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.2px;cursor:pointer;}
+  .tutorialToggles input{transform:translateY(0.5px);}
+  body.lightBG .tutorialToggles{border-color:rgba(0,0,0,.08);background:rgba(0,0,0,.03)}
+  .rotZControl, #tutorialZRotBox{display:none !important;}
+
 </style>
 </head>
 <body>
@@ -248,6 +308,12 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
         <div>
           <label class="small"><input id="showAxes" type="checkbox" checked /> Mostrar eixos XYZ</label>
         </div>
+        <div>
+          <label class="small"><input id="showAngles" type="checkbox" checked /> Mostrar ângulos entre ligações</label>
+        </div>
+        <div>
+          <label class="small"><input id="lightBgQuick" type="checkbox" /> Fundo branco</label>
+        </div>
       </div>
 
       <button class="btn" id="save">Salvar imagem (PNG)</button>
@@ -259,6 +325,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
         <div><label for="bgBrightness">Brilho</label><input id="bgBrightness" type="range" min="0" max="1.6" step="0.01" value="1.0" /></div>
         <div><label for="bgStars">Densidade de estrelas</label><input id="bgStars" type="range" min="0" max="2.5" step="0.01" value="1.3" /></div>
       </div>
+      <div style="margin-top:10px"><label class="small"><input id="lightBg" type="checkbox" /> Fundo branco</label></div>
     </fieldset>
 
     <fieldset>
@@ -266,7 +333,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       <div class="row3">
         <div><label for="rotXS">Ângulo X (°)</label><input id="rotXS" type="range" min="-180" max="180" step="1" value="0" /></div>
         <div><label for="rotYS">Ângulo Y (°)</label><input id="rotYS" type="range" min="-180" max="180" step="1" value="0" /></div>
-        <div><label for="rotZS">Ângulo Z (°)</label><input id="rotZS" type="range" min="-180" max="180" step="1" value="0" /></div>
+        <div class="rotZControl"><label for="rotZS">Rotação Z (°)</label><input id="rotZS" type="range" min="0" max="360" step="1" value="0" /></div>
       </div>
       <button class="btn" id="rotReset">Resetar rotação</button>
     </fieldset>
@@ -288,6 +355,14 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
             <div class="tutorialMini" id="tutorialMini"></div>
             <div class="tutorialNote" id="tutorialNote"></div>
             <div class="tutorialExamples" id="tutorialExamples"></div>
+            <div class="tutorialZRot" id="tutorialZRotBox">
+              <div class="zrHead"><b>Rotação no eixo Z</b><span id="tutorialRotZVal">0°</span></div>
+              <button class="tbtn subtle" id="rot180Btn" style="width:100%; margin-top:8px">Rotacionar em 180º</button>
+              <div class="zrHint">Atalho rápido: gira o modelo em torno de Z sem mexer na câmera.</div>
+            </div>
+            <div class="tutorialToggles" id="tutorialToggles">
+              <label><input id="tutorialLightBg" type="checkbox" /> Fundo branco</label>
+            </div>
             <div class="tutorialProgress"><i id="tutorialProgressBar"></i></div>
             <div class="tutorialActions">
               <button class="tbtn ghost" id="tutorialPrev">◀ Anterior</button>
@@ -301,6 +376,8 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
 
   <main>
     <canvas id="gl"></canvas>
+    <div id="miniAxesWrap" aria-hidden="true"><canvas id="miniAxes"></canvas></div>
+    <div class="axesToggle" id="axesToggle"><label><input id="axesToggleChk" type="checkbox" checked /> Mostrar eixos</label></div>
     <div id="axisXLabel" class="axisLabel" style="color:#ff7a7a">x</div>
     <div id="axisYLabel" class="axisLabel" style="color:#6dffb0">y</div>
     <div id="axisZLabel" class="axisLabel" style="color:#7ec8ff">z</div>
@@ -368,7 +445,8 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     setAxisLabelsVisible(true);
     [['x',axisLabels.x],['y',axisLabels.y],['z',axisLabels.z]].forEach(function(item){
       var key=item[0], el=item[1];
-      var p = projectToCanvas(pts[key], eyePos);
+      var pw = (typeof rotXYZ==='function') ? rotXYZ(pts[key], rot) : pts[key];
+      var p = projectToCanvas(pw, eyePos);
       if(!p || !p.visible){ el.style.display='none'; return; }
       el.style.display='block';
       el.style.left = p.x + 'px';
@@ -388,16 +466,108 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   var ui = {
     geom:geom,bondLen:bondLen,size:size,ligandRadius:ligandRadius,bondRadius:bondRadius,lpScale:lpScale,
     ambient:ambient,sat:sat,specK:specK,refl:refl,ligandColor:ligandColor,lpColor:lpColor,coreColor:coreColor,
-    bondType:bondType,showAxes:showAxes,save:save,infoName:infoName,infoArr:infoArr,infoIdeal:infoIdeal,
+    bondType:bondType,showAxes:showAxes,showAngles:showAngles,lightBg:lightBg,lightBgQuick:lightBgQuick,save:save,infoName:infoName,infoArr:infoArr,infoIdeal:infoIdeal,
     rotXS:rotXS,rotYS:rotYS,rotZS:rotZS,bgStars:bgStars,bgBrightness:bgBrightness, rotReset:rotReset
   };
-  Object.keys(ui).forEach(function(k){ var el=ui[k]; if(el && (el.tagName==='INPUT'||el.tagName==='SELECT')) el.addEventListener('input', sync); });
-  save.addEventListener('click', function(){ requestAnimationFrame(function(){ var a=document.createElement('a'); a.download='geometria_molecular_3d.png'; a.href=canvas.toDataURL('image/png'); a.click(); }); });
+  Object.keys(ui).forEach(function(k){ var el=ui[k]; if(!el) return; if(k==='lightBg' || k==='lightBgQuick') return; if(el && (el.tagName==='INPUT'||el.tagName==='SELECT')){ el.addEventListener('input', sync); el.addEventListener('change', sync); } });
+  // Fundo branco (estado único) — evita "grudar" ao tentar desativar
+    var __whiteMode = false;
+  function __setLightBG(v){
+    v = !!v;
+    __whiteMode = v;
+
+    // sincroniza TODAS as checkboxes de “Fundo branco”
+    if(ui.lightBg) ui.lightBg.checked = v;
+    if(ui.lightBgQuick) ui.lightBgQuick.checked = v;
+    if(typeof tutorialLightBg!=='undefined' && tutorialLightBg) tutorialLightBg.checked = v;
+
+    // CSS (imediato)
+    document.body.classList.toggle('lightBg', v);
+
+    // GLSL uniforms (quando o programa já está pronto)
+    if(typeof prog!=='undefined' && prog && typeof U!=='undefined' && U){
+      gl.useProgram(prog);
+      if(U.uLightBG) gl.uniform1f(U.uLightBG, v ? 1.0 : 0.0);
+
+      // No branco, a gente deixa o fundo claro “limpo” e as estrelas sutis (ainda azuis)
+      if(U.uBGStars){
+        var stars = v ? 0.35 : parseFloat(bgStars && bgStars.value || 1.0);
+        gl.uniform1f(U.uBGStars, stars);
+      }
+      if(U.uBGBright){
+        var bright = v ? 1.0 : parseFloat(bgBrightness && bgBrightness.value || 1.0);
+        gl.uniform1f(U.uBGBright, bright);
+      }
+    }
+  }
+
+  // estado inicial
+  __setLightBG(!!((ui.lightBg && ui.lightBg.checked) || (ui.lightBgQuick && ui.lightBgQuick.checked) || (typeof tutorialLightBg!=='undefined' && tutorialLightBg && tutorialLightBg.checked)));
+  if(ui.lightBg){
+    ui.lightBg.addEventListener('input', function(){ __setLightBG(ui.lightBg.checked); sync(); });
+    ui.lightBg.addEventListener('change', function(){ __setLightBG(ui.lightBg.checked); sync(); });
+  }
+  if(ui.lightBgQuick){
+    ui.lightBgQuick.addEventListener('input', function(){ __setLightBG(ui.lightBgQuick.checked); sync(); });
+    ui.lightBgQuick.addEventListener('change', function(){ __setLightBG(ui.lightBgQuick.checked); sync(); });
+  }
+
+  // Checkbox visível (overlay) para eixos — sincroniza com o checkbox interno do menu
+  var axesToggleChk = document.getElementById('axesToggleChk');
+  if(axesToggleChk && ui.showAxes){
+    axesToggleChk.checked = !!ui.showAxes.checked;
+
+    function __syncAxesToggle(){
+      ui.showAxes.checked = !!axesToggleChk.checked;
+      sync();
+    }
+    axesToggleChk.addEventListener('input', __syncAxesToggle);
+    axesToggleChk.addEventListener('change', __syncAxesToggle);
+
+    function __mirrorAxesToggle(){
+      axesToggleChk.checked = !!ui.showAxes.checked;
+    }
+    ui.showAxes.addEventListener('input', __mirrorAxesToggle);
+    ui.showAxes.addEventListener('change', __mirrorAxesToggle);
+  }
+
+save.addEventListener('click', function(){ requestAnimationFrame(function(){ var a=document.createElement('a'); a.download='geometria_molecular_3d.png'; a.href=canvas.toDataURL('image/png'); a.click(); }); });
 
   // rotação via sliders
   var DEG=Math.PI/180; var rot={x:0,y:0,z:0};
-  ['x','y','z'].forEach(function(ax){ document.getElementById('rot'+ax.toUpperCase()+'S').addEventListener('input', function(e){ rot[ax]=parseFloat(e.target.value)*DEG; }); });
-  rotReset.addEventListener('click', function(){ rot.x=rot.y=rot.z=0; rotXS.value=rotYS.value=rotZS.value='0'; });
+  var tutorialRotZVal = document.getElementById('tutorialRotZVal');
+  var tutorialLightBg = document.getElementById('tutorialLightBg');
+  if(tutorialLightBg){
+    tutorialLightBg.addEventListener('input', function(){ __setLightBG(tutorialLightBg.checked); sync(); });
+    tutorialLightBg.addEventListener('change', function(){ __setLightBG(tutorialLightBg.checked); sync(); });
+  }
+  ['x','y','z'].forEach(function(ax){
+    var el = document.getElementById('rot'+ax.toUpperCase()+'S');
+    if(!el) return;
+    el.addEventListener('input', function(e){
+      var v = parseFloat(e.target.value)||0;
+      if(ax==='z'){
+        rot.z = 0;
+        el.value = '0';
+        if(tutorialRotZVal) tutorialRotZVal.textContent='0°';
+        return;
+      }
+      rot[ax]=v*DEG;
+    });
+  });
+  rotReset.addEventListener('click', function(){
+    rot.x=rot.y=rot.z=0;
+    rotXS.value=rotYS.value='0';
+    if(rotZS) rotZS.value='0';
+    if(null) null.value='0';
+    if(tutorialRotZVal) tutorialRotZVal.textContent='0°';
+  });
+
+  // Botão: rotacionar 180º em Z (sem slider)
+  var rot180Btn = document.getElementById('rot180Btn');
+  if(rot180Btn){
+    rot180Btn.style.display = 'none';
+  }
 
   // câmera (orbital + mouse)
   var camDist=4.6, rotX=0.35, rotY=-0.6, isDown=false, lastX=0,lastY=0;
@@ -405,7 +575,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   window.addEventListener('mouseup', function(){ isDown=false; });
   window.addEventListener('mousemove', function(e){ if(!isDown) return; var dx=(e.clientX-lastX)/canvas.clientWidth, dy=(e.clientY-lastY)/canvas.clientHeight; lastX=e.clientX; lastY=e.clientY; rotY+=dx*Math.PI; rotX+=dy*Math.PI; rotX=Math.max(-Math.PI/2+.05, Math.min(Math.PI/2-.05, rotX)); });
   canvas.addEventListener('wheel', function(e){ e.preventDefault(); camDist*=(1+Math.sign(e.deltaY)*0.08); camDist=Math.max(2.2, Math.min(14, camDist)); }, {passive:false});
-  canvas.addEventListener('dblclick', function(){ camDist=autoDist(); rotX=0.35; rotY=-0.6; rot.x=rot.y=rot.z=0; rotXS.value=rotYS.value=rotZS.value='0'; });
+  canvas.addEventListener('dblclick', function(){ camDist=autoDist(); rotX=0.35; rotY=-0.6; rot.x=rot.y=rot.z=0; rotXS.value=rotYS.value='0'; if(rotZS) rotZS.value='0'; });
 
   // Shaders
   var VERT=`
@@ -421,6 +591,9 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     uniform int uLPCount;  uniform vec3 uLPDirs[8];
     uniform float uBondLen, uCentralR, uLigR, uBondR, uLPScale, uAmbient, uSat, uSpecK, uRefl;
     uniform vec3 uLigColor, uLPColor, uCoreColor;
+    uniform float uTime;
+    uniform float uLPAnim;
+
     // Balões 3D (tutorial)
     uniform int uBalloonN;
     uniform vec3 uBalloonPos[6];
@@ -434,7 +607,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     uniform int uBondType; // 1=simples, 2=dupla, 3=tripla
     uniform vec3 uRot;
     // Fundo (estrelas apenas)
-    uniform float uBGStars, uBGBright;
+    uniform float uBGStars, uBGBright, uLightBG;
 
     mat3 look(vec3 f, vec3 up){ vec3 w=normalize(f); vec3 up2 = (abs(dot(w, normalize(up)))>0.98) ? vec3(0.0,0.0,1.0) : up; vec3 u=normalize(cross(w,up2)); vec3 v=cross(u,w); return mat3(u,v,w); }
     float sdSphere(vec3 p, float r){ return length(p)-r; }
@@ -467,18 +640,41 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       s += starLayer(uv, 900.0, 0.0020, 0.9);
       s += starLayer(uv, 1500.0, 0.0017, 0.8);
       s += starLayer(uv, 2400.0, 0.0015, 0.6);
-      vec3 col = vec3(0.75,0.82,1.0) * s * uBGStars;
-      col *= uBGBright;
+
+      // Base: preto (modo escuro) ou off-white (modo claro — não “estoura”)
+      float lb = clamp(uLightBG,0.0,1.0);
+      vec3 base = mix(vec3(0.0), vec3(0.945, 0.955, 0.97), lb);
+
+      // Estrelas: azul claro no escuro, azul bem “ink” no claro (pra aparecer no branco)
+      vec3 starC = mix(vec3(0.75,0.82,1.0), vec3(0.00,0.34,1.00), lb);
+
+      float baseBoost = mix(1.0, 0.90, lb);
+      float starBoost = mix(1.0, 2.35, lb);
+
+      vec3 col = base * uBGBright * baseBoost + (starC * s * uBGStars * starBoost);
       return clamp(col, 0.0, 1.0);
+    }
+
+    vec3 lpPushAxis(){
+      vec3 sum=vec3(0.0);
+      for(int j=0;j<8;j++) if(j<uLPCount){ sum += normalize(uLPDirs[j]); }
+      float L=length(sum);
+      if(L<0.001) return vec3(0.0,0.0,1.0);
+      return sum/L;
     }
 
     Hit map(vec3 p){
       Hit res; res.d=1e9; res.col=vec3(0.0); res.lp=0.0;
 
+      // Modelo
+      vec3 pr=rotateXYZ(p,uRot);
+      vec3 pm=pr-uMolOffset;
+
+      // Eixos (no espaço do modelo — giram junto com as ligações)
       if(uShowAxes){
-        float ax = sdCapsule(p, vec3(-3.0,0.0,0.0), vec3(3.0,0.0,0.0), 0.02);
-        float ay = sdCapsule(p, vec3(0.0,-3.0,0.0), vec3(0.0,3.0,0.0), 0.02);
-        float az = sdCapsule(p, vec3(0.0,0.0,-3.0), vec3(0.0,0.0,3.0), 0.02);
+        float ax = sdCapsule(pm, vec3(-3.0,0.0,0.0), vec3(3.0,0.0,0.0), 0.02);
+        float ay = sdCapsule(pm, vec3(0.0,-3.0,0.0), vec3(0.0,3.0,0.0), 0.02);
+        float az = sdCapsule(pm, vec3(0.0,0.0,-3.0), vec3(0.0,0.0,3.0), 0.02);
         float d=ax;
         vec3 axisCol=vec3(1.0,0.28,0.28);   // X = vermelho
         if(ay<d){ d=ay; axisCol=vec3(0.28,1.0,0.38); } // Y = verde
@@ -486,12 +682,18 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
         if(d<res.d){ res.d=d; res.col=axisCol; res.lp=0.0; }
       }
 
-      vec3 pr=rotateXYZ(p,uRot);
-      vec3 pm=pr-uMolOffset;
-      float dc=sdSphere(pm,uCentralR); if(dc<res.d){ res.d=dc; res.col=uCoreColor; res.lp=0.0; }
+      float dc=sdSphere(pm,uCentralR);
+      if(dc<res.d){ res.d=dc; res.col=uCoreColor; res.lp=0.0; }
+
+      // animação: se há pares livres, eles "empurram" as ligações para baixo (direção oposta ao eixo dos LPs)
+      vec3 pushAxis = lpPushAxis();
+      float k = (uLPCount>0 && !(uLPCount==2 && uLigCount==4)) ? (0.36 * clamp(uLPAnim, 0.0, 1.0)) : 0.0;
+      vec3 down = -pushAxis;
 
       for(int i=0;i<8;i++) if(i<uLigCount){
-        vec3 dir=normalize(uLigDirs[i]);
+        vec3 dir0=normalize(uLigDirs[i]);
+        vec3 dir = normalize(dir0 + down*k);
+
         vec3 b=dir*uBondLen;
 
         if(uBondType==1){
@@ -510,27 +712,14 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
           float d2=sdCapsule(pm, perp*off,b+perp*off,r3); if(d2<res.d){ res.d=d2; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
         }
 
-        float dl=sdSphere(pm-b, uLigR); if(dl<res.d){ res.d=dl; res.col=uLigColor; res.lp=0.0; }
+        float dl=sdSphere(pm-b, uLigR);
+        if(dl<res.d){ res.d=dl; res.col=uLigColor; res.lp=0.0; }
       }
 
-      for(int i=0;i<8;i++) if(i<uLPCount){
-        vec3 dir=normalize(uLPDirs[i]);
-        float pScale=uLPScale*2.35; // nuvem um pouco menor (mantém destaque)
-        float centerDist=uCentralR + 0.23*pScale; // encostado no átomo central (com leve interseção visual)
-        vec3 center=dir*centerDist;
-        mat3 B=basisFromDir(dir);
-        vec3 q=mulByTranspose(B, (pm-center));
+      /* Pares livres (visual): agora renderizados apenas como pontos de probabilidade (sem esfera). */
 
-        // "nuvem" em metade de orbital p (um lobo / balão único)
-        float off=0.16*pScale;
-        float lobe=sdEllipsoid(q-vec3(0.0,0.0, off), vec3(0.26*pScale,0.26*pScale,0.40*pScale));
-        float base=sdEllipsoid(q-vec3(0.0,0.0, 0.02*pScale), vec3(0.12*pScale,0.12*pScale,0.12*pScale));
-        float dell=min(lobe, base);
 
-        if(dell<res.d){ res.d=dell; res.col=uLPColor; res.lp=1.0; }
-      }
-
-      // Balões 3D (tutorial): balões de festa (corpo + gargalo + nó), orientados e encostados no mesmo ponto
+      // Balões 3D (tutorial)
       for(int i=0;i<6;i++) if(i<uBalloonN){
         vec3 bdir = normalize(uBalloonDir[i]);
         mat3 BB = basisFromDir(bdir);
@@ -542,6 +731,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
         float db = min(min(body, neck), knot);
         if(db<res.d){ res.d=db; res.col=uBalloonCol[i]; res.lp=2.0; }
       }
+
       return res;
     }
 
@@ -556,14 +746,67 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     }
     vec3 saturateColor(vec3 c, float s){ float l=dot(c, vec3(0.299,0.587,0.114)); return mix(vec3(l), c, s); }
 
+    float raySphereThickness(vec3 ro, vec3 rd, vec3 c, float r){
+      vec3 oc = ro - c;
+      float b = dot(oc, rd);
+      float h = b*b - dot(oc,oc) + r*r;
+      if(h<0.0) return 0.0;
+      h = sqrt(h);
+      float t0 = -b - h;
+      float t1 = -b + h;
+      float a0 = max(t0, 0.0);
+      float a1 = max(t1, 0.0);
+      return max(0.0, a1-a0);
+    }
+
+
+// Intervalo de interseção do raio com esfera: retorna (t0,t1). Se não intersecta, t1 < 0.
+vec2 raySphereInterval(vec3 ro, vec3 rd, vec3 c, float r){
+  vec3 oc = ro - c;
+  float b = dot(oc, rd);
+  float h = b*b - dot(oc,oc) + r*r;
+  if(h < 0.0) return vec2(1e9, -1e9);
+  h = sqrt(h);
+  return vec2(-b - h, -b + h);
+}
+
+// Máscara de "pontinhos" (nuvem de probabilidade) em coordenadas locais normalizadas da esfera (|p|<=1)
+float probDots(vec3 p, float seed){
+  float grid = 14.0; // densidade de pontinhos
+  vec3 q = p*grid + seed*vec3(7.13, 13.71, 5.17);
+  vec3 cell = floor(q);
+  vec3 f = fract(q);
+
+  vec3 rnd = fract(sin(vec3(
+    dot(cell, vec3(127.1,311.7,74.7)),
+    dot(cell, vec3(269.5,183.3,246.1)),
+    dot(cell, vec3(113.5,271.9,124.6))
+  ))*43758.5453);
+
+  float d = length(f - rnd);
+  float rDot = mix(0.18, 0.30, clamp(uLightBG,0.0,1.0));
+  float m = 1.0 - smoothstep(rDot*0.65, rDot, d);
+
+  // concentra mais no miolo (probabilidade maior)
+  float radial = length(p);
+  m *= smoothstep(1.0, 0.25, radial);
+
+  // leve cintilação (bem sutil)
+  /* sem cintilação: nuvem de probabilidade estável */
+  m *= 1.0;
+
+  return m;
+}
+
     void main(){
       vec3 fwd=normalize(uTarget-uEye); mat3 cam=look(fwd, uUp);
       vec2 uv=vUV*2.0-1.0; uv.x*=uRes.x/uRes.y;
       vec3 rd=normalize(cam*normalize(vec3(uv,1.25))); vec3 ro=uEye;
 
       float t=0.0; vec3 col=vec3(0.0); float fog=0.0; float hitFlag=0.0;
+      Hit h; vec3 p=vec3(0.0);
       for(int i=0;i<160;i++){
-        vec3 p=ro+rd*t; Hit h=map(p);
+        p=ro+rd*t; h=map(p);
         if(h.d<0.001){
           vec3 n=calcNormal(p);
           vec3 ldir=normalize(-uEye);
@@ -579,6 +822,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
           vec3 reflMix=mix(lit,env,clamp(uRefl,0.0,0.8));
           float rim=pow(1.0-max(dot(n,-rd),0.0),3.0);
           col=clamp(reflMix+vec3(spec)*uSpecK+vec3(rim)*0.08,0.0,1.0);
+
           if(h.lp>1.5){
             // Balões (analogia): mais opacos, coloridos e com brilho tipo látex
             float specB = pow(max(dot(reflect(-ldir,n), -rd), 0.0), 90.0);
@@ -587,14 +831,9 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
             vec3 latex = h.col*(0.50 + 0.72*diff*sh + 0.18*diff2) + vec3(rim)*0.07;
             latex = saturateColor(latex, 1.18);
             col = clamp(latex + envSoft + vec3(specB)*0.42 + vec3(fresB)*0.04, 0.0, 1.0);
-          } else if(h.lp>0.5){
-            vec3 bgHere = envMap(rd);
-            vec3 envRefl = envMap(reflect(-rd,n));
-            float fres = pow(1.0-max(dot(n,-rd),0.0), 2.2);
-            vec3 glassBase = mix(bgHere, envRefl, 0.65);
-            vec3 lpTint = mix(glassBase, h.col, 0.18);
-            col = mix(bgHere, lpTint, 0.24 + 0.12*fres); // mais vidrinho (mais transparente + reflexo)
           }
+
+
           fog=1.0-exp(-0.05*t); hitFlag=1.0; break;
         }
         t+=clamp(h.d, 0.002, 0.50); if(t>30.0) break;
@@ -603,6 +842,54 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       vec3 bg=envMap(rd);
       vec3 colFog=mix(bg,col,1.0-fog);
       col=mix(bg,colFog,hitFlag);
+
+      // Pares livres: renderização apenas por "pontinhos" (nuvem de probabilidade), sem esfera/haze.
+      float lpDots = 0.0;
+      if(uLPCount>0){
+        // raio no espaço do modelo (mesma rotação usada no SDF)
+        vec3 roM = rotateXYZ(ro, uRot) - uMolOffset;
+        vec3 rdM = normalize(rotateXYZ(rd, uRot));
+
+        float pScale=uLPScale*1.85;
+        float centerDist=uCentralR + 0.34*pScale;
+        float rCloud=0.34*pScale;
+
+        float tMax = (hitFlag>0.5) ? t : 30.0; // oculta pontos atrás do sólido
+        const int SAMPLES = 14;
+
+        for(int j=0;j<8;j++) if(j<uLPCount){
+          vec3 dir=normalize(uLPDirs[j]);
+          vec3 c = dir*centerDist;
+
+          vec2 iv = raySphereInterval(roM, rdM, c, rCloud);
+          float t0 = iv.x, t1 = iv.y;
+          if(t1 < 0.0) continue;
+
+          float a0 = max(t0, 0.0);
+          float a1 = min(t1, tMax);
+          float seg = max(0.0, a1-a0);
+          if(seg <= 0.0) continue;
+
+          float acc = 0.0;
+          for(int s=0;s<SAMPLES;s++){
+            float u = (float(s)+0.5)/float(SAMPLES);
+            float tt = mix(a0, a1, u);
+            vec3 p = roM + rdM*tt;
+            vec3 pl = (p - c)/rCloud; // normalizado (raio ~1)
+            acc = max(acc, probDots(pl, float(j)));
+          }
+          lpDots = max(lpDots, acc);
+        }
+      }
+      float lightBG = clamp(uLightBG,0.0,1.0);
+      lpDots = clamp(lpDots * mix(1.0, 3.8, lightBG), 0.0, 1.0);
+      vec3 lpInkDark = saturateColor(uLPColor, 1.18);
+      vec3 lpInkLight = vec3(0.015,0.015,0.015);
+
+      // No fundo escuro: soma emissiva normal. No fundo claro: mistura para preto (senão "somar preto" não aparece).
+      col += lpInkDark * 1.05 * lpDots * (1.0-lightBG);
+      col = mix(col, lpInkLight, lpDots * 0.92 * lightBG);
+
       col=pow(col, vec3(1.0/2.2));
       gl_FragColor=vec4(col,1.0);
     }
@@ -643,10 +930,10 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     uLPCount:gl.getUniformLocation(prog,'uLPCount'), uLPDirs:gl.getUniformLocation(prog,'uLPDirs[0]'),
     uBondLen:gl.getUniformLocation(prog,'uBondLen'), uCentralR:gl.getUniformLocation(prog,'uCentralR'), uLigR:gl.getUniformLocation(prog,'uLigR'), uBondR:gl.getUniformLocation(prog,'uBondR'),
     uLPScale:gl.getUniformLocation(prog,'uLPScale'), uAmbient:gl.getUniformLocation(prog,'uAmbient'), uSat:gl.getUniformLocation(prog,'uSat'), uSpecK:gl.getUniformLocation(prog,'uSpecK'),
-    uRefl:gl.getUniformLocation(prog,'uRefl'), uLigColor:gl.getUniformLocation(prog,'uLigColor'), uLPColor:gl.getUniformLocation(prog,'uLPColor'), uCoreColor:gl.getUniformLocation(prog,'uCoreColor'),
+    uRefl:gl.getUniformLocation(prog,'uRefl'), uLigColor:gl.getUniformLocation(prog,'uLigColor'), uLPColor:gl.getUniformLocation(prog,'uLPColor'), uCoreColor:gl.getUniformLocation(prog,'uCoreColor'), uTime:gl.getUniformLocation(prog,'uTime'), uLPAnim:gl.getUniformLocation(prog,'uLPAnim'),
     uBalloonN:gl.getUniformLocation(prog,'uBalloonN'), uBalloonPos:gl.getUniformLocation(prog,'uBalloonPos[0]'), uBalloonRad:gl.getUniformLocation(prog,'uBalloonRad[0]'), uBalloonCol:gl.getUniformLocation(prog,'uBalloonCol[0]'), uBalloonDir:gl.getUniformLocation(prog,'uBalloonDir[0]'), uMolOffset:gl.getUniformLocation(prog,'uMolOffset'), uBalloonOffset:gl.getUniformLocation(prog,'uBalloonOffset'),
     uShowAxes:gl.getUniformLocation(prog,'uShowAxes'), uBondType:gl.getUniformLocation(prog,'uBondType'), uRot:gl.getUniformLocation(prog,'uRot'),
-    uBGStars:gl.getUniformLocation(prog,'uBGStars'), uBGBright:gl.getUniformLocation(prog,'uBGBright')
+    uBGStars:gl.getUniformLocation(prog,'uBGStars'), uBGBright:gl.getUniformLocation(prog,'uBGBright'), uLightBG:gl.getUniformLocation(prog,'uLightBG')
   };
 
   function hexToRgb(hex){ var h=hex.replace('#',''); var v=parseInt(h,16); return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255]; }
@@ -716,33 +1003,99 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   function eye(){ var ex=camDist*Math.cos(rotX)*Math.sin(rotY); var ey=camDist*Math.sin(rotX); var ez=camDist*Math.cos(rotX)*Math.cos(rotY); return [ex,ey,ez]; }
 
   function geomPositions(type){
-    var Uv={
-      linear:[[0,0,1],[0,0,-1]],
-      trigonal_planar:[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]],
-      tetra:(function(){var v=[[1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]]; for(var i=0;i<v.length;i++){ var n=v[i]; var L=Math.hypot(n[0],n[1],n[2]); v[i]=[n[0]/L,n[1]/L,n[2]/L]; } return v;})(),
-      tbp:(function(){ var eq=[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]]; var ax=[[0,0,1],[0,0,-1]]; return {eq:eq,ax:ax};})(),
-      oct:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]
-    };
+    // Orientações escolhidas para que o "eixo de simetria principal" fique alinhado ao Z.
+    // (Ex.: linear C∞ no Z; trigonal planar C3 no Z; tetra com um C3 no Z; piramidal com LP no +Z.)
+    var SQ2=Math.sqrt(2), SQ3=Math.sqrt(3);
+    var trig = [
+      [ 1, 0, 0 ],
+      [ -0.5,  SQ3/2, 0 ],
+      [ -0.5, -SQ3/2, 0 ]
+    ];
+    // Tetra com um vértice no +Z e a face oposta no -Z (eixo C3 alinhado ao Z)
+    var r = 2*SQ2/3, z = -1/3;
+    var tetra = [
+      [0,0,1],
+      [ r, 0, z],
+      [ r*Math.cos(2*Math.PI/3), r*Math.sin(2*Math.PI/3), z],
+      [ r*Math.cos(4*Math.PI/3), r*Math.sin(4*Math.PI/3), z]
+    ];
+    // TBP: axiais em ±Z, equatoriais no plano XY
+    var tbp = { eq: trig, ax: [[0,0,1],[0,0,-1]] };
+    // Octa: pares opostos em ±X, ±Y, ±Z
+    var oct = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+
+    function nrm(v){ var L=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/L,v[1]/L,v[2]/L]; }
+    tetra = tetra.map(nrm);
+
     switch(type){
-      case 'linear': return {lig:Uv.linear, lp:[], label:'Linear', arr:'AX2', ideal:'Ângulo 180°'};
-      case 'trigonal_planar': return {lig:Uv.trigonal_planar, lp:[], label:'Trigonal planar', arr:'AX3', ideal:'Ângulo 120°'};
-      case 'tetrahedral': return {lig:Uv.tetra, lp:[], label:'Tetraédrica', arr:'AX4', ideal:'Ângulo 109,5° (3D)'};
-      case 'trigonal_bipyramidal': return {lig:Uv.tbp.eq.concat(Uv.tbp.ax), lp:[], label:'Bipirâmide trigonal', arr:'AX5', ideal:'Eq-Eq 120°, Ax-Eq 90°, Ax-Ax 180°'};
-      case 'octahedral': return {lig:Uv.oct, lp:[], label:'Octaédrica', arr:'AX6', ideal:'Adjacentes 90°, opostos 180°'};
-      case 'bent_tp': { var lp1=[Uv.trigonal_planar[1]]; var lig1=[Uv.trigonal_planar[0],Uv.trigonal_planar[2]]; return {lig:lig1, lp:lp1, label:'Angular (base trigonal planar)', arr:'AX2E', ideal:'Ângulo <120° (1 par livre)'}; }
-      case 'trigonal_pyramidal': { var lp2=[Uv.tetra[0]]; var lig2=[Uv.tetra[1],Uv.tetra[2],Uv.tetra[3]]; return {lig:lig2, lp:lp2, label:'Piramidal trigonal', arr:'AX3E', ideal:'~107° (<109,5°; 1 par livre)'}; }
-      case 'bent_tet': { var lp3=[Uv.tetra[0],Uv.tetra[1]]; var lig3=[Uv.tetra[2],Uv.tetra[3]]; return {lig:lig3, lp:lp3, label:'Angular (base tetraédrica)', arr:'AX2E2', ideal:'~104,5° (<109,5°; 2 pares livres)'}; }
-      case 'see_saw': { var lp4=[Uv.tbp.eq[0]]; var lig4=[Uv.tbp.eq[1],Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig4, lp:lp4, label:'Gangorra / Seesaw', arr:'AX4E', ideal:'Eq-Eq <120°, Ax-Eq <90°, Ax-Ax <180°'}; }
-      case 't_shaped': { var lp5=[Uv.tbp.eq[0],Uv.tbp.eq[1]]; var lig5=[Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig5, lp:lp5, label:'Em T', arr:'AX3E2', ideal:'Ax-Eq <90°, Ax-Ax <180°'}; }
-      case 'linear_tbp': { var lp6=Uv.tbp.eq.slice(); var lig6=[Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig6, lp:lp6, label:'Linear (base TBP)', arr:'AX2E3', ideal:'Lig-Lig 180° (pares livres equatoriais)'}; }
-      case 'square_pyramidal': { var lp7=[[0,0,1]]; var lig7=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]]; return {lig:lig7, lp:lp7, label:'Piramidal quadrada', arr:'AX5E', ideal:'Ax-Basal <90°; base 90°/180°'}; }
-      case 'square_planar': { var lp8=[[0,0,1],[0,0,-1]]; var lig8=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]]; return {lig:lig8, lp:lp8, label:'Quadrada planar', arr:'AX4E2', ideal:'90°/180° (pares livres trans)'}; }
-      default: return {lig:Uv.tetra, lp:[], label:'Tetraédrica', arr:'AX4', ideal:'109,5°'};
+      case 'linear': return {lig:[[0,0,1],[0,0,-1]], lp:[], angle:'180°', ideal:'180°', arr:'AX2', label:'Linear'};
+      case 'trigonal_planar': return {lig:trig, lp:[], angle:'120°', ideal:'120°', arr:'AX3', label:'Trigonal planar'};
+      case 'tetrahedral':
+      case 'tetra': return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5° (3D)', ideal:'109,5°', arr:'AX4', label:'Tetraédrica'};
+      case 'trigonal_bipyramidal':
+      case 'tbp': return {lig:tbp.eq.concat(tbp.ax), lp:[], angle:'120° (eq-eq), 90° (ax-eq), 180° (ax-ax)', ideal:'120°/90°/180°', arr:'AX5', label:'Bipirâmide trigonal'};
+      case 'octahedral':
+      case 'oct': return {lig:oct, lp:[], angle:'90° (adj.), 180° (opostos)', ideal:'90°/180°', arr:'AX6', label:'Octaédrica'};
+
+      // Com pares livres — aqui a ideia é deixar LP "no topo" (+Z) e ligações mais "embaixo" (−Z),
+      // pra ficar didático e animar a deformação puxando as ligações para baixo.
+      case 'bent_tp': {
+        var t=60*DEG; // ~120° entre ligações
+        var lig=[ [ Math.sin(t),0,-Math.cos(t) ], [ -Math.sin(t),0,-Math.cos(t) ] ];
+        var lp=[ [0,0,1] ];
+        return {lig:lig, lp:lp, angle:'<120° (1 par livre)', ideal:'<120°', arr:'AX2E', label:'Angular (AX2E)'};
+      }
+      case 'trigonal_pyramidal': {
+        // LP no +Z; 3 ligações na "face" inferior
+        var lig=[tetra[1],tetra[2],tetra[3]];
+        var lp=[tetra[0]];
+        return {lig:lig, lp:lp, angle:'~107° (<109,5°; 1 par livre)', ideal:'~107°', arr:'AX3E', label:'Piramidal trigonal (AX3E)'};
+      }
+      case 'bent_tet': {
+        // C2 no Z (bissetriz). LPs acima (+Z), ligações abaixo (−Z).
+        var a=30*DEG, b=52.25*DEG;
+        var lp=[ [ Math.sin(a),0, Math.cos(a) ], [ -Math.sin(a),0, Math.cos(a) ] ];
+        var lig=[ [ Math.sin(b),0,-Math.cos(b) ], [ -Math.sin(b),0,-Math.cos(b) ] ];
+        return {lig:lig, lp:lp, angle:'~104,5° (<109,5°; 2 pares livres)', ideal:'~104,5°', arr:'AX2E2', label:'Angular (AX2E2)'};
+      }
+      case 'see_saw': {
+        // Mantém base TBP (LP equatorial). Não é perfeito pro eixo principal, mas fica consistente com TBP.
+        var lp=[tbp.eq[0]];
+        var lig=[tbp.eq[1],tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig, lp:lp, angle:'<120° (eq-eq), <90° (ax-eq), <180° (ax-ax)', ideal:'<120°/<90°/<180°', arr:'AX4E', label:'Gangorra (AX4E)'};
+      }
+      case 't_shaped': {
+        var lp=[tbp.eq[0],tbp.eq[1]];
+        var lig=[tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig, lp:lp, angle:'<90° (ax-eq), <180° (ax-ax)', ideal:'<90°/<180°', arr:'AX3E2', label:'Em T (AX3E2)'};
+      }
+      case 'linear_tbp': {
+        var lig=[tbp.ax[0],tbp.ax[1]];
+        var lp=tbp.eq.slice();
+        return {lig:lig, lp:lp, angle:'180° (lig-lig); pares livres equatoriais a 120°', ideal:'180°', arr:'AX2E3', label:'Linear (AX2E3)'};
+      }
+      case 'square_pyramidal': {
+        var lig=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]];
+        var lp=[[0,0,1]];
+        return {lig:lig, lp:lp, angle:'<90° (ax-basal), 90°/180° na base', ideal:'<90°/90°/180°', arr:'AX5E', label:'Piramidal quadrada (AX5E)'};
+      }
+      case 'square_planar': {
+        var lig=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];
+        var lp=[[0,0,1],[0,0,-1]];
+        return {lig:lig, lp:lp, angle:'90°/180° (pares livres trans fora do plano)', ideal:'90°/180°', arr:'AX4E2', label:'Quadrada planar (AX4E2)'};
+      }
+      default: return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5° (3D)', ideal:'109,5°', arr:'AX4', label:'Tetraédrica'};
     }
   }
 
   function sync(){
     var G=geomPositions(geom.value);
+    var __geomChanged = (geom.value !== __lastGeomKey);
+    if(__geomChanged){
+      __lastGeomKey = geom.value;
+      if(G.lp && G.lp.length>0 && !(G.lp.length===2 && G.lig.length===4)){ __startLPPulse(); }
+      else { __lpPulseStart = -1; __lpHold = 0.0; }
+    }
     gl.useProgram(prog);
     gl.uniform1i(U.uLigCount, G.lig.length);
     gl.uniform3fv(U.uLigDirs, padVecArray(G.lig,8));
@@ -766,8 +1119,13 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     gl.uniform1f(U.uBGStars, parseFloat(bgStars.value));
     gl.uniform1f(U.uBGBright, parseFloat(bgBrightness.value));
 
-
-    // Balões 3D (tutorial): mantém estado atual
+    var __lb = (typeof __whiteMode!=='undefined') ? !!__whiteMode : !!((ui.lightBgQuick && ui.lightBgQuick.checked) || (ui.lightBg && ui.lightBg.checked) || (typeof tutorialLightBg!=='undefined' && tutorialLightBg && tutorialLightBg.checked));
+    if(ui.lightBg) ui.lightBg.checked = __lb;
+    if(ui.lightBgQuick) ui.lightBgQuick.checked = __lb;
+    if(typeof tutorialLightBg!=='undefined' && tutorialLightBg) tutorialLightBg.checked = __lb;
+    if(U.uLightBG) gl.uniform1f(U.uLightBG, __lb ? 1.0 : 0.0);
+    document.body.classList.toggle('lightBg', __lb);
+// Balões 3D (tutorial): mantém estado atual
     gl.uniform1i(U.uBalloonN, __balloons.n||0);
     gl.uniform3fv(U.uBalloonPos, __balloons.pos||new Float32Array(18));
     gl.uniform3fv(U.uBalloonRad, __balloons.rad||new Float32Array(18));
@@ -780,9 +1138,137 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     document.getElementById('hud').innerHTML='<b>'+G2.label+'</b> · <span class="small">'+G2.arr+' - '+G2.ideal+'</span>';
   }
 
+    // Mini viewer (2D): eixos isolados que seguem a mesma rotação do modelo + órbita da câmera
+  var miniWrap = document.getElementById('miniAxesWrap');
+  var miniCanvas = document.getElementById('miniAxes');
+  var miniCtx = miniCanvas ? miniCanvas.getContext('2d') : null;
+  var miniDist = 3.1;
+
+  function miniResize(){
+    if(!miniCanvas || !miniCtx) return;
+    var dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+    var w = miniCanvas.clientWidth || 180;
+    var h = miniCanvas.clientHeight || 180;
+    if(miniCanvas.width !== w*dpr || miniCanvas.height !== h*dpr){
+      miniCanvas.width = w*dpr;
+      miniCanvas.height = h*dpr;
+      miniCtx.setTransform(dpr,0,0,dpr,0,0); // desenha em px "CSS"
+    }
+  }
+  miniResize();
+  try{ if(window.ResizeObserver && miniWrap){ new ResizeObserver(miniResize).observe(miniWrap); } }catch(_e){}
+
+  function rotXYZ(v, r){
+    var x=v[0], y=v[1], z=v[2];
+    var cx=Math.cos(r.x), sx=Math.sin(r.x);
+    var cy=Math.cos(r.y), sy=Math.sin(r.y);
+    var cz=Math.cos(r.z), sz=Math.sin(r.z);
+    // X
+    var y1=cx*y - sx*z, z1=sx*y + cx*z; y=y1; z=z1;
+    // Y
+    var x2=cy*x + sy*z, z2=-sy*x + cy*z; x=x2; z=z2;
+    // Z
+    var x3=cz*x - sz*y, y3=sz*x + cz*y; x=x3; y=y3;
+    return [x,y,z];
+  }
+
+  function projectMini(world, eyePos){
+    var target=[0,0,0], up=[0,1,0];
+    var f=vNorm(vSub(target, eyePos));
+    var useUp = Math.abs(vDot(f, up)) > 0.98 ? [0,0,1] : up;
+    var r=vNorm(vCross(f, useUp));
+    if(!isFinite(r[0])||!isFinite(r[1])||!isFinite(r[2])) r=[1,0,0];
+    var u=vCross(r, f);
+    var q=vSub(world, eyePos);
+    var cx=vDot(q, r), cy=vDot(q, u), cz=vDot(q, f);
+    if(cz < 0.08) cz = 0.08;
+    var w = miniCanvas.clientWidth || 180;
+    var h = miniCanvas.clientHeight || 180;
+    var aspect = w/h;
+    var fov = 1.10;
+    var t = Math.tan(fov*0.5);
+    var ndcX = cx/(cz*t*aspect);
+    var ndcY = cy/(cz*t);
+    return {x:(ndcX*0.5+0.5)*w, y:(1.0-(ndcY*0.5+0.5))*h, z:cz};
+  }
+
+  function drawMiniAxes(){
+    if(!miniCtx || !miniWrap) return;
+    var show = !!(showAxes && showAxes.checked);
+    miniWrap.style.display = show ? 'block' : 'none';
+    if(!show) return;
+    miniResize();
+    var w = miniCanvas.clientWidth || 180;
+    var h = miniCanvas.clientHeight || 180;
+    miniCtx.clearRect(0,0,w,h);
+
+    // fundo suave
+    var g = miniCtx.createRadialGradient(w*0.35,h*0.35, 10, w*0.5,h*0.55, Math.max(w,h)*0.80);
+    g.addColorStop(0,'rgba(255,255,255,.06)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    miniCtx.fillStyle = g;
+    miniCtx.fillRect(0,0,w,h);
+
+    // mesma órbita (rotX/rotY), distância fixa
+    var ex = miniDist*Math.cos(rotX)*Math.sin(rotY);
+    var ey = miniDist*Math.sin(rotX);
+    var ez = miniDist*Math.cos(rotX)*Math.cos(rotY);
+    var eyePos=[ex,ey,ez];
+
+    var L=0.92; // menor pra não "sumir" em rotações extremas
+    var axes=[
+      {name:'X', col:'rgba(255,122,122,.95)', end:[L,0,0]},
+      {name:'Y', col:'rgba(109,255,176,.95)', end:[0,L,0]},
+      {name:'Z', col:'rgba(126,200,255,.95)', end:[0,0,L]}
+    ];
+
+    var o = projectMini([0,0,0], eyePos);
+    axes.forEach(function(a){
+      a.endR = rotXYZ(a.end, rot);
+      a.p = projectMini(a.endR, eyePos);
+    });
+    axes.sort(function(a,b){ return b.p.z - a.p.z; });
+
+    axes.forEach(function(a){
+      var p=a.p;
+      miniCtx.strokeStyle=a.col;
+      miniCtx.lineWidth=2;
+      miniCtx.lineCap='round';
+      miniCtx.beginPath();
+      miniCtx.moveTo(o.x,o.y);
+      miniCtx.lineTo(p.x,p.y);
+      miniCtx.stroke();
+
+      // ponta
+      var dx=p.x-o.x, dy=p.y-o.y;
+      var len=Math.hypot(dx,dy)||1;
+      var ux=dx/len, uy=dy/len;
+      var ah=7, aw=4;
+      var bx=p.x-ux*ah, by=p.y-uy*ah;
+      miniCtx.fillStyle=a.col;
+      miniCtx.beginPath();
+      miniCtx.moveTo(p.x,p.y);
+      miniCtx.lineTo(bx - uy*aw, by + ux*aw);
+      miniCtx.lineTo(bx + uy*aw, by - ux*aw);
+      miniCtx.closePath();
+      miniCtx.fill();
+
+      miniCtx.font='700 12px system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif';
+      miniCtx.fillStyle='rgba(255,255,255,.92)';
+      miniCtx.fillText(a.name, p.x+6, p.y+4);
+    });
+  }
+
   // primeiro sync antes do render
   sync();
   camDist = autoDist();
+
+  // animação de repulsão (apenas 1 vez ao trocar a estrutura com pares livres)
+  var __lpPulseStart = -1;
+  var __lpPulseDur = 900; // ms
+  var __lpHold = 0.0; // mantém deformação final (não volta ao início)
+  var __lastGeomKey = geom.value;
+  function __startLPPulse(){ __lpPulseStart = performance.now(); __lpHold = 0.0; }
 
   function draw(){
     resize();
@@ -797,10 +1283,29 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     var fwd = vNorm(vSub([0,0,0],[ex,ey,ez]));
     var camUp = Math.abs(vDot(fwd,[0,1,0])) > 0.98 ? [0,0,1] : [0,1,0];
     gl.uniform3f(U.uUp, camUp[0], camUp[1], camUp[2]);
-    gl.uniform3f(U.uRot, rot.x, rot.y, rot.z);
+    var __now = performance.now();
+    gl.uniform1f(U.uTime, (__now*0.001));
+    // animação única de repulsão por pares livres (0→1) e mantém o estado final (não volta)
+    if(U.uLPAnim){
+      var lpAnim = (__lpHold||0.0);
+      if(__lpPulseStart>=0){
+        var tt=(__now-__lpPulseStart)/__lpPulseDur;
+        if(tt>=1){ __lpPulseStart=-1; __lpHold=1.0; lpAnim=1.0; }
+        else {
+          var u=Math.max(0, Math.min(1, tt));
+          // easeOutCubic
+          lpAnim = 1.0 - Math.pow(1.0-u, 3.0);
+          __lpHold = lpAnim;
+        }
+      }
+      if(geom && geom.value==='square_planar') lpAnim = 0.0;
+      gl.uniform1f(U.uLPAnim, lpAnim);
+    }
+    rot.z = 0; gl.uniform3f(U.uRot, rot.x, rot.y, 0.0);
     __pushSceneUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     updateAxisLabels([ex,ey,ez]);
+    drawMiniAxes();
     requestAnimationFrame(draw);
   }
   draw();
@@ -816,10 +1321,15 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   function __lerp(a,b,t){ return a + (b-a)*t; }
   function __ease(t){ return t<.5 ? 4.0*t*t*t : 1.0 - Math.pow(-2.0*t+2.0,3.0)/2.0; }
   function __setObjRotDeg(x,y,z){
-    rot.x=(x||0)*DEG; rot.y=(y||0)*DEG; rot.z=(z||0)*DEG;
+    var zIn = (z==null?0:Number(z));
+    var zx = (Math.round(zIn)===360)?360:(((zIn||0)%360+360)%360);
+    var zRot = (Math.round(zx)===360)?0:zx;
+    rot.x=(x||0)*DEG; rot.y=(y||0)*DEG; rot.z=zRot*DEG;
     if(rotXS) rotXS.value=String(Math.round((x||0)));
     if(rotYS) rotYS.value=String(Math.round((y||0)));
-    if(rotZS) rotZS.value=String(Math.round((z||0)));
+    if(rotZS) rotZS.value=String(Math.round(zx));
+    if(typeof null!=='undefined' && null){ null.value=String(Math.round(zx)); }
+    if(typeof tutorialRotZVal!=='undefined' && tutorialRotZVal){ tutorialRotZVal.textContent = Math.round(zx)+'°'; }
   }
   function __animateView(opts,dur){
     dur = Math.max(0, dur||900);
@@ -831,9 +1341,9 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       rotY: ('rotY' in opts)? opts.rotY : s.rotY,
       ox: ('objRotXDeg' in opts)? (opts.objRotXDeg||0)*DEG : s.ox,
       oy: ('objRotYDeg' in opts)? (opts.objRotYDeg||0)*DEG : s.oy,
-      oz: ('objRotZDeg' in opts)? (opts.objRotZDeg||0)*DEG : s.oz
+      oz: 0
     };
-    if(dur===0){ camDist=e.camDist; rotX=e.rotX; rotY=e.rotY; rot.x=e.ox; rot.y=e.oy; rot.z=e.oz; return Promise.resolve(); }
+    if(dur===0){ camDist=e.camDist; rotX=e.rotX; rotY=e.rotY; rot.x=e.ox; rot.y=e.oy; rot.z=0; return Promise.resolve(); }
     return new Promise(function(resolve){
       var t0=performance.now();
       function step(now){
@@ -844,7 +1354,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
         rotY=__lerp(s.rotY,e.rotY,t);
         rot.x=__lerp(s.ox,e.ox,t);
         rot.y=__lerp(s.oy,e.oy,t);
-        rot.z=__lerp(s.oz,e.oz,t);
+        rot.z=0;
         if(t<1) requestAnimationFrame(step); else resolve(true);
       }
       requestAnimationFrame(step);
@@ -867,7 +1377,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     },
     clearBalloons: function(){ __setBalloons3D(0,null); },
     setObjRotDeg: __setObjRotDeg,
-    getView: function(){ return {camDist:camDist, rotX:rotX, rotY:rotY, objRotXDeg:rot.x/DEG, objRotYDeg:rot.y/DEG, objRotZDeg:rot.z/DEG}; },
+    getView: function(){ return {camDist:camDist, rotX:rotX, rotY:rotY, objRotXDeg:rot.x/DEG, objRotYDeg:rot.y/DEG, objRotZDeg:0}; },
     setView: function(o){ o=o||{}; if('camDist' in o) camDist=__clamp(o.camDist,2.2,14); if('rotX' in o) rotX=__clamp(o.rotX,-Math.PI/2+.05,Math.PI/2-.05); if('rotY' in o) rotY=o.rotY; if(('objRotXDeg' in o)||('objRotYDeg' in o)||('objRotZDeg' in o)) __setObjRotDeg(o.objRotXDeg||0,o.objRotYDeg||0,o.objRotZDeg||0); },
     animateTo: __animateView,
     pulse: function(){ var c=document.getElementById('tutorialCard'); if(!c) return; c.classList.remove('stepPulse'); void c.offsetWidth; c.classList.add('stepPulse'); setTimeout(function(){ c.classList.remove('stepPulse'); }, 700); }
@@ -901,43 +1411,91 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
   function ease(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
 
   function geomPositions(type){
-    var Uv={
-      linear:[[0,0,1],[0,0,-1]],
-      trigonal_planar:[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]],
-      tetra:(function(){var a=[[1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]]; return a.map(function(n){return vNorm(n);});})(),
-      tbp:(function(){ var eq=[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]]; var ax=[[0,0,1],[0,0,-1]]; return {eq:eq,ax:ax};})(),
-      oct:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]
-    };
+    // Mesma orientação do viewer: eixos de simetria principais alinhados ao Z.
+    var DEG = Math.PI/180;
+    var SQ2=Math.sqrt(2), SQ3=Math.sqrt(3);
+    var trig = [
+      [ 1, 0, 0 ],
+      [ -0.5,  SQ3/2, 0 ],
+      [ -0.5, -SQ3/2, 0 ]
+    ];
+    var r = 2*SQ2/3, z = -1/3;
+    var tetra = [
+      [0,0,1],
+      [ r, 0, z],
+      [ r*Math.cos(2*Math.PI/3), r*Math.sin(2*Math.PI/3), z],
+      [ r*Math.cos(4*Math.PI/3), r*Math.sin(4*Math.PI/3), z]
+    ];
+    var tbp = { eq: trig, ax: [[0,0,1],[0,0,-1]] };
+    var oct = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+    function nrm(v){ var L=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/L,v[1]/L,v[2]/L]; }
+    tetra = tetra.map(nrm);
+
     switch(type){
-      case 'linear': return {lig:Uv.linear, lp:[], angle:'180°', arr:'AX2'};
-      case 'trigonal_planar': return {lig:Uv.trigonal_planar, lp:[], angle:'120°', arr:'AX3'};
+      case 'linear': return {lig:[[0,0,1],[0,0,-1]], lp:[], angle:'180°', ideal:'180°', arr:'AX2', label:'Linear'};
+      case 'trigonal_planar': return {lig:trig, lp:[], angle:'120°', ideal:'120°', arr:'AX3', label:'Trigonal planar'};
       case 'tetrahedral':
-      case 'tetra': return {lig:Uv.tetra, lp:[], angle:'109,5° (3D)', arr:'AX4'};
+      case 'tetra': return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5° (3D)', ideal:'109,5°', arr:'AX4', label:'Tetraédrica'};
       case 'trigonal_bipyramidal':
-      case 'tbp': return {lig:Uv.tbp.eq.concat(Uv.tbp.ax), lp:[], angle:'120° (eq-eq), 90° (ax-eq), 180° (ax-ax)', arr:'AX5'};
+      case 'tbp': return {lig:tbp.eq.concat(tbp.ax), lp:[], angle:'120° (eq-eq), 90° (ax-eq), 180° (ax-ax)', ideal:'120°/90°/180°', arr:'AX5', label:'Bipirâmide trigonal'};
       case 'octahedral':
-      case 'oct': return {lig:Uv.oct, lp:[], angle:'90° (adj.), 180° (opostos)', arr:'AX6'};
-      case 'bent_tp': return {lig:[Uv.trigonal_planar[0],Uv.trigonal_planar[2]], lp:[Uv.trigonal_planar[1]], angle:'<120° (1 par livre)', arr:'AX2E'};
-      case 'trigonal_pyramidal': return {lig:[Uv.tetra[1],Uv.tetra[2],Uv.tetra[3]], lp:[Uv.tetra[0]], angle:'~107° (<109,5°; 1 par livre)', arr:'AX3E'};
-      case 'bent_tet': return {lig:[Uv.tetra[2],Uv.tetra[3]], lp:[Uv.tetra[0],Uv.tetra[1]], angle:'~104,5° (<109,5°; 2 pares livres)', arr:'AX2E2'};
-      case 'see_saw': return {lig:[Uv.tbp.eq[1],Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]], lp:[Uv.tbp.eq[0]], angle:'<120° (eq-eq), <90° (ax-eq), <180° (ax-ax)', arr:'AX4E'};
-      case 't_shaped': return {lig:[Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]], lp:[Uv.tbp.eq[0],Uv.tbp.eq[1]], angle:'<90° (ax-eq), <180° (ax-ax)', arr:'AX3E2'};
-      case 'linear_tbp': return {lig:[Uv.tbp.ax[0],Uv.tbp.ax[1]], lp:Uv.tbp.eq.slice(), angle:'180° (lig-lig); pares livres equatoriais a 120°', arr:'AX2E3'};
-      case 'square_pyramidal': return {lig:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]], lp:[[0,0,1]], angle:'<90° (ax-basal), 90°/180° na base', arr:'AX5E'};
-      case 'square_planar': return {lig:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]], lp:[[0,0,1],[0,0,-1]], angle:'90°/180° (pares livres trans fora do plano)', arr:'AX4E2'};
-      default: return {lig:Uv.tetra, lp:[], angle:'109,5° (3D)', arr:'AX4'};
+      case 'oct': return {lig:oct, lp:[], angle:'90° (adj.), 180° (opostos)', ideal:'90°/180°', arr:'AX6', label:'Octaédrica'};
+
+      case 'bent_tp': {
+        var t=60*DEG;
+        var lig=[ [ Math.sin(t),0,-Math.cos(t) ], [ -Math.sin(t),0,-Math.cos(t) ] ];
+        var lp=[ [0,0,1] ];
+        return {lig:lig, lp:lp, angle:'<120° (1 par livre)', ideal:'<120°', arr:'AX2E', label:'Angular (AX2E)'};
+      }
+      case 'trigonal_pyramidal': {
+        var lig=[tetra[1],tetra[2],tetra[3]];
+        var lp=[tetra[0]];
+        return {lig:lig, lp:lp, angle:'~107° (<109,5°; 1 par livre)', ideal:'~107°', arr:'AX3E', label:'Piramidal trigonal (AX3E)'};
+      }
+      case 'bent_tet': {
+        var a=30*DEG, b=52.25*DEG;
+        var lp=[ [ Math.sin(a),0, Math.cos(a) ], [ -Math.sin(a),0, Math.cos(a) ] ];
+        var lig=[ [ Math.sin(b),0,-Math.cos(b) ], [ -Math.sin(b),0,-Math.cos(b) ] ];
+        return {lig:lig, lp:lp, angle:'~104,5° (<109,5°; 2 pares livres)', ideal:'~104,5°', arr:'AX2E2', label:'Angular (AX2E2)'};
+      }
+      case 'see_saw': {
+        var lp=[tbp.eq[0]];
+        var lig=[tbp.eq[1],tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig, lp:lp, angle:'<120° (eq-eq), <90° (ax-eq), <180° (ax-ax)', ideal:'<120°/<90°/<180°', arr:'AX4E', label:'Gangorra (AX4E)'};
+      }
+      case 't_shaped': {
+        var lp=[tbp.eq[0],tbp.eq[1]];
+        var lig=[tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig, lp:lp, angle:'<90° (ax-eq), <180° (ax-ax)', ideal:'<90°/<180°', arr:'AX3E2', label:'Em T (AX3E2)'};
+      }
+      case 'linear_tbp': {
+        var lig=[tbp.ax[0],tbp.ax[1]];
+        var lp=tbp.eq.slice();
+        return {lig:lig, lp:lp, angle:'180° (lig-lig); pares livres equatoriais a 120°', ideal:'180°', arr:'AX2E3', label:'Linear (AX2E3)'};
+      }
+      case 'square_pyramidal': {
+        var lig=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]];
+        var lp=[[0,0,1]];
+        return {lig:lig, lp:lp, angle:'<90° (ax-basal), 90°/180° na base', ideal:'<90°/90°/180°', arr:'AX5E', label:'Piramidal quadrada (AX5E)'};
+      }
+      case 'square_planar': {
+        var lig=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];
+        var lp=[[0,0,1],[0,0,-1]];
+        return {lig:lig, lp:lp, angle:'90°/180° (pares livres trans fora do plano)', ideal:'90°/180°', arr:'AX4E2', label:'Quadrada planar (AX4E2)'};
+      }
+      default: return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5° (3D)', ideal:'109,5°', arr:'AX4', label:'Tetraédrica'};
     }
   }
 
   var exampleCatalog = {
-    H2O: { key:'H2O', label:'H₂O', geom:'bent_tet', center:'O', ligands:['H','H'], centerColor:'#d84040', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:-1, muBond:1.5, delta:'O é mais eletronegativo que H; cada ligação O-H tem dipolo apontando para O.', view:{camDist:4.65, rotX:0.43, rotY:-0.95, objRotYDeg:20}, note:'Geometria angular + dipolos que não se cancelam ⇒ molécula polar.', densityBias:1.0 },
-    NH3: { key:'NH3', label:'NH₃', geom:'trigonal_pyramidal', center:'N', ligands:['H','H','H'], centerColor:'#4d7cff', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:-1, muBond:1.25, delta:'N é mais eletronegativo que H; os dipolos N-H apontam para o N.', view:{camDist:4.9, rotX:0.36, rotY:-0.85, objRotYDeg:16}, note:'A pirâmide trigonal e o par livre ajudam a gerar resultante não nula.', densityBias:0.8 },
-    CO2: { key:'CO2', label:'CO₂', geom:'linear', center:'C', ligands:['O','O'], centerColor:'#3c3f45', ligandColor:'#d84040', lpColor:'#1100ff', sign:+1, muBond:1.8, delta:'Cada C=O é polar (dipolo aponta para O), mas a geometria linear cancela os vetores.', view:{camDist:4.15, rotX:0.10, rotY:0.06, objRotYDeg:90}, note:'Ligação polar não garante molécula polar: a simetria pode cancelar.', densityBias:0.0 },
-    BF3: { key:'BF3', label:'BF₃', geom:'trigonal_planar', center:'B', ligands:['F','F','F'], centerColor:'#e39b3c', ligandColor:'#6fd68c', lpColor:'#1100ff', sign:+1, muBond:1.4, delta:'B-F é bem polar, mas os três vetores a 120° se cancelam no plano.', view:{camDist:4.65, rotX:0.07, rotY:0.05, objRotYDeg:10}, note:'Exemplo clássico de molécula apolar com ligações polares.', densityBias:0.0 },
-    SO2: { key:'SO2', label:'SO₂', geom:'bent_tp', center:'S', ligands:['O','O'], centerColor:'#f0bf4a', ligandColor:'#d84040', lpColor:'#1100ff', sign:+1, muBond:1.55, delta:'O é mais eletronegativo que S; como a geometria é angular, a soma não zera.', view:{camDist:4.65, rotX:0.22, rotY:-0.35, objRotYDeg:6}, note:'Ótimo para comparar com CO₂: ambos têm 2 oxigênios, mas geometrias diferentes.', densityBias:0.9 },
-    CH4: { key:'CH4', label:'CH₄', geom:'tetrahedral', center:'C', ligands:['H','H','H','H'], centerColor:'#2f343a', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:+1, muBond:0.35, delta:'C-H é fracamente polar; na tetraédrica os vetores se cancelam quase totalmente.', view:{camDist:5.2, rotX:0.36, rotY:-0.75, objRotYDeg:18}, note:'Na prática, CH₄ é tratado como apolar.', densityBias:0.0 },
-    CCl4: { key:'CCl4', label:'CCl₄', geom:'tetrahedral', center:'C', ligands:['Cl','Cl','Cl','Cl'], centerColor:'#2f343a', ligandColor:'#7bde64', lpColor:'#1100ff', sign:+1, muBond:1.5, delta:'Cada C-Cl é polar, mas a simetria tetraédrica cancela a resultante.', view:{camDist:5.2, rotX:0.36, rotY:-0.75, objRotYDeg:18}, note:'Simetria perfeita = cancelamento vetorial.', densityBias:0.0 },
-    BeCl2: { key:'BeCl2', label:'BeCl₂', geom:'linear', center:'Be', ligands:['Cl','Cl'], centerColor:'#b5b9c1', ligandColor:'#7bde64', lpColor:'#1100ff', sign:+1, muBond:1.55, delta:'Ligação polar + arranjo linear simétrico ⇒ resultante nula.', view:{camDist:4.2, rotX:0.12, rotY:0.02, objRotYDeg:90}, note:'Linear simétrica é campeã de cancelamento.', densityBias:0.0 }
+    H2O: { key:'H2O', label:'H₂O', geom:'bent_tet', center:'O', ligands:['H','H'], centerColor:'#d84040', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:-1, muBond:1.5, delta:'O é mais eletronegativo que H; cada ligação O-H tem dipolo apontando para O.', view:{camDist:4.65, rotX:0.43, rotY:-0.95, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Geometria angular + dipolos que não se cancelam ⇒ molécula polar.', densityBias:1.0 },
+    NH3: { key:'NH3', label:'NH₃', geom:'trigonal_pyramidal', center:'N', ligands:['H','H','H'], centerColor:'#4d7cff', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:-1, muBond:1.25, delta:'N é mais eletronegativo que H; os dipolos N-H apontam para o N.', view:{camDist:4.9, rotX:0.36, rotY:-0.85, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'A pirâmide trigonal e o par livre ajudam a gerar resultante não nula.', densityBias:0.8 },
+    CO2: { key:'CO2', label:'CO₂', geom:'linear', center:'C', ligands:['O','O'], centerColor:'#3c3f45', ligandColor:'#d84040', lpColor:'#1100ff', sign:+1, muBond:1.8, delta:'Cada C=O é polar (dipolo aponta para O), mas a geometria linear cancela os vetores.', view:{camDist:4.15, rotX:0.10, rotY:0.06, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Ligação polar não garante molécula polar: a simetria pode cancelar.', densityBias:0.0 },
+    BF3: { key:'BF3', label:'BF₃', geom:'trigonal_planar', center:'B', ligands:['F','F','F'], centerColor:'#e39b3c', ligandColor:'#6fd68c', lpColor:'#1100ff', sign:+1, muBond:1.4, delta:'B-F é bem polar, mas os três vetores a 120° se cancelam no plano.', view:{camDist:4.65, rotX:0.07, rotY:0.05, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Exemplo clássico de molécula apolar com ligações polares.', densityBias:0.0 },
+    SO2: { key:'SO2', label:'SO₂', geom:'bent_tp', center:'S', ligands:['O','O'], centerColor:'#f0bf4a', ligandColor:'#d84040', lpColor:'#1100ff', sign:+1, muBond:1.55, delta:'O é mais eletronegativo que S; como a geometria é angular, a soma não zera.', view:{camDist:4.65, rotX:0.22, rotY:-0.35, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Ótimo para comparar com CO₂: ambos têm 2 oxigênios, mas geometrias diferentes.', densityBias:0.9 },
+    CH4: { key:'CH4', label:'CH₄', geom:'tetrahedral', center:'C', ligands:['H','H','H','H'], centerColor:'#2f343a', ligandColor:'#f5f7ff', lpColor:'#1100ff', sign:+1, muBond:0.35, delta:'C-H é fracamente polar; na tetraédrica os vetores se cancelam quase totalmente.', view:{camDist:5.2, rotX:0.36, rotY:-0.75, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Na prática, CH₄ é tratado como apolar.', densityBias:0.0 },
+    CCl4: { key:'CCl4', label:'CCl₄', geom:'tetrahedral', center:'C', ligands:['Cl','Cl','Cl','Cl'], centerColor:'#2f343a', ligandColor:'#7bde64', lpColor:'#1100ff', sign:+1, muBond:1.5, delta:'Cada C-Cl é polar, mas a simetria tetraédrica cancela a resultante.', view:{camDist:5.2, rotX:0.36, rotY:-0.75, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Simetria perfeita = cancelamento vetorial.', densityBias:0.0 },
+    BeCl2: { key:'BeCl2', label:'BeCl₂', geom:'linear', center:'Be', ligands:['Cl','Cl'], centerColor:'#b5b9c1', ligandColor:'#7bde64', lpColor:'#1100ff', sign:+1, muBond:1.55, delta:'Ligação polar + arranjo linear simétrico ⇒ resultante nula.', view:{camDist:4.2, rotX:0.12, rotY:0.02, objRotXDeg:0, objRotYDeg:0, objRotZDeg:0}, note:'Linear simétrica é campeã de cancelamento.', densityBias:0.0 }
   };
 
   var steps = [
@@ -969,15 +1527,30 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       run: async function(api){ await setExample('CO2', {cam:true}); }
     },
     {
-      title:'Eletronegatividade e deslocamento de densidade',
-      body:'O átomo mais eletronegativo puxa mais a nuvem eletrônica da ligação. Por isso marcamos <b>δ−</b> no lado mais eletronegativo e <b>δ+</b> no outro lado. Essa separação parcial de cargas é a base do vetor de dipolo de ligação.',
-      note:'No cotidiano: é tipo um cabo de guerra desigual. A corda (densidade eletrônica) fica mais para o lado do time mais forte.',
-      pills:['eletronegatividade','δ−','δ+'],
-      examples:['H2O','NH3','CCl4'],
+      title:'Eletronegatividade: quem puxa mais forte?',
+      body:'<b>Eletronegatividade</b> é a “força de puxar elétrons” numa ligação. Quando dois átomos se ligam, o mais eletronegativo puxa a densidade eletrônica para si — por isso surgem <b>δ−</b> (onde acumula elétron) e <b>δ+</b> (onde falta).',
+      note:'Tradução pop: é um cabo de guerra eletrônico. Quem tem maior eletronegatividade puxa o “cabo” da ligação.',
+      examples:['H2O','NH3','BeCl2'],
+      viz:{bond:true,result:false,cloud:true,calc:false,deltas:true,angles:false},
+      run: async function(api){ await setExample('H2O', {cam:true}); }
+    },
+    {
+      title:'Fila de eletronegatividade (atalho de bolso)',
+      body:'Dá pra decorar uma <b>fila rápida</b> usando o macete <b>“Fui Ontem No Clube, Briguei e Saí Correndo Para o Hospital”</b>: <b>F</b>, <b>O</b>, <b>N</b>, <b>Cl</b>, <b>Br</b>, <b>I</b>, <b>S</b>, <b>C</b>, <b>P</b>, <b>H</b>. Não é uma régua perfeita pra toda a tabela, mas ajuda demais a lembrar quem costuma puxar mais forte os elétrons numa ligação. Na tabela periódica, a eletronegatividade tende a <b>aumentar →</b> (pra direita) e <b>aumentar ↑</b> (pra cima).',
+      note:'Você não precisa de números exatos aqui. Só a ordem já explica 90% do “pra onde aponta o dipolo”.',
+      examples:['BeCl2','CCl4','BF3'],
+      viz:{bond:true,result:false,cloud:true,calc:false,deltas:true,angles:false},
+      run: async function(api){ await setExample('BeCl2', {cam:true}); }
+    },
+    {
+      title:'ΔEN na prática (quem vira δ− e δ+)',
+      body:'O que manda é a diferença de eletronegatividade (<b>ΔEN</b>). Quanto maior o ΔEN, mais “polar” fica a ligação. A extremidade do átomo mais eletronegativo fica <b>δ−</b> e a outra fica <b>δ+</b>. Isso é o começo da história dos vetores.',
+      note:'Daqui a pouco a gente desenha isso como setas (μ) e soma tudo na geometria.',
+      examples:['NH3','H2O','SO2'],
       viz:{bond:true,result:false,cloud:true,calc:false,deltas:true,angles:false},
       run: async function(api){ await setExample('NH3', {cam:true}); }
     },
-    {
+{
       title:'Vetor dipolar de ligação (μ): direção e sentido',
       body:'Cada ligação polar pode ser representada por um vetor <b>μ</b>. O <b>sentido</b> aponta para o lado de maior densidade eletrônica (mais eletronegativo). O <b>módulo</b> cresce quando a separação de carga aumenta e/ou a distância efetiva entre as cargas aumenta.',
       note:'Em livros você também vê μ = q·d (módulo), onde q é a carga parcial efetiva e d é a distância entre centros de carga. Aqui usamos uma versão didática para visualizar e somar vetores.',
@@ -1002,7 +1575,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       body:'Quando os vetores de dipolo fazem ângulos que deixam componentes no <b>mesmo sentido</b>, acontece <b>adição vetorial</b>. Na prática, somamos as setas por componentes (x, y, z): partes que apontam para o mesmo lado <b>se reforçam</b>.',
       note:'Analogia: duas pessoas empurrando um carrinho quase para a mesma direção. Mesmo se não estiverem perfeitamente alinhadas, uma parte da força de cada uma soma e o carrinho anda mais para aquele lado.',
       pills:['adição vetorial','componentes','reforço de resultante'],
-      examples:['H2O','NH3','SO2'],
+      examples:[],
       viz:{bond:true,result:true,cloud:true,calc:true,deltas:false,angles:true},
       onlyVectors:true,
       vectorMode:'addition',
@@ -1013,11 +1586,30 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       body:'Quando vetores têm componentes em <b>sentidos opostos</b>, fazemos uma <b>subtração vetorial</b> (ou soma com sinal). Se os módulos forem iguais e a direção oposta na mesma linha, o cancelamento é total. Se forem inclinados, pode sobrar uma resultante.',
       note:'Analogia: cabo de guerra equilibrado = resultante ~ 0. Se um lado puxa mais, sobra uma resultante. Em moléculas simétricas (CO₂, BF₃, CCl₄), a geometria ajuda a cancelar.',
       pills:['subtração vetorial','cancelamento','simetria'],
-      examples:['CO2','BeCl2','BF3','CCl4'],
+      examples:[],
       viz:{bond:true,result:true,cloud:true,calc:true,deltas:false,angles:true},
       onlyVectors:true,
       vectorMode:'subtraction',
       run: async function(api){ await setExample('CO2', {cam:true}); }
+    },
+
+    {
+      title:'Eixo de simetria padrão em Z',
+      body:'Neste visualizador, por padrão, o <b>eixo de simetria principal</b> da estrutura é alinhado ao <b>eixo Z</b>. Isso deixa a leitura consistente: quando você gira no <b>slider de Z</b>, você está “rodando em torno do eixo de simetria” (quando ele existe).',
+      note:'Use “Mostrar eixos XYZ” para ver XYZ no viewer e no mini-viewer. O mini-viewer é só referência — ele copia a mesma rotação do modelo.',
+      pills:['eixo Z','orientação','simetria'],
+      examples:['CO2','BF3'],
+      viz:{bond:true,result:true,cloud:true,calc:false,deltas:true,angles:true},
+      run: async function(api){ await setExample('CO2', {cam:true}); }
+    },
+    {
+      title:'Simetria (o poder do “cancelamento”)',
+      body:'<b>Simetria</b> é quando a geometria se repete por rotações/espelhos. Para polaridade, a pergunta é: “os vetores ficam distribuídos de forma que se anulam?”. Se a distribuição é simétrica e os ligantes são iguais, a chance de <b>μR ≈ 0</b> explode.',
+      note:'Compare: CO₂ (linear e simétrica) → cancela. SO₂ (angular) → sobra. Mesmos átomos “de fora”, resultado diferente por geometria.',
+      pills:['simetria','cancelamento','μR'],
+      examples:['CO2','SO2'],
+      viz:{bond:true,result:true,cloud:true,calc:true,deltas:true,angles:true},
+      run: async function(api){ await setExample('SO2', {cam:true}); }
     },
     {
       title:'Ângulos entram no jogo (sim, muito)',
@@ -1167,10 +1759,19 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     var html='';
     if(step.examples && step.examples.length){
       var first = exampleCatalog[step.examples[0]];
-      html += '<button type="button" class="exInlineBtn" data-ex-key="'+esc(first.key)+'"><b>Exemplo(s):</b> clique aqui para jogar o primeiro exemplo na lousa ('+esc(first.label)+') e use os botões abaixo para comparar.</button>';
-      html += '<div class="exBtns">'+ step.examples.map(function(k){ var ex=exampleCatalog[k]; if(!ex) return ''; return '<button type="button" class="exBtn'+(activeExampleKey===k?' active':'')+'" data-ex-key="'+esc(k)+'">'+esc(ex.label)+'</button>'; }).join('') + '</div>';
+      // Passo 1 e 2: sem "dica" no viewer (fica só a lista de exemplos).
+      if(stepIdx >= 2 && first){
+        html += '<button type="button" class="exInlineBtn" data-ex-key="'+esc(first.key)+'"><b>Exemplo(s):</b> clique para jogar o primeiro exemplo na lousa ('+esc(first.label)+') e use os botões abaixo para comparar.</button>';
+      } else {
+        html += '<div class="small" style="margin:2px 0 8px; opacity:.92"><b>Exemplo(s):</b></div>';
+      }
+      html += '<div class="exBtns">'+ step.examples.map(function(k){
+        var ex=exampleCatalog[k]; if(!ex) return '';
+        return '<button type="button" class="exBtn'+(activeExampleKey===k?' active':'')+'" data-ex-key="'+esc(k)+'">'+esc(ex.label||k)+'</button>';
+      }).join('') +'</div>';
+      html += '<div class="exHelp">Clique para alternar entre moléculas e comparar o cancelamento (ou reforço) dos vetores.</div>';
     }
-    html += '<div class="legendDots">'+
+        html += '<div class="legendDots">'+
       '<span class="dotItem"><span class="dot" style="background:#4ec7ff"></span>dipolos de ligação</span>'+
       '<span class="dotItem"><span class="dot" style="background:#ffd34d"></span>μ resultante</span>'+
       '<span class="dotItem"><span class="dot" style="background:#5f7dff"></span>nuvem eletrônica (mais densa)</span>'+
@@ -1181,7 +1782,6 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     }
     return html;
   }
-
   function getCoreBondLen(){
     var ui = apiRef && apiRef.ui;
     if(ui && ui.bondLen) return parseFloat(ui.bondLen.value)||1.55;
@@ -1230,7 +1830,6 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     apiRef.setGeom(ex.geom);
     apiRef.sync();
     if(el.examples){ el.examples.innerHTML = buildExamplesHTML(steps[stepIdx]); }
-    refreshMiniCalc();
     if(opts && opts.cam && ex.view){ try{ await apiRef.animateTo(ex.view, 800); }catch(_e){} }
   }
 
@@ -1304,8 +1903,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     el.examples.style.display = '';
     el.prog.style.width = (((stepIdx+1)/steps.length)*100).toFixed(2)+'%';
     updateButtons();
-    refreshMiniCalc();
-  }
+    }
 
   async function applyStep(i){
     stepIdx = clamp(i, 0, steps.length-1);
@@ -1315,8 +1913,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
     try{ if(steps[stepIdx].run) await steps[stepIdx].run(apiRef); }catch(e){ console.error(e); }
     if(my !== token) return;
     applying = false; updateButtons();
-    refreshMiniCalc();
-  }
+    }
   async function next(){ if(applying) return; if(stepIdx>=steps.length-1){ playing=false; updateButtons(); return; } await applyStep(stepIdx+1); }
   async function prev(){ if(applying||stepIdx<=0) return; await applyStep(stepIdx-1); }
   async function restart(){ playing=false; token++; await applyStep(0); }
@@ -1336,11 +1933,7 @@ aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
       overlay.id='polarOverlay';
       glCanvas.parentElement.appendChild(overlay);
       octx = overlay.getContext('2d');
-      calcHud = document.createElement('div');
-      calcHud.className='polarCalcHud';
-      calcHud.id='polarCalcHud';
-      glCanvas.parentElement.appendChild(calcHud);
-    }
+}
     var dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
     var w = glCanvas.clientWidth||1, h = glCanvas.clientHeight||1;
     if(overlay.width !== Math.round(w*dpr) || overlay.height !== Math.round(h*dpr)){
@@ -1602,6 +2195,7 @@ function __angleArc180(ctx, c, left, right, label){
 
 function drawAngleSchematic(ctx, data, can){
   if(!ctx||!data||!can) return;
+  var DEG = Math.PI/180;
   var w=Math.min(408, Math.max(292, can.w*0.36));
   var h=(can.h < 500)?170:206;
   var x=can.w - w - 16;
@@ -1665,20 +2259,33 @@ function drawAngleSchematic(ctx, data, can){
   }
 
   if(exGeom==='bent_tet'){
-    var L=P(-54,24), R=P(54,24), LP1=P(-26,-42), LP2=P(26,-42);
+    // H2O / AX2E2: desenha ligações com ângulo ~104,5° em 2D e pares livres no topo
+    var Rb=70;
+    var ha=52.25*DEG; // metade de 104,5°
+    var dx=Math.sin(ha)*Rb, dy=Math.cos(ha)*Rb;
+    var L=P(-dx,dy), R=P(dx,dy);
+    var LP1=P(-24,-58), LP2=P(24,-58);
     drawCommon([L,R], {lp:[LP1,LP2]});
-    __angleArcLabel(ctx, center, L, R, '104,5°', 28);
+    __angleArcLabel(ctx, center, L, R, '104,5°', 34);
     footer('AX2E2 (angular): 2 pares livres comprimem o ângulo', 'Ângulo real ~104,5° < 109,5° (tetraédrico ideal)');
   } else if(exGeom==='bent_tp'){
-    var L2=P(-56,22), R2=P(56,22), LP=P(0,-46);
+    // SO2 / AX2E: ligações com referência ~120° e par livre comprimindo (mostra <120°)
+    var Rb2=72;
+    var ha2=60*DEG; // metade de 120°
+    var dx2=Math.sin(ha2)*Rb2, dy2=Math.cos(ha2)*Rb2;
+    var L2=P(-dx2,dy2), R2=P(dx2,dy2), LP=P(0,-62);
     drawCommon([L2,R2], {lp:[LP]});
-    __angleArcLabel(ctx, center, L2, R2, '<120°', 28);
+    __angleArcLabel(ctx, center, L2, R2, '<120°', 34);
     footer('AX2E (angular, base trigonal planar): 1 par livre comprime', 'Ângulo real menor que 120°');
   } else if(exGeom==='trigonal_pyramidal'){
-    var T=P(0,-55), BL=P(-50,26), BR=P(50,26);
-    drawCommon([T,BL,BR], {lp:[P(0,-76)]});
-    __angleArcLabel(ctx, center, BL, BR, '107°', 27);
-    footer('AX3E (piramidal trigonal): derivada da tetraédrica', 'Ângulo real ~107° < 109,5° por 1 par livre');
+    // NH3 / AX3E: 3 ligações na parte inferior + 1 par livre no topo
+    var Rb3=70;
+    var ha3=53.5*DEG; // metade de ~107°
+    var dx3=Math.sin(ha3)*Rb3, dy3=Math.cos(ha3)*Rb3;
+    var BL=P(-dx3,dy3), BR=P(dx3,dy3), B=P(0, Rb3);
+    drawCommon([BL,BR,B], {lp:[P(0,-66)]});
+    __angleArcLabel(ctx, center, BL, BR, '107°', 33);
+    footer('AX3E (piramidal trigonal): 1 par livre empurra as ligações', 'Ângulo real ~107° < 109,5° por repulsão do par livre');
   } else if(exGeom==='see_saw'){
     var AXu=P(0,-60), AXd=P(0,60), EqL=P(-52,18), EqR=P(52,18);
     drawCommon([AXu,AXd,EqL,EqR], {lp:[P(-62,-16)]});
@@ -1725,12 +2332,30 @@ function drawAngleSchematic(ctx, data, can){
     __angleArcLabel(ctx, center, T3, R5, '109,5°', 31);
     footer('AX4 (tetraédrica): ângulo ideal em 3D', 'No esquema 2D, a projeção é só didática');
   } else if(arr==='AX5' || exGeom==='trigonal_bipyramidal' || exGeom==='tbp'){
-    var AxU=P(0,-68), AxD=P(0,68), E1=P(60,0), E2=P(-30,52), E3=P(-30,-52);
-    drawCommon([AxU,AxD,E1,E2,E3]);
-    __angleArcLabel(ctx, center, AxU, E1, '90°', 23);
-    __angleArcLabel(ctx, center, E2, E3, '120°', 33);
-    __angleArc180(ctx, center, AxU, AxD, '180°');
-    footer('AX5 (bipirâmide trigonal)', 'Eq-Eq 120°, Ax-Eq 90°, Ax-Ax 180°');
+    // Esquema padronizado com os outros painéis: leitura limpa, sem chips extras.
+    // Mantemos o desenho simplificado do print para destacar só os 3 tipos de ângulo.
+    var AxU=P(0,-64), EqL=P(-66,0), EqR=P(66,0), EqBL=P(-38,36), EqBR=P(38,36);
+
+    function drawBondC(a, b){
+      ctx.save();
+      ctx.strokeStyle='rgba(117,255,235,.96)';
+      ctx.lineWidth=4;
+      ctx.lineCap='round';
+      ctx.shadowColor='rgba(117,255,235,.24)';
+      ctx.shadowBlur=4;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      ctx.restore();
+    }
+
+    [AxU,EqL,EqR,EqBL,EqBR].forEach(function(p){ drawBondC(center, p); });
+    __angleDrawAtom(ctx, center.x, center.y, centerR, 'rgba(60,92,255,.95)');
+    [AxU,EqL,EqR,EqBL,EqBR].forEach(function(p){ __angleDrawAtom(ctx, p.x, p.y, ligR, 'rgba(255,92,158,.96)'); });
+
+    __angleArc180(ctx, center, EqL, EqR, '180°');
+    __angleArcLabel(ctx, center, AxU, EqR, '90°', 22);
+    __angleArcLabel(ctx, center, EqBL, EqBR, '120°', 29);
+
+    footer('AX5 (bipirâmide trigonal): Eq-Eq 120° | Ax-Eq 90° | Ax-Ax 180°', 'Esquema simplificado para destacar os 3 tipos de ângulo sem poluir o painel.');
   } else if(arr==='AX6' || exGeom==='octahedral' || exGeom==='oct'){
     var U3=P(0,-66), D3=P(0,66), L6=P(-62,0), R6=P(62,0), F6=P(-30,-24), B6=P(30,24);
     drawCommon([U3,D3,L6,R6,F6,B6]);
@@ -1793,118 +2418,47 @@ function drawAngleSchematic(ctx, data, can){
     return getWorldDataForExample(ex);
   }
 
-  function refreshMiniCalc(){
-    var s = steps[stepIdx];
-    var data = moleculeVisualData();
-    var ex = data.ex;
-    var polar = data.muMag > 0.18;
-    var comp = data.muR.map(function(n){ return round(n,2); });
-    if(calcHud){
-      calcHud.classList.toggle('hide', !visualState.calc);
-      if(visualState.calc){
-        calcHud.innerHTML = ''+
-          '<div style="font-weight:800; margin-bottom:6px">Cálculo didático - '+esc(ex.label)+' <span class="badge '+(polar?'polar':'apolar')+'">'+(polar?'polar':'apolar')+'</span></div>'+
-          '<div class="row"><span class="k">μlig (modelo):</span><span class="v mono">|μ| ~ '+round(ex.muBond,2)+' u.a.</span></div>'+
-          '<div class="row"><span class="k">Soma vetorial:</span><span class="v mono">μR = Σ μᵢ</span></div>'+
-          '<div class="row"><span class="k">Componentes</span><span class="v mono">('+comp[0]+', '+comp[1]+', '+comp[2]+')</span></div>'+
-          '<div class="row"><span class="k">Módulo</span><span class="v mono">|μR| = '+round(data.muMag,2)+'</span></div>'+
-          '<div class="row"><span class="k">Leitura</span><span class="v">'+(polar?'resultante não nula -> polar':'cancelamento -> apolar')+'</span></div>';
-      }
-    }
-    var box = document.getElementById('miniCalcBox');
-    if(box){
-      box.innerHTML = ''+
-        '<div><b>'+esc(ex.label)+'</b> - '+esc(data.geom.arr)+' - ângulo ideal de referência: '+esc(data.geom.angle)+'</div>'+
-        '<div class="mono" style="margin-top:4px">μR = Σμᵢ = ('+comp[0]+', '+comp[1]+', '+comp[2]+') &nbsp; |μR| = '+round(data.muMag,2)+'</div>'+
-        '<div style="margin-top:4px">'+esc(ex.delta)+'</div>';
-    }
-  }
+  function refreshMiniCalc(){ /* removido com segurança */ }
 
-
-
-  function __pxPerWorld(view, can){
-    var c = projectPoint([0,0,0], view, can);
-    var x = projectPoint([0.35,0,0], view, can);
-    var y = projectPoint([0,0.35,0], view, can);
-    var d1 = (c && x) ? Math.hypot(x.x-c.x, x.y-c.y)/0.35 : 0;
-    var d2 = (c && y) ? Math.hypot(y.x-c.x, y.y-c.y)/0.35 : 0;
-    var d = (d1+d2)/2;
-    if(!isFinite(d) || d<=0) d = 40;
-    return d;
-  }
-
+  // Coleta itens em pixels para construir um envelope estável (sem estourar em rotações)
+  
   function __elementRadiusWorld(label, role){
-    if(role==='center') return 0.52;
-    var s = String(label||'X').replace(/[^A-Za-z]/g,'');
-    if(/^H$/i.test(s)) return 0.33;
-    if(/^(F|O|N|Cl|Br|I|S|P)$/i.test(s)) return 0.46;
-    if(/^C$/i.test(s)) return 0.44;
-    return 0.42;
+    // raio qualitativo em unidades do modelo — usado só para envelopes/mapas 2D
+    var rCenter = (typeof size!=='undefined' && size) ? (parseFloat(size.value)||1.0) : 1.0;
+    var rLig = (typeof ligandRadius!=='undefined' && ligandRadius) ? (parseFloat(ligandRadius.value)||0.44) : 0.44;
+    var sym = String(label||'').trim();
+
+    if(role === 'center') return rCenter;
+    if(/^H$/i.test(sym)) return rLig * 0.82;
+    if(/^(F|O|Cl|Br|I|N|S|P)$/i.test(sym)) return rLig * 1.06;
+    return rLig;
   }
 
-  function __collectEnvelopeItems(data, view, can){
-    var items=[];
-    var pxU = __pxPerWorld(view, can);
-    var pCenter = projectPoint([0,0,0], view, can);
-    var centerZ = (pCenter && isFinite(pCenter.z)) ? pCenter.z : null;
-    function addAt(pos3, rPx){
-      var p = projectPoint(pos3, view, can);
-      if(!p) return;
-      if(!isFinite(p.x)||!isFinite(p.y)) return;
-      var rr = Math.max(10, rPx||12);
-      // Ajuste por perspectiva: componentes mais próximos da câmera precisam de "casca" maior.
-      if(centerZ && p.z){
-        var k = centerZ / p.z;
-        if(!isFinite(k)) k = 1;
-        k = Math.max(0.72, Math.min(1.95, k));
-        rr *= k;
-      }
-      items.push({x:p.x, y:p.y, r:rr});
-      return p;
-    }
+function __collectEnvelopeItems(data, view, can){
+    try{
+      var p0 = projectPoint([0,0,0], view, can);
+      var p1 = projectPoint([1,0,0], view, can);
+      var pxU = (p0 && p1) ? Math.hypot(p1.x-p0.x, p1.y-p0.y) : (Math.min(can.w,can.h)*0.22);
+      if(!isFinite(pxU) || pxU<1) pxU = Math.min(can.w,can.h)*0.22;
 
-    // átomos
-    (data.atoms||[]).forEach(function(a, idx){
-      var rw = __elementRadiusWorld(a.label, idx===0 ? 'center' : 'lig');
-      addAt(a.pos, rw*pxU + (idx===0?8:6));
-    });
-
-    // ligações (amostras ao longo dos cilindros)
-    (data.atoms||[]).slice(1).forEach(function(a){
-      var p0 = [0,0,0], p1 = a.pos;
-      [0.18,0.35,0.52,0.70,0.86].forEach(function(t){
-        var pos = [p0[0]*(1-t)+p1[0]*t, p0[1]*(1-t)+p1[1]*t, p0[2]*(1-t)+p1[2]*t];
-        addAt(pos, pxU*0.18 + 8);
+      var items = [];
+      (data.atoms||[]).forEach(function(a, idx){
+        var p = projectPoint(a.pos, view, can);
+        if(!p) return;
+        var rw = __elementRadiusWorld(a.label, idx===0 ? 'center' : 'lig');
+        var rr = Math.max(14, rw*pxU*1.18);
+        items.push({x:p.x, y:p.y, r:rr, kind:'atom', idx:idx, label:a.label});
       });
-    });
 
-    // pares livres / nuvens locais
-    (data.lps||[]).forEach(function(lp){
-      addAt(lp.pos, pxU*0.58 + 10);
-      addAt(vAdd(lp.pos, vMul(lp.dir||[1,0,0], 0.20)), pxU*0.34 + 6);
-    });
-
-    // nuvens de densidade associadas aos dipolos de ligação (qualitativas)
-    (data.bondDipoles||[]).forEach(function(d){
-      var negDir = vNorm(d.vec||[1,0,0]);
-      var cloudPos = vAdd(d.anchor||[0,0,0], vMul(negDir, (data.bondLen||1.55)*0.18));
-      addAt(cloudPos, pxU*0.46 + 8);
-    });
-
-    // nuvem global qualitativa ao longo de μR (quando há resultante)
-    if((data.muMag||0) > 0.18){
-      var muDir = vNorm(data.muR||[0,0,0]);
-      addAt(vMul(muDir, (data.bondLen||1.55)*0.55), pxU*0.80 + 14); // lado eletrorrico
-      addAt(vMul(muDir, -(data.bondLen||1.55)*0.55), pxU*0.64 + 12); // lado pobre
+      // Se faltar átomo por algum motivo, cria um mínimo para não quebrar o desenho
+      if(!items.length && p0) items.push({x:p0.x, y:p0.y, r:Math.max(40, pxU*0.9), kind:'fallback'});
+      return {items:items, pxU:pxU};
+    }catch(e){
+      return {items:[], pxU:(Math.min(can.w,can.h)*0.22)};
     }
-
-    // centro extra para garantir envelope conectando tudo
-    addAt([0,0,0], pxU*0.56 + 18);
-
-    return {items:items, pxU:pxU};
   }
 
-  function __envelopePathPoints(items, pad){
+function __envelopePathPoints(items, pad){
     if(!items || !items.length) return null;
     var cx=0, cy=0, wsum=0;
     for(var i=0;i<items.length;i++){
@@ -1981,6 +2535,7 @@ function drawDensitySurfaceMap(ctx, data, view, can){
     var isCO2 = !!(data.ex && data.ex.key==='CO2');
     var pC = projectPoint([0,0,0], view, can);
     var pLig = (data.atoms||[]).slice(1).map(function(a){ return projectPoint(a.pos, view, can); }).filter(Boolean);
+    var isLightBG = !!(document.body && document.body.classList && document.body.classList.contains('lightBg'));
 
     ctx.save();
     __traceSmoothClosedPath(ctx, env.pts);
@@ -1992,9 +2547,16 @@ function drawDensitySurfaceMap(ctx, data, view, can){
 
     // base neutra da “superfície” (densidade eletrônica = mapa escalar; sem vermelho/azul de potencial)
     var rg = ctx.createRadialGradient(cx, cy, 8, cx, cy, span*0.66);
-    rg.addColorStop(0.00,'rgba(165,244,255,0.15)');
-    rg.addColorStop(0.50,'rgba(108,206,255,0.09)');
-    rg.addColorStop(1.00,'rgba(72,165,255,0.02)');
+    if(isLightBG){
+      // no modo claro, evitar “sombras internas” pretas — deixar a superfície mais homogênea e suave
+      rg.addColorStop(0.00,'rgba(150,158,168,0.14)');
+      rg.addColorStop(0.50,'rgba(156,164,174,0.10)');
+      rg.addColorStop(1.00,'rgba(164,172,182,0.04)');
+    }else{
+      rg.addColorStop(0.00,'rgba(165,244,255,0.28)');
+      rg.addColorStop(0.50,'rgba(108,206,255,0.17)');
+      rg.addColorStop(1.00,'rgba(72,165,255,0.05)');
+    }
     ctx.fillStyle = rg;
     ctx.fillRect(bbMinX-28, bbMinY-28, (bbMaxX-bbMinX)+56, (bbMaxY-bbMinY)+56);
 
@@ -2009,8 +2571,8 @@ function drawDensitySurfaceMap(ctx, data, view, can){
         if(dC < dL) a *= 0.52;
         else a *= 1.08;
       }
-      drawCloudBlob(ctx, it.x, it.y, it.r*1.22, it.r*0.95, [165,245,255], a, 0);
-      if(idx % 3 === 0) drawCloudBlob(ctx, it.x+1.4, it.y-1.5, it.r*0.60, it.r*0.48, [236,255,255], a*0.42, 0);
+      drawCloudBlob(ctx, it.x, it.y, it.r*1.22, it.r*0.95, isLightBG?[168,176,186]:[165,245,255], isLightBG?a*0.82:a*1.55, 0);
+      if(!isLightBG && idx % 3 === 0) drawCloudBlob(ctx, it.x+1.4, it.y-1.5, it.r*0.60, it.r*0.48, [236,255,255], a*0.42, 0);
     });
 
     // reforço por átomo (importante para CO2 não parecer “errado”: maior densidade nas pontas O)
@@ -2031,8 +2593,8 @@ function drawDensitySurfaceMap(ctx, data, view, can){
         boost = (idx===0 ? 0.56 : 1.48);
       }
 
-      drawCloudBlob(ctx, p.x, p.y, rr*boost, rr*0.78*boost, [170,246,255], 0.048 + 0.010*boost, 0);
-      drawCloudBlob(ctx, p.x-rr*0.12, p.y-rr*0.16, rr*0.42*boost, rr*0.34*boost, [245,255,255], 0.028 + 0.007*boost, 0);
+      drawCloudBlob(ctx, p.x, p.y, rr*boost, rr*0.78*boost, isLightBG?[174,182,192]:[170,246,255], isLightBG?(0.060 + 0.010*boost):(0.070 + 0.014*boost), 0);
+      if(!isLightBG) drawCloudBlob(ctx, p.x-rr*0.12, p.y-rr*0.16, rr*0.42*boost, rr*0.34*boost, [245,255,255], (0.040 + 0.008*boost), 0);
     });
 
     // reforço local nas direções de maior densidade de cada ligação (independe de μR global)
@@ -2045,7 +2607,7 @@ function drawDensitySurfaceMap(ctx, data, view, can){
       var aBond = isCO2 ? 0.060 : 0.050;
       var rx = Math.max(22, envBase.pxU*(isCO2?0.60:0.52));
       var ry = Math.max(14, envBase.pxU*(isCO2?0.36:0.33));
-      drawCloudBlob(ctx, p.x, p.y, rx, ry, [185,248,255], aBond, ang);
+      drawCloudBlob(ctx, p.x, p.y, rx, ry, isLightBG?[178,186,196]:[185,248,255], isLightBG?aBond*0.95:aBond*1.35, ang);
     });
 
     // pares livres = regiões de densidade mais concentrada
@@ -2053,7 +2615,7 @@ function drawDensitySurfaceMap(ctx, data, view, can){
       var p = projectPoint(lp.pos, view, can); if(!p) return;
       var p2 = projectPoint(vAdd(lp.pos, lp.dir||[1,0,0]), view, can) || {x:p.x+1,y:p.y};
       var ang = Math.atan2(p2.y-p.y,p2.x-p.x);
-      drawCloudBlob(ctx, p.x, p.y, Math.max(30, envBase.pxU*0.72), Math.max(18, envBase.pxU*0.44), [120,205,255], 0.070, ang);
+      drawCloudBlob(ctx, p.x, p.y, Math.max(34, envBase.pxU*0.82), Math.max(22, envBase.pxU*0.52), isLightBG?[182,190,200]:[120,205,255], isLightBG?0.085:0.11, ang);
     });
 
     // reforço extra específico para CO2: duas "pontas" equivalentes mais evidentes (simétricas)
@@ -2065,7 +2627,7 @@ function drawDensitySurfaceMap(ctx, data, view, can){
         var d = Math.hypot(dx,dy)||1;
         var px = pL.x + (dx/d) * (envBase.pxU*0.04);
         var py = pL.y + (dy/d) * (envBase.pxU*0.04);
-        drawCloudBlob(ctx, px, py, Math.max(26, envBase.pxU*0.70), Math.max(16, envBase.pxU*0.44), [178,248,255], 0.060, ang);
+        drawCloudBlob(ctx, px, py, Math.max(28, envBase.pxU*0.74), Math.max(18, envBase.pxU*0.48), isLightBG?[180,188,198]:[178,248,255], isLightBG?0.075:0.09, ang);
       });
     }
 
@@ -2073,14 +2635,14 @@ function drawDensitySurfaceMap(ctx, data, view, can){
 
     // contorno discreto da superfície
     ctx.save();
-    ctx.strokeStyle='rgba(190,245,255,.24)'; ctx.lineWidth=1.1;
+    ctx.strokeStyle=(isLightBG?'rgba(158,168,178,.18)':'rgba(190,245,255,.34)'); ctx.lineWidth=1.25;
     if(ctx.setLineDash) ctx.setLineDash([6,4]);
     __traceSmoothClosedPath(ctx, env.pts);
     ctx.stroke();
     if(ctx.setLineDash) ctx.setLineDash([]);
     ctx.restore();
 
-    drawTextLabel(ctx, {x:cx, y:bbMaxY + 18}, 'Mapa de densidade eletrônica (qualitativo)', '#e9f3ff');
+    drawTextLabel(ctx, {x:cx, y:bbMaxY + 18}, 'Mapa de densidade eletrônica (qualitativo)', isLightBG ? '#101319' : '#e9f3ff');
   }
 
   
@@ -2670,44 +3232,10 @@ function drawDensitySurfaceMap(ctx, data, view, can){
     var pCenter = projAtoms[0] && projAtoms[0].p;
     if(!pCenter) return;
 
-    // nuvens de densidade locais nas ligações
-    if(!vectorOnly && visualState.cloud){
-      data.bondDipoles.forEach(function(d){
-        var negDir = vNorm(d.vec);
-        var cloudPos = vAdd(d.anchor, vMul(negDir, data.bondLen*0.18));
-        var p = projectPoint(cloudPos, view, can);
-        if(!p) return;
-        var p2 = projectPoint(vAdd(cloudPos, negDir), view, can) || {x:p.x+1,y:p.y};
-        var ang = Math.atan2((p2.y-p.y),(p2.x-p.x));
-        drawCloudBlob(ctx, p.x, p.y, 26, 16, [92,112,255], 0.16 + 0.03*Math.sin(glowPhase), ang);
-      });
-      // nuvem resultante global
-      var muDir = data.muMag > 1e-4 ? vNorm(data.muR) : [0,0,0];
-      if(data.muMag > 0.18){
-        var neg = projectPoint(vAdd([0,0,0], vMul(muDir, data.bondLen*0.55)), view, can);
-        var neg2 = projectPoint(vAdd([0,0,0], vMul(muDir, data.bondLen*1.15)), view, can);
-        if(neg){
-          var ang2 = neg2 ? Math.atan2(neg2.y-neg.y, neg2.x-neg.x) : 0;
-          drawCloudBlob(ctx, neg.x, neg.y, 60, 34, [90,132,255], 0.18, ang2);
-        }
-        var pos = projectPoint(vMul(muDir, -data.bondLen*0.55), view, can);
-        var pos2 = projectPoint(vMul(muDir, -data.bondLen*1.0), view, can);
-        if(pos){
-          var ang3 = pos2 ? Math.atan2(pos2.y-pos.y, pos2.x-pos.x) : 0;
-          drawCloudBlob(ctx, pos.x, pos.y, 46, 26, [255,92,120], 0.10, ang3);
-        }
-      } else {
-        drawCloudBlob(ctx, pCenter.x, pCenter.y, 70, 45, [164,184,220], 0.06, 0);
-      }
-      // pares livres (qualitativo)
-      data.lps.forEach(function(lp){
-        var p = projectPoint(lp.pos, view, can); if(!p) return;
-        var p2 = projectPoint(vAdd(lp.pos, lp.dir), view, can) || {x:p.x+1,y:p.y};
-        drawCloudBlob(ctx, p.x, p.y, 38, 20, [50,72,255], 0.11, Math.atan2(p2.y-p.y,p2.x-p.x));
-      });
-    }
+    // nuvem de densidade (blobs) removida — manter apenas nuvem de probabilidade em pontos
 
-    if(!vectorOnly && visualState.pizza){
+        var hasLonePairs = !!(data && data.geom && data.geom.lp && data.geom.lp.length);
+    if(!vectorOnly && visualState.pizza && !hasLonePairs && (typeof showAngles==='undefined' || !showAngles || showAngles.checked)){
       drawPizzaProjection(ctx, data, view, can);
     }
 
@@ -2718,12 +3246,19 @@ function drawDensitySurfaceMap(ctx, data, view, can){
       drawESPMap(ctx, data, view, can);
     }
 
-    // vetores de ligação
+    // vetores de ligação: desenhados exatamente sobre as ligações projetadas
     if(visualState.bond){
-      data.bondDipoles.forEach(function(d){
-        var a = projectVectorPoint(vAdd(d.anchor, vMul(vNorm(d.vec), -0.14)), view, can);
-        var b = projectVectorPoint(vAdd(d.anchor, vMul(vNorm(d.vec), 0.52)), view, can);
-        if(!a || !b) return;
+      projAtoms.slice(1).forEach(function(it){
+        if(!it || !it.p || !pCenter) return;
+        var dx = it.p.x - pCenter.x, dy = it.p.y - pCenter.y;
+        var L = Math.hypot(dx,dy) || 0;
+        if(!isFinite(L) || L < 10) return;
+        var towardLig = (ex.sign||1) > 0;
+        var t0 = towardLig ? 0.34 : 0.78;
+        var t1 = towardLig ? 0.82 : 0.38;
+        var a = { x:pCenter.x + dx*t0, y:pCenter.y + dy*t0 };
+        var b = { x:pCenter.x + dx*t1, y:pCenter.y + dy*t1 };
+        if(Math.hypot(b.x-a.x, b.y-a.y) < 10) return;
         drawArrow(ctx, a, b, '#4ec7ff', 2.5, 8);
       });
     }
@@ -2773,7 +3308,7 @@ function drawDensitySurfaceMap(ctx, data, view, can){
     }
 
     // ângulos (painel esquemático sem perspectiva, estilo didático)
-    if(!vectorOnly && visualState.angles){
+    if(!vectorOnly && visualState.angles && !hasLonePairs && (typeof showAngles==='undefined' || !showAngles || showAngles.checked)){
       drawAngleSchematic(ctx, data, can);
     }
   }
@@ -2822,7 +3357,6 @@ function drawDensitySurfaceMap(ctx, data, view, can){
     // Se o arranjo for mudado manualmente durante uma etapa, recalcule HUD e overlay imediatamente.
     if(apiRef.ui && apiRef.ui.geom){
       var __refreshOnGeomChange = function(){
-        refreshMiniCalc();
         if(el.examples){ el.examples.innerHTML = buildExamplesHTML(steps[stepIdx]); }
       };
       apiRef.ui.geom.addEventListener('input', __refreshOnGeomChange);

@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Geometria Molecular 3D </title>
+<style>
+  :root{ --panel:#0b1222; --panel2:#101a33; --ink:#edf4ff; --muted:#aac0e0; --accent:#7a7dff; --accent2:#4ed5ff; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; background:#000; color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+  .app{display:grid; grid-template-columns:280px 1fr; grid-template-rows:100vh}
+  aside{background:linear-gradient(180deg,var(--panel),var(--panel2)); padding:16px; border-right:1px solid rgba(120,160,255,.18); box-shadow:inset -1px 0 0 rgba(255,255,255,.02); overflow:auto}
+  main{position:relative}
+  h1{font-size:18px; margin:0 0 8px}
+  fieldset{border:1px solid #1f2a3a; border-radius:12px; padding:12px 12px 6px; margin:0 0 12px}
+  legend{padding:0 6px; color:#c7ddff; font-size:12px}
+  label{display:block; font-size:12px; color:#c6d7ef; margin:6px 0 4px}
+  select,input[type="range"],input[type="color"],button{width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(119,151,221,.28); background:#0d1427; color:var(--ink); outline:none}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px}
+  .small{font-size:11px; color:#9fb3cc}
+  .btn{cursor:pointer; margin-top:8px; background:#122036; border-color:#21324b}
+  .btn:hover{background:#142746}
+  #gl{display:block; width:100%; height:100%; background:#000}
+  .hud{position:absolute; left:12px; bottom:12px; background:rgba(12,16,24,.45); border:1px solid rgba(36,48,68,.55); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; font-size:12px}
+  .badge{display:inline-block; background:rgba(78,213,255,.10); color:#e7f8ff; padding:6px 10px; border-radius:999px; border:1px solid rgba(78,213,255,.28); font-size:12px}
+  .badges{display:flex; gap:6px; flex-wrap:wrap}
+
+  .axisLabel{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    font:700 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+    letter-spacing:.02em;
+    text-shadow:0 0 10px rgba(0,0,0,.9), 0 1px 2px rgba(0,0,0,.95);
+    pointer-events:none;
+    user-select:none;
+    padding:2px 5px;
+    border-radius:999px;
+    background:rgba(4,8,14,.18);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(2px);
+  }
+
+/* Modo simplificado: mostrar apenas escolha do arranjo */
+aside > h1{display:none !important;}
+aside fieldset legend{display:none !important;}
+aside fieldset:not(:first-of-type){display:none !important;}
+aside fieldset:first-of-type > *:not(label[for="geom"]):not(select#geom){display:none !important;}
+aside fieldset:first-of-type{padding:12px !important; margin:0 !important;}
+aside{padding-top:12px !important;}
+
+
+
+  /* Tutorial guiado (passo a passo) */
+  .tutorialWrap{
+    position:absolute; top:14px; right:14px; width:min(380px, calc(100% - 28px));
+    z-index:30; pointer-events:none;
+  }
+  .tutorialCard{
+    pointer-events:auto;
+    background:linear-gradient(180deg, rgba(12,19,35,.80), rgba(9,14,26,.74));
+    border:1px solid rgba(126,125,255,.26);
+    box-shadow:0 20px 50px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+    backdrop-filter: blur(10px);
+    border-radius:18px;
+    padding:14px 14px 12px;
+    transform:translateY(0);
+    transition:transform .35s ease, opacity .35s ease, box-shadow .35s ease;
+  }
+  .tutorialCard.stepPulse{ box-shadow:0 0 0 1px rgba(116,157,255,.28), 0 18px 42px rgba(0,0,0,.4), 0 0 40px rgba(17,0,255,.20); }
+  .tutorialCard.fadeStep{ opacity:.35; transform:translateY(6px) scale(.992); }
+  .tutorialTop{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px}
+  .tutorialKicker{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#c7dcff; opacity:.95}
+  .tutorialStepTag{font-size:12px; color:#f0f5ff; background:rgba(122,125,255,.16); border:1px solid rgba(122,125,255,.34); padding:5px 9px; border-radius:999px}
+  .tutorialTitle{font-weight:800; font-size:18px; line-height:1.2; margin:0 0 8px}
+  .tutorialBody{font-size:14px; line-height:1.52; color:#e2eeff; min-height:72px; text-align:justify; text-justify:inter-word; hyphens:auto}
+  .tutorialBody b{color:#fff}
+  .tutorialNote{margin-top:8px; font-size:12px; color:#b8cdea; line-height:1.42; text-align:justify; text-justify:inter-word; hyphens:auto}
+  .tutorialExamples{margin-top:8px; font-size:12px; line-height:1.42; color:#dce9ff; text-align:justify; text-justify:inter-word; hyphens:auto; background:rgba(78,213,255,.06); border:1px solid rgba(78,213,255,.14); border-radius:10px; padding:8px 10px}
+  .tutorialExamples b{color:#fff}
+  .tutorialExamples .exHelp{margin-top:8px; color:#bcd1ef; font-size:11px}
+  .tutorialExamples .exMainBtn{appearance:none; border:none; cursor:pointer; width:100%; margin-top:0; margin-bottom:8px; padding:8px 10px; border-radius:10px; font-size:12px; font-weight:800; line-height:1.2; color:#eef8ff; background:linear-gradient(180deg, rgba(78,213,255,.16), rgba(122,125,255,.16)); border:1px solid rgba(78,213,255,.38); box-shadow:0 0 0 1px rgba(78,213,255,.10) inset; text-align:left; transition:transform .12s ease, filter .18s ease, border-color .18s ease}
+  .tutorialExamples .exMainBtn:hover{filter:brightness(1.08); border-color:rgba(78,213,255,.56)}
+  .tutorialExamples .exMainBtn:active{transform:translateY(1px) scale(.995)}
+  .tutorialExamples .exBtns{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+  .tutorialExamples .exBtn{appearance:none; border:none; cursor:pointer; padding:6px 9px; border-radius:999px; font-size:11px; font-weight:700; line-height:1; color:#eaf3ff; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); transition:transform .12s ease, filter .18s ease, background .18s ease, border-color .18s ease}
+  .tutorialExamples .exBtn:hover{filter:brightness(1.08); background:rgba(122,125,255,.14); border-color:rgba(122,125,255,.34)}
+  .tutorialExamples .exBtn:active{transform:translateY(1px) scale(.99)}
+  .tutorialExamples .exBtn.active{background:linear-gradient(180deg, rgba(78,213,255,.18), rgba(122,125,255,.18)); border-color:rgba(78,213,255,.42); box-shadow:0 0 0 1px rgba(78,213,255,.12) inset}
+  .tutorialExamples .exInlineBtn{display:block; width:100%; text-align:justify; text-justify:inter-word; cursor:pointer; background:rgba(255,255,255,.02); color:#dce9ff; border:1px dashed rgba(78,213,255,.22); border-radius:10px; padding:8px 10px; margin:0 0 8px; line-height:1.42; transition:background .18s ease, border-color .18s ease, transform .12s ease, box-shadow .18s ease}
+  .tutorialExamples .exInlineBtn:hover{background:rgba(78,213,255,.08); border-color:rgba(78,213,255,.42); box-shadow:0 0 0 1px rgba(78,213,255,.10) inset}
+  .tutorialExamples .exInlineBtn:active{transform:translateY(1px)}
+  .tutorialExamples .exInlineBtn b{color:#fff}
+  .tutorialExamples .exInlineBtn .hint{display:inline-block; margin-left:6px; font-size:11px; color:#bcd1ef; opacity:.95}
+  .tutorialProgress{height:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.06); border-radius:999px; overflow:hidden; margin:12px 0 12px}
+  .tutorialProgress > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#4ed5ff,#7a7dff); transition:width .35s ease}
+  .tutorialActions{display:flex; gap:8px; flex-wrap:wrap}
+  .tbtn{appearance:none; border:none; cursor:pointer; border-radius:12px; padding:10px 12px; font-weight:700; font-size:13px; pointer-events:auto; transition:transform .12s ease, filter .18s ease, opacity .18s ease}
+  .tbtn:hover{filter:brightness(1.08)} .tbtn:active{transform:translateY(1px) scale(.99)}
+  .tbtn.ghost{background:rgba(255,255,255,.05); color:#dce9ff; border:1px solid rgba(255,255,255,.08)}
+  .tbtn.primary{background:linear-gradient(180deg,#4ed5ff,#7a7dff); color:#06101f; border:1px solid rgba(255,255,255,.22); box-shadow:0 6px 18px rgba(78,0,255,.25)}
+  .tbtn.subtle{background:rgba(16,24,39,.75); color:#b6cbeb; border:1px solid rgba(255,255,255,.06)}
+  .tbtn[disabled]{opacity:.45; cursor:not-allowed; filter:none}
+  .tutorialMini{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+  .pill{font-size:11px; color:#cfe0ff; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); padding:4px 7px; border-radius:999px}
+  .focusHint{position:absolute; inset:auto auto 14px 14px; z-index:25; pointer-events:none; max-width:280px; background:rgba(4,9,16,.55); border:1px solid rgba(110,152,255,.18); color:#cfe0ff; font-size:12px; padding:8px 10px; border-radius:12px; backdrop-filter:blur(8px); opacity:.94}
+  .focusHint b{color:#fff}
+  .focusHint.hide{display:none}
+  .boardSplitOverlay{position:absolute; inset:12px 12px 12px 12px; pointer-events:none; opacity:0; transition:opacity .25s ease; z-index:12;}
+  .boardSplitOverlay.show{opacity:1}
+  .boardSplitOverlay::before{content:''; position:absolute; left:50%; top:4%; bottom:4%; width:1px; background:linear-gradient(180deg, rgba(120,190,255,.0), rgba(120,190,255,.55), rgba(120,190,255,.18), rgba(120,190,255,.55), rgba(120,190,255,.0)); box-shadow:0 0 0 1px rgba(255,255,255,.03), 0 0 18px rgba(70,170,255,.18);}
+  .boardSplitOverlay .sideTag{position:absolute; top:12px; padding:5px 9px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.2px; color:#dff2ff; background:rgba(9,18,34,.55); border:1px solid rgba(120,190,255,.22); backdrop-filter:blur(6px); text-shadow:0 1px 0 rgba(0,0,0,.25);}
+  .boardSplitOverlay .sideTag.left{left:14px}
+  .boardSplitOverlay .sideTag.right{right:14px}
+  .boardSplitOverlay .ghostPane{position:absolute; top:8%; bottom:8%; width:46%; border-radius:18px; border:1px dashed rgba(120,190,255,.07); background:linear-gradient(180deg, rgba(30,52,86,.03), rgba(14,22,38,.02));}
+  .boardSplitOverlay .ghostPane.left{left:1.5%}
+  .boardSplitOverlay .ghostPane.right{right:1.5%}
+  @media (max-width: 900px){
+    .app{grid-template-columns:1fr; grid-template-rows:auto 1fr}
+    aside{height:auto; border-right:0; border-bottom:1px solid #1e2735}
+    main{height:calc(100vh - 82px)}
+    .tutorialWrap{left:14px; right:14px; width:auto; top:14px}
+  }
+
+
+
+/* Tutorial dentro do menu esquerdo */
+aside .tutorialWrap{
+  position:static !important;
+  top:auto !important; right:auto !important; left:auto !important;
+  width:100% !important;
+  margin-top:12px;
+  z-index:auto;
+  pointer-events:auto;
+}
+aside .tutorialCard{
+  background:rgba(8,13,22,.86);
+  border-radius:14px;
+  padding:12px;
+  box-shadow:0 10px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.03);
+}
+aside .tutorialTitle{font-size:16px}
+aside .tutorialBody{min-height:74px}
+aside .tutorialActions .tbtn{flex:1 1 calc(50% - 6px); width:auto}
+aside .tutorialActions .tbtn.primary{order:2}
+aside .tutorialActions .tbtn.ghost{order:1}
+aside .tutorialActions .tbtn.subtle{flex:1 1 calc(50% - 6px)}
+@media (max-width: 900px){
+  aside .tutorialWrap{margin-top:10px}
+}
+
+
+  /* Tutorial: analogia com balões */
+  .balloonDemo{margin-top:8px; border:1px solid rgba(120,180,255,.22); border-radius:12px; padding:10px; background:linear-gradient(180deg, rgba(22,35,62,.75), rgba(10,18,34,.7));}
+  .balloonDemo h4{margin:0 0 8px; font-size:13px; color:#d8ebff; letter-spacing:.2px}
+  .balloonToolbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 8px}
+  .balloonCount{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid rgba(120,180,255,.25); background:rgba(255,255,255,.03); font-weight:700; font-size:12px; color:#d7e9ff}
+  .balloonActions{display:flex; gap:6px; flex-wrap:wrap}
+  .miniBtn{appearance:none; border:1px solid rgba(120,180,255,.28); background:linear-gradient(180deg, rgba(40,58,92,.95), rgba(21,31,54,.95)); color:#eaf4ff; border-radius:10px; padding:6px 9px; font-size:12px; font-weight:700; cursor:pointer; transition:.18s transform,.18s filter,.18s border-color}
+  .miniBtn:hover{filter:brightness(1.08)}
+  .miniBtn:active{transform:translateY(1px)}
+  .miniBtn[disabled]{opacity:.45; cursor:not-allowed; filter:none}
+  .miniBtn.subtle{background:rgba(255,255,255,.04)}
+  .balloonStage{display:flex; align-items:flex-end; gap:8px; min-height:92px; padding:8px 8px 10px; border-radius:10px; background:radial-gradient(110px 60px at 16% 10%, rgba(120,180,255,.10), transparent 70%), rgba(6,10,18,.55); border:1px solid rgba(255,255,255,.05); overflow:hidden}
+  .balloonCol{display:flex; flex-direction:column; align-items:center; gap:2px; width:26px; position:relative}
+  .balloonTop{width:18px; height:22px; border-radius:50% 50% 46% 46% / 55% 55% 42% 42%; position:relative; box-shadow:inset -3px -5px 10px rgba(0,0,0,.18), inset 3px 5px 10px rgba(255,255,255,.18), 0 4px 10px rgba(0,0,0,.15)}
+  .balloonTop::before{content:''; position:absolute; left:4px; top:4px; width:5px; height:8px; border-radius:50%; background:rgba(255,255,255,.35); filter:blur(.2px)}
+  .balloonKnot{width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:6px solid rgba(255,255,255,.7); opacity:.65; margin-top:-2px}
+  .balloonString{width:1.5px; height:44px; background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.12)); border-radius:999px; opacity:.8}
+  .balloonGround{height:4px; width:100%; border-radius:999px; background:linear-gradient(90deg, rgba(120,180,255,.35), rgba(190,130,255,.35)); margin-top:auto}
+  .balloonPalette-1 .balloonTop{background:linear-gradient(180deg,#6fd7ff,#3ea5ff)}
+  .balloonPalette-2 .balloonTop{background:linear-gradient(180deg,#a0ffcf,#42d994)}
+  .balloonPalette-3 .balloonTop{background:linear-gradient(180deg,#ffd57e,#ff9b45)}
+  .balloonPalette-4 .balloonTop{background:linear-gradient(180deg,#ff9fc4,#ef5fa0)}
+  .balloonPalette-5 .balloonTop{background:linear-gradient(180deg,#d4b0ff,#8f6bff)}
+  .balloonPalette-6 .balloonTop{background:linear-gradient(180deg,#fff39a,#e8c54f)}
+  .balloonLegend{margin-top:8px; font-size:12px; color:#c5d9f7; line-height:1.45; text-align:justify}
+  .balloonLegend b{color:#eef6ff}
+  .balloonMap{margin-top:8px; font-size:11px; color:#b7cceb; display:grid; grid-template-columns:1fr; gap:4px}
+  .balloonMap .row{display:flex; justify-content:space-between; gap:8px; padding:4px 6px; border-radius:8px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.04)}
+  .balloonMap .row.active{border-color:rgba(94,213,255,.35); background:rgba(78,213,255,.08)}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <h1>Geometria Molecular 3D</h1>
+
+    <fieldset>
+      <legend>Geometria (VSEPR)</legend>
+      <label for="geom">Escolha um arranjo</label>
+      <select id="geom">
+        <optgroup label="Sem pares não-ligantes (E=0)">
+          <option value="linear">Linear (AX2)</option>
+          <option value="trigonal_planar">Trigonal planar (AX3)</option>
+          <option value="tetrahedral" selected>Tetraédrica (AX4)</option>
+          <option value="trigonal_bipyramidal">Bipirâmide trigonal (AX5)</option>
+          <option value="octahedral">Octaédrica (AX6)</option>
+        </optgroup>
+        <optgroup label="Com pares não-ligantes">
+          <option value="bent_tp">Angular (AX2E, base trigonal planar)</option>
+          <option value="trigonal_pyramidal">Piramidal trigonal (AX3E)</option>
+          <option value="bent_tet">Angular (AX2E2, base tetraédrica)</option>
+          <option value="see_saw">Gangorra / Seesaw (AX4E)</option>
+          <option value="t_shaped">Em T (AX3E2)</option>
+          <option value="linear_tbp">Linear (AX2E3, base TBP)</option>
+          <option value="square_pyramidal">Piramidal quadrada (AX5E)</option>
+          <option value="square_planar">Quadrada planar (AX4E2)</option>
+        </optgroup>
+      </select>
+      <div class="row">
+        <div><label for="bondLen">Comprimento de ligação</label><input id="bondLen" type="range" min="0.6" max="2.2" step="0.01" value="1.25" /></div>
+        <div><label for="size">Raio do átomo central</label><input id="size" type="range" min="0.35" max="1.2" step="0.01" value="0.64" /></div>
+      </div>
+      <div class="row">
+        <div><label for="ligandRadius">Raio dos ligantes</label><input id="ligandRadius" type="range" min="0.18" max="0.8" step="0.01" value="0.44" /></div>
+        <div><label for="bondRadius">Raio da ligação</label><input id="bondRadius" type="range" min="0.03" max="0.18" step="0.005" value="0.085" /></div>
+      </div>
+      <div class="row">
+        <div><label for="lpScale">Tamanho do par não-ligante</label><input id="lpScale" type="range" min="0.6" max="1.8" step="0.01" value="1.0" /></div>
+        <div><label for="ambient">Luz ambiente</label><input id="ambient" type="range" min="0" max="1" step="0.01" value="0.45" /></div>
+      </div>
+      <div class="row">
+        <div><label for="sat">Saturação</label><input id="sat" type="range" min="0" max="2" step="0.01" value="1.25" /></div>
+        <div><label for="specK">Brilho especular</label><input id="specK" type="range" min="0" max="0.6" step="0.005" value="0.14" /></div>
+      </div>
+      <div class="row">
+        <div><label for="refl">Reflexo (ambiente)</label><input id="refl" type="range" min="0" max="0.8" step="0.01" value="0.18" /></div>
+        <div></div>
+      </div>
+      <div class="row">
+        <div><label for="ligandColor">Cor dos ligantes</label><input id="ligandColor" type="color" value="#0b2e87" /></div>
+        <div><label for="lpColor">Cor dos pares não-ligantes</label><input id="lpColor" type="color" value="#1100ff" /></div>
+      </div>
+      <div><label for="coreColor">Cor do átomo central</label><input id="coreColor" type="color" value="#ffffff" /></div>
+
+      <div class="row">
+        <div>
+          <label for="bondType">Tipo de ligação</label>
+          <select id="bondType">
+            <option value="1" selected>Simples (–)</option>
+            <option value="2">Dupla (=)</option>
+            <option value="3">Tripla (≡)</option>
+          </select>
+        </div>
+        <div>
+          <label class="small"><input id="showAxes" type="checkbox" checked /> Mostrar eixos XYZ</label>
+        </div>
+      </div>
+
+      <button class="btn" id="save">Salvar imagem (PNG)</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Fundo espacial</legend>
+      <div class="row">
+        <div><label for="bgBrightness">Brilho</label><input id="bgBrightness" type="range" min="0" max="1.6" step="0.01" value="1.0" /></div>
+        <div><label for="bgStars">Densidade de estrelas</label><input id="bgStars" type="range" min="0" max="2.5" step="0.01" value="1.3" /></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rotação do modelo</legend>
+      <div class="row3">
+        <div><label for="rotXS">Ângulo X (°)</label><input id="rotXS" type="range" min="-180" max="180" step="1" value="0" /></div>
+        <div><label for="rotYS">Ângulo Y (°)</label><input id="rotYS" type="range" min="-180" max="180" step="1" value="0" /></div>
+        <div><label for="rotZS">Ângulo Z (°)</label><input id="rotZS" type="range" min="-180" max="180" step="1" value="0" /></div>
+      </div>
+      <button class="btn" id="rotReset">Resetar rotação</button>
+    </fieldset>
+
+    <fieldset id="infoBox">
+      <legend>Geometria selecionada</legend>
+      <div class="badges"><div id="infoName" class="badge">—</div><div id="infoArr" class="badge">—</div></div>
+      <div id="infoIdeal" class="small" style="margin-top:6px">—</div>
+    </fieldset>
+
+    <div class="tutorialWrap" id="tutorialWrap">
+          <div class="tutorialCard" id="tutorialCard" aria-live="polite">
+            <div class="tutorialTop">
+              <div class="tutorialKicker">Tutorial guiado · VSEPR</div>
+              <div class="tutorialStepTag" id="tutorialStepTag">Passo 1</div>
+            </div>
+            <h2 class="tutorialTitle" id="tutorialTitle">Carregando…</h2>
+            <div class="tutorialBody" id="tutorialBody"></div>
+            <div class="tutorialMini" id="tutorialMini"></div>
+            <div class="tutorialNote" id="tutorialNote"></div>
+            <div class="tutorialExamples" id="tutorialExamples"></div>
+            <div class="tutorialProgress"><i id="tutorialProgressBar"></i></div>
+            <div class="tutorialActions">
+              <button class="tbtn ghost" id="tutorialPrev">◀ Anterior</button>
+              <button class="tbtn primary" id="tutorialNext">Próximo ▶</button>
+              <button class="tbtn subtle" id="tutorialRestart">↺ Reiniciar</button>
+              <button class="tbtn subtle" id="tutorialPlay">▶ Auto</button>
+            </div>
+          </div>
+        </div>
+  </aside>
+
+  <main>
+    <canvas id="gl"></canvas>
+    <div id="axisXLabel" class="axisLabel" style="color:#ff7a7a">x</div>
+    <div id="axisYLabel" class="axisLabel" style="color:#6dffb0">y</div>
+    <div id="axisZLabel" class="axisLabel" style="color:#7ec8ff">z</div>
+    <div class="hud" id="hud">—</div>
+    <div id="boardSplitOverlay" class="boardSplitOverlay" aria-hidden="true"><div class="ghostPane left"></div><div class="ghostPane right"></div><div class="sideTag left">🎈 Balões (analogia)</div><div class="sideTag right">🧪 Molécula</div></div>
+
+        <div class="focusHint" id="focusHint"><b>Dica:</b> arraste para orbitar e use o scroll para zoom. O tutorial não reseta seu zoom quando você troca o arranjo.</div>
+
+  </main>
+</div>
+
+<script>
+'use strict';
+(function(){
+  var canvas = document.getElementById('gl');
+  var gl = canvas.getContext('webgl', {antialias:true, alpha:false, preserveDrawingBuffer:true});
+  if(!gl){ alert('Seu navegador não suporta WebGL.'); return; }
+
+  var mainEl = canvas.parentElement;
+  var boardSplitOverlay = document.getElementById('boardSplitOverlay');
+  var axisLabels = {
+    x: document.getElementById('axisXLabel'),
+    y: document.getElementById('axisYLabel'),
+    z: document.getElementById('axisZLabel')
+  };
+  function setAxisLabelsVisible(v){
+    axisLabels.x.style.display = v ? 'block' : 'none';
+    axisLabels.y.style.display = v ? 'block' : 'none';
+    axisLabels.z.style.display = v ? 'block' : 'none';
+  }
+  function vSub(a,b){ return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+  function vDot(a,b){ return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+  function vCross(a,b){ return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+  function vLen(a){ return Math.hypot(a[0],a[1],a[2]) || 1; }
+  function vNorm(a){ var L=vLen(a); return [a[0]/L,a[1]/L,a[2]/L]; }
+  function projectToCanvas(world, eyePos){
+    var target=[0,0,0], up=[0,1,0];
+    var f=vNorm(vSub(target, eyePos));
+    var r=vNorm(vCross(f, up));
+    var u=vCross(r, f);
+    var q=vSub(world, eyePos);
+    var cx=vDot(q, r), cy=vDot(q, u), cz=vDot(q, f);
+    if(cz <= 0.01) return null;
+    var aspect = (canvas.clientWidth||1)/(canvas.clientHeight||1);
+    var fov = 1.2;
+    var t = Math.tan(fov*0.5);
+    var ndcX = cx/(cz*t*aspect);
+    var ndcY = cy/(cz*t);
+    if(!isFinite(ndcX) || !isFinite(ndcY)) return null;
+    var sx = (ndcX*0.5 + 0.5) * canvas.clientWidth;
+    var sy = (1.0 - (ndcY*0.5 + 0.5)) * canvas.clientHeight;
+    var visible = ndcX>-1.25 && ndcX<1.25 && ndcY>-1.25 && ndcY<1.25;
+    return {x:sx, y:sy, visible:visible};
+  }
+  function updateAxisLabels(eyePos){
+    if(!(window.showAxes && showAxes.checked)){ setAxisLabelsVisible(false); return; }
+    var pts = {
+      x:[3.18,0,0],
+      y:[0,3.18,0],
+      z:[0,0,3.18]
+    };
+    setAxisLabelsVisible(true);
+    [['x',axisLabels.x],['y',axisLabels.y],['z',axisLabels.z]].forEach(function(item){
+      var key=item[0], el=item[1];
+      var p = projectToCanvas(pts[key], eyePos);
+      if(!p || !p.visible){ el.style.display='none'; return; }
+      el.style.display='block';
+      el.style.left = p.x + 'px';
+      el.style.top = p.y + 'px';
+    });
+  }
+
+  function resize(){
+    var dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    if(canvas.width!==w*dpr||canvas.height!==h*dpr){ canvas.width=w*dpr; canvas.height=h*dpr; gl.viewport(0,0,canvas.width,canvas.height); }
+  }
+  resize();
+  var ro = window.ResizeObserver ? new ResizeObserver(resize) : null; if(ro){ ro.observe(canvas);} else { window.addEventListener('resize', resize); }
+
+  // UI refs
+  var ui = {
+    geom:geom,bondLen:bondLen,size:size,ligandRadius:ligandRadius,bondRadius:bondRadius,lpScale:lpScale,
+    ambient:ambient,sat:sat,specK:specK,refl:refl,ligandColor:ligandColor,lpColor:lpColor,coreColor:coreColor,
+    bondType:bondType,showAxes:showAxes,save:save,infoName:infoName,infoArr:infoArr,infoIdeal:infoIdeal,
+    rotXS:rotXS,rotYS:rotYS,rotZS:rotZS,bgStars:bgStars,bgBrightness:bgBrightness, rotReset:rotReset
+  };
+  Object.keys(ui).forEach(function(k){ var el=ui[k]; if(el && (el.tagName==='INPUT'||el.tagName==='SELECT')) el.addEventListener('input', sync); });
+  save.addEventListener('click', function(){ requestAnimationFrame(function(){ var a=document.createElement('a'); a.download='geometria_molecular_3d.png'; a.href=canvas.toDataURL('image/png'); a.click(); }); });
+
+  // rotação via sliders
+  var DEG=Math.PI/180; var rot={x:0,y:0,z:0};
+  ['x','y','z'].forEach(function(ax){ document.getElementById('rot'+ax.toUpperCase()+'S').addEventListener('input', function(e){ rot[ax]=parseFloat(e.target.value)*DEG; }); });
+  rotReset.addEventListener('click', function(){ rot.x=rot.y=rot.z=0; rotXS.value=rotYS.value=rotZS.value='0'; });
+
+  // câmera (orbital + mouse)
+  var camDist=4.6, rotX=0.35, rotY=-0.6, isDown=false, lastX=0,lastY=0;
+  canvas.addEventListener('mousedown', function(e){ isDown=true; lastX=e.clientX; lastY=e.clientY; });
+  window.addEventListener('mouseup', function(){ isDown=false; });
+  window.addEventListener('mousemove', function(e){ if(!isDown) return; var dx=(e.clientX-lastX)/canvas.clientWidth, dy=(e.clientY-lastY)/canvas.clientHeight; lastX=e.clientX; lastY=e.clientY; rotY+=dx*Math.PI; rotX+=dy*Math.PI; rotX=Math.max(-Math.PI/2+.05, Math.min(Math.PI/2-.05, rotX)); });
+  canvas.addEventListener('wheel', function(e){ e.preventDefault(); camDist*=(1+Math.sign(e.deltaY)*0.08); camDist=Math.max(2.2, Math.min(14, camDist)); }, {passive:false});
+  canvas.addEventListener('dblclick', function(){ camDist=autoDist(); rotX=0.35; rotY=-0.6; rot.x=rot.y=rot.z=0; rotXS.value=rotYS.value=rotZS.value='0'; });
+
+  // Shaders
+  var VERT=`
+    attribute vec2 aPos; varying vec2 vUV;
+    void main(){ vUV=aPos*0.5+0.5; gl_Position=vec4(aPos,0.0,1.0); }
+  `;
+  var FRAG=`
+    precision highp float;
+    varying vec2 vUV;
+    uniform vec2 uRes;
+    uniform vec3 uEye, uTarget, uUp;
+    uniform int uLigCount; uniform vec3 uLigDirs[8];
+    uniform int uLPCount;  uniform vec3 uLPDirs[8];
+    uniform float uBondLen, uCentralR, uLigR, uBondR, uLPScale, uAmbient, uSat, uSpecK, uRefl;
+    uniform vec3 uLigColor, uLPColor, uCoreColor;
+    // Balões 3D (tutorial)
+    uniform int uBalloonN;
+    uniform vec3 uBalloonPos[6];
+    uniform vec3 uBalloonRad[6];
+    uniform vec3 uBalloonCol[6];
+    uniform vec3 uBalloonDir[6];
+    uniform vec3 uMolOffset;
+    uniform vec3 uBalloonOffset;
+
+    uniform bool uShowAxes;
+    uniform int uBondType; // 1=simples, 2=dupla, 3=tripla
+    uniform vec3 uRot;
+    // Fundo (estrelas apenas)
+    uniform float uBGStars, uBGBright;
+
+    mat3 look(vec3 f, vec3 up){ vec3 w=normalize(f); vec3 u=normalize(cross(w,up)); vec3 v=cross(u,w); return mat3(u,v,w); }
+    float sdSphere(vec3 p, float r){ return length(p)-r; }
+    float sdCapsule(vec3 p, vec3 a, vec3 b, float r){ vec3 pa=p-a, ba=b-a; float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0); return length(pa-ba*h)-r; }
+    float sdEllipsoid(vec3 p, vec3 r){ float k0=length(p/r); return (k0-1.0)*min(min(r.x,r.y),r.z); }
+    struct Hit{ float d; vec3 col; float lp; };
+
+    mat3 basisFromDir(vec3 d){ vec3 w=normalize(d); vec3 a=(abs(w.z)<0.999)?vec3(0.0,0.0,1.0):vec3(0.0,1.0,0.0); vec3 u=normalize(cross(a,w)); vec3 v=cross(w,u); return mat3(u,v,w); }
+    vec3 mulByTranspose(mat3 B, vec3 x){ return vec3(dot(B[0],x), dot(B[1],x), dot(B[2],x)); }
+    vec3 rotateXYZ(vec3 p, vec3 r){ float cx=cos(r.x), sx=sin(r.x); float cy=cos(r.y), sy=sin(r.y); float cz=cos(r.z), sz=sin(r.z); p=vec3(p.x, cx*p.y-sx*p.z, sx*p.y+cx*p.z); p=vec3(cy*p.x+sy*p.z, p.y, -sy*p.x+cy*p.z); p=vec3(cz*p.x-sz*p.y, sz*p.x+cz*p.y, p.z); return p; }
+
+    float hash21(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }
+    vec2  hash22(vec2 p){ return fract(sin(vec2(dot(p,vec2(269.5,183.3)), dot(p,vec2(113.5,271.9))))*43758.5453); }
+    const float PI=3.14159265359;
+    vec2 dirToUV(vec3 dir){ dir=normalize(dir); float lon=atan(dir.x, dir.z); float lat=asin(clamp(dir.y,-1.0,1.0)); return vec2(lon/(2.0*PI)+0.5, lat/PI+0.5); }
+
+    float starLayer(vec2 uv, float cells, float baseRadius, float boost){
+      vec2 gv=uv*cells; vec2 id=floor(gv); vec2 f=fract(gv);
+      vec2 sp=hash22(id); vec2 d=f-sp;
+      float dist=length(d);
+      float r=baseRadius*(0.7+0.6*hash21(id+7.3));
+      float star=smoothstep(r, 0.0, dist);
+      float halo=exp(-dist*dist/(r*r*3.0));
+      return (star+0.4*halo)*boost;
+    }
+
+    vec3 envMap(vec3 dir){
+      vec2 uv=dirToUV(dir);
+      float s=0.0;
+      s += starLayer(uv, 900.0, 0.0020, 0.9);
+      s += starLayer(uv, 1500.0, 0.0017, 0.8);
+      s += starLayer(uv, 2400.0, 0.0015, 0.6);
+      vec3 col = vec3(0.75,0.82,1.0) * s * uBGStars;
+      col *= uBGBright;
+      return clamp(col, 0.0, 1.0);
+    }
+
+    Hit map(vec3 p){
+      Hit res; res.d=1e9; res.col=vec3(0.0); res.lp=0.0;
+
+      if(uShowAxes){
+        float ax = sdCapsule(p, vec3(-3.0,0.0,0.0), vec3(3.0,0.0,0.0), 0.02);
+        float ay = sdCapsule(p, vec3(0.0,-3.0,0.0), vec3(0.0,3.0,0.0), 0.02);
+        float az = sdCapsule(p, vec3(0.0,0.0,-3.0), vec3(0.0,0.0,3.0), 0.02);
+        float d=ax;
+        vec3 axisCol=vec3(1.0,0.28,0.28);   // X = vermelho
+        if(ay<d){ d=ay; axisCol=vec3(0.28,1.0,0.38); } // Y = verde
+        if(az<d){ d=az; axisCol=vec3(0.35,0.62,1.0); } // Z = azul
+        if(d<res.d){ res.d=d; res.col=axisCol; res.lp=0.0; }
+      }
+
+      vec3 pr=rotateXYZ(p,uRot);
+      vec3 pm=pr-uMolOffset;
+      float dc=sdSphere(pm,uCentralR); if(dc<res.d){ res.d=dc; res.col=uCoreColor; res.lp=0.0; }
+
+      for(int i=0;i<8;i++) if(i<uLigCount){
+        vec3 dir=normalize(uLigDirs[i]);
+        vec3 b=dir*uBondLen;
+
+        if(uBondType==1){
+          float db=sdCapsule(pm, vec3(0.0), b, uBondR);
+          if(db<res.d){ res.d=db; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+        } else if(uBondType==2){
+          vec3 perp=(abs(dir.z)<0.99)?normalize(cross(dir,vec3(0.0,0.0,1.0))):normalize(cross(dir,vec3(0.0,1.0,0.0)));
+          float r2=uBondR*0.6; float off=r2*1.8;
+          float d1=sdCapsule(pm,-perp*off,b-perp*off,r2); if(d1<res.d){ res.d=d1; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+          float d2=sdCapsule(pm, perp*off,b+perp*off,r2); if(d2<res.d){ res.d=d2; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+        } else {
+          vec3 perp=(abs(dir.z)<0.99)?normalize(cross(dir,vec3(0.0,0.0,1.0))):normalize(cross(dir,vec3(0.0,1.0,0.0)));
+          float r3=uBondR*0.5; float off=r3*1.8;
+          float d0=sdCapsule(pm, vec3(0.0), b, r3); if(d0<res.d){ res.d=d0; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+          float d1=sdCapsule(pm,-perp*off,b-perp*off,r3); if(d1<res.d){ res.d=d1; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+          float d2=sdCapsule(pm, perp*off,b+perp*off,r3); if(d2<res.d){ res.d=d2; res.col=vec3(0.82,0.9,1.0); res.lp=0.0;}
+        }
+
+        float dl=sdSphere(pm-b, uLigR); if(dl<res.d){ res.d=dl; res.col=uLigColor; res.lp=0.0; }
+      }
+
+      for(int i=0;i<8;i++) if(i<uLPCount){
+        vec3 dir=normalize(uLPDirs[i]);
+        float pScale=uLPScale*2.35; // nuvem um pouco menor (mantém destaque)
+        float centerDist=uCentralR + 0.23*pScale; // encostado no átomo central (com leve interseção visual)
+        vec3 center=dir*centerDist;
+        mat3 B=basisFromDir(dir);
+        vec3 q=mulByTranspose(B, (pm-center));
+
+        // "nuvem" em metade de orbital p (um lobo / balão único)
+        float off=0.16*pScale;
+        float lobe=sdEllipsoid(q-vec3(0.0,0.0, off), vec3(0.26*pScale,0.26*pScale,0.40*pScale));
+        float base=sdEllipsoid(q-vec3(0.0,0.0, 0.02*pScale), vec3(0.12*pScale,0.12*pScale,0.12*pScale));
+        float dell=min(lobe, base);
+
+        if(dell<res.d){ res.d=dell; res.col=uLPColor; res.lp=1.0; }
+      }
+
+      // Balões 3D (tutorial): balões de festa (corpo + gargalo + nó), orientados e encostados no mesmo ponto
+      for(int i=0;i<6;i++) if(i<uBalloonN){
+        vec3 bdir = normalize(uBalloonDir[i]);
+        mat3 BB = basisFromDir(bdir);
+        vec3 qB = mulByTranspose(BB, (pr - (uBalloonPos[i] + uBalloonOffset)));
+        vec3 rB = uBalloonRad[i];
+        float body = sdEllipsoid(qB - vec3(0.0,0.0,0.10), vec3(rB.x*0.95, rB.y*0.95, rB.z*1.06));
+        float neck = sdEllipsoid(qB - vec3(0.0,0.0,-0.34), vec3(rB.x*0.36, rB.y*0.36, rB.z*0.16));
+        float knot = sdSphere(qB - vec3(0.0,0.0,-0.48), 0.075);
+        float db = min(min(body, neck), knot);
+        if(db<res.d){ res.d=db; res.col=uBalloonCol[i]; res.lp=2.0; }
+      }
+      return res;
+    }
+
+    vec3 calcNormal(vec3 p){
+      float e=0.0015; vec2 h=vec2(1.0,-1.0)*0.5773;
+      return normalize( h.xyy*map(p+h.xyy*e).d + h.yyx*map(p+h.yyx*e).d + h.yxy*map(p+h.yxy*e).d + h.xxx*map(p+h.xxx*e).d );
+    }
+    float softShadow(vec3 ro, vec3 rd){
+      float res=1.0; float t=0.02;
+      for(int i=0;i<32;i++){ vec3 p=ro+rd*t; float h=map(p).d; res=min(res,8.0*h/t); t+=clamp(h,0.02,0.25); if(res<0.001||t>10.0) break; }
+      return clamp(res,0.0,1.0);
+    }
+    vec3 saturateColor(vec3 c, float s){ float l=dot(c, vec3(0.299,0.587,0.114)); return mix(vec3(l), c, s); }
+
+    void main(){
+      vec3 fwd=normalize(uTarget-uEye); mat3 cam=look(fwd, uUp);
+      vec2 uv=vUV*2.0-1.0; uv.x*=uRes.x/uRes.y;
+      vec3 rd=normalize(cam*normalize(vec3(uv,1.25))); vec3 ro=uEye;
+
+      float t=0.0; vec3 col=vec3(0.0); float fog=0.0; float hitFlag=0.0;
+      for(int i=0;i<128;i++){
+        vec3 p=ro+rd*t; Hit h=map(p);
+        if(h.d<0.001){
+          vec3 n=calcNormal(p);
+          vec3 ldir=normalize(-uEye);
+          float diff=max(dot(n,ldir),0.0);
+          float sh=softShadow(p+n*0.01, ldir);
+          float spec=pow(max(dot(reflect(-ldir,n), -rd), 0.0), 40.0);
+          float amb=clamp(uAmbient,0.0,1.0);
+          float diff2=max(dot(n, normalize(vec3(0.6,0.5,0.2))), 0.0)*0.35;
+
+          vec3 lit=h.col*(amb+(1.0-amb)*(diff*sh*0.85+diff2));
+          lit=saturateColor(lit,uSat);
+          vec3 env=envMap(reflect(-rd,n));
+          vec3 reflMix=mix(lit,env,clamp(uRefl,0.0,0.8));
+          float rim=pow(1.0-max(dot(n,-rd),0.0),3.0);
+          col=clamp(reflMix+vec3(spec)*uSpecK+vec3(rim)*0.08,0.0,1.0);
+          if(h.lp>1.5){
+            // Balões (analogia): mais opacos, coloridos e com brilho tipo látex
+            float specB = pow(max(dot(reflect(-ldir,n), -rd), 0.0), 90.0);
+            float fresB = pow(1.0-max(dot(n,-rd),0.0), 3.2);
+            vec3 envSoft = envMap(reflect(-rd,n))*0.10;
+            vec3 latex = h.col*(0.50 + 0.72*diff*sh + 0.18*diff2) + vec3(rim)*0.07;
+            latex = saturateColor(latex, 1.18);
+            col = clamp(latex + envSoft + vec3(specB)*0.42 + vec3(fresB)*0.04, 0.0, 1.0);
+          } else if(h.lp>0.5){
+            vec3 bgHere = envMap(rd);
+            vec3 envRefl = envMap(reflect(-rd,n));
+            float fres = pow(1.0-max(dot(n,-rd),0.0), 2.2);
+            vec3 glassBase = mix(bgHere, envRefl, 0.65);
+            vec3 lpTint = mix(glassBase, h.col, 0.18);
+            col = mix(bgHere, lpTint, 0.24 + 0.12*fres); // mais vidrinho (mais transparente + reflexo)
+          }
+          fog=1.0-exp(-0.05*t); hitFlag=1.0; break;
+        }
+        t+=h.d; if(t>30.0) break;
+      }
+
+      vec3 bg=envMap(rd);
+      vec3 colFog=mix(bg,col,1.0-fog);
+      col=mix(bg,colFog,hitFlag);
+      col=pow(col, vec3(1.0/2.2));
+      gl_FragColor=vec4(col,1.0);
+    }
+  `;
+
+  function compile(type,src){
+    var s=gl.createShader(type);
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){
+      var info=gl.getShaderInfoLog(s)||'erro ao compilar shader';
+      console.error(info);
+      alert(info);
+      throw new Error(info);
+    }
+    return s;
+  }
+  function program(vs,fs){
+    var p=gl.createProgram();
+    gl.attachShader(p,vs); gl.attachShader(p,fs);
+    gl.linkProgram(p);
+    if(!gl.getProgramParameter(p,gl.LINK_STATUS)){
+      var info=gl.getProgramInfoLog(p)||'erro link';
+      console.error(info); alert(info); throw new Error(info);
+    }
+    return p;
+  }
+
+  var prog=program(compile(gl.VERTEX_SHADER, VERT), compile(gl.FRAGMENT_SHADER, FRAG));
+  gl.useProgram(prog);
+
+  var quad=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+  var aPos=gl.getAttribLocation(prog,'aPos'); gl.enableVertexAttribArray(aPos); gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+
+  var U={
+    uRes:gl.getUniformLocation(prog,'uRes'), uEye:gl.getUniformLocation(prog,'uEye'), uTarget:gl.getUniformLocation(prog,'uTarget'), uUp:gl.getUniformLocation(prog,'uUp'),
+    uLigCount:gl.getUniformLocation(prog,'uLigCount'), uLigDirs:gl.getUniformLocation(prog,'uLigDirs[0]'),
+    uLPCount:gl.getUniformLocation(prog,'uLPCount'), uLPDirs:gl.getUniformLocation(prog,'uLPDirs[0]'),
+    uBondLen:gl.getUniformLocation(prog,'uBondLen'), uCentralR:gl.getUniformLocation(prog,'uCentralR'), uLigR:gl.getUniformLocation(prog,'uLigR'), uBondR:gl.getUniformLocation(prog,'uBondR'),
+    uLPScale:gl.getUniformLocation(prog,'uLPScale'), uAmbient:gl.getUniformLocation(prog,'uAmbient'), uSat:gl.getUniformLocation(prog,'uSat'), uSpecK:gl.getUniformLocation(prog,'uSpecK'),
+    uRefl:gl.getUniformLocation(prog,'uRefl'), uLigColor:gl.getUniformLocation(prog,'uLigColor'), uLPColor:gl.getUniformLocation(prog,'uLPColor'), uCoreColor:gl.getUniformLocation(prog,'uCoreColor'),
+    uBalloonN:gl.getUniformLocation(prog,'uBalloonN'), uBalloonPos:gl.getUniformLocation(prog,'uBalloonPos[0]'), uBalloonRad:gl.getUniformLocation(prog,'uBalloonRad[0]'), uBalloonCol:gl.getUniformLocation(prog,'uBalloonCol[0]'), uBalloonDir:gl.getUniformLocation(prog,'uBalloonDir[0]'), uMolOffset:gl.getUniformLocation(prog,'uMolOffset'), uBalloonOffset:gl.getUniformLocation(prog,'uBalloonOffset'),
+    uShowAxes:gl.getUniformLocation(prog,'uShowAxes'), uBondType:gl.getUniformLocation(prog,'uBondType'), uRot:gl.getUniformLocation(prog,'uRot'),
+    uBGStars:gl.getUniformLocation(prog,'uBGStars'), uBGBright:gl.getUniformLocation(prog,'uBGBright')
+  };
+
+  function hexToRgb(hex){ var h=hex.replace('#',''); var v=parseInt(h,16); return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255]; }
+  function padVecArray(arr,t){ var out=[]; for(var i=0;i<arr.length;i++){ out.push(arr[i][0],arr[i][1],arr[i][2]); } while(out.length<t*3) out.push(0,0,0); return new Float32Array(out.slice(0,t*3)); }
+
+  // --- Balões 3D (tutorial) ---
+  var __balloons = { n:0, pos:new Float32Array(18), rad:new Float32Array(18), col:new Float32Array(18), dir:new Float32Array(18) };
+  var __sceneSplit = false;
+  var __sceneMolOffset = new Float32Array([0,0,0]);
+  var __sceneBalloonOffset = new Float32Array([0,0,0]);
+  function __pushSceneUniforms(){
+    gl.useProgram(prog);
+    if(U.uMolOffset) gl.uniform3fv(U.uMolOffset, __sceneMolOffset);
+    if(U.uBalloonOffset) gl.uniform3fv(U.uBalloonOffset, __sceneBalloonOffset);
+  }
+  function __setBoardSplit(active){
+    __sceneSplit = !!active;
+    __sceneMolOffset[0] = __sceneSplit ? 1.95 : 0.0;
+    __sceneMolOffset[1] = 0.0; __sceneMolOffset[2] = 0.0;
+    __sceneBalloonOffset[0] = __sceneSplit ? -1.95 : 0.0;
+    __sceneBalloonOffset[1] = 0.0; __sceneBalloonOffset[2] = 0.0;
+    if(boardSplitOverlay) boardSplitOverlay.classList.toggle('show', __sceneSplit);
+    __pushSceneUniforms();
+  }
+  function __setBalloons3D(n, dirs){
+    n = Math.max(0, Math.min(6, (n|0)));
+    __balloons.n = n;
+    // cluster de balões em torno de um nó comum (o deslocamento para a esquerda vem do modo split)
+    var cx = 0.0, cy = 0.0, cz = 0.0;
+    var dist = 0.48; // centros mais próximos para parecerem encostados no mesmo nó
+    // tamanhos estilo balão de festa (mais alongados)
+    for(var i=0;i<6;i++){
+      var bi=i*3;
+      if(i<n && dirs && dirs[i]){
+        var d=dirs[i]; var L=Math.hypot(d[0],d[1],d[2])||1; d=[d[0]/L,d[1]/L,d[2]/L];
+        // posição (centro do balão) e direção local do balão
+        __balloons.pos[bi+0]=cx + d[0]*dist;
+        __balloons.pos[bi+1]=cy + d[1]*dist;
+        __balloons.pos[bi+2]=cz + d[2]*dist;
+        __balloons.dir[bi+0]=d[0]; __balloons.dir[bi+1]=d[1]; __balloons.dir[bi+2]=d[2];
+        // raio (mais alongado para ficar com cara de balão)
+        __balloons.rad[bi+0]=0.30;
+        __balloons.rad[bi+1]=0.30;
+        __balloons.rad[bi+2]=0.46;
+        // cor (tons de balão)
+        // paleta suave: pêssego, amarelo, azul, rosa, verde, lilás
+        var palette=[[0.99,0.74,0.46],[0.99,0.90,0.40],[0.50,0.78,1.00],[0.99,0.56,0.78],[0.46,0.90,0.68],[0.78,0.62,1.00]];
+        var c=palette[i%palette.length];
+        __balloons.col[bi+0]=c[0]; __balloons.col[bi+1]=c[1]; __balloons.col[bi+2]=c[2];
+      } else {
+        __balloons.pos[bi+0]=__balloons.pos[bi+1]=__balloons.pos[bi+2]=0;
+        __balloons.rad[bi+0]=__balloons.rad[bi+1]=__balloons.rad[bi+2]=0;
+        __balloons.col[bi+0]=__balloons.col[bi+1]=__balloons.col[bi+2]=0;
+        __balloons.dir[bi+0]=__balloons.dir[bi+1]=__balloons.dir[bi+2]=0;
+      }
+    }
+    // envia para GPU (sem chamar sync pra não mexer na câmera)
+    gl.useProgram(prog);
+    gl.uniform1i(U.uBalloonN, __balloons.n);
+    gl.uniform3fv(U.uBalloonPos, __balloons.pos);
+    gl.uniform3fv(U.uBalloonRad, __balloons.rad);
+    gl.uniform3fv(U.uBalloonCol, __balloons.col);
+    if(U.uBalloonDir) gl.uniform3fv(U.uBalloonDir, __balloons.dir);
+  }
+
+  function autoDist(){ var bl=parseFloat(bondLen.value); var R=Math.max(parseFloat(size.value), parseFloat(ligandRadius.value))+bl+0.5; return Math.min(10, Math.max(3.2, R*1.55)); }
+  function eye(){ var ex=camDist*Math.cos(rotX)*Math.sin(rotY); var ey=camDist*Math.sin(rotX); var ez=camDist*Math.cos(rotX)*Math.cos(rotY); return [ex,ey,ez]; }
+
+  function geomPositions(type){
+    var Uv={
+      linear:[[0,0,1],[0,0,-1]],
+      trigonal_planar:[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]],
+      tetra:(function(){var v=[[1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]]; for(var i=0;i<v.length;i++){ var n=v[i]; var L=Math.hypot(n[0],n[1],n[2]); v[i]=[n[0]/L,n[1]/L,n[2]/L]; } return v;})(),
+      tbp:(function(){ var eq=[[1,0,0],[Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),0],[Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3),0]]; var ax=[[0,0,1],[0,0,-1]]; return {eq:eq,ax:ax};})(),
+      oct:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]
+    };
+    switch(type){
+      case 'linear': return {lig:Uv.linear, lp:[], label:'Linear', arr:'AX2', ideal:'Ângulo 180°'};
+      case 'trigonal_planar': return {lig:Uv.trigonal_planar, lp:[], label:'Trigonal planar', arr:'AX3', ideal:'Ângulos ~120°'};
+      case 'tetrahedral': return {lig:Uv.tetra, lp:[], label:'Tetraédrica', arr:'AX4', ideal:'Ângulos ~109,5°'};
+      case 'trigonal_bipyramidal': return {lig:Uv.tbp.eq.concat(Uv.tbp.ax), lp:[], label:'Bipirâmide trigonal', arr:'AX5', ideal:'Equatorial 120°, Axial 90°'};
+      case 'octahedral': return {lig:Uv.oct, lp:[], label:'Octaédrica', arr:'Ângulos 90°/180°'};
+      case 'bent_tp': { var lp1=[Uv.trigonal_planar[1]]; var lig1=[Uv.trigonal_planar[0],Uv.trigonal_planar[2]]; return {lig:lig1, lp:lp1, label:'Angular (base trigonal planar)', arr:'AX2E', ideal:'Ângulo <120°'}; }
+      case 'trigonal_pyramidal': { var lp2=[Uv.tetra[0]]; var lig2=[Uv.tetra[1],Uv.tetra[2],Uv.tetra[3]]; return {lig:lig2, lp:lp2, label:'Piramidal trigonal', arr:'AX3E', ideal:'Ângulo <109,5°'}; }
+      case 'bent_tet': { var lp3=[Uv.tetra[0],Uv.tetra[1]]; var lig3=[Uv.tetra[2],Uv.tetra[3]]; return {lig:lig3, lp:lp3, label:'Angular (base tetraédrica)', arr:'AX2E2', ideal:'Ângulo ~104,5°'}; }
+      case 'see_saw': { var lp4=[Uv.tbp.eq[0]]; var lig4=[Uv.tbp.eq[1],Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig4, lp:lp4, label:'Gangorra / Seesaw', arr:'AX4E', ideal:'Equatorial ~120°, Axial ~90°'}; }
+      case 't_shaped': { var lp5=[Uv.tbp.eq[0],Uv.tbp.eq[1]]; var lig5=[Uv.tbp.eq[2],Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig5, lp:lp5, label:'Em T', arr:'AX3E2', ideal:'Ângulos ~90°'}; }
+      case 'linear_tbp': { var lp6=Uv.tbp.eq.slice(); var lig6=[Uv.tbp.ax[0],Uv.tbp.ax[1]]; return {lig:lig6, lp:lp6, label:'Linear (base TBP)', arr:'AX2E3', ideal:'Ângulo 180°'}; }
+      case 'square_pyramidal': { var lp7=[[0,0,1]]; var lig7=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]]; return {lig:lig7, lp:lp7, label:'Piramidal quadrada', arr:'AX5E', ideal:'Ângulos ~90°'}; }
+      case 'square_planar': { var lp8=[[0,0,1],[0,0,-1]]; var lig8=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]]; return {lig:lig8, lp:lp8, label:'Quadrada planar', arr:'Ângulos 90°/180°'}; }
+      default: return {lig:Uv.tetra, lp:[], label:'Tetraédrica', arr:'AX4', ideal:'~109,5°'};
+    }
+  }
+
+  function sync(){
+    var G=geomPositions(geom.value);
+    gl.useProgram(prog);
+    gl.uniform1i(U.uLigCount, G.lig.length);
+    gl.uniform3fv(U.uLigDirs, padVecArray(G.lig,8));
+    gl.uniform1i(U.uLPCount, G.lp.length);
+    gl.uniform3fv(U.uLPDirs, padVecArray(G.lp,8));
+    gl.uniform1f(U.uBondLen, parseFloat(bondLen.value));
+    gl.uniform1f(U.uCentralR, parseFloat(size.value));
+    gl.uniform1f(U.uLigR, parseFloat(ligandRadius.value));
+    gl.uniform1f(U.uBondR, parseFloat(bondRadius.value));
+    gl.uniform1f(U.uLPScale, parseFloat(lpScale.value));
+    gl.uniform1f(U.uAmbient, parseFloat(ambient.value));
+    gl.uniform1f(U.uSat, parseFloat(sat.value));
+    gl.uniform1f(U.uSpecK, parseFloat(specK.value));
+    gl.uniform1f(U.uRefl, parseFloat(refl.value));
+    gl.uniform3fv(U.uLigColor, new Float32Array(hexToRgb(ligandColor.value)));
+    gl.uniform3fv(U.uLPColor, new Float32Array(hexToRgb(lpColor.value)));
+    gl.uniform3fv(U.uCoreColor, new Float32Array(hexToRgb(coreColor.value)));
+    gl.uniform1i(U.uShowAxes, showAxes.checked?1:0);
+    setAxisLabelsVisible(showAxes.checked);
+    gl.uniform1i(U.uBondType, parseInt(bondType.value,10));
+    gl.uniform1f(U.uBGStars, parseFloat(bgStars.value));
+    gl.uniform1f(U.uBGBright, parseFloat(bgBrightness.value));
+
+
+    // Balões 3D (tutorial): mantém estado atual
+    gl.uniform1i(U.uBalloonN, __balloons.n||0);
+    gl.uniform3fv(U.uBalloonPos, __balloons.pos||new Float32Array(18));
+    gl.uniform3fv(U.uBalloonRad, __balloons.rad||new Float32Array(18));
+    gl.uniform3fv(U.uBalloonCol, __balloons.col||new Float32Array(18));
+    if(U.uBalloonDir) gl.uniform3fv(U.uBalloonDir, __balloons.dir||new Float32Array(18));
+    __pushSceneUniforms();
+    infoName.textContent = geom.options[geom.selectedIndex].textContent.split('(')[0].trim();
+    var G2=geomPositions(geom.value);
+    infoArr.textContent = G2.arr; infoIdeal.textContent = G2.ideal;
+    document.getElementById('hud').innerHTML='<b>'+G2.label+'</b> · <span class="small">'+G2.arr+' — '+G2.ideal+'</span>';
+  }
+
+  // primeiro sync antes do render
+  sync();
+  camDist = autoDist();
+
+  function draw(){
+    resize();
+    gl.clearColor(0,0,0,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    var ex=camDist*Math.cos(rotX)*Math.sin(rotY), ey=camDist*Math.sin(rotX), ez=camDist*Math.cos(rotX)*Math.cos(rotY);
+    gl.uniform3f(U.uEye, ex,ey,ez);
+    gl.uniform3f(U.uTarget, 0,0,0);
+    gl.uniform3f(U.uUp, 0,1,0);
+    gl.uniform3f(U.uRot, rot.x, rot.y, rot.z);
+    __pushSceneUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    updateAxisLabels([ex,ey,ez]);
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  function hexToRgb(hex){ var h=hex.replace('#',''); var v=parseInt(h,16); return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255]; }
+  function padVecArray(arr,t){ var out=[]; for(var i=0;i<arr.length;i++){ out.push(arr[i][0],arr[i][1],arr[i][2]); } while(out.length<t*3) out.push(0,0,0); return new Float32Array(out.slice(0,t*3)); }
+  function autoDist(){ var bl=parseFloat(bondLen.value); var R=Math.max(parseFloat(size.value), parseFloat(ligandRadius.value))+bl+0.5; return Math.min(10, Math.max(3.2, R*1.55)); }
+
+
+  // API exposta para tutorial guiado externo
+  var __tutorialTweenId = 0;
+  function __clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  function __lerp(a,b,t){ return a + (b-a)*t; }
+  function __ease(t){ return t<.5 ? 4.0*t*t*t : 1.0 - Math.pow(-2.0*t+2.0,3.0)/2.0; }
+  function __setObjRotDeg(x,y,z){
+    rot.x=(x||0)*DEG; rot.y=(y||0)*DEG; rot.z=(z||0)*DEG;
+    if(rotXS) rotXS.value=String(Math.round((x||0)));
+    if(rotYS) rotYS.value=String(Math.round((y||0)));
+    if(rotZS) rotZS.value=String(Math.round((z||0)));
+  }
+  function __animateView(opts,dur){
+    dur = Math.max(0, dur||900);
+    var id = ++__tutorialTweenId;
+    var s = { camDist:camDist, rotX:rotX, rotY:rotY, ox:rot.x, oy:rot.y, oz:rot.z };
+    var e = {
+      camDist: ('camDist' in opts)? __clamp(opts.camDist, 2.2, 14) : s.camDist,
+      rotX: ('rotX' in opts)? __clamp(opts.rotX, -Math.PI/2+.05, Math.PI/2-.05) : s.rotX,
+      rotY: ('rotY' in opts)? opts.rotY : s.rotY,
+      ox: ('objRotXDeg' in opts)? (opts.objRotXDeg||0)*DEG : s.ox,
+      oy: ('objRotYDeg' in opts)? (opts.objRotYDeg||0)*DEG : s.oy,
+      oz: ('objRotZDeg' in opts)? (opts.objRotZDeg||0)*DEG : s.oz
+    };
+    if(dur===0){ camDist=e.camDist; rotX=e.rotX; rotY=e.rotY; rot.x=e.ox; rot.y=e.oy; rot.z=e.oz; return Promise.resolve(); }
+    return new Promise(function(resolve){
+      var t0=performance.now();
+      function step(now){
+        if(id!==__tutorialTweenId){ resolve(false); return; }
+        var t=(now-t0)/dur; if(t<0)t=0; if(t>1)t=1; t=__ease(t);
+        camDist=__lerp(s.camDist,e.camDist,t);
+        rotX=__lerp(s.rotX,e.rotX,t);
+        rotY=__lerp(s.rotY,e.rotY,t);
+        rot.x=__lerp(s.ox,e.ox,t);
+        rot.y=__lerp(s.oy,e.oy,t);
+        rot.z=__lerp(s.oz,e.oz,t);
+        if(t<1) requestAnimationFrame(step); else resolve(true);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  window.__geomTutorialAPI = {
+    ui: ui,
+    sync: sync,
+    setGeom: function(v){ if(v && geom && geom.querySelector('option[value="'+v+'"]')){ geom.value=v; sync(); } },
+    setAxes: function(v){ if(showAxes){ showAxes.checked=!!v; sync(); } },
+    setLPScale: function(v){ if(lpScale && isFinite(v)){ lpScale.value=String(v); sync(); } },
+
+    setBoardSplit: function(v){ __setBoardSplit(!!v); },
+    setBalloons: function(n){
+      var map={2:'linear',3:'trigonal_planar',4:'tetrahedral',5:'trigonal_bipyramidal',6:'octahedral'};
+      var key=map[n|0]||'';
+      if(!key){ __setBalloons3D(0,null); return; }
+      var G=geomPositions(key);
+      __setBalloons3D(n|0, G.lig);
+    },
+    clearBalloons: function(){ __setBalloons3D(0,null); },
+    setObjRotDeg: __setObjRotDeg,
+    getView: function(){ return {camDist:camDist, rotX:rotX, rotY:rotY, objRotXDeg:rot.x/DEG, objRotYDeg:rot.y/DEG, objRotZDeg:rot.z/DEG}; },
+    setView: function(o){ o=o||{}; if('camDist' in o) camDist=__clamp(o.camDist,2.2,14); if('rotX' in o) rotX=__clamp(o.rotX,-Math.PI/2+.05,Math.PI/2-.05); if('rotY' in o) rotY=o.rotY; if(('objRotXDeg' in o)||('objRotYDeg' in o)||('objRotZDeg' in o)) __setObjRotDeg(o.objRotXDeg||0,o.objRotYDeg||0,o.objRotZDeg||0); },
+    animateTo: __animateView,
+    pulse: function(){ var c=document.getElementById('tutorialCard'); if(!c) return; c.classList.remove('stepPulse'); void c.offsetWidth; c.classList.add('stepPulse'); setTimeout(function(){ c.classList.remove('stepPulse'); }, 700); }
+  };
+  try{ window.dispatchEvent(new CustomEvent('geom-api-ready')); }catch(_e){}
+
+})();
+</script>
+
+<script>
+(function(){
+  function onReady(fn){
+    if(window.__geomTutorialAPI) return fn(window.__geomTutorialAPI);
+    window.addEventListener('geom-api-ready', function(){ fn(window.__geomTutorialAPI); }, {once:true});
+    setTimeout(function(){ if(window.__geomTutorialAPI) fn(window.__geomTutorialAPI); }, 50);
+  }
+
+  onReady(function(api){
+    if(!api) return;
+    var el = {
+      card: document.getElementById('tutorialCard'),
+      tag: document.getElementById('tutorialStepTag'),
+      title: document.getElementById('tutorialTitle'),
+      body: document.getElementById('tutorialBody'),
+      mini: document.getElementById('tutorialMini'),
+      note: document.getElementById('tutorialNote'),
+      examples: document.getElementById('tutorialExamples'),
+      prog: document.getElementById('tutorialProgressBar'),
+      prev: document.getElementById('tutorialPrev'),
+      next: document.getElementById('tutorialNext'),
+      restart: document.getElementById('tutorialRestart'),
+      play: document.getElementById('tutorialPlay'),
+      hint: document.getElementById('focusHint')
+    };
+
+    var PI=Math.PI;
+    function pills(arr){ return (arr||[]).map(function(t){ return '<span class="pill">'+t+'</span>'; }).join(''); }
+    function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+
+    var balloonDemoCount = 2;
+    var balloonGeomMap = {2:'linear', 3:'trigonal_planar', 4:'tetrahedral', 5:'trigonal_bipyramidal', 6:'octahedral'};
+    function isBalloonStep(s){ return !!(s && s.kind==='balloon_analogy'); }
+    function clampBalloonCount(n){ n = (n|0); if(!isFinite(n)) n=2; return Math.max(2, Math.min(6, n)); }
+    function balloonGeomLabel(n){ return ({2:'linear (180°)',3:'trigonal planar (120°)',4:'tetraédrica (109,5°)',5:'bipirâmide trigonal (90°/120°)',6:'octaédrica (90°)'}[n]||'—'); }
+    function balloonDemoHTML(){
+      var n = clampBalloonCount(balloonDemoCount);
+      var cols = '';
+      for(var i=1;i<=n;i++){
+        cols += '<div class="balloonCol balloonPalette-'+(((i-1)%6)+1)+'" title="Balão '+i+'">'
+             +  '<div class="balloonTop"></div><div class="balloonKnot"></div><div class="balloonString"></div></div>';
+      }
+      var rows='';
+      [2,3,4,5,6].forEach(function(k){ rows += '<div class="row'+(k===n?' active':'')+'"><span>'+k+' balões</span><b>'+balloonGeomLabel(k)+'</b></div>'; });
+      return ''
+        + '<div class="balloonDemo">'
+        +   '<h4>Analogia com balões: ocupando espaço</h4>'
+        +   '<div class="balloonToolbar">'
+        +     '<span class="balloonCount">🎈 '+n+' bal'+(n===1?'ão':'ões')+' → '+(n===1?'1 ligante':'ligantes')+'</span>'
+        +     '<div class="balloonActions">'
+        +       '<button type="button" class="miniBtn balloonRem" '+(n<=2?'disabled':'')+'>− Remover balão</button>'
+        +       '<button type="button" class="miniBtn balloonAdd" '+(n>=6?'disabled':'')+'>+ Adicionar balão</button>'
+        +       '<button type="button" class="miniBtn subtle balloonReset">↺ Resetar</button>'
+        +     '</div>'
+        +   '</div>'
+        +   '<div class="balloonStage">'+cols+'<div class="balloonGround"></div></div>'
+        +   '<div class="balloonLegend"><b>Ideia:</b> imagine vários balões amarrados no mesmo nó. Quanto mais balões você coloca, mais eles precisam se reorganizar para caber sem se espremer. Na molécula, quem faz esse papel são as <b>regiões eletrônicas</b> (e depois os <b>ligantes</b> que você vê na lousa).</div>'
+        +   '<div class="balloonMap">'+rows+'</div>'
+        + '</div>';
+    }
+    async function applyBalloonDemoToBoard(count, animate){
+      count = clampBalloonCount(count);
+      balloonDemoCount = count;
+      if(!api || !api.ui) return;
+      var u = api.ui;
+      if(u.showAxes){ u.showAxes.checked = true; }
+      if(u.geom){
+        var g = balloonGeomMap[count] || 'tetrahedral';
+        if(u.geom.querySelector('option[value="'+g+'"]')) u.geom.value = g;
+      }
+      if(u.bondType) u.bondType.value = '1';
+      if(u.lpScale) u.lpScale.value = '1.55';
+      if(u.coreColor) u.coreColor.value = '#f7c76b';
+      if(u.ligandColor) u.ligandColor.value = '#57c7ff';
+      if(u.lpColor) u.lpColor.value = '#1100ff';
+      api.sync();
+      if(api.setBoardSplit) api.setBoardSplit(true);
+      if(api.setBalloons) api.setBalloons(count);
+      if(el.examples && isBalloonStep(steps[idx])) el.examples.innerHTML = balloonDemoHTML();
+      if(api.pulse) api.pulse();
+      if(animate!==false){
+        var viewByN = {
+          2:{camDist:7.6, rotX:0.38, rotY:-0.98, objRotXDeg:0, objRotYDeg:22},
+          3:{camDist:5.35, rotX:0.16, rotY:-0.45, objRotXDeg:10, objRotYDeg:18},
+          4:{camDist:5.8, rotX:0.40, rotY:-0.82, objRotYDeg:20},
+          5:{camDist:6.4, rotX:0.30, rotY:-0.90, objRotYDeg:16},
+          6:{camDist:6.7, rotX:0.34, rotY:-0.95, objRotYDeg:20}
+        };
+        try{ await api.animateTo(viewByN[count] || viewByN[4], 700); }catch(_e){}
+      }
+    }
+
+    var stepExamples = {
+      'Por que existe geometria molecular?':'CO₂ (linear), H₂O (angular) e CH₄ (tetraédrica) mostram que a forma não é detalhe: ela muda o comportamento da substância.',
+      'Analogia com balões: ocupando espaço':'Vários balões presos no mesmo nó se afastam para diminuir aperto. Na molécula, as regiões eletrônicas fazem esse papel e definem a geometria-base.',
+      'VSEPR em uma frase':'Pense em NH₃ e H₂O: ambos têm 4 regiões eletrônicas no átomo central, mas pares livres “recortam” a forma final.',
+      'Leitura espacial: eixos x, y e z':'No papel, CH₄ e uma estrutura inclinada podem parecer parecidos; no espaço, os eixos ajudam a ver quem está vindo “pra frente” ou “pra trás”.',
+      'O que é ângulo de ligação?':'Ex.: em H–O–H (água), o ângulo é medido no O. Em CO₂, o ângulo O–C–O é 180°.',
+      'Ângulo ideal x ângulo real':'CH₄ ~109,5° (ideal tetraédrico); NH₃ ~107°; H₂O ~104,5° por causa dos pares livres.',
+      'Energia, estabilidade e forma':'Ex.: CH₄ prefere tetraedro porque afasta melhor os pares eletrônicos do carbono do que uma forma “achatada”.',
+      'Repulsão estérica (steric repulsion)':'Cadeias carbônicas: CH₄ (referência), C₂H₆ (carbono tetraédrico/sp³), C₂H₄ (carbono trigonal planar/sp²) e C₂H₂ (carbono linear/sp). Em butano, conformações anti/gauche mostram repulsão estérica no dia a dia da orgânica.',
+      'Arranjo eletrônico x geometria molecular':'H₂O: arranjo eletrônico tetraédrico; geometria molecular angular. NH₃: arranjo tetraédrico; geometria piramidal trigonal.',
+      '2 regiões eletrônicas → linear':'CO₂, BeCl₂ (fase gasosa).',
+      '3 regiões eletrônicas → trigonal planar':'BF₃, SO₃.',
+      '3 regiões com par livre → angular (AX2E)':'SO₂, O₃ (ozônio) — ambos com desvio em relação a 120°.',
+      '4 regiões eletrônicas → tetraédrico':'CH₄, CCl₄.',
+      'Piramidal trigonal (AX3E): NH3':'NH₃, PCl₃.',
+      'Angular (AX2E2): H2O e deformação maior':'H₂O, OF₂ (com ângulos diferentes por conta dos átomos envolvidos).',
+      'Ordem de repulsão (quem empurra mais)':'Isso explica por que H₂O (2 pares livres) comprime mais que NH₃ (1 par livre).',
+      '5 regiões → bipirâmide trigonal (TBP)':'PCl₅ é o clássico.',
+      'Pares livres em TBP: preferência equatorial':'SF₄ (gangorra) mostra esse comportamento.',
+      'Derivadas da TBP: gangorra, T e linear':'SF₄ (gangorra), ClF₃ (T), XeF₂ (linear).',
+      '6 regiões → octaédrico':'SF₆ é o exemplo clássico de simetria alta.',
+      'Derivadas do octaédrico: piramidal quadrada e quadrado planar':'BrF₅ (piramidal quadrada), XeF₄ (quadrado planar).',
+      'Como resolver qualquer exercício (passo a passo)':'Treine com CO₂, BF₃, CH₄, NH₃ e H₂O antes de ir para SF₄ e XeF₄.',
+      'Fechamento: forma muda propriedades':'H₂O é polar e CO₂ é apolar (linear), embora ambos tenham ligações polares.',
+      'Ligação dupla/tripla: conta 1 região, mas repele mais':'CO₂ (duplas no carbono central) ainda é linear; SO₂ (com par livre) mostra como o ângulo real pode desviar.',
+      'Ângulo e energia: pequenas mudanças, grande efeito':'NH₃ e H₂O são ótimos para comparar como pares livres mudam ângulo e estabilidade do arranjo.',
+      'Checklist mental rápido para não confundir':'Use o checklist em CO₂, BF₃, CH₄, NH₃ e H₂O para treinar a lógica antes dos casos mais chatinhos.'
+    };
+
+    var stepAnalogies = {
+      'Por que existe geometria molecular?':'Analogia: pessoas com mochilas entrando num elevador naturalmente se espalham para não bater ombro com ombro.',
+      'VSEPR em uma frase':'Analogia: é como distribuir cadeiras em volta de uma mesa para ninguém ficar espremido.',
+      'Leitura espacial: eixos x, y e z':'Analogia: igual mapa vs GPS 3D — no mapa parece perto, mas no prédio há andares e profundidade.',
+      'O que é ângulo de ligação?':'Analogia: duas lanternas saindo de um mesmo ponto; o ângulo é a abertura entre os feixes.',
+      'Ângulo ideal x ângulo real':'Analogia: uma barraca montada no manual (ideal) vs barraca com vento e terreno irregular (real).',
+      'Energia, estabilidade e forma':'Analogia: bolinhas de gude numa tigela param no fundo porque ali é mais estável (menor energia).',
+      'Repulsão estérica (steric repulsion)':'Analogia: sentar três pessoas com casacos volumosos num banco estreito força todo mundo a ajustar postura.',
+      'Arranjo eletrônico x geometria molecular':'Analogia: arranjo eletrônico = todas as cadeiras da mesa; geometria molecular = só as cadeiras ocupadas por convidados.',
+      'Ordem de repulsão (quem empurra mais)':'Analogia: mochila grande (par livre) ocupa mais espaço que braço esticado (ligação).',
+      'Pares livres em TBP: preferência equatorial':'Analogia: num banco de 3 lugares (equatorial) é mais confortável do que ficar numa ponta espremida entre duas passagens de 90°.',
+      'Como resolver qualquer exercício (passo a passo)':'Analogia: receita de bolo — se seguir a ordem (Lewis → contar regiões → arranjo → geometria), você erra bem menos.',
+      'Ligação dupla/tripla: conta 1 região, mas repele mais':'Analogia: duas pessoas ocupam uma cadeira (1 região), mas com mochilas grandes ocupam mais espaço ao redor.',
+      'Ângulo e energia: pequenas mudanças, grande efeito':'Analogia: ajustar um móvel alguns centímetros já pode destravar a circulação de um cômodo.',
+      'Checklist mental rápido para não confundir':'Analogia: checklist de aeroporto — pode parecer chato, mas evita erro bobo e retrabalho.'
+    };
+
+    function stepContextParts(s){
+      return {
+        ex: s.examples || stepExamples[s.title] || '',
+        an: s.analogy || stepAnalogies[s.title] || ''
+      };
+    }
+    function stepContextHTML(s){
+      var out=[];
+      var parts = stepContextParts(s);
+      if(parts.ex) out.push('<b>Exemplo(s):</b> '+parts.ex);
+      if(parts.an) out.push('<b>No cotidiano:</b> '+parts.an);
+      return out.join('<br><br>');
+    }
+
+    var exampleCatalog = {
+      'CO2':  {label:'CO₂',  geom:'linear',               coreColor:'#3d4147', ligandColor:'#ff5858', lpColor:'#1100ff', bondType:2, view:{camDist:4.2, rotX:0.14, rotY:0.02, objRotYDeg:90}},
+      'H2O':  {label:'H₂O',  geom:'bent_tet',             coreColor:'#ff5858', ligandColor:'#eef6ff', lpColor:'#1100ff', bondType:1, lpScale:1.65, view:{camDist:4.7, rotX:0.44, rotY:-0.96, objRotYDeg:18}},
+      'NH3':  {label:'NH₃',  geom:'trigonal_pyramidal',   coreColor:'#5c76ff', ligandColor:'#f5fbff', lpColor:'#1100ff', bondType:1, lpScale:1.65, view:{camDist:4.95, rotX:0.42, rotY:-0.96, objRotYDeg:24}},
+      'CH4':  {label:'CH₄',  geom:'tetrahedral',          coreColor:'#3f434a', ligandColor:'#f5fbff', lpColor:'#1100ff', bondType:1, lpScale:1.45, view:{camDist:4.95, rotX:0.40, rotY:-0.82, objRotYDeg:22}},
+      'C2H6': {label:'C₂H₆ (em torno de 1 C)', geom:'tetrahedral',   coreColor:'#3f434a', ligandColor:'#eaf4ff', lpColor:'#1100ff', bondType:1, lpScale:1.45, view:{camDist:5.0, rotX:0.40, rotY:-0.84, objRotYDeg:24}},
+      'C2H4': {label:'C₂H₄ (em torno de 1 C)', geom:'trigonal_planar',coreColor:'#3f434a', ligandColor:'#eaf4ff', lpColor:'#1100ff', bondType:2, view:{camDist:4.6, rotX:0.08, rotY:-0.28, objRotXDeg:90, objRotYDeg:10}},
+      'C2H2': {label:'C₂H₂ (em torno de 1 C)', geom:'linear',         coreColor:'#3f434a', ligandColor:'#eaf4ff', lpColor:'#1100ff', bondType:3, view:{camDist:4.25, rotX:0.14, rotY:0.02, objRotYDeg:90}},
+      'BF3':  {label:'BF₃',  geom:'trigonal_planar',      coreColor:'#ff9b7a', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, view:{camDist:4.55, rotX:0.05, rotY:-0.22, objRotXDeg:90, objRotYDeg:0}},
+      'SO2':  {label:'SO₂',  geom:'bent_tp',              coreColor:'#ffd654', ligandColor:'#ff5858', lpColor:'#1100ff', bondType:2, lpScale:1.7, view:{camDist:4.35, rotX:0.24, rotY:-0.55, objRotYDeg:12}},
+      'O3':   {label:'O₃',   geom:'bent_tp',              coreColor:'#ff7272', ligandColor:'#ff4f4f', lpColor:'#1100ff', bondType:1, lpScale:1.65, view:{camDist:4.4, rotX:0.24, rotY:-0.52, objRotYDeg:10}},
+      'SO3':  {label:'SO₃',  geom:'trigonal_planar',      coreColor:'#ffd654', ligandColor:'#ff5858', lpColor:'#1100ff', bondType:2, view:{camDist:4.6, rotX:0.08, rotY:-0.30, objRotXDeg:90, objRotYDeg:10}},
+      'CCl4': {label:'CCl₄', geom:'tetrahedral',          coreColor:'#3f434a', ligandColor:'#39c66d', lpColor:'#1100ff', bondType:1, view:{camDist:5.05, rotX:0.42, rotY:-0.86, objRotYDeg:22}},
+      'PCl3': {label:'PCl₃', geom:'trigonal_pyramidal',   coreColor:'#ff9f43', ligandColor:'#39c66d', lpColor:'#1100ff', bondType:1, lpScale:1.7, view:{camDist:4.95, rotX:0.42, rotY:-0.98, objRotYDeg:26}},
+      'PCl5': {label:'PCl₅', geom:'trigonal_bipyramidal', coreColor:'#ff9f43', ligandColor:'#39c66d', lpColor:'#1100ff', bondType:1, view:{camDist:5.8, rotX:0.30, rotY:-0.84, objRotYDeg:18}},
+      'SF4':  {label:'SF₄',  geom:'see_saw',              coreColor:'#ffd654', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.75, view:{camDist:5.1, rotX:0.40, rotY:-0.98, objRotYDeg:24}},
+      'ClF3': {label:'ClF₃', geom:'t_shaped',             coreColor:'#39c66d', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.7, view:{camDist:4.95, rotX:0.36, rotY:-0.92, objRotYDeg:20}},
+      'XeF2': {label:'XeF₂', geom:'linear_tbp',           coreColor:'#9b85ff', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.75, view:{camDist:4.65, rotX:0.18, rotY:-0.32, objRotYDeg:90}},
+      'SF6':  {label:'SF₆',  geom:'octahedral',           coreColor:'#ffd654', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, view:{camDist:5.65, rotX:0.38, rotY:-0.92, objRotYDeg:18}},
+      'BrF5': {label:'BrF₅', geom:'square_pyramidal',     coreColor:'#c88446', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.7, view:{camDist:5.25, rotX:0.44, rotY:-0.96, objRotYDeg:18}},
+      'XeF4': {label:'XeF₄', geom:'square_planar',        coreColor:'#9b85ff', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.75, view:{camDist:5.0, rotX:0.18, rotY:-0.42, objRotXDeg:90, objRotYDeg:8}},
+      'OF2':  {label:'OF₂',  geom:'bent_tet',             coreColor:'#ff5858', ligandColor:'#bff56a', lpColor:'#1100ff', bondType:1, lpScale:1.65, view:{camDist:4.65, rotX:0.42, rotY:-0.92, objRotYDeg:16}},
+      'BeCl2':{label:'BeCl₂',geom:'linear',               coreColor:'#9bb4a4', ligandColor:'#39c66d', lpColor:'#1100ff', bondType:1, view:{camDist:4.2, rotX:0.14, rotY:0.02, objRotYDeg:90}}
+    };
+    var activeExampleKey = null;
+    function __escHtml(t){ return String(t).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c] || c; }); }
+    function __normalizeChemText(str){
+      var map = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
+      return String(str||'').replace(/[₀₁₂₃₄₅₆₇₈₉]/g, function(ch){ return map[ch] || ch; });
+    }
+    function stepExampleKeys(s){
+      var srcRaw = [s.examples || stepExamples[s.title] || '', s.note || '', s.body || '', s.title || ''].join(' ');
+      var src = __normalizeChemText(srcRaw);
+      var keys=[];
+      Object.keys(exampleCatalog).forEach(function(k){
+        var re = new RegExp('(^|[^A-Za-z0-9])'+k.replace(/([\^$.*+?()[\]{}|])/g,'\\$1')+'([^A-Za-z0-9]|$)','i');
+        if(re.test(src)) keys.push(k);
+      });
+      keys.sort(function(a,b){ return src.toUpperCase().indexOf(a.toUpperCase())-src.toUpperCase().indexOf(b.toUpperCase()); });
+      return keys.filter(function(k,i,a){ return a.indexOf(k)===i; });
+    }
+    function buildExamplesHTML(s){
+      if(isBalloonStep(s)) return balloonDemoHTML();
+      var parts = stepContextParts(s);
+      var keys = stepExampleKeys(s);
+      var blocks = [];
+      if(parts.ex){
+        if(keys.length){
+          var primary = exampleCatalog[keys[0]];
+          var label = primary ? primary.label : keys[0];
+          blocks.push('<button type="button" class="exInlineBtn" data-ex-key="'+keys[0]+'" title="Mostrar '+__escHtml(label)+' na lousa"><b>Exemplo(s):</b> '+parts.ex+' <span class="hint">(clique para mostrar na lousa)</span></button>');
+        } else {
+          blocks.push('<div><b>Exemplo(s):</b> '+parts.ex+'</div>');
+        }
+      }
+      if(parts.an) blocks.push('<div><b>No cotidiano:</b> '+parts.an+'</div>');
+      var base = blocks.join('<br><br>');
+      if(!keys.length) return base;
+      var btns = keys.map(function(k){
+        var ex = exampleCatalog[k];
+        if(!ex) return '';
+        return '<button type="button" class="exBtn'+(activeExampleKey===k?' active':'')+'" data-ex-key="'+k+'" title="Mostrar '+__escHtml(ex.label)+' na lousa">'+__escHtml(ex.label)+'</button>';
+      }).join('');
+      return base + '<div class="exHelp">Você pode clicar no texto de exemplo acima ou nos botões abaixo para jogar a molécula na lousa.</div><div class="exBtns">'+btns+'</div>';
+    }
+    async function applyExampleToBoard(key){
+      var ex = exampleCatalog[key]; if(!ex || !api || !api.ui) return;
+      activeExampleKey = key;
+      playing = false; updateButtons();
+      var u = api.ui;
+      if(u.showAxes){ u.showAxes.checked = true; }
+      if(ex.geom && u.geom && u.geom.querySelector('option[value="'+ex.geom+'"]')) u.geom.value = ex.geom;
+      if('bondType' in ex && u.bondType) u.bondType.value = String(ex.bondType);
+      if('lpScale' in ex && u.lpScale) u.lpScale.value = String(ex.lpScale);
+      if(ex.coreColor && u.coreColor) u.coreColor.value = ex.coreColor;
+      if(ex.ligandColor && u.ligandColor) u.ligandColor.value = ex.ligandColor;
+      if(ex.lpColor && u.lpColor) u.lpColor.value = ex.lpColor;
+      api.sync();
+      if(api.setBalloons) api.setBalloons(count);
+      if(el.examples) { el.examples.innerHTML = buildExamplesHTML(steps[idx]); }
+      if(api.pulse) api.pulse();
+      if(ex.view) { try{ await api.animateTo(ex.view, 850); } catch(_e){} }
+    }
+
+    var steps = [
+      {
+        title: 'Por que existe geometria molecular?',
+        body: 'Moléculas não são desenhos chapados de caderno: os elétrons ocupam <b>volume no espaço</b>. Como têm carga negativa, eles se repelem e o conjunto se organiza de um jeito que <b>diminui apertos</b>, reduz a <b>energia potencial</b> e aumenta a <b>estabilidade</b>. Essa “arrumação 3D” é a geometria molecular.',
+        note: 'Em linguagem física: a forma surge porque o sistema tende a um arranjo de menor energia. Menor energia = maior estabilidade relativa (sem magia, só interação elétrica).',
+        pills: ['energia', 'estabilidade', 'repulsão'],
+        run: async function(){
+          api.setAxes(true);
+          api.setGeom('tetrahedral');
+          api.setLPScale(1.8);
+          await api.animateTo({camDist:5.2, rotX:0.36, rotY:-0.75, objRotYDeg:18}, 950);
+        }
+      },
+      {
+        title: 'Analogia com balões: ocupando espaço',
+        kind: 'balloon_analogy',
+        body: 'Pensa em vários <b>balões presos no mesmo ponto</b>. Cada balão ocupa volume e “quer” um espaço para não ficar comprimido. Quando você adiciona mais balões, eles se rearranjam. Na molécula acontece algo parecido: as <b>regiões eletrônicas</b> ao redor do átomo central se organizam para reduzir repulsão e deixar o sistema mais estável.',
+        note: 'Use os botões abaixo para adicionar balões (até 6). Cada balão extra aumenta o número de ligantes mostrado na lousa dividida ao lado (balões de um lado e molécula do outro), conectando a analogia com os arranjos reais (linear, trigonal planar, tetraédrico, TBP e octaédrico).',
+        pills: ['analogia', 'balões', 'volume', 'afastamento'],
+        run: async function(){
+          balloonDemoCount = clampBalloonCount(balloonDemoCount || 2);
+          await applyBalloonDemoToBoard(balloonDemoCount, true);
+        }
+      },
+      {
+        title: 'VSEPR em uma frase',
+        body: 'A teoria VSEPR (repulsão dos pares de elétrons da valência) diz que as <b>regiões eletrônicas</b> ao redor do átomo central se posicionam o mais longe possível para reduzir repulsões. Na prática, faça em duas etapas: descubra o <b>arranjo eletrônico</b> (todas as regiões) e depois obtenha a <b>geometria molecular</b> (considerando a posição dos átomos).',
+        note: 'Região eletrônica = ligação simples, dupla, tripla ou par livre. No VSEPR, cada uma conta como 1 região para definir a geometria-base.',
+        pills: ['VSEPR', 'regiões eletrônicas', 'arranjo'],
+        run: async function(){
+          api.setGeom('trigonal_pyramidal');
+          api.setLPScale(2.0);
+          await api.animateTo({camDist:4.95, rotX:0.42, rotY:-0.96, objRotYDeg:24}, 900);
+        }
+      },
+      {
+        title: 'Leitura espacial: eixos x, y e z',
+        body: 'Os eixos coloridos ajudam a enxergar profundidade: <b>x</b> (vermelho), <b>y</b> (verde) e <b>z</b> (azul). Sem isso, é comum confundir duas estruturas que parecem iguais em 2D, mas estão orientadas diferente em 3D.',
+        note: 'Geometria molecular é uma ideia espacial. O papel é só uma projeção.',
+        pills: ['3D', 'orientação', 'projeção'],
+        run: async function(){
+          api.setAxes(true);
+          api.setGeom('tetrahedral');
+          await api.animateTo({camDist:5.5, rotX:0.20, rotY:-0.20, objRotXDeg:8, objRotYDeg:34}, 800);
+          await api.animateTo({camDist:5.5, rotX:0.56, rotY:-1.08, objRotXDeg:-8, objRotYDeg:-12}, 950);
+        }
+      },
+      {
+        title: 'O que é ângulo de ligação?',
+        body: 'É a abertura entre <b>duas ligações</b>, medida no átomo central. Se você imaginar setas (vetores) saindo do centro até dois ligantes, o ângulo de ligação é exatamente a abertura entre essas duas setas.',
+        note: 'O ângulo não é escolhido “na mão”: ele aparece como consequência da distribuição espacial das nuvens eletrônicas e das repulsões entre elas.',
+        pills: ['ângulo', 'vetores', 'átomo central'],
+        run: async function(){
+          api.setGeom('bent_tet');
+          api.setLPScale(2.0);
+          await api.animateTo({camDist:4.25, rotX:0.20, rotY:-0.45, objRotYDeg:0}, 700);
+          await api.animateTo({camDist:4.75, rotX:0.46, rotY:-0.98, objRotYDeg:18}, 900);
+        }
+      },
+      {
+        title: 'Ângulo ideal x ângulo real',
+        body: 'Cada arranjo tem um <b>ângulo ideal</b> (modelo geométrico perfeito, tipo régua e compasso). Na molécula real, o <b>ângulo observado</b> pode mudar porque pares livres, ligações múltiplas e o tamanho dos átomos alteram a intensidade das repulsões.',
+        note: 'Resumo mental: primeiro identifique a geometria ideal, depois aplique as deformações.',
+        pills: ['ideal', 'real', 'deformação'],
+        run: async function(){
+          api.setGeom('tetrahedral');
+          api.setLPScale(1.6);
+          await api.animateTo({camDist:4.95, rotX:0.40, rotY:-0.82, objRotYDeg:22}, 900);
+        }
+      },
+      {
+        title: 'Energia, estabilidade e forma',
+        body: 'Quando as regiões eletrônicas ficam melhor distribuídas, a <b>repulsão diminui</b> e a <b>energia potencial</b> do sistema cai. Em geral, a forma mais estável é a que evita aproximações desnecessárias e deixa o “trânsito eletrônico” menos congestionado.',
+        note: 'Não é estética: é otimização energética. A molécula “prefere” o arranjo que custa menos energia para manter.',
+        pills: ['energia potencial', 'mínimo', 'estabilidade'],
+        run: async function(){
+          api.setGeom('trigonal_bipyramidal');
+          await api.animateTo({camDist:5.85, rotX:0.28, rotY:-0.82, objRotYDeg:22}, 900);
+          await api.animateTo({camDist:5.35, rotX:0.36, rotY:-0.94, objRotYDeg:16}, 650);
+        }
+      },
+      {
+        title: 'Repulsão estérica (steric repulsion)',
+        body: 'Além da repulsão eletrônica local, existe a <b>repulsão estérica</b> (impedimento espacial): quando grupos/átomos ocupam muito volume, eles “se esbarram” no espaço e forçam ajustes de ângulo e orientação para reduzir esse aperto. Em <b>cadeias carbônicas</b>, isso aparece quando grupos maiores tentam ficar mais afastados uns dos outros.',
+        note: 'Exemplos em cadeias carbônicas: no butano, a conformação anti é mais estável que a gauche porque grupos ficam menos apertados; em cadeias ramificadas, o volume dos substituintes também influencia a orientação. Para visualizar na lousa, compare CH₄, C₂H₆, C₂H₄ e C₂H₂ (geometrias locais ao redor do carbono).',
+        pills: ['repulsão estérica', 'volume', 'impedimento espacial'],
+        run: async function(){
+          api.setGeom('see_saw');
+          api.setLPScale(2.1);
+          await api.animateTo({camDist:5.2, rotX:0.34, rotY:-0.82, objRotYDeg:18}, 900);
+          await api.animateTo({camDist:4.95, rotX:0.44, rotY:-1.05, objRotYDeg:28}, 700);
+        }
+      },
+      {
+        title: 'Arranjo eletrônico x geometria molecular',
+        body: '<b>Arranjo eletrônico</b> considera todas as regiões (ligações + pares livres). <b>Geometria molecular</b> considera só a posição dos átomos ligados. Por isso uma molécula pode ter arranjo tetraédrico e geometria angular.',
+        note: 'Essa distinção é a virada de chave que evita decorar tabelas sem entender.',
+        pills: ['arranjo eletrônico', 'geometria molecular', 'pares livres'],
+        run: async function(){
+          api.setGeom('bent_tet');
+          api.setLPScale(2.05);
+          await api.animateTo({camDist:4.55, rotX:0.42, rotY:-0.95, objRotYDeg:20}, 900);
+        }
+      },
+      {
+        title: '2 regiões eletrônicas → linear',
+        body: 'Com <b>2 regiões</b>, a maior separação possível é em linha reta: <b>180°</b>. Se as duas regiões forem ligações, o arranjo eletrônico e a geometria molecular são ambos lineares.',
+        note: 'Exemplo clássico: CO₂. Duplas ligações contam como 1 região cada no VSEPR.',
+        pills: ['2 regiões', 'linear', '180°'],
+        run: async function(){
+          api.setGeom('linear');
+          await api.animateTo({camDist:4.25, rotX:0.14, rotY:0.02, objRotYDeg:90}, 900);
+        }
+      },
+      {
+        title: '3 regiões eletrônicas → trigonal planar',
+        body: 'Com <b>3 regiões</b>, a distribuição ideal é <b>trigonal planar</b>, com ângulos de <b>120°</b>. Tudo fica em um mesmo plano ao redor do átomo central.',
+        note: 'Exemplo: BF₃. Se 1 região for par livre, a geometria molecular vira angular (base trigonal planar).',
+        pills: ['3 regiões', '120°', 'plano'],
+        run: async function(){
+          api.setGeom('trigonal_planar');
+          await api.animateTo({camDist:4.55, rotX:0.05, rotY:-0.22, objRotXDeg:90, objRotYDeg:0}, 950);
+        }
+      },
+      {
+        title: '3 regiões com par livre → angular (AX2E)',
+        body: 'Quando uma das 3 regiões é <b>par livre</b>, ele ocupa mais espaço e empurra as ligações. A base continua trigonal planar, mas a <b>geometria molecular observada</b> fica angular.',
+        note: 'Aqui já aparece a lógica de deformação por repulsão diferente entre regiões.',
+        pills: ['AX2E', 'angular', 'par livre'],
+        run: async function(){
+          api.setGeom('bent_tp');
+          api.setLPScale(2.0);
+          await api.animateTo({camDist:4.35, rotX:0.24, rotY:-0.55, objRotYDeg:12}, 850);
+        }
+      },
+      {
+        title: '4 regiões eletrônicas → tetraédrico',
+        body: 'Com <b>4 regiões</b>, o arranjo ideal é <b>tetraédrico</b>, com ângulo ideal de <b>109,5°</b>. Essa é uma geometria central para entender química orgânica e muitas moléculas covalentes.',
+        note: 'Exemplo: CH₄. Sem pares livres, os ângulos ficam próximos do ideal.',
+        pills: ['4 regiões', 'tetraédrico', '109,5°'],
+        run: async function(){
+          api.setGeom('tetrahedral');
+          api.setLPScale(1.6);
+          await api.animateTo({camDist:4.9, rotX:0.42, rotY:-0.80, objRotYDeg:24}, 900);
+        }
+      },
+      {
+        title: 'Piramidal trigonal (AX3E): NH3',
+        body: 'Com 4 regiões totais, sendo <b>3 ligações + 1 par livre</b>, a base eletrônica é tetraédrica, mas a geometria molecular vira <b>piramidal trigonal</b>. O ângulo cai de 109,5° para cerca de <b>107°</b>.',
+        note: 'O par livre ocupa mais espaço e comprime os ângulos ligação–ligação.',
+        pills: ['AX3E', 'NH3', '≈107°'],
+        run: async function(){
+          api.setGeom('trigonal_pyramidal');
+          api.setLPScale(2.1);
+          await api.animateTo({camDist:5.0, rotX:0.38, rotY:-0.95, objRotYDeg:24}, 850);
+          await api.animateTo({camDist:4.6, rotX:0.42, rotY:-0.87, objRotYDeg:28}, 600);
+        }
+      },
+      {
+        title: 'Angular (AX2E2): H2O e deformação maior',
+        body: 'Na água, o oxigênio tem <b>4 regiões</b> (2 ligações + 2 pares livres). O arranjo eletrônico é tetraédrico, mas a geometria molecular é <b>angular</b> e o ângulo cai para ~<b>104,5°</b>.',
+        note: 'Dois pares livres comprimem mais que um. Por isso H₂O desvia mais do ideal que NH₃.',
+        pills: ['AX2E2', 'H2O', '≈104,5°'],
+        run: async function(){
+          api.setGeom('bent_tet');
+          api.setLPScale(2.2);
+          await api.animateTo({camDist:4.2, rotX:0.22, rotY:-0.42, objRotYDeg:0}, 700);
+          await api.animateTo({camDist:4.75, rotX:0.50, rotY:-1.02, objRotYDeg:18}, 900);
+        }
+      },
+      {
+        title: 'Ordem de repulsão (quem empurra mais)',
+        body: 'Nem toda interação repulsiva é igual. Em geral: <b>par livre–par livre &gt; par livre–ligação &gt; ligação–ligação</b>. Esse ranking explica por que pares livres deformam tanto a geometria.',
+        note: 'Ligações múltiplas também podem aumentar repulsão local e ajustar ângulos reais.',
+        pills: ['LP-LP', 'LP-L', 'L-L'],
+        run: async function(){
+          api.setGeom('trigonal_pyramidal');
+          api.setLPScale(2.25);
+          await api.animateTo({camDist:4.7, rotX:0.42, rotY:-0.92, objRotYDeg:30}, 850);
+        }
+      },
+      {
+        title: '5 regiões → bipirâmide trigonal (TBP)',
+        body: 'Com <b>5 regiões</b>, aparecem duas classes de posição: <b>equatoriais</b> (120° entre si) e <b>axiais</b> (90° em relação ao plano equatorial, 180° entre si).',
+        note: 'Esse arranjo é importante porque nem todas as posições têm a mesma repulsão.',
+        pills: ['TBP', 'equatorial', 'axial'],
+        run: async function(){
+          api.setGeom('trigonal_bipyramidal');
+          await api.animateTo({camDist:5.8, rotX:0.24, rotY:-0.78, objRotYDeg:20}, 900);
+          await api.animateTo({camDist:5.4, rotX:0.34, rotY:-0.98, objRotYDeg:12}, 700);
+        }
+      },
+      {
+        title: 'Pares livres em TBP: preferência equatorial',
+        body: 'Em uma bipirâmide trigonal, um par livre costuma preferir posição <b>equatorial</b>, porque ali ele sofre menos interações a 90°. Isso aumenta a estabilidade do arranjo.',
+        note: 'É uma decisão energética: menos repulsões fortes, menor energia.',
+        pills: ['equatorial preferida', 'energia menor', 'estabilidade'],
+        run: async function(){
+          api.setGeom('see_saw');
+          api.setLPScale(2.15);
+          await api.animateTo({camDist:5.1, rotX:0.34, rotY:-0.84, objRotYDeg:20}, 900);
+        }
+      },
+      {
+        title: 'Derivadas da TBP: gangorra, T e linear',
+        body: 'Removendo visualmente pares livres da base TBP, surgem geometrias como <b>gangorra (AX4E)</b>, <b>em T (AX3E2)</b> e até <b>linear (AX2E3)</b>. O mesmo arranjo eletrônico pode gerar formas bem diferentes.',
+        note: 'Aqui o segredo é sempre lembrar: primeiro base eletrônica, depois geometria molecular.',
+        pills: ['AX4E', 'AX3E2', 'AX2E3'],
+        run: async function(){
+          api.setGeom('t_shaped');
+          api.setLPScale(2.15);
+          await api.animateTo({camDist:4.9, rotX:0.28, rotY:-0.70, objRotYDeg:8}, 750);
+          api.setGeom('linear_tbp');
+          await api.animateTo({camDist:4.55, rotX:0.18, rotY:0.02, objRotYDeg:90}, 850);
+        }
+      },
+      {
+        title: '6 regiões → octaédrico',
+        body: 'Com <b>6 regiões</b>, o arranjo ideal é <b>octaédrico</b>, com ângulos de <b>90°</b> e <b>180°</b>. É uma distribuição altamente simétrica e energeticamente favorável para seis regiões equivalentes.',
+        note: 'Exemplo clássico: SF₆.',
+        pills: ['6 regiões', 'octaédrico', '90°/180°'],
+        run: async function(){
+          api.setGeom('octahedral');
+          await api.animateTo({camDist:5.35, rotX:0.36, rotY:-0.66, objRotXDeg:10, objRotYDeg:28}, 900);
+        }
+      },
+      {
+        title: 'Derivadas do octaédrico: piramidal quadrada e quadrado planar',
+        body: 'Com pares livres na base octaédrica surgem <b>piramidal quadrada (AX5E)</b> e <b>quadrado planar (AX4E2)</b>. No quadrado planar, os pares livres ficam opostos e a molécula aparece bem plana.',
+        note: 'Exemplo famoso de quadrado planar: XeF₄ (em discussões introdutórias de VSEPR).',
+        pills: ['AX5E', 'AX4E2', 'quadrado planar'],
+        run: async function(){
+          api.setGeom('square_pyramidal');
+          api.setLPScale(2.1);
+          await api.animateTo({camDist:5.05, rotX:0.34, rotY:-0.78, objRotYDeg:20}, 850);
+          api.setGeom('square_planar');
+          await api.animateTo({camDist:4.7, rotX:0.08, rotY:-0.20, objRotXDeg:90, objRotYDeg:0}, 900);
+        }
+      },
+      {
+        title: 'Ligação dupla/tripla: conta 1 região, mas repele mais',
+        body: 'No VSEPR, <b>ligação simples, dupla ou tripla</b> contam como <b>1 região eletrônica</b> para definir o arranjo. Mas ligações múltiplas têm maior densidade eletrônica e podem <b>ajustar o ângulo real</b> por repulsão local mais intensa.',
+        note: 'Regra prática: use 1 região para classificar a geometria; depois refine a previsão do ângulo real.',
+        pills: ['ligação dupla', 'ligação tripla', 'ângulo real'],
+        run: async function(){
+          api.setGeom('linear');
+          await api.animateTo({camDist:4.8, rotX:0.24, rotY:-0.62, objRotYDeg:10}, 800);
+          api.setGeom('bent_trig');
+          api.setLPScale(1.95);
+          await api.animateTo({camDist:4.7, rotX:0.42, rotY:-0.95, objRotYDeg:16}, 900);
+        }
+      },
+      {
+        title: 'Ângulo e energia: pequenas mudanças, grande efeito',
+        body: 'Quando um ângulo se afasta do ideal, a molécula pode aumentar ou diminuir sua energia dependendo das repulsões envolvidas. Em geral, o sistema “negocia” ângulos para chegar a um <b>mínimo de energia</b> possível dentro das restrições de tamanho e repulsão.',
+        note: 'A geometria observada é um equilíbrio: não existe “perfeição geométrica” isolada, existe compromisso energético.',
+        pills: ['mínimo de energia', 'equilíbrio', 'ângulo'],
+        run: async function(){
+          api.setGeom('trigonal_pyramidal');
+          api.setLPScale(2.0);
+          await api.animateTo({camDist:4.95, rotX:0.33, rotY:-0.78, objRotYDeg:22}, 800);
+          await api.animateTo({camDist:4.55, rotX:0.48, rotY:-1.00, objRotYDeg:28}, 900);
+        }
+      },
+      {
+        title: 'Checklist mental rápido para não confundir',
+        body: 'Pergunte sempre: (1) qual é o átomo central? (2) quantas regiões eletrônicas ele tem? (3) qual o arranjo eletrônico? (4) quantos pares livres existem? (5) qual a geometria molecular e como isso deforma o ângulo ideal?',
+        note: 'Esse checklist evita o erro clássico de chamar H₂O de tetraédrica (o arranjo eletrônico é tetraédrico, a geometria molecular é angular).',
+        pills: ['checklist', 'Lewis', 'evitar erro comum'],
+        run: async function(){
+          api.setGeom('tetrahedral');
+          await api.animateTo({camDist:5.0, rotX:0.40, rotY:-0.85, objRotYDeg:20}, 700);
+          api.setGeom('bent_tet');
+          api.setLPScale(2.0);
+          await api.animateTo({camDist:4.65, rotX:0.42, rotY:-0.95, objRotYDeg:20}, 950);
+        }
+      },
+      {
+        title: 'Como resolver qualquer exercício (passo a passo)',
+        body: '<b>1)</b> faça/analise Lewis; <b>2)</b> conte regiões eletrônicas no átomo central; <b>3)</b> identifique o arranjo eletrônico; <b>4)</b> remova pares livres para obter a geometria molecular; <b>5)</b> ajuste ângulos reais considerando repulsão e efeito estérico.',
+        note: 'Macete-base: 2 linear · 3 trigonal planar · 4 tetraédrico · 5 TBP · 6 octaédrico.',
+        pills: ['método', 'Lewis', 'ângulos reais'],
+        run: async function(){
+          api.setGeom('tetrahedral');
+          api.setLPScale(1.8);
+          await api.animateTo({camDist:5.15, rotX:0.36, rotY:-0.74, objRotXDeg:0, objRotYDeg:12}, 900);
+        }
+      },
+      {
+        title: 'Fechamento: forma muda propriedades',
+        body: 'A geometria molecular influencia <b>polaridade</b>, forças intermoleculares, reatividade e propriedades físicas. Ou seja: a forma não é enfeite — ela ajuda a explicar o comportamento químico real.',
+        note: 'Resumo final: geometria = distribuição espacial guiada por repulsão, energia e estabilidade.',
+        pills: ['polaridade', 'reatividade', 'propriedades'],
+        run: async function(){
+          api.setGeom('tetrahedral');
+          api.setAxes(true);
+          await api.animateTo({camDist:5.35, rotX:0.42, rotY:-1.02, objRotYDeg:32}, 1000);
+        }
+      }
+    ];
+
+    var idx = 0;
+    var playing = false;
+    var applying = false;
+    var runToken = 0;
+
+    function setFade(on){ if(!el.card) return; el.card.classList.toggle('fadeStep', !!on); }
+    function updateButtons(){
+      el.prev.disabled = (idx===0) || applying;
+      el.next.disabled = applying;
+      el.restart.disabled = applying;
+      el.play.disabled = applying;
+      el.play.textContent = playing ? '⏸ Auto' : '▶ Auto';
+      el.next.textContent = idx === steps.length-1 ? 'Concluir ✓' : 'Próximo ▶';
+    }
+    function renderStep(){
+      var s = steps[idx];
+      el.tag.textContent = 'Passo ' + (idx+1) + ' / ' + steps.length;
+      el.title.innerHTML = s.title;
+      el.body.innerHTML = s.body;
+      el.note.innerHTML = s.note || '';
+      el.examples.innerHTML = buildExamplesHTML(s);
+      el.examples.style.display = el.examples.innerHTML ? '' : 'none';
+      el.mini.innerHTML = pills(s.pills);
+      el.prog.style.width = (((idx+1)/steps.length)*100).toFixed(2)+'%';
+      if(el.hint){ el.hint.classList.toggle('hide', idx>1); }
+      updateButtons();
+      api.pulse && api.pulse();
+    }
+
+    async function applyStep(i){
+      idx = Math.max(0, Math.min(steps.length-1, i));
+      var token = ++runToken;
+      applying = true; updateButtons(); setFade(true);
+      renderStep();
+      // Balões 3D aparecem só na etapa de analogia + lousa dividida em 2 nessa etapa
+      if(api && api.setBoardSplit) api.setBoardSplit(isBalloonStep(steps[idx]));
+      if(api && api.clearBalloons && !isBalloonStep(steps[idx])) api.clearBalloons();
+      if(api && api.setBalloons && isBalloonStep(steps[idx])) api.setBalloons(balloonDemoCount);
+      await sleep(120);
+      setFade(false);
+      try {
+        if(steps[idx] && typeof steps[idx].run === 'function'){
+          await steps[idx].run();
+        }
+      } catch(e) { console.error(e); }
+      if(token !== runToken) return;
+      applying = false; updateButtons();
+    }
+
+    async function next(){
+      if(applying) return;
+      if(idx >= steps.length-1){
+        playing = false; updateButtons();
+        return;
+      }
+      await applyStep(idx+1);
+    }
+    async function prev(){ if(applying || idx<=0) return; await applyStep(idx-1); }
+    async function restart(){ playing = false; runToken++; await applyStep(0); }
+
+    async function autoplay(){
+      if(playing){ playing = false; updateButtons(); return; }
+      playing = true; updateButtons();
+      while(playing && idx < steps.length-1){
+        if(applying){ await sleep(120); continue; }
+        await sleep(2400);
+        if(!playing) break;
+        await next();
+      }
+      playing = false; updateButtons();
+    }
+
+    el.next.addEventListener('click', next);
+    el.prev.addEventListener('click', prev);
+    el.restart.addEventListener('click', restart);
+    el.play.addEventListener('click', autoplay);
+    el.examples.addEventListener('click', function(ev){
+      var t = ev.target && ev.target.closest ? ev.target.closest('.balloonAdd, .balloonRem, .balloonReset, .exBtn, .exInlineBtn') : null;
+      if(!t) return;
+      ev.preventDefault();
+      if(t.classList.contains('balloonAdd')){ applyBalloonDemoToBoard(balloonDemoCount+1, true); return; }
+      if(t.classList.contains('balloonRem')){ applyBalloonDemoToBoard(balloonDemoCount-1, true); return; }
+      if(t.classList.contains('balloonReset')){ applyBalloonDemoToBoard(2, true); return; }
+      var k = t.getAttribute('data-ex-key');
+      if(k) applyExampleToBoard(k);
+    });
+
+    window.addEventListener('keydown', function(e){
+      if(e.key==='ArrowRight') next();
+      else if(e.key==='ArrowLeft') prev();
+    });
+
+    // Estado inicial bonito
+    if(api.ui && api.ui.showAxes){ api.ui.showAxes.checked = true; }
+    api.sync();
+    applyStep(0);
+  });
+})();
+</script>
+
+</body>
+</html>

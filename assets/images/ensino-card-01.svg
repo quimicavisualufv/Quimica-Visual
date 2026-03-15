@@ -30,8 +30,8 @@
   </g>
   <circle cx="143" cy="121" r="18" fill="#ffd166" stroke="#ffcf5a" stroke-width="4"/>
   <circle cx="347" cy="121" r="28" fill="#ff7aa2" opacity="0.9" stroke="#ff9ab7" stroke-width="4"/>
-  <text x="453" y="88" fill="#b7ffda" font-size="22" font-family="Manrope, Arial">tetra</text>
-  <text x="454" y="128" fill="#ffc8d8" font-size="22" font-family="Manrope, Arial">octa</text>
+  <text x="453" y="88" fill="#b7ffda" font-size="22" font-family="Manrope, Arial"> </text>
+  <text x="454" y="128" fill="#ffc8d8" font-size="22" font-family="Manrope, Arial"> </text>
 </g>
     <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b"/>
     <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700">Buracos e Empacotamento</text>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+<title>Exercícios de fixação · Polaridade e Geometria</title>
+<link rel="stylesheet" href="assets/css/style1.css" />
+</head>
+<body>
+<div class="app">
+  <aside>
+    <h1>Polaridade Molecular 3D · Exercícios</h1>
+
+    <fieldset>
+      <legend>Geometria (VSEPR)</legend>
+      <div class="geomSelectHidden" aria-hidden="true">
+      <select id="geom" tabindex="-1">
+        <optgroup label="Sem pares não-ligantes (E=0)">
+          <option value="linear">Linear (AX2)</option>
+          <option value="trigonal_planar">Trigonal planar (AX3)</option>
+          <option value="tetrahedral" selected>Tetraédrica (AX4)</option>
+          <option value="trigonal_bipyramidal">Bipirâmide trigonal (AX5)</option>
+          <option value="octahedral">Octaédrica (AX6)</option>
+        </optgroup>
+        <optgroup label="Com pares não-ligantes">
+          <option value="bent_tp">Angular (AX2E, base trigonal planar)</option>
+          <option value="trigonal_pyramidal">Piramidal trigonal (AX3E)</option>
+          <option value="bent_tet">Angular (AX2E2, base tetraédrica)</option>
+          <option value="see_saw">Gangorra / Seesaw (AX4E)</option>
+          <option value="t_shaped">Em T (AX3E2)</option>
+          <option value="linear_tbp">Linear (AX2E3, base TBP)</option>
+          <option value="square_pyramidal">Piramidal quadrada (AX5E)</option>
+          <option value="square_planar">Quadrada planar (AX4E2)</option>
+        </optgroup>
+      </select>
+      </div>
+      <div class="row">
+        <div><label for="bondLen">Comprimento de ligação</label><input id="bondLen" type="range" min="0.6" max="2.2" step="0.01" value="1.25" /></div>
+        <div><label for="size">Raio do átomo central</label><input id="size" type="range" min="0.35" max="1.2" step="0.01" value="0.64" /></div>
+      </div>
+      <div class="row">
+        <div><label for="ligandRadius">Raio dos ligantes</label><input id="ligandRadius" type="range" min="0.18" max="0.8" step="0.01" value="0.44" /></div>
+        <div><label for="bondRadius">Raio da ligação</label><input id="bondRadius" type="range" min="0.03" max="0.18" step="0.005" value="0.085" /></div>
+      </div>
+      <div class="row">
+        <div><label for="lpScale">Tamanho do par não-ligante</label><input id="lpScale" type="range" min="0.6" max="1.8" step="0.01" value="1.0" /></div>
+        <div><label for="ambient">Luz ambiente</label><input id="ambient" type="range" min="0" max="1" step="0.01" value="0.45" /></div>
+      </div>
+      <div class="row">
+        <div><label for="sat">Saturação</label><input id="sat" type="range" min="0" max="2" step="0.01" value="1.25" /></div>
+        <div><label for="specK">Brilho especular</label><input id="specK" type="range" min="0" max="0.6" step="0.005" value="0" /></div>
+      </div>
+      <div class="row">
+        <div><label for="refl">Reflexo (ambiente)</label><input id="refl" type="range" min="0" max="0.8" step="0.01" value="0" /></div>
+        <div></div>
+      </div>
+      <div class="row">
+        <div><label for="ligandColor">Cor dos ligantes</label><input id="ligandColor" type="color" value="#0b2e87" /></div>
+        <div><label for="lpColor">Cor dos pares não-ligantes</label><input id="lpColor" type="color" value="#1100ff" /></div>
+      </div>
+      <div><label for="coreColor">Cor do átomo central</label><input id="coreColor" type="color" value="#ffffff" /></div>
+
+      <div class="row">
+        <div>
+          <label for="bondType">Tipo de ligação</label>
+          <select id="bondType">
+            <option value="1" selected>Simples (-)</option>
+            <option value="2">Dupla (=)</option>
+            <option value="3">Tripla (≡)</option>
+          </select>
+        </div>
+        <div class="checkStack">
+          <label class="small"><input id="showAxes" type="checkbox" checked /> Mostrar eixos XYZ</label>
+          <label class="small"><input id="showAngles" type="checkbox" checked /> Mostrar ângulos</label>
+        </div>
+        <div>
+          <label class="small"><input id="lightBgQuick" type="checkbox" /> Fundo branco</label>
+        </div>
+      </div>
+
+      <button class="btn" id="save">Salvar imagem (PNG)</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Fundo espacial</legend>
+      <div class="row">
+        <div><label for="bgBrightness">Brilho</label><input id="bgBrightness" type="range" min="0" max="1.6" step="0.01" value="0" /></div>
+        <div><label for="bgStars">Densidade de estrelas</label><input id="bgStars" type="range" min="0" max="2.5" step="0.01" value="0" /></div>
+      </div>
+      <div style="margin-top:10px"><label class="small"><input id="lightBg" type="checkbox" /> Fundo branco</label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rotação do modelo</legend>
+      <div class="row3">
+        <div><label for="rotXS">Ângulo X (°)</label><input id="rotXS" type="range" min="-180" max="180" step="1" value="0" /></div>
+        <div><label for="rotYS">Ângulo Y (°)</label><input id="rotYS" type="range" min="-180" max="180" step="1" value="0" /></div>
+        <div class="rotZControl"><label for="rotZS">Rotação Z (°)</label><input id="rotZS" type="range" min="0" max="360" step="1" value="0" /></div>
+      </div>
+      <button class="btn" id="rotReset">Resetar rotação</button>
+    </fieldset>
+
+    <fieldset id="infoBox">
+      <legend>Geometria selecionada</legend>
+      <div class="badges"><div id="infoName" class="badge">-</div><div id="infoArr" class="badge">-</div></div>
+      <div id="infoIdeal" class="small" style="margin-top:6px">-</div>
+    </fieldset>
+
+      </aside>
+
+  <main>
+    <canvas id="gl"></canvas>
+    <canvas id="angleOverlay"></canvas>
+    <div id="miniAxesWrap" aria-hidden="true"><canvas id="miniAxes"></canvas></div>
+    <div class="axesToggle" id="axesToggle"><label><input id="axesToggleChk" type="checkbox" checked /> Mostrar eixos</label></div>
+    <div aria-label="Ângulos da molécula" class="angleLegendPanel" id="angleLegendPanel"></div>
+    <div id="axisXLabel" class="axisLabel" style="color:#ff7a7a">x</div>
+    <div id="axisYLabel" class="axisLabel" style="color:#6dffb0">y</div>
+    <div id="axisZLabel" class="axisLabel" style="color:#7ec8ff">z</div>
+    <div class="hud" id="hud">-</div>
+    <div id="boardSplitOverlay" class="boardSplitOverlay" aria-hidden="true"><div class="ghostPane left"></div><div class="ghostPane right"></div><div class="sideTag left">🎈 Balões (analogia)</div><div class="sideTag right">🧪 Molécula</div></div>
+
+        <div class="focusHint hide" id="focusHint"></div>
+
+  </main>
+</div>
+
+<script src="assets/js/script1.js"></script>
+
+<script src="assets/js/script2.js"></script>
+
+</body>
+</html>

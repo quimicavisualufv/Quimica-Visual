@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+<title>Contagem por Frações — Células Unitárias (App)</title>
+
+
+<link rel="stylesheet" href="assets/css/style1.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <header>
+        <h1>Contagem por Frações — Células Unitárias</h1>
+        <small>drag = girar • scroll = zoom • D = reset</small>
+      </header>
+      <canvas id="sceneCanvas" width="1400" height="840"></canvas>
+    </div>
+    <div class="panel" id="right">
+      <header><h1>Controles</h1><small>Método das frações</small></header>
+      <div class="ui">
+        <label class="col-span-2">Sistema cristalino
+          <select id="cellType">
+            <option value="cubic">Cúbica</option>
+            <option value="tetragonal">Tetragonal</option>
+            <option value="orthorhombic">Ortorrômbica</option>
+            <option value="hexagonal">Hexagonal (γ=120°)</option>
+          
+            <option value="rhombohedral">Romboédrica (Trigonal)</option>
+            <option value="monoclinic">Monoclínica</option>
+            <option value="triclinic">Triclínica</option>
+          </select>
+        </label>
+
+        <label>Zoom
+          <input id="zoom" type="range" min="0.6" max="2" step="0.01" value="1.0">
+        </label><label>Preset (exemplo)
+          <select id="preset">
+          </select>
+        </label><div class="legend col-span-2" title="Cores dos átomos por posição">
+          <div class="chip"><span class="dot vtx"></span>Vértice</div>
+          <div class="chip"><span class="dot edge"></span>Aresta</div>
+          <div class="chip"><span class="dot face"></span>Face</div>
+          <div class="chip"><span class="dot center"></span>Centro</div>
+        </div>
+
+        <div class="col-span-2 grid2">
+          <label>Elemento nos vértices<select id="symV"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+          <label>Elemento nas arestas<select id="symE"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+          <label>Elemento nas faces<select id="symF"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+          <label>Elemento no centro<select id="symC"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+        </div>
+
+        <div class="readout col-span-2" id="readout"></div>
+        <div class="footer col-span-2">Fração por posição (universal): <b>Centro=1</b>, <b>Face=½</b>, <b>Aresta=¼</b>, <b>Vértice=⅛</b>.</div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script src="assets/js/script1.js"></script>
+</body>
+</html>

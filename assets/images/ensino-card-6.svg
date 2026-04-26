@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#0b1220"/>
+        <stop offset="100%" stop-color="#15233d"/>
+      </linearGradient>
+      <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#1f2f4f"/>
+        <stop offset="100%" stop-color="#16243f"/>
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+      </filter>
+    </defs>
+    <rect width="640" height="420" rx="28" fill="url(#g)"/>
+    <g opacity="0.08" stroke="#9cc7ff" stroke-width="1">
+      <path d="M0 70H640"/><path d="M0 140H640"/><path d="M0 210H640"/><path d="M0 280H640"/><path d="M0 350H640"/>
+      <path d="M90 0V420"/><path d="M180 0V420"/><path d="M270 0V420"/><path d="M360 0V420"/><path d="M450 0V420"/><path d="M540 0V420"/>
+    </g>
+    <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)"/>
+    
+<g transform="translate(90,36)">
+  <g stroke="#8fd3ff" stroke-width="5" fill="none" opacity="0.95">
+    <line x1="220" y1="120" x2="130" y2="55"/>
+    <line x1="220" y1="120" x2="310" y2="55"/>
+    <line x1="220" y1="120" x2="120" y2="190"/>
+    <line x1="220" y1="120" x2="320" y2="190"/>
+    <line x1="220" y1="120" x2="220" y2="235"/>
+  </g>
+  <g fill="#b7ffda">
+    <circle cx="130" cy="55" r="16"/><circle cx="310" cy="55" r="16"/><circle cx="120" cy="190" r="16"/><circle cx="320" cy="190" r="16"/><circle cx="220" cy="235" r="16"/>
+  </g>
+  <circle cx="220" cy="120" r="28" fill="#7c5cff" stroke="#b9a8ff" stroke-width="4"/>
+  <g transform="translate(410,28)">
+    <rect x="0" y="0" width="120" height="90" rx="16" fill="#162744" stroke="#27426e"/>
+    <text x="16" y="37" fill="#ffd166" font-family="Manrope, Arial" font-size="24">VSEPR</text>
+  </g>
+</g>
+    <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b"/>
+    <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700">Geometria Molecular</text>
+    </svg>

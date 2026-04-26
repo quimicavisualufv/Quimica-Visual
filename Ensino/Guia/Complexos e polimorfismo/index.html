@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<title>Visualizador 3D Acadêmico • estruturas cristalinas, Azul da Prússia e cisplatina</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app">
+<section class="panel stage">
+<div class="head">
+<div>
+<h1>Visualizador 3D Acadêmico • estruturas cristalinas, Azul da Prússia e cisplatina</h1>
+<small>Visualização orientada de polimorfismo, célula unitária, rede cristalina, cavidades estruturais e espécies internas.</small>
+</div>
+<div class="pill-row">
+<div class="pill" id="sceneTag">Quartzo</div>
+<div class="pill" id="countTag">29 átomos • 30 ligações</div>
+</div>
+</div>
+<div class="view-wrap">
+<canvas height="967" id="view" width="836"></canvas>
+<div class="anim-banner" id="animBanner"><span>Cisplatina α</span><span class="anim-arrow">→</span><span>Cisplatina β</span></div>
+<div class="anim-stage" id="animStageLabel"></div>
+<div class="guide-float" id="guideFloat">
+<div class="guide-float-step" id="guideFloatStep">passo 1 de 24</div>
+<div class="guide-float-title" id="guideFloatTitle">Objetivo do visualizador</div>
+<div class="guide-float-text" id="guideFloatText">O roteiro foi organizado para separar composição química, célula unitária, rede cristalina e polimorfismo.</div>
+</div>
+<div class="overlay">
+<div class="chip">modo guiado</div>
+<div class="chip">α → transição → β</div>
+<div class="chip">mesma substância, arranjos diferentes</div>
+<div class="chip">redes, cavidades e contra-íons</div>
+</div>
+</div>
+</section>
+<aside class="panel sidebar">
+<div class="head">
+<div>
+<h2 style="font-size:15px;margin:0">Parâmetros de visualização</h2>
+<small>Use as setas do teclado para avançar no roteiro ou clique nos botões. A estrutura pode ser rotacionada manualmente na lousa.</small>
+</div>
+</div>
+<div class="scroll">
+<section class="section guide-card">
+<div class="guide-kicker">Complexos e polimorfismo</div>
+<h3 class="guide-heading" id="guideHeading">Objetivo do visualizador</h3>
+<div class="guide-text" id="guideText"><p>Polimorfismo, complexos e hidratação de sais são conceitos que mostram como a organização da matéria influencia suas propriedades. No polimorfismo, uma mesma substância pode apresentar diferentes arranjos estruturais no estado sólido, alterando características físicas sem mudar a composição química. Nos complexos, um metal central se liga a ligantes ao seu redor, formando geometrias específicas que determinam sua reatividade e comportamento. Já na hidratação de sais, moléculas de água passam a integrar a estrutura cristalina do composto, modificando sua estabilidade, massa e, em alguns casos, sua aparência. Veremos alguns exemplos disso durante esse guia</p>
+<div class="guide-callout"><strong>Comparação útil:</strong> uma estrutura cristalina pode ser lida como um revestimento modular: a célula unitária faz o papel da menor peça capaz de reconstruir o todo.</div></div>
+<div class="guide-nav-top"><div class="tutorialStepTag" id="tutorialStepTag">Passo 1 / 24</div></div>
+<div class="tutorialActions">
+<button class="tbtn ghost" disabled="" id="tutorialPrev" title="Seta para a esquerda">← Anterior</button>
+<button class="tbtn primary" id="tutorialNext" title="Seta para a direita">Próximo →</button>
+</div>
+</section>
+<section class="section">
+<h3>Visualização</h3>
+<div class="grid2">
+<label>Zoom<input id="zoom" max="3.4" min="0.6" step="0.01" type="range" value="2.00"/></label>
+<label>Rotação<input id="pitch" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid2" style="margin-top:10px">
+<label>Escala das esferas<input id="sphereScale" max="1.85" min="0.55" step="0.01" type="range" value="1"/></label>
+<label>Espessura das ligações<input id="bondScale" max="2.4" min="0.6" step="0.01" type="range" value="1"/></label>
+</div>
+<div class="grid2" style="margin-top:10px">
+<label class="check"><input checked="" id="showCell" type="checkbox"/> Mostrar célula</label>
+<label class="check"><input checked="" id="showLabels" type="checkbox"/> Mostrar rótulos</label>
+</div>
+<div class="grid2" style="margin-top:8px">
+<label class="check"><input checked="" id="showAtoms" type="checkbox"/> Mostrar átomos</label>
+<label class="check"><input checked="" id="showBonds" type="checkbox"/> Mostrar ligações</label>
+</div>
+<div style="margin-top:8px">
+<label class="check"><input id="showPolyhedra" type="checkbox"/> Mostrar poliedros</label>
+</div>
+<div style="margin-top:8px">
+<label class="check"><input checked="" id="showAxes" type="checkbox"/> Mostrar eixos</label>
+</div>
+<div style="margin-top:8px">
+<label class="check"><input id="showOnlyUnitCell" type="checkbox"/> Mostrar somente os átomos da célula unitária</label>
+</div>
+<div class="grid2" style="margin-top:10px">
+<button class="ghost" id="resetCam">Resetar câmera</button>
+<button class="ghost" id="fitScene">Reenquadrar</button>
+</div>
+</section><section class="section" id="sceneSection">
+<h3>Estrutura desta etapa</h3>
+<div class="note" id="sceneDescription" style="margin-top:10px"><strong>Quartzo</strong><br/><span class="muted">SiO₄ • rede cristalina contínua</span><br/><br/>Estrutura cristalina de SiO₄ lida como rede tridimensional. Um bom paralelo cotidiano é o de um piso de azulejos: a célula unitária funciona como a menor peça capaz de reconstruir o padrão inteiro por repetição.</div>
+<div class="legend" id="legend"><div class="legend-item"><span class="swatch" style="background:#fe0300"></span><span>O</span></div><div class="legend-item"><span class="swatch" style="background:#1b3bfa"></span><span>Si</span></div></div>
+</section>
+<section class="section hidden-panel" id="animSection">
+<div class="card-top"><h3 style="margin:0">Animação na estrutura</h3><label class="check" style="width:auto;padding:8px 12px"><input id="animEnable" type="checkbox"/> ativar</label></div>
+<div class="grid2">
+<button class="secondary" id="animPlay">Reproduzir</button>
+<button class="ghost" id="animReset">Voltar ao início</button>
+</div>
+<label style="margin-top:10px">Progresso (arraste para ver a deformação passo a passo)<input id="animProgress" max="1" min="0" step="0.001" type="range" value="0"/></label>
+<div class="phase-ruler">
+<button class="phase-step" id="phaseStepAlpha" type="button">fase 1</button>
+<button class="phase-step" id="phaseStepMid" type="button">fase 2</button>
+<button class="phase-step" id="phaseStepBeta" type="button">fase 3</button>
+</div>
+<div class="phase-caption" id="animPhaseCaption">Etapa inicial da transformação estrutural. Use o controle para acompanhar a variação geométrica.</div>
+<label style="margin-top:10px">Duração (s)<input id="animDuration" max="18" min="4" step="0.5" type="range" value="8"/></label>
+<div class="note" style="margin-top:10px">A animação do roteiro é <strong>didática</strong>: ela mostra a reorganização espacial entre formas estruturais relacionadas. O objetivo não é reproduzir uma trajetória termodinâmica real, mas tornar visível a mudança de empacotamento, simetria e ocupação do espaço.</div>
+</section>
+<section class="section">
+<h3>Célula unitária</h3>
+<div class="grid3">
+<label>a<input id="cellA" step="0.01" type="number"/></label>
+<label>b<input id="cellB" step="0.01" type="number"/></label>
+<label>c<input id="cellC" step="0.01" type="number"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>α<input id="cellAlpha" step="0.1" type="number"/></label>
+<label>β<input id="cellBeta" step="0.1" type="number"/></label>
+<label>γ<input id="cellGamma" step="0.1" type="number"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>rep X<input id="repeatX" min="1" step="1" type="number"/></label>
+<label>rep Y<input id="repeatY" min="1" step="1" type="number"/></label>
+<label>rep Z<input id="repeatZ" min="1" step="1" type="number"/></label>
+</div>
+</section>
+<section class="section advanced-only">
+<div class="card-top"><h3 style="margin:0">Átomos</h3><button class="ghost" id="addAtom" style="width:auto;padding:7px 10px">Adicionar átomo</button></div>
+<div class="list" id="atomsList"><div class="card">
+<div class="card-top">
+<strong>Átomo 1</strong>
+<button class="ghost" data-rm-atom="0" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="0" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="0" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="0" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="0" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="0" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="0" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="0" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 2</strong>
+<button class="ghost" data-rm-atom="1" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="1" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="1" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="1" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="1" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="1" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="1" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="1" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 3</strong>
+<button class="ghost" data-rm-atom="2" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="2" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="2" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="2" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="2" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="2" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="2" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="2" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 4</strong>
+<button class="ghost" data-rm-atom="3" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="3" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="3" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="3" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="3" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="3" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="3" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="3" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 5</strong>
+<button class="ghost" data-rm-atom="4" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="4" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="4" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="4" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="4" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="4" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="4" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="4" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 6</strong>
+<button class="ghost" data-rm-atom="5" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="5" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="5" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="5" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="5" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="5" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="5" data-k="color" type="color" value="#ff0400"/></label>
+<label>rótulo<input data-atom="5" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 7</strong>
+<button class="ghost" data-rm-atom="6" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="6" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="6" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="6" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="6" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="6" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="6" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="6" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 8</strong>
+<button class="ghost" data-rm-atom="7" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="7" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="7" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="7" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="7" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="7" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="7" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="7" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 9</strong>
+<button class="ghost" data-rm-atom="8" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="8" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="8" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="8" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="8" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="8" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="8" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="8" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 10</strong>
+<button class="ghost" data-rm-atom="9" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="9" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="9" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="9" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="9" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="9" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="9" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="9" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 11</strong>
+<button class="ghost" data-rm-atom="10" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="10" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="10" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="10" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="10" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="10" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="10" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="10" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 12</strong>
+<button class="ghost" data-rm-atom="11" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="11" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="11" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="11" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="11" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="11" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="11" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="11" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 13</strong>
+<button class="ghost" data-rm-atom="12" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="12" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="12" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="12" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="12" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="12" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="12" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="12" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 14</strong>
+<button class="ghost" data-rm-atom="13" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="13" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="13" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="13" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="13" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="13" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="13" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="13" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 15</strong>
+<button class="ghost" data-rm-atom="14" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="14" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="14" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="14" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="14" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="14" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="14" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="14" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 16</strong>
+<button class="ghost" data-rm-atom="15" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="15" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="15" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="15" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="15" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="15" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="15" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="15" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 17</strong>
+<button class="ghost" data-rm-atom="16" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="16" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="16" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="16" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="16" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="16" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="16" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="16" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 18</strong>
+<button class="ghost" data-rm-atom="17" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="17" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="17" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="17" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="17" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="17" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="17" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="17" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 19</strong>
+<button class="ghost" data-rm-atom="18" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="18" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="18" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="18" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="18" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="18" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="18" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="18" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 20</strong>
+<button class="ghost" data-rm-atom="19" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="19" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="19" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="19" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="19" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="19" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="19" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="19" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 21</strong>
+<button class="ghost" data-rm-atom="20" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="20" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="20" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="20" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="20" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="20" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="20" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="20" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 22</strong>
+<button class="ghost" data-rm-atom="21" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="21" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="21" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="21" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="21" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="21" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="21" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="21" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 23</strong>
+<button class="ghost" data-rm-atom="22" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="22" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="22" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="22" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="22" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="22" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="22" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="22" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 24</strong>
+<button class="ghost" data-rm-atom="23" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="23" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="23" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="23" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="23" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="23" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="23" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="23" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 25</strong>
+<button class="ghost" data-rm-atom="24" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="24" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="24" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="24" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="24" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="24" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="24" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="24" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 26</strong>
+<button class="ghost" data-rm-atom="25" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="25" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="25" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="25" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="25" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="25" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="25" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="25" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 27</strong>
+<button class="ghost" data-rm-atom="26" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="26" data-k="el" type="text" value="Si"/></label>
+<label>x<input data-atom="26" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="26" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="26" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="26" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="26" data-k="color" type="color" value="#1b3bfa"/></label>
+<label>rótulo<input data-atom="26" data-k="label" type="text" value="Si"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 28</strong>
+<button class="ghost" data-rm-atom="27" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="27" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="27" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="27" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="27" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="27" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="27" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="27" data-k="label" type="text" value="O"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Átomo 29</strong>
+<button class="ghost" data-rm-atom="28" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>elem<input data-atom="28" data-k="el" type="text" value="O"/></label>
+<label>x<input data-atom="28" data-k="x" step="0.01" type="number" value="0"/></label>
+<label>y<input data-atom="28" data-k="y" step="0.01" type="number" value="0"/></label>
+<label>z<input data-atom="28" data-k="z" step="0.01" type="number" value="0"/></label>
+</div>
+<div class="grid3" style="margin-top:8px">
+<label>escala<input data-atom="28" data-k="scale" step="1" type="number" value="100"/></label>
+<label>cor<input data-atom="28" data-k="color" type="color" value="#fe0300"/></label>
+<label>rótulo<input data-atom="28" data-k="label" type="text" value="O"/></label>
+</div></div></div>
+</section>
+<section class="section advanced-only">
+<div class="card-top"><h3 style="margin:0">Ligações</h3><button class="ghost" id="addBond" style="width:auto;padding:7px 10px">Adicionar ligação</button></div>
+<div class="list" id="bondsList"><div class="card">
+<div class="card-top">
+<strong>Ligação 1</strong>
+<button class="ghost" data-rm-bond="0" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="0" data-k="a" min="0" step="1" type="number" value="0"/></label>
+<label>b<input data-bond="0" data-k="b" min="0" step="1" type="number" value="15"/></label>
+<label>tipo
+ <select data-bond="0" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="0" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 2</strong>
+<button class="ghost" data-rm-bond="1" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="1" data-k="a" min="0" step="1" type="number" value="1"/></label>
+<label>b<input data-bond="1" data-k="b" min="0" step="1" type="number" value="10"/></label>
+<label>tipo
+ <select data-bond="1" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="1" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 3</strong>
+<button class="ghost" data-rm-bond="2" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="2" data-k="a" min="0" step="1" type="number" value="1"/></label>
+<label>b<input data-bond="2" data-k="b" min="0" step="1" type="number" value="14"/></label>
+<label>tipo
+ <select data-bond="2" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="2" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 4</strong>
+<button class="ghost" data-rm-bond="3" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="3" data-k="a" min="0" step="1" type="number" value="2"/></label>
+<label>b<input data-bond="3" data-k="b" min="0" step="1" type="number" value="3"/></label>
+<label>tipo
+ <select data-bond="3" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="3" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 5</strong>
+<button class="ghost" data-rm-bond="4" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="4" data-k="a" min="0" step="1" type="number" value="2"/></label>
+<label>b<input data-bond="4" data-k="b" min="0" step="1" type="number" value="13"/></label>
+<label>tipo
+ <select data-bond="4" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="4" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 6</strong>
+<button class="ghost" data-rm-bond="5" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="5" data-k="a" min="0" step="1" type="number" value="3"/></label>
+<label>b<input data-bond="5" data-k="b" min="0" step="1" type="number" value="18"/></label>
+<label>tipo
+ <select data-bond="5" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="5" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 7</strong>
+<button class="ghost" data-rm-bond="6" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="6" data-k="a" min="0" step="1" type="number" value="4"/></label>
+<label>b<input data-bond="6" data-k="b" min="0" step="1" type="number" value="5"/></label>
+<label>tipo
+ <select data-bond="6" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="6" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 8</strong>
+<button class="ghost" data-rm-bond="7" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="7" data-k="a" min="0" step="1" type="number" value="4"/></label>
+<label>b<input data-bond="7" data-k="b" min="0" step="1" type="number" value="13"/></label>
+<label>tipo
+ <select data-bond="7" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="7" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 9</strong>
+<button class="ghost" data-rm-bond="8" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="8" data-k="a" min="0" step="1" type="number" value="4"/></label>
+<label>b<input data-bond="8" data-k="b" min="0" step="1" type="number" value="23"/></label>
+<label>tipo
+ <select data-bond="8" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="8" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 10</strong>
+<button class="ghost" data-rm-bond="9" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="9" data-k="a" min="0" step="1" type="number" value="5"/></label>
+<label>b<input data-bond="9" data-k="b" min="0" step="1" type="number" value="7"/></label>
+<label>tipo
+ <select data-bond="9" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="9" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 11</strong>
+<button class="ghost" data-rm-bond="10" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="10" data-k="a" min="0" step="1" type="number" value="6"/></label>
+<label>b<input data-bond="10" data-k="b" min="0" step="1" type="number" value="26"/></label>
+<label>tipo
+ <select data-bond="10" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="10" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 12</strong>
+<button class="ghost" data-rm-bond="11" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="11" data-k="a" min="0" step="1" type="number" value="7"/></label>
+<label>b<input data-bond="11" data-k="b" min="0" step="1" type="number" value="8"/></label>
+<label>tipo
+ <select data-bond="11" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="11" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 13</strong>
+<button class="ghost" data-rm-bond="12" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="12" data-k="a" min="0" step="1" type="number" value="7"/></label>
+<label>b<input data-bond="12" data-k="b" min="0" step="1" type="number" value="17"/></label>
+<label>tipo
+ <select data-bond="12" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="12" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 14</strong>
+<button class="ghost" data-rm-bond="13" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="13" data-k="a" min="0" step="1" type="number" value="7"/></label>
+<label>b<input data-bond="13" data-k="b" min="0" step="1" type="number" value="23"/></label>
+<label>tipo
+ <select data-bond="13" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="13" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 15</strong>
+<button class="ghost" data-rm-bond="14" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="14" data-k="a" min="0" step="1" type="number" value="9"/></label>
+<label>b<input data-bond="14" data-k="b" min="0" step="1" type="number" value="15"/></label>
+<label>tipo
+ <select data-bond="14" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="14" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 16</strong>
+<button class="ghost" data-rm-bond="15" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="15" data-k="a" min="0" step="1" type="number" value="10"/></label>
+<label>b<input data-bond="15" data-k="b" min="0" step="1" type="number" value="11"/></label>
+<label>tipo
+ <select data-bond="15" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="15" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 17</strong>
+<button class="ghost" data-rm-bond="16" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="16" data-k="a" min="0" step="1" type="number" value="10"/></label>
+<label>b<input data-bond="16" data-k="b" min="0" step="1" type="number" value="22"/></label>
+<label>tipo
+ <select data-bond="16" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="16" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 18</strong>
+<button class="ghost" data-rm-bond="17" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="17" data-k="a" min="0" step="1" type="number" value="11"/></label>
+<label>b<input data-bond="17" data-k="b" min="0" step="1" type="number" value="12"/></label>
+<label>tipo
+ <select data-bond="17" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="17" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 19</strong>
+<button class="ghost" data-rm-bond="18" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="18" data-k="a" min="0" step="1" type="number" value="12"/></label>
+<label>b<input data-bond="18" data-k="b" min="0" step="1" type="number" value="19"/></label>
+<label>tipo
+ <select data-bond="18" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="18" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 20</strong>
+<button class="ghost" data-rm-bond="19" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="19" data-k="a" min="0" step="1" type="number" value="12"/></label>
+<label>b<input data-bond="19" data-k="b" min="0" step="1" type="number" value="22"/></label>
+<label>tipo
+ <select data-bond="19" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="19" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 21</strong>
+<button class="ghost" data-rm-bond="20" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="20" data-k="a" min="0" step="1" type="number" value="12"/></label>
+<label>b<input data-bond="20" data-k="b" min="0" step="1" type="number" value="24"/></label>
+<label>tipo
+ <select data-bond="20" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="20" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 22</strong>
+<button class="ghost" data-rm-bond="21" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="21" data-k="a" min="0" step="1" type="number" value="12"/></label>
+<label>b<input data-bond="21" data-k="b" min="0" step="1" type="number" value="25"/></label>
+<label>tipo
+ <select data-bond="21" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="21" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 23</strong>
+<button class="ghost" data-rm-bond="22" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="22" data-k="a" min="0" step="1" type="number" value="13"/></label>
+<label>b<input data-bond="22" data-k="b" min="0" step="1" type="number" value="18"/></label>
+<label>tipo
+ <select data-bond="22" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="22" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 24</strong>
+<button class="ghost" data-rm-bond="23" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="23" data-k="a" min="0" step="1" type="number" value="13"/></label>
+<label>b<input data-bond="23" data-k="b" min="0" step="1" type="number" value="19"/></label>
+<label>tipo
+ <select data-bond="23" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="23" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 25</strong>
+<button class="ghost" data-rm-bond="24" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="24" data-k="a" min="0" step="1" type="number" value="14"/></label>
+<label>b<input data-bond="24" data-k="b" min="0" step="1" type="number" value="16"/></label>
+<label>tipo
+ <select data-bond="24" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="24" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 26</strong>
+<button class="ghost" data-rm-bond="25" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="25" data-k="a" min="0" step="1" type="number" value="20"/></label>
+<label>b<input data-bond="25" data-k="b" min="0" step="1" type="number" value="26"/></label>
+<label>tipo
+ <select data-bond="25" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="25" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 27</strong>
+<button class="ghost" data-rm-bond="26" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="26" data-k="a" min="0" step="1" type="number" value="21"/></label>
+<label>b<input data-bond="26" data-k="b" min="0" step="1" type="number" value="27"/></label>
+<label>tipo
+ <select data-bond="26" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="26" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 28</strong>
+<button class="ghost" data-rm-bond="27" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="27" data-k="a" min="0" step="1" type="number" value="24"/></label>
+<label>b<input data-bond="27" data-k="b" min="0" step="1" type="number" value="25"/></label>
+<label>tipo
+ <select data-bond="27" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="27" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 29</strong>
+<button class="ghost" data-rm-bond="28" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="28" data-k="a" min="0" step="1" type="number" value="26"/></label>
+<label>b<input data-bond="28" data-k="b" min="0" step="1" type="number" value="27"/></label>
+<label>tipo
+ <select data-bond="28" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="28" data-k="color" type="color" value="#ffffff"/></label>
+</div></div><div class="card">
+<div class="card-top">
+<strong>Ligação 30</strong>
+<button class="ghost" data-rm-bond="29" style="width:auto;padding:6px 10px">remover</button>
+</div>
+<div class="grid4">
+<label>a<input data-bond="29" data-k="a" min="0" step="1" type="number" value="26"/></label>
+<label>b<input data-bond="29" data-k="b" min="0" step="1" type="number" value="28"/></label>
+<label>tipo
+ <select data-bond="29" data-k="kind">
+<option selected="" value="single">single</option>
+<option value="double">double</option>
+<option value="triple">triple</option>
+<option value="weak">weak</option>
+</select>
+</label>
+<label>cor<input data-bond="29" data-k="color" type="color" value="#ffffff"/></label>
+</div></div></div>
+</section>
+<section class="section advanced-only">
+<h3>Salvar / limpar</h3>
+<div class="grid2">
+<button id="saveScene">Salvar no navegador</button>
+<button class="danger" id="resetScene">Voltar ao preset</button>
+</div>
+<div class="footer-note" style="margin-top:10px">
+ Este app foi reorganizado em formato guiado para explicar dois cenários: (1) a cisplatina, em que a mesma substância pode cristalizar com empacotamentos diferentes quando mudam tempo, solvente, temperatura e dinâmica de nucleação/crescimento; e (2) o Azul da Prússia, em que uma rede de coordenação estendida ajuda a discutir cavidades, vacâncias, água e contra-íons dentro de redes e células.
+ </div>
+</section>
+</div>
+</aside>
+</div>
+<script src="assets/js/script1.js"></script>
+</body></html>

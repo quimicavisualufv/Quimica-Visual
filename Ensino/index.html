@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+<html class="desktop mbr-site-loaded" style=""><head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport"/>
+<link href="../assets/images/simoens-1-214x194.png" rel="shortcut icon" type="image/x-icon"/>
+<meta content="" name="description"/>
+<title>Ensino</title>
+<link href="../assets/web/assets/mobirise-icons2/mobirise2.css" rel="stylesheet"/>
+<link href="../assets/web/assets/mobirise-icons-bold/mobirise-icons-bold.css" rel="stylesheet"/>
+<link href="../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../assets/dropdown/css/style.css" rel="stylesheet"/>
+<link href="../assets/socicon/css/styles.css" rel="stylesheet"/>
+<link href="../assets/theme/css/style.css" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&amp;display=swap&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&amp;display=swap&amp;display=swap" rel="stylesheet"/></noscript>
+<link as="style" href="../assets/mobirise/css/mbr-additional.css?v=acY8eE" rel="preload"/><link href="../assets/mobirise/css/mbr-additional.css?v=acY8eE" rel="stylesheet" type="text/css"/>
+<style>
+.ensino-filtros-wrap{
+  margin: 0 auto 2rem;
+  max-width: 100%;
+  width: 100%;
+}
+.ensino-filtros-box{
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 18px;
+  padding: 1rem;
+  padding-right: 4.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+.ensino-help-wrap{
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .55rem;
+}
+.ensino-help-btn{
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(0,0,0,.14);
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.ensino-help-btn:hover,
+.ensino-help-btn:focus-visible,
+.ensino-help-btn.is-open{
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+  outline: none;
+}
+.ensino-lock-btn{
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(0,0,0,.14);
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.ensino-lock-btn:hover,
+.ensino-lock-btn:focus-visible,
+.ensino-lock-btn.is-active{
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+  outline: none;
+}
+.ensino-help-bubble{
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(420px, calc(100vw - 3rem));
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+  display: none;
+  text-align: left;
+}
+.ensino-help-bubble.is-open{
+  display: block;
+}
+.ensino-help-bubble::before{
+  content: '';
+  position: absolute;
+  top: -9px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,.08);
+  border-left: 1px solid rgba(0,0,0,.08);
+  transform: rotate(45deg);
+}
+.ensino-help-bubble p{
+  margin: 0;
+  font-size: .96rem;
+  line-height: 1.45;
+}
+.ensino-help-bubble p + p{
+  margin-top: .75rem;
+}
+.ensino-help-bubble strong{
+  font-weight: 800;
+}
+.ensino-search-input{
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.14);
+  padding: 0 1rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.ensino-search-input:focus{
+  border-color: #000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+}
+.ensino-filter-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  justify-content: center;
+}
+.ensino-filter-btn{
+  border: 1px solid rgba(0,0,0,.14);
+  background: #fff;
+  color: #000;
+  border-radius: 999px;
+  min-height: 46px;
+  padding: .65rem 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  transition: all .2s ease;
+}
+.ensino-filter-btn:hover,
+.ensino-filter-btn.is-active{
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+.ensino-filtros-meta{
+  margin-top: .85rem;
+  text-align: center;
+}
+#ensino-no-results{
+  display: none;
+  width: 100%;
+  text-align: center;
+  padding: 2rem 1rem 0;
+}
+#ensino-no-results .display-7{
+  margin-bottom: 0;
+}
+@media (max-width: 991px){
+  .ensino-filtros-box{
+    padding: .9rem;
+    padding-top: 4.2rem;
+    padding-right: .9rem;
+  }
+  .ensino-help-wrap{
+    top: .9rem;
+    right: .9rem;
+  }
+  .ensino-help-bubble{
+    width: min(360px, calc(100vw - 2.2rem));
+  }
+}
+</style>
+<style>
+    .vw-unique-widget {
+      position: fixed;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(14, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      z-index: 9999;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vw-unique-widget.bottom-right { right: 18px; bottom: 18px; }
+    .vw-unique-widget.bottom-left { left: 18px; bottom: 18px; }
+    .vw-unique-widget.top-right { right: 18px; top: 18px; }
+    .vw-unique-widget.top-left { left: 18px; top: 18px; }
+    .vw-unique-widget .vw-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+      flex: 0 0 auto;
+    }
+    .vw-unique-widget .vw-number {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .vw-unique-widget .vw-label {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      opacity: 0.82;
+    }
+    .vw-unique-widget .vw-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .vw-unique-widget .vw-loading {
+      opacity: 0.72;
+    }
+  </style><style id="vw-unique-widget-style">
+    .vw-unique-widget {
+      position: fixed;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(14, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      z-index: 9999;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vw-unique-widget.bottom-right { right: 18px; bottom: 18px; }
+    .vw-unique-widget.bottom-left { left: 18px; bottom: 18px; }
+    .vw-unique-widget.top-right { right: 18px; top: 18px; }
+    .vw-unique-widget.top-left { left: 18px; top: 18px; }
+    .vw-unique-widget .vw-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+      flex: 0 0 auto;
+    }
+    .vw-unique-widget .vw-number {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .vw-unique-widget .vw-label {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      opacity: 0.82;
+    }
+    .vw-unique-widget .vw-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .vw-unique-widget .vw-loading {
+      opacity: 0.72;
+    }
+  </style></head>
+<body style="z-index: 0"><section id="top-1" style="display: none;"><a href="https://mobirise.com/builder/ai-website-maker.html">Best AI Website Maker</a> Mobirise v6.1.12 <a href="https://mobirise.com/builder/ai-website-creator.html">Free AI Website Creator</a></section>
+<section class="menu menu2 cid-vdkq0jkQqa" data-bs-version="5.1" id="menu02-i" once="menu">
+<nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg opacityScroll">
+<div class="container">
+<div class="navbar-brand">
+<span class="navbar-logo">
+<a href="../">
+<img alt="" src="../assets/images/simoens-1-214x194.png" style="height: 5rem;"/>
+</a>
+</span>
+<span class="navbar-caption-wrap"><a class="navbar-caption text-black text-primary display-4">SiMoEns</a></span>
+</div>
+<button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+<div class="hamburger">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</button>
+<div class="collapse navbar-collapse opacityScroll" id="navbarSupportedContent">
+<ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true"><li class="nav-item">
+<a class="nav-link link text-black text-primary display-4" href="../">Home</a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link link text-black text-primary display-4" href="../#about-us-1-v5iWwJlyUz">Sobre</a>
+</li>
+<li class="nav-item">
+<a class="nav-link link text-black text-primary display-4" href="../#testimonials-5-v5iWwJmiE2">Parceiros</a>
+</li><li class="nav-item dropdown"><a aria-expanded="false" class="nav-link link text-black dropdown-toggle display-4" data-bs-auto-close="outside" data-bs-toggle="dropdown" data-toggle="dropdown-submenu" href="#">Produtos</a><div aria-labelledby="dropdown-604" class="dropdown-menu"><a class="text-black dropdown-item text-primary display-4" href="./">Ensino<br/></a><a class="text-black dropdown-item text-primary display-4" href="../Modelagem/modelagem.html">Modelagem</a><a class="text-black dropdown-item text-primary display-4" href="../Simulação/simulacao.html">Simulação</a><a class="text-black dropdown-item text-primary display-4" href="../Chat/chatbot.html">Chat inteligente</a></div></li></ul>
+<div class="icons-menu">
+<a href="../#contact-form-2-v5iWwJnC3V"><span class="p-2 mbr-iconfont mbrib-letter" style="font-size: 32px;"></span></a>
+<a href="../#contacts-11-v5iWwJnXpI"><span class="p-2 mbr-iconfont mobi-mbri-map-pin mobi-mbri" style="font-size: 32px;"></span></a>
+</div>
+</div>
+</div>
+</nav>
+</section>
+<section class="gallery3 cid-vdkq0jGCRb" data-bs-version="5.1" id="gallery03-j">
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-12 content-head">
+<div class="mbr-section-head mb-5">
+<h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+<strong>Ensino</strong></h4>
+<h5 class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-4 display-7">Material voltado para o ensino. Não otimizado para dispositivos móveis.</h5>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-12">
+<div class="ensino-filtros-wrap">
+<div class="ensino-filtros-box">
+<div class="ensino-help-wrap">
+<button aria-expanded="false" aria-label="Informações sobre os tipos de animação" class="ensino-help-btn" id="ensino-help-btn" type="button">?</button>
+<button aria-pressed="true" aria-label="Ocultar apps protegidos por senha" class="ensino-lock-btn is-active" id="ensino-lock-btn" type="button">🔒</button>
+<div aria-hidden="true" class="ensino-help-bubble" id="ensino-help-bubble">
+<p><strong>Visualização:</strong> Recursos para visualização de conceitos teóricos voltados para professores.</p>
+<p><strong>Guia:</strong> Animações guiadas voltadas para o aluno.</p>
+<p><strong>Jogo:</strong> Jogos didáticos para fixação de conteúdo de forma lúdica.</p>
+<p><strong>Exercícios de fixação:</strong> Exercícios voltados aos alunos sobre conteúdos abordados nas animações e guias.</p>
+</div>
+</div>
+<div class="row g-3 align-items-center">
+<div class="col-12 col-lg-6">
+<input class="ensino-search-input" id="ensino-search" placeholder="Pesquisar animação pelo nome" type="text"/>
+</div>
+<div class="col-12 col-lg-6">
+<div aria-label="Filtrar animações" class="ensino-filter-list" role="group">
+<button class="ensino-filter-btn is-active" data-filter="todos" type="button">Todas</button>
+<button class="ensino-filter-btn" data-filter="visualizacao" type="button">Visualização</button>
+<button class="ensino-filter-btn" data-filter="guiado" type="button">Guia</button>
+<button class="ensino-filter-btn" data-filter="exercicio" type="button">Exercício de fixação</button>
+<button class="ensino-filter-btn" data-filter="jogo" type="button">Jogo</button>
+</div>
+</div>
+</div>
+<div class="ensino-filtros-meta">
+<p class="mbr-fonts-style display-7 mb-0" id="ensino-results-count">29 animações encontradas</p>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12" id="ensino-no-results" style="display: none;">
+<p class="mbr-fonts-style display-7">Nenhuma animação encontrada com os filtros atuais.</p>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3 active" data-category="visualizacao" data-title="buracos e empacotamento" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/buracos-e-empacotamento/" href="#"><img alt="Buracos e empacotamento" data-bs-slide-to="0" data-slide-to="0" src="../assets/images/ensino-card-1.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7">
+<strong>Buracos e empacotamento</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Tipos de buracos em células unitárias, empacotamentos e relação com coordenação e ocupação.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="celulas primitivas, sistemas de bravais e celula de wigner (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/" href="#"><img alt="Células Primitivas, Sistemas de Bravais e Célula de Wigner (GUIA)" data-bs-slide-to="2" data-slide-to="2" src="../assets/images/ensino-card-2.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><div><strong>Células Primitivas, Sistemas de Bravais e Célula de Wigner (GUIA)</strong></div></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Tipos de células, sistemas de Bravais e introdução à construção de Wigner–Seitz em contexto cristalográfico</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="parametros de rede (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/celulas/" href="#"><img alt="Parâmetros de rede (GUIA)" data-bs-slide-to="3" data-slide-to="3" src="../assets/images/ensino-card-3.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7">
+<strong>Parâmetros de rede (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Célula, célula unitária, modelo de esferas, parâmetro de rede, ângulos (α, β, γ) e rede cristalina.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="geometria cristalografica" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/geometria-cristalografica/" href="#"><img alt="Geometria Cristalográfica" data-bs-slide-to="4" data-slide-to="4" src="../assets/images/ensino-card-4.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7">
+<strong>Geometria Cristalográfica</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Geometrias das células (cúbica, tetragonal, ortorrômbica, etc.) e como elas aparecem em redes cristalinas.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="geometria molecular (guia)" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/geometria-molecular-passo-a-passo/" href="#"><img alt="Geometria molecular (GUIA)" data-bs-slide-to="5" data-slide-to="5" src="../assets/images/ensino-card-5.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Geometria molecular (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Tutorial guiado para montar e entender os tipos mais comum de geometria molecular.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="polaridade molecular (guia)" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/" href="#"><img alt="Polaridade molecular (GUIA)" data-bs-slide-to="6" data-slide-to="6" src="../assets/images/ensino-card-7.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><div><strong>Polaridade molecular (GUIA)</strong></div></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Momento dipolar, vetores de ligação e geometria molecular para decidir polaridade com apoio visual.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="geometria molecular" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/geometria-molecular/" href="#"><img alt="Geometria molecular" data-bs-slide-to="7" data-slide-to="7" src="../assets/images/ensino-card-6.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Geometria molecular</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">
+                Visualizador simples de moléculas, com representação de seus ângulos, elétrons livres, geometria e arranjo espacial.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-title="quebra-cabeca ionico covalente (jogo)" style="" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="jogo/quebra-cabeca-ionico-covalente/" href="#"><img alt="Quebra-cabeça iônico covalente (Jogo)" data-bs-slide-to="8" data-slide-to="8" src="../assets/images/ensino-card-8.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Quebra-cabeça iônico covalente (Jogo)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Arraste, combine e teste conceito: ligação iônica vs covalente, propriedades e exemplos clássicos.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="redes cristalinas" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/redes-cristalinas/" href="#"><img alt="Redes Cristalinas" data-bs-slide-to="9" data-slide-to="9" src="../assets/images/ensino-card-9.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Redes Cristalinas</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Translação, pontos de rede e como a repetição gera estruturas cristalinas, com exemplos, contraexemplos e modo de criação livre.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="simetria e formula unitaria" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/simetria-e-formula-unitaria/" href="#"><img alt="Simetria e fórmula unitária" data-bs-slide-to="10" data-slide-to="10" src="../assets/images/ensino-card-10.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><div><strong>Simetria e fórmula unitária</strong></div></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Operações de simetria e translação, contagem fracionária de átomos para chegar na fórmula mínima da célula unitária e representações visuais.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="complexos e polimorfismo (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/Complexos e polimorfismo/" href="#"><img alt="Complexos e polimorfismo (GUIA)" data-bs-slide-to="11" data-slide-to="11" src="../assets/images/ensino-card-11.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Complexos e polimorfismo (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador orientado para polimorfismo, complexos, hidratação de sais e organização estrutural da matéria, com apoio de exemplos reais e sítios formados.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="modelos atomicos (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/modelos_atomicos/" href="#"><img alt="Modelos Atômicos (GUIA)" data-bs-slide-to="12" data-slide-to="12" src="../assets/images/ensino-card-14.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Modelos Atômicos (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Evolução histórica dos modelos atômicos de Dalton, Thomson, Rutherford, Bohr e Schrödinger, além números magnéticos.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="equacoes de onda hidrogenoides (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/eq_de_ondas_hidrogenoides/" href="#"><img alt="Equações de Onda Hidrogenoides (GUIA)" data-bs-slide-to="13" data-slide-to="13" src="../assets/images/ensino-card-12.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Equações de Onda Hidrogenoides (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Leitura guiada da equação de Schrödinger para espécies hidrogenoides, com separação radial e angular e interpretação dos números quânticos.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="visualizador de hidrogenoides" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/visualizador_de_hidrogenoides/" href="#"><img alt="Visualizador de Hidrogenoides" data-bs-slide-to="14" data-slide-to="14" src="../assets/images/ensino-card-13.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Visualizador de Hidrogenoides</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador interativo de orbitais hidrogenoides com nuvem dos orbitais, funções de ondas, densidade e gráfico radial.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="visualizador de orbitais" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/visualizador_orbitais/" href="#"><img alt="Visualizador de Orbitais" data-bs-slide-to="15" data-slide-to="15" src="../assets/images/ensino-card-15.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Visualizador de Orbitais</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador interativo de orbitais atômicos e moleculares em estruturas blobby e metaball, com edição de lóbulos, cores e fases.</h2>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="atlas termodinamico (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/atlas_termodinamico/" href="#"><img alt="Atlas Termodinâmico (GUIA)" data-bs-slide-to="16" data-slide-to="16" src="../assets/images/ensino-card-16.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Atlas Termodinâmico (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Material interativo voltado à conceitos, relações termodinâmicas, processos e interpretações de grandezas o.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="fases da agua (guia)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/fases_da_agua/" href="#"><img alt="Fases da Água (GUIA)" data-bs-slide-to="17" data-slide-to="17" src="../assets/images/ensino-card-17.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Fases da Água (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Animação interativa com foco em diagrama de fases, ponto triplo, ponto crítico e comportamento da água sob diferentes condições de pressão e temperatura.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-title="interacoes intermoleculares (guia)" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Guia/interacoes_intermoleculares/" href="#"><img alt="Interações Intermoleculares (GUIA)" data-bs-slide-to="18" data-slide-to="18" src="../assets/images/ensino-card-18.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Interações Intermoleculares (GUIA)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Percurso visual para estudar dipolo-dipolo, dispersão, ligações de hidrogênio e o impacto dessas interações sobre propriedades e comportamento da matéria.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="polaridade e geometria molecular (exercicio)" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/Polaridade-e-Geometria-molecular/" href="#"><img alt="Polaridade e Geometria molecular (Exercício)" data-bs-slide-to="19" data-slide-to="19" src="../assets/images/ensino-card-19.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Polaridade e Geometria molecular (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Exercício interativo de fixação para treinar ângulos, geometria molecular, polaridade parcial e vetores de ligação.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="classificacao do sistema cristalino (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/sistema-cristalino/" href="#"><img alt="Classificação do sistema cristalino (Exercício)" data-bs-slide-to="20" data-slide-to="20" src="../assets/images/ensino-card-20.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Classificação do sistema cristalino (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Atividade para classificar estruturas nos sistemas cristalinos a partir de forma, eixos, ângulos e relações geométricas.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="intersticios cristalinos (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/buracos-cristalinos/" href="#"><img alt="Interstícios cristalinos (Exercício)" data-bs-slide-to="21" data-slide-to="21" src="../assets/images/ensino-card-21.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Interstícios cristalinos (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Treino visual para diferenciar sítios tetraédricos e octaédricos a partir do arranjo espacial nas estruturas cristalinas.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="caca ao sitio cristalino (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/caca-ao-sitio-cristalino/" href="#"><img alt="Caça ao sítio cristalino (Exercício)" data-bs-slide-to="22" data-slide-to="22" src="../assets/images/ensino-card-22.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Caça ao sítio cristalino (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Atividade de identificação para localizar sítios cristalinos e relacionar posição, coordenação e ocupação.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="formula unitaria na pratica (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/Contagem-de-atomo/" href="#"><img alt="Fórmula Unitária na Prática (Exercício)" data-bs-slide-to="23" data-slide-to="23" src="../assets/images/ensino-card-23.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Fórmula Unitária na Prática (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Exercício interativo para identificar contribuições de vértices, arestas, faces e interior na contagem de átomos da célula unitária.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="coordenacao e empacotamento (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/coordenacao-empacotamento/" href="#"><img alt="Coordenação e empacotamento (Exercício)" data-bs-slide-to="24" data-slide-to="24" src="../assets/images/ensino-card-24.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Coordenação e empacotamento (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Exercício de fixação para conectar número de coordenação, tipos de empacotamento e organização espacial dos átomos.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="identificacao de defeitos cristalinos (exercicio)" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/defeitos-cristalinos/" href="#"><img alt="Identificação de defeitos cristalinos (Exercício)" data-bs-slide-to="25" data-slide-to="25" src="../assets/images/ensino-card-26.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Identificação de defeitos cristalinos (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Comparação entre estrutura original e defeituosa para reconhecer vacâncias, intersticiais, substitucionais e outras imperfeições.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-title="comparacao de polaridade molecular (exercicio)" style="display: none;" data-protected="false">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Exercicio Guiado/batalha-de-polaridade/" href="#"><img alt="Comparação de polaridade molecular (Exercício)" data-bs-slide-to="26" data-slide-to="26" src="../assets/images/ensino-card-27.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Comparação de polaridade molecular (Exercício)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Rodadas de fixação para comparar geometrias, ângulos, vetores e decidir a polaridade molecular correta.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-title="caca-palavras (jogo)" style="" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="jogo/caça-palavras/" href="#"><img alt="Caça-palavras (Jogo)" data-bs-slide-to="28" data-slide-to="28" src="../assets/images/ensino-card-28.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Caça-palavras (Jogo)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Jogo com temas de química para reforço de vocabulário, reconhecimento de conceitos e revisão de conteúdos.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-title="xadrez quimico (jogo)" style="" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="jogo/xadrez-quimico/" href="#"><img alt="Xadrez Químico (Jogo)" data-bs-slide-to="29" data-slide-to="29" src="../assets/images/ensino-card-29.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Xadrez Químico (Jogo)</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Jogo com peças inspiradas em vidrarias para praticar estratégia, vidrarias e suas funções em uma interface temática de química.</h2>
+</div>
+</div>
+</div>
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-title="vidrarias e equipamentos de laboratorio" style="display: none;" data-protected="true">
+<div class="item-wrapper">
+<div class="item-img">
+<a data-open-href="Animacao/catalogo-de-vidrarias-animado/" href="#"><img alt="Vidrarias e Equipamentos de Laboratório" data-bs-slide-to="30" data-slide-to="30" src="../assets/images/ensino-card-30.svg"/></a>
+</div>
+<div class="item-content align-left">
+<h5 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Vidrarias e Equipamentos de Laboratório</strong></h5>
+<h2 class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador interativo de vidrarias e equipamentos de laboratório, com modelos, funções, aplicações e exploração visual em 3D.</h2>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="footer3 cid-vdkq0k5vNJ" data-bs-version="5.1" id="footer03-k" once="footers">
+<div class="container">
+<div class="row">
+<div class="col-12 mt-4">
+<p class="mbr-fonts-style copyright display-7">© 2025-2026 SiMoEns. All rights reserved.</p>
+</div>
+</div>
+</div>
+</section><script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script> <script src="../assets/smoothscroll/smooth-scroll.js"></script> <script src="../assets/ytplayer/index.js"></script> <script src="../assets/dropdown/js/navbar-dropdown.js"></script> <script src="../assets/theme/js/script.js"></script>
+<div class="scrollToTop mbr-arrow-up" id="scrollToTop" style="display: none; opacity: -1.4;"><a style="text-align: center;"><i class="mbr-arrow-up-icon mbr-arrow-up-icon-cm cm-icon cm-icon-smallarrow-up"></i></a></div>
+<script src="../assets/chat-widget/chat-widget.js?v=widget-fix-20260401a"></script>
+<script>
+window.VisitWidgetConfig = {
+  functionUrl: 'https://uiziwrtliumlgdfrcddw.supabase.co/functions/v1/count-visit',
+  anonKey: 'sb_publishable_eyD-PP9S5sdNQkonppUeGg_UnktwkTx',
+  siteKey: 'principal',
+  position: 'bottom-left',
+  label: 'Visitas'
+}
+</script>
+<script src="../Chat/widget/visit-widget-unique.js"></script>
+<script>
+(function () {
+  const helpButton = document.getElementById('ensino-help-btn');
+  const helpBubble = document.getElementById('ensino-help-bubble');
+
+  if (!helpButton || !helpBubble) return;
+
+  const setOpen = (open) => {
+    helpButton.classList.toggle('is-open', open);
+    helpBubble.classList.toggle('is-open', open);
+    helpButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+    helpBubble.setAttribute('aria-hidden', open ? 'false' : 'true');
+  };
+
+  helpButton.addEventListener('click', function (event) {
+    event.stopPropagation();
+    setOpen(!helpBubble.classList.contains('is-open'));
+  });
+
+  helpBubble.addEventListener('click', function (event) {
+    event.stopPropagation();
+  });
+
+  document.addEventListener('click', function () {
+    setOpen(false);
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') setOpen(false);
+  });
+})();
+</script>
+<script>
+(function () {
+  const cards = Array.from(document.querySelectorAll('#gallery03-j .item.features-image'));
+  const searchInput = document.getElementById('ensino-search');
+  const filterButtons = Array.from(document.querySelectorAll('.ensino-filter-btn'));
+  const noResults = document.getElementById('ensino-no-results');
+  const resultsCount = document.getElementById('ensino-results-count');
+  const lockButton = document.getElementById('ensino-lock-btn');
+
+  if (!cards.length || !searchInput || !filterButtons.length || !noResults || !resultsCount) return;
+
+  const normalizeText = (value) => (value || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim();
+
+  const getTitle = (card) => {
+    const titleEl = card.querySelector('.item-title');
+    return titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim() : '';
+  };
+
+  const getCategory = (title) => {
+    const normalizedTitle = normalizeText(title);
+    const isExercise = normalizedTitle.includes('(exercicio)') || normalizedTitle.includes('(exercicio de fixacao)') || normalizedTitle.includes('(exercicio de fizacao)');
+    const isGuide = normalizedTitle.includes('(guia)');
+    const isGame = normalizedTitle.includes('(jogo)');
+    if (isExercise) return 'exercicio';
+    if (isGuide) return 'guiado';
+    if (isGame) return 'jogo';
+    return 'visualizacao';
+  };
+
+  const isLockEnabled = () => !lockButton || lockButton.getAttribute('aria-pressed') === 'true';
+
+  const syncLockButton = () => {
+    if (!lockButton) return;
+    const active = isLockEnabled();
+    lockButton.classList.toggle('is-active', active);
+    lockButton.textContent = active ? '🔒' : '🔓';
+    lockButton.setAttribute('aria-label', active ? 'Mostrar apps protegidos por senha' : 'Ocultar apps protegidos por senha');
+    lockButton.setAttribute('title', active ? 'Apps protegidos ocultos' : 'Apps protegidos visíveis');
+  };
+
+  cards.forEach((card) => {
+    const title = getTitle(card);
+    card.dataset.title = normalizeText(title);
+    card.dataset.category = getCategory(title);
+  });
+
+  let currentFilter = 'todos';
+
+  const applyFilters = () => {
+    const searchTerm = normalizeText(searchInput.value);
+    const hideProtected = isLockEnabled();
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const isProtected = card.dataset.protected === 'true';
+      const matchesProtection = !hideProtected || !isProtected;
+      const matchesFilter = currentFilter === 'todos' || card.dataset.category === currentFilter;
+      const matchesSearch = !searchTerm || card.dataset.title.includes(searchTerm);
+      const shouldShow = matchesProtection && matchesFilter && matchesSearch;
+
+      card.style.display = shouldShow ? '' : 'none';
+
+      if (shouldShow) visibleCount += 1;
+    });
+
+    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    resultsCount.textContent = visibleCount === 1 ? '1 animação encontrada' : `${visibleCount} animações encontradas`;
+    syncLockButton();
+  };
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', function () {
+      currentFilter = this.dataset.filter || 'todos';
+      filterButtons.forEach((btn) => btn.classList.remove('is-active'));
+      this.classList.add('is-active');
+      applyFilters();
+    });
+  });
+
+  if (lockButton) {
+    lockButton.addEventListener('click', function () {
+      const nextState = this.getAttribute('aria-pressed') !== 'true';
+      this.setAttribute('aria-pressed', nextState ? 'true' : 'false');
+      applyFilters();
+    });
+    syncLockButton();
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  applyFilters();
+})();
+</script>
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/',
+    'Animacao/geometria-molecular/'
+  ]);
+
+  async function d0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  async function e0(path) {
+    if (c0.has(path)) return true;
+    if (sessionStorage.getItem(b0) === a0) return true;
+    const f1 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (f1 === null) return false;
+    const g1 = await d0(f1);
+    if (g1 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return true;
+    }
+    window.alert('Senha incorreta.');
+    return false;
+  }
+
+  document.querySelectorAll('#gallery03-j .item-img a[data-open-href]').forEach((link) => {
+    link.addEventListener('click', async function (event) {
+      event.preventDefault();
+      const path = this.dataset.openHref || '';
+      if (!path) return;
+      if (!(await e0(path))) return;
+      const resolved = new URL(path, window.location.href);
+      window.open(resolved.href, '_blank', 'noopener');
+    });
+  });
+})();
+</script>
+
+</body></html>

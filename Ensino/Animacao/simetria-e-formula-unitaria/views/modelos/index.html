@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+<title>Modelos 3D — Posições na célula</title>
+
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+
+
+<link rel="stylesheet" href="assets/css/style1.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <header>
+        <h1>Modelos 3D — posições</h1>
+        <small>drag = girar • scroll = zoom</small>
+      </header>
+      <model-viewer id="mv" camera-controls touch-action="pan-y" exposure="1.05" shadow-intensity="0.35"></model-viewer>
+    </div>
+
+    <div class="panel">
+      <header>
+        <h1>Controles</h1>
+        <small>visualização didática</small>
+      </header>
+
+      <div class="controls">
+        <label class="col2">Modelo
+          <select id="pick">
+            <option value="Vertices">Vértices</option>
+            <option value="Arestas">Arestas</option>
+            <option value="Face">Faces</option>
+            <option value="Centro">Centro do corpo</option>
+          </select>
+        </label>
+<div class="card col2">
+          <b>Resumo rápido das frações</b>
+          <div class="muted">
+            Vértices: 8 pontos × 1/8 = 1 •
+            Arestas: 12 pontos × 1/4 = 3 •
+            Faces: 6 pontos × 1/2 = 3 •
+            Centro: 1 ponto × 1 = 1
+          </div>
+        </div>
+
+        <div class="card col2">
+          <b>Dica</b>
+          <div id="desc" class="muted"></div>
+        </div>
+
+        <button class="col2" id="reset">Reset câmera</button>
+      </div>
+    </div>
+  </div>
+
+
+
+<script src="assets/js/script1.js"></script>
+</body>
+</html>

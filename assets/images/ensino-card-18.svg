@@ -1,0 +1,285 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#15233d"/>
+    </linearGradient>
+
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1f2f4f"/>
+      <stop offset="100%" stop-color="#16243f"/>
+    </linearGradient>
+
+    <linearGradient id="metaballFill" x1="0.18" y1="0.08" x2="0.86" y2="0.88">
+      <stop offset="0%" stop-color="#ff504d"/>
+      <stop offset="34%" stop-color="#d22c71"/>
+      <stop offset="58%" stop-color="#5d1f9f"/>
+      <stop offset="84%" stop-color="#0c1d97"/>
+      <stop offset="100%" stop-color="#08135e"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="11" stdDeviation="9" flood-color="#000" flood-opacity="0.34"/>
+    </filter>
+
+    <filter id="innerShade" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur"/>
+      <feOffset dx="0" dy="8" result="off"/>
+      <feComposite in="off" in2="SourceAlpha" operator="out" result="inner"/>
+      <feColorMatrix in="inner" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0" result="shade"/>
+      <feBlend in="SourceGraphic" in2="shade" mode="multiply"/>
+    </filter>
+
+    <radialGradient id="highlight" cx="30%" cy="18%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.23"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="65%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <clipPath id="previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24"/>
+    </clipPath>
+  <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stop-color="#121629"/>
+            <stop offset="60%" stop-color="#080a14"/>
+            <stop offset="100%" stop-color="#030408"/>
+        </radialGradient>
+
+        
+        <radialGradient id="grad-o" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ff8080"/>
+            <stop offset="20%" stop-color="#e60000"/>
+            <stop offset="70%" stop-color="#800000"/>
+            <stop offset="100%" stop-color="#330000"/>
+        </radialGradient>
+
+        <radialGradient id="grad-h" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="40%" stop-color="#cce0ff"/>
+            <stop offset="80%" stop-color="#4d94ff"/>
+            <stop offset="100%" stop-color="#003380"/>
+        </radialGradient>
+
+        
+        <radialGradient id="field-o" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ff0040" stop-opacity="0.25"/>
+            <stop offset="50%" stop-color="#ff0040" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="#ff0040" stop-opacity="0"/>
+        </radialGradient>
+
+        <radialGradient id="field-h" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00aaff" stop-opacity="0.25"/>
+            <stop offset="50%" stop-color="#00aaff" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="#00aaff" stop-opacity="0"/>
+        </radialGradient>
+
+        
+        <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="blur1"/>
+            <feGaussianBlur stdDeviation="12" result="blur2"/>
+            <feMerge>
+                <feMergeNode in="blur2"/>
+                <feMergeNode in="blur1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+
+        <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+
+        <filter id="drop-shadow" x="-20%" y="-20%" width="150%" height="150%">
+            <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000000" flood-opacity="0.7"/>
+        </filter>
+
+        
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="20" cy="20" r="1" fill="#ffffff" opacity="0.1"/>
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.03"/>
+        </pattern>
+    </defs>
+
+  <rect width="640" height="420" rx="28" fill="url(#bg)"/>
+
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1">
+    <path d="M0 70H640"/><path d="M0 140H640"/><path d="M0 210H640"/><path d="M0 280H640"/><path d="M0 350H640"/>
+    <path d="M90 0V420"/><path d="M180 0V420"/><path d="M270 0V420"/><path d="M360 0V420"/><path d="M450 0V420"/><path d="M540 0V420"/>
+  </g>
+
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)"/>
+
+  <g clip-path="url(#previewClip)">
+    <g transform="translate(170.000000,20.000000) scale(0.375000)">
+    
+
+    
+    <g id="fields">
+        
+        <circle cx="400" cy="400" r="160" fill="url(#field-o)"/>
+        <circle cx="320" cy="460" r="100" fill="url(#field-h)"/>
+        <circle cx="480" cy="460" r="100" fill="url(#field-h)"/>
+        
+        
+        <circle cx="600" cy="180" r="140" fill="url(#field-o)"/>
+        <circle cx="520" cy="240" r="100" fill="url(#field-h)"/>
+        
+        
+        <circle cx="180" cy="600" r="140" fill="url(#field-o)"/>
+        
+        
+        <circle cx="200" cy="180" r="140" fill="url(#field-o)"/>
+        <circle cx="280" cy="240" r="100" fill="url(#field-h)"/>
+        
+        
+        <circle cx="620" cy="600" r="140" fill="url(#field-o)"/>
+    </g>
+
+    
+    <g id="inter-bonds">
+        
+        <line x1="520" y1="240" x2="400" y2="400" stroke="#00ffff" stroke-width="8" opacity="0.3" filter="url(#glow-strong)" stroke-linecap="round"/>
+        <line x1="520" y1="240" x2="400" y2="400" stroke="#ffffff" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+        
+        
+        <line x1="280" y1="240" x2="400" y2="400" stroke="#00ffff" stroke-width="8" opacity="0.3" filter="url(#glow-strong)" stroke-linecap="round"/>
+        <line x1="280" y1="240" x2="400" y2="400" stroke="#ffffff" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+        
+        
+        <line x1="320" y1="460" x2="180" y2="600" stroke="#00ffff" stroke-width="8" opacity="0.3" filter="url(#glow-strong)" stroke-linecap="round"/>
+        <line x1="320" y1="460" x2="180" y2="600" stroke="#ffffff" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+        
+        
+        <line x1="480" y1="460" x2="620" y2="600" stroke="#00ffff" stroke-width="8" opacity="0.3" filter="url(#glow-strong)" stroke-linecap="round"/>
+        <line x1="480" y1="460" x2="620" y2="600" stroke="#ffffff" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+
+        
+        <g filter="url(#glow-strong)">
+            <circle cx="460" cy="320" r="6" fill="#00ffff" opacity="0.8"/>
+            <circle cx="340" cy="320" r="6" fill="#00ffff" opacity="0.8"/>
+            <circle cx="250" cy="530" r="6" fill="#00ffff" opacity="0.8"/>
+            <circle cx="550" cy="530" r="6" fill="#00ffff" opacity="0.8"/>
+        </g>
+        <circle cx="460" cy="320" r="2" fill="#ffffff"/>
+        <circle cx="340" cy="320" r="2" fill="#ffffff"/>
+        <circle cx="250" cy="530" r="2" fill="#ffffff"/>
+        <circle cx="550" cy="530" r="2" fill="#ffffff"/>
+    </g>
+
+    
+    <g id="intra-bonds" stroke="#b3d9ff" stroke-width="16" stroke-linecap="round" opacity="0.7">
+        
+        <line x1="400" y1="400" x2="320" y2="460"/>
+        <line x1="400" y1="400" x2="480" y2="460"/>
+        
+        <line x1="600" y1="180" x2="520" y2="240"/>
+        <line x1="600" y1="180" x2="680" y2="240"/>
+        
+        <line x1="180" y1="600" x2="100" y2="660"/>
+        <line x1="180" y1="600" x2="260" y2="660"/>
+        
+        <line x1="200" y1="180" x2="280" y2="240"/>
+        <line x1="200" y1="180" x2="120" y2="240"/>
+        
+        <line x1="620" y1="600" x2="540" y2="660"/>
+        <line x1="620" y1="600" x2="700" y2="660"/>
+    </g>
+
+    
+    <g id="electron-clouds" stroke="#ffffff" stroke-width="1" stroke-dasharray="4 6" fill="none" opacity="0.2">
+        <circle cx="400" cy="400" r="65"/>
+        <circle cx="600" cy="180" r="65"/>
+        <circle cx="180" cy="600" r="65"/>
+        <circle cx="200" cy="180" r="65"/>
+        <circle cx="620" cy="600" r="65"/>
+    </g>
+
+    
+    <g id="atoms" filter="url(#drop-shadow)">
+        
+        <circle cx="400" cy="400" r="45" fill="url(#grad-o)"/>
+        <circle cx="320" cy="460" r="25" fill="url(#grad-h)"/>
+        <circle cx="480" cy="460" r="25" fill="url(#grad-h)"/>
+
+        
+        <circle cx="600" cy="180" r="45" fill="url(#grad-o)"/>
+        <circle cx="520" cy="240" r="25" fill="url(#grad-h)"/>
+        <circle cx="680" cy="240" r="25" fill="url(#grad-h)"/>
+
+        
+        <circle cx="180" cy="600" r="45" fill="url(#grad-o)"/>
+        <circle cx="100" cy="660" r="25" fill="url(#grad-h)"/>
+        <circle cx="260" cy="660" r="25" fill="url(#grad-h)"/>
+
+        
+        <circle cx="200" cy="180" r="45" fill="url(#grad-o)"/>
+        <circle cx="280" cy="240" r="25" fill="url(#grad-h)"/>
+        <circle cx="120" cy="240" r="25" fill="url(#grad-h)"/>
+
+        
+        <circle cx="620" cy="600" r="45" fill="url(#grad-o)"/>
+        <circle cx="540" cy="660" r="25" fill="url(#grad-h)"/>
+        <circle cx="700" cy="660" r="25" fill="url(#grad-h)"/>
+    </g>
+
+    
+    <g id="labels" font-family="Georgia, serif" font-style="italic" font-size="26" text-anchor="middle" filter="url(#glow-subtle)">
+        
+        
+        <g fill="#ffb3b3">
+            <text x="400" y="340">δ<tspan baseline-shift="super" font-size="16" font-style="normal">-</tspan></text>
+            <text x="600" y="120">δ<tspan baseline-shift="super" font-size="16" font-style="normal">-</tspan></text>
+            <text x="130" y="580">δ<tspan baseline-shift="super" font-size="16" font-style="normal">-</tspan></text>
+            <text x="200" y="120">δ<tspan baseline-shift="super" font-size="16" font-style="normal">-</tspan></text>
+            <text x="670" y="580">δ<tspan baseline-shift="super" font-size="16" font-style="normal">-</tspan></text>
+        </g>
+
+        
+        <g fill="#b3d9ff">
+            
+            <text x="280" y="500">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            <text x="520" y="500">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            
+            <text x="550" y="295">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            <text x="720" y="280">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            
+            <text x="60" y="700">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            <text x="300" y="700">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            
+            <text x="250" y="295">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            <text x="80" y="280">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            
+            <text x="500" y="700">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+            <text x="740" y="700">δ<tspan baseline-shift="super" font-size="16" font-style="normal">+</tspan></text>
+        </g>
+    </g>
+
+    
+    <g fill="#ffffff" opacity="0.4" filter="url(#glow-subtle)">
+        <circle cx="150" cy="350" r="2"/>
+        <circle cx="650" cy="450" r="1.5"/>
+        <circle cx="300" cy="100" r="2.5"/>
+        <circle cx="500" cy="700" r="1"/>
+        <circle cx="750" cy="500" r="2"/>
+        <circle cx="80" cy="200" r="1.5"/>
+    </g>
+
+    
+    <g text-anchor="middle" font-family="Arial, sans-serif">
+        <text x="400" y="750" fill="#668cff" font-size="18" font-weight="bold" letter-spacing="8" opacity="0.9" filter="url(#glow-subtle)">Interações intermoleculares</text>
+        
+    </g>
+
+</g></g>
+
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b"/>
+  <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700">Interações intermoleculares</text>
+</svg>

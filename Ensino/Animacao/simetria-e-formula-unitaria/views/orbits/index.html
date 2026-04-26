@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+<title>Método da Simetria de Translação — Células e Contagem</title>
+
+
+<link rel="stylesheet" href="assets/css/style1.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <header>
+        <h1>Método da Simetria de Translação</h1>
+        <small>drag = girar • scroll = zoom • D = reset</small>
+      </header>
+      <canvas id="sceneCanvas" width="1400" height="840"></canvas>
+    </div>
+    <div class="panel">
+      <header><h1>Controles</h1><small>conta por conjuntos equivalentes</small></header>
+      <div class="ui">
+        <label class="col2">Sistema cristalino
+          <select id="cellType">
+            <option value="cubic">Cúbica</option>
+            <option value="tetragonal">Tetragonal</option>
+            <option value="orthorhombic">Ortorrômbica</option>
+            <option value="hexagonal">Hexagonal (γ=120°)</option>
+            <option value="rhombohedral">Romboédrica (Trigonal)</option>
+            <option value="monoclinic">Monoclínica</option>
+            <option value="triclinic">Triclínica</option>
+          </select>
+        </label>
+
+        <label>Zoom
+          <input id="zoom" type="range" min="0.6" max="2" step="0.01" value="1.0">
+        </label><div class="legend col2" title="Cores por POSIÇÃO (contorno)">
+          <div class="chip"><span class="dot vtx"></span>Vértice</div>
+          <div class="chip"><span class="dot face"></span>Face</div>
+          <div class="chip"><span class="dot edge"></span>Aresta</div>
+          <div class="chip"><span class="dot center"></span>Centro</div>
+</div>
+
+        <div class="col2"><b>Conjuntos equivalentes por translação</b> <span class="hint">cada conjunto contribui 1 átomo por célula</span></div>
+
+        <div class="row"><input id="gV" type="checkbox" checked><label for="gV">Vértices</label><select id="eV"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+
+        <div class="row"><input id="gFx" type="checkbox" checked><label for="gFx">Faces ⟂ x</label><select id="eFx"><option>A</option><option selected>B</option><option>C</option><option>D</option></select></div>
+        <div class="row"><input id="gFy" type="checkbox"><label for="gFy">Faces ⟂ y</label><select id="eFy"><option>A</option><option>B</option><option selected>C</option><option>D</option></select></div>
+        <div class="row"><input id="gFz" type="checkbox"><label for="gFz">Faces ⟂ z</label><select id="eFz"><option>A</option><option>B</option><option>C</option><option selected>D</option></select></div>
+
+        <div class="row"><input id="gEx" type="checkbox"><label for="gEx">Arestas ∥ x</label><select id="eEx"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+        <div class="row"><input id="gEy" type="checkbox"><label for="gEy">Arestas ∥ y</label><select id="eEy"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+        <div class="row"><input id="gEz" type="checkbox"><label for="gEz">Arestas ∥ z</label><select id="eEz"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+
+        <div class="row"><input id="gC" type="checkbox"><label for="gC">Centro (corpo)</label><select id="eC"><option>A</option><option selected>B</option><option>C</option><option>D</option></select></div>
+
+        <div class="readout col2" id="readout"></div>
+        <div class="hint col2">Inspiração: contar por orbits de translação — vértices (1 conjunto), faces em 3 orientações (até 3 conjuntos), arestas em 3 orientações (até 3 conjuntos), centro (1). Cada conjunto equivale a <b>1 átomo/unit cell</b>.</div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script src="assets/js/script1.js"></script>
+</body>
+</html>

@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="desktop mbr-site-loaded" style=""><head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="../assets/images/simoens-1-214x194.png" type="image/x-icon">
+  <meta name="description" content="Assistente do SiMoEns offline com histórico persistente local, integrado ao visual do SiMoEns.">
+  <title>Assistente do SiMoEns | SiMoEns</title>
+  <link rel="stylesheet" href="../assets/web/assets/mobirise-icons2/mobirise2.css">
+  <link rel="stylesheet" href="../assets/web/assets/mobirise-icons-bold/mobirise-icons-bold.css">
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="../assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="../assets/theme/css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"></noscript>
+  <link rel="preload" as="style" href="../assets/mobirise/css/mbr-additional.css?v=quimibot-simoens-20260417"><link rel="stylesheet" href="../assets/mobirise/css/mbr-additional.css?v=quimibot-simoens-20260417" type="text/css">
+
+  
+  <style>
+    :root {
+      --page-bg: #f5f5f2;
+      --card: #ffffff;
+      --card-soft: #fbfbf9;
+      --line: rgba(17, 24, 39, 0.10);
+      --line-strong: rgba(17, 24, 39, 0.16);
+      --text: #171717;
+      --muted: #6f6f73;
+      --muted-soft: #a0a0a7;
+      --brand: #1d6b55;
+      --brand-soft: rgba(29, 107, 85, 0.10);
+      --blue: #10347c;
+      --blue-soft: rgba(16, 52, 124, 0.08);
+      --shadow-lg: 0 26px 70px rgba(18, 18, 18, 0.06);
+      --shadow-md: 0 18px 40px rgba(18, 18, 18, 0.05);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 16px;
+      --shell-gap: 36px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: Manrope, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    .display-1,
+    .display-2,
+    .display-4,
+    .display-5,
+    .display-7 {
+      font-family: Manrope, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .menu.menu2 {
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar.navbar-dropdown {
+      padding-top: 32px;
+      background: transparent !important;
+    }
+
+    .navbar.navbar-dropdown .container {
+      max-width: 1328px;
+      background: rgba(255,255,255,.97);
+      border: 1px solid rgba(0,0,0,.03);
+      border-radius: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.035);
+      padding: 18px 30px;
+    }
+
+    .navbar-fixed-top {
+      top: 0;
+    }
+
+    .navbar.navbar-dropdown .navbar-logo img {
+      height: 5rem;
+      width: auto;
+    }
+
+    .navbar.navbar-dropdown .navbar-caption {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-size: 1.05rem;
+      color: #111 !important;
+    }
+
+    .navbar-nav .nav-link,
+    .dropdown-menu .dropdown-item {
+      color: #1a1a1d !important;
+    }
+
+    .icons-menu .mbr-iconfont {
+      color: #10347c !important;
+    }
+
+    .navbar-nav .nav-link {
+      font-weight: 500 !important;
+    }
+
+    .chat-smart-page {
+      padding: 7.3rem 0 4.5rem;
+    }
+
+    .chat-smart-shell {
+      max-width: 1328px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .chat-smart-grid {
+      display: grid;
+      grid-template-columns: 366px minmax(0, 1fr);
+      gap: var(--shell-gap);
+      align-items: stretch;
+    }
+
+    .left-rail {
+      min-width: 0;
+    }
+
+    .left-rail-inner {
+      background: rgba(255,255,255,.36);
+      border: 1px solid rgba(0,0,0,.035);
+      border-radius: 34px;
+      box-shadow: 0 16px 44px rgba(0,0,0,.03);
+      padding: 18px;
+      min-height: 980px;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(6px);
+    }
+
+    .rail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .rail-head h2 {
+      margin: 0;
+      font-size: 1.78rem;
+      line-height: 1;
+      letter-spacing: -0.045em;
+      font-weight: 600;
+    }
+
+    .new-chat-btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fff, #f2f2ef);
+      color: #b4b4b4;
+      font-weight: 700;
+      font-size: .86rem;
+      padding: 13px 18px;
+      box-shadow: 0 18px 34px rgba(29, 107, 85, 0.12);
+      transition: transform .15s ease, box-shadow .2s ease;
+      white-space: nowrap;
+    }
+
+    .new-chat-btn:hover,
+    .send:hover,
+    .action-pill:hover,
+    .suggestion-chip:hover,
+    .sidebar-toggle:hover,
+    .visits-pill:hover {
+      transform: translateY(-1px);
+    }
+
+    .sidebar-search {
+      display: none;
+    }
+
+    .status-card {
+      position: relative;
+      border: 1px solid rgba(17, 24, 39, 0.10);
+      border-radius: 24px;
+      background: rgba(255,255,255,.74);
+      padding: 18px 18px 16px;
+      margin-bottom: 20px;
+      min-height: 250px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+    }
+
+    .status-card h3 {
+      margin: 0;
+      font-size: .92rem;
+      font-weight: 800;
+      line-height: 1.32;
+      max-width: 10ch;
+    }
+
+    .status-card .status-percent {
+      align-self: center;
+      font-size: .94rem;
+      color: var(--brand);
+      font-weight: 800;
+      padding-top: 12px;
+    }
+
+    .status-copy {
+      grid-column: 1 / -1;
+      color: #2b2b30;
+      font-size: .88rem;
+      line-height: 1.45;
+      max-width: 17ch;
+    }
+
+    .history {
+      flex: 1;
+      min-height: 180px;
+      overflow: auto;
+      padding-right: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .history-empty {
+      padding: 16px 8px;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.5;
+    }
+
+    .history-item {
+      width: 100%;
+      text-align: left;
+      border-radius: 22px;
+      border: 1.5px solid rgba(29, 107, 85, 0.20);
+      background: rgba(255,255,255,.86);
+      padding: 14px 16px;
+      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+      box-shadow: 0 10px 24px rgba(18,18,18,.025);
+    }
+
+    .history-item:hover {
+      border-color: rgba(29, 107, 85, 0.34);
+      box-shadow: 0 14px 26px rgba(18,18,18,.04);
+    }
+
+    .history-item.active {
+      background: rgba(255,255,255,.97);
+      border-color: rgba(29, 107, 85, 0.40);
+      box-shadow: 0 12px 28px rgba(29, 107, 85, 0.10);
+    }
+
+    .history-title {
+      font-size: .92rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: #1a1a1d;
+      white-space: normal;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .history-snippet {
+      font-size: .84rem;
+      line-height: 1.42;
+      color: #38383d;
+      min-height: 2.5em;
+      margin-bottom: 18px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .history-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: .81rem;
+      color: #33353a;
+    }
+
+    .history-tag {
+      color: var(--brand);
+      font-weight: 800;
+    }
+
+    .visits-pill {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 26px;
+      background: linear-gradient(180deg, #fff, #f3f2ef);
+      border-radius: 999px;
+      box-shadow: 0 16px 32px rgba(18,18,18,.04);
+      font-size: .95rem;
+      color: #aaaaae;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .visits-pill strong {
+      color: #8a8a90;
+      font-size: .92rem;
+    }
+
+    .main-stage {
+      min-width: 0;
+    }
+
+    .chat-card {
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(0,0,0,.035);
+      border-radius: 34px;
+      box-shadow: 0 16px 44px rgba(0,0,0,.03);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .chat-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 26px 20px;
+    }
+
+    .chat-card-title h3 {
+      margin: 0;
+      font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      font-weight: 700;
+      color: #111114;
+    }
+
+    .chat-card-title p {
+      margin: 10px 0 0;
+      color: #34363a;
+      font-size: .96rem;
+      line-height: 1.42;
+      max-width: 18ch;
+    }
+
+    .chat-actions {
+      display: grid;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .action-pill,
+    .icon-btn,
+    .send,
+    .sidebar-toggle {
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.86);
+      color: #1a1a1d;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+      box-shadow: 0 10px 22px rgba(18,18,18,.03);
+    }
+
+    .action-pill,
+    .icon-btn {
+      padding: 13px 18px;
+      font-size: .92rem;
+      min-width: 188px;
+      text-align: center;
+    }
+
+    .chat-card-divider {
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+    }
+
+    .chat-wrap {
+      max-height: 460px;
+      overflow: auto;
+      padding: 28px 24px 30px;
+      scroll-behavior: smooth;
+    }
+
+    .chat {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message-card {
+      border-radius: 26px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      background: rgba(255,255,255,.76);
+      padding: 24px 22px;
+      box-shadow: 0 12px 26px rgba(18,18,18,.02);
+    }
+
+    .message-card.user {
+      margin-left: auto;
+      max-width: 84%;
+      background: rgba(16, 52, 124, 0.055);
+      border-color: rgba(16, 52, 124, 0.16);
+    }
+
+    .message-card.bot {
+      max-width: 92%;
+    }
+
+    .message-role {
+      margin-bottom: 10px;
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .message-card.bot .message-role {
+      color: var(--brand);
+    }
+
+    .message-card.user .message-role {
+      color: var(--blue);
+    }
+
+    .message-body {
+      font-size: clamp(1rem, 1.2vw, 1.06rem);
+      line-height: 1.78;
+      color: #1f2024;
+      overflow-wrap: anywhere;
+    }
+
+    .message-body p {
+      margin: 0;
+    }
+
+    .message-body strong {
+      font-weight: 800;
+    }
+
+    .message-body a {
+      color: var(--blue);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .message-body code {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: .92em;
+      background: rgba(17, 24, 39, 0.08);
+      padding: 2px 6px;
+      border-radius: 7px;
+    }
+
+    .message-body pre {
+      margin: 12px 0 0;
+      padding: 14px 16px;
+      overflow: auto;
+      border-radius: 18px;
+      background: #111827;
+      color: #f8fafc;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: .94rem;
+      line-height: 1.55;
+    }
+
+    .typing-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 18px;
+    }
+
+    .typing-inline span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #95a3b4;
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .typing-inline span:nth-child(2) { animation-delay: .15s; }
+    .typing-inline span:nth-child(3) { animation-delay: .3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .45; }
+      40% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .prompt-panel {
+      padding: 8px 20px 0;
+    }
+
+    .composer {
+      background: transparent;
+      padding: 0;
+    }
+
+    .composer-inner {
+      width: 100%;
+      margin: 0;
+    }
+
+    .field {
+      position: relative;
+      display: block;
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    .field textarea {
+      width: 100%;
+      min-height: 196px;
+      resize: vertical;
+      border-radius: 26px;
+      border: 1px solid rgba(17, 24, 39, 0.14);
+      background: rgba(255,255,255,.86);
+      padding: 24px 24px 74px;
+      font-size: 1rem;
+      line-height: 1.55;
+      color: #18181b;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
+    }
+
+    .field textarea::placeholder {
+      color: #8c8c92;
+    }
+
+    .field textarea:focus {
+      border-color: rgba(16, 52, 124, 0.36);
+      box-shadow: 0 0 0 4px rgba(16, 52, 124, 0.07);
+    }
+
+    .composer-bottom {
+      display: block;
+      padding: 0;
+      margin: 0;
+    }
+
+    .composer-text {
+      display: none;
+    }
+
+    .send {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      min-height: 0;
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 52, 124, 0.92);
+      background: rgba(16, 52, 124, 0.96);
+      font-size: .84rem;
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      box-shadow: 0 8px 18px rgba(16, 52, 124, 0.16);
+      z-index: 2;
+    }
+
+    .send:hover {
+      background: rgba(12, 42, 103, 0.98);
+      border-color: rgba(12, 42, 103, 0.98);
+      box-shadow: 0 10px 22px rgba(12, 42, 103, 0.2);
+    }
+
+    .send:disabled {
+      opacity: .68;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 12px;
+      padding: 0 4px;
+      color: var(--muted);
+      font-size: .92rem;
+      flex-wrap: wrap;
+    }
+
+    .counter.limit {
+      color: #b42318;
+      font-weight: 800;
+    }
+
+
+    .learn-section {
+      padding: 4.2rem 0 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .learn-title {
+      text-align: center;
+      font-size: clamp(2.1rem, 3.6vw, 3.9rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      font-weight: 700;
+      margin: 0 0 2.2rem;
+      color: #141417;
+    }
+
+
+    .learn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .learn-card {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(17, 24, 39, 0.10);
+      border-radius: 28px;
+      padding: 24px 24px 26px;
+      min-height: 220px;
+      box-shadow: 0 12px 26px rgba(18,18,18,.025);
+    }
+
+    .learn-card h4 {
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 2vw, 2.45rem);
+      line-height: .95;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      color: #16171a;
+    }
+
+    .learn-card p {
+      margin: 0;
+      color: #28292e;
+      font-size: 1rem;
+      line-height: 1.62;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 40;
+    }
+
+    body.sidebar-open .overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media print {
+      html,
+      body {
+        background: #f5f5f2 !important;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .navbar.navbar-dropdown {
+        padding-top: 24px;
+      }
+
+      .chat-smart-page {
+        padding-top: 7.4rem;
+        padding-bottom: 2.2rem;
+      }
+
+      .chat-smart-grid {
+        align-items: stretch;
+      }
+
+      .left-rail {
+        align-self: stretch;
+      }
+
+      .left-rail-inner {
+        min-height: 1080px;
+        height: auto;
+      }
+
+      .history {
+        overflow: visible !important;
+      }
+
+      .chat-card,
+      .prompt-panel,
+      .learn-section,
+      .learn-card,
+      .status-card,
+      .history-item,
+      .quick-prompts,
+      .suggestion-chip,
+      .message-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .chat-wrap {
+        max-height: none !important;
+        overflow: visible !important;
+        padding-bottom: 8px;
+      }
+
+      .visits-pill {
+        position: fixed;
+        left: 72px;
+        bottom: 48px;
+        z-index: 20;
+      }
+
+      .footer3 {
+        padding-top: 1.5rem;
+      }
+    }
+
+    .sidebar-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+
+    .spoiler {
+      display: inline-block;
+      border-radius: 8px;
+      padding: 2px 8px;
+      background: #d6d8de;
+      color: transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color .2s ease, color .2s ease;
+    }
+
+    .spoiler:hover,
+    .spoiler.revealed {
+      background: #eceef3;
+      color: inherit;
+    }
+
+    @media (max-width: 1199.98px) {
+      .chat-smart-grid {
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 24px;
+      }
+
+      .chat-card-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chat-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .action-pill,
+      .icon-btn {
+        min-width: 0;
+      }
+
+      .learn-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 991.98px) {
+      .navbar.navbar-dropdown .container {
+        padding: 16px 20px;
+      }
+
+      .chat-smart-page {
+        padding-top: .75rem;
+      }
+
+      .chat-smart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .left-rail {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: min(86vw, 350px);
+        z-index: 60;
+        padding: 92px 14px 14px;
+        transform: translateX(-100%);
+        transition: transform .22s ease;
+      }
+
+      body.sidebar-open .left-rail {
+        transform: translateX(0);
+      }
+
+      .left-rail-inner {
+        min-height: calc(100vh - 106px);
+        border-radius: 28px;
+        background: rgba(255,255,255,.96);
+      }
+
+      .sidebar-toggle {
+        display: inline-flex;
+      }
+
+      .chat-card-head {
+        padding: 24px 20px 20px;
+      }
+
+      .chat-wrap {
+        padding: 22px 18px 24px;
+      }
+
+      .prompt-panel {
+        padding: 8px 12px 0;
+      }
+
+      .composer-bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .send {
+        min-height: 64px;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .navbar.navbar-dropdown {
+        padding-top: 18px;
+      }
+
+      .navbar.navbar-dropdown .container {
+        border-radius: 24px;
+        padding: 14px 16px;
+      }
+
+      .left-rail {
+        width: min(90vw, 330px);
+      }
+
+      .rail-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chat-card-title h3 {
+        font-size: 1.9rem;
+      }
+
+      .quick-prompts {
+        gap: 10px;
+      }
+
+      .suggestion-chip {
+        width: 100%;
+        text-align: left;
+      }
+
+      .learn-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .learn-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .chat-smart-shell {
+        padding: 0 10px;
+      }
+
+      .left-rail-inner,
+      .chat-card {
+        border-radius: 24px;
+      }
+
+      .status-card {
+        min-height: auto;
+      }
+
+      .chat-card-head {
+        padding: 20px 16px 18px;
+      }
+
+      .chat-wrap {
+        padding: 18px 14px 20px;
+      }
+
+      .field textarea {
+        min-height: 150px;
+        padding: 18px 18px;
+      }
+
+      .meta {
+        font-size: .86rem;
+      }
+    }
+  </style>
+
+<style>
+    .vw-unique-widget {
+      position: fixed;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(14, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      z-index: 9999;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vw-unique-widget.bottom-right { right: 18px; bottom: 18px; }
+    .vw-unique-widget.bottom-left { left: 18px; bottom: 18px; }
+    .vw-unique-widget.top-right { right: 18px; top: 18px; }
+    .vw-unique-widget.top-left { left: 18px; top: 18px; }
+    .vw-unique-widget .vw-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+      flex: 0 0 auto;
+    }
+    .vw-unique-widget .vw-number {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .vw-unique-widget .vw-label {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      opacity: 0.82;
+    }
+    .vw-unique-widget .vw-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .vw-unique-widget .vw-loading {
+      opacity: 0.72;
+    }
+  </style><style>
+    .vw-unique-widget {
+      position: fixed;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(14, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      z-index: 9999;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vw-unique-widget.bottom-right { right: 18px; bottom: 18px; }
+    .vw-unique-widget.bottom-left { left: 18px; bottom: 18px; }
+    .vw-unique-widget.top-right { right: 18px; top: 18px; }
+    .vw-unique-widget.top-left { left: 18px; top: 18px; }
+    .vw-unique-widget .vw-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+      flex: 0 0 auto;
+    }
+    .vw-unique-widget .vw-number {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .vw-unique-widget .vw-label {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      opacity: 0.82;
+    }
+    .vw-unique-widget .vw-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .vw-unique-widget .vw-loading {
+      opacity: 0.72;
+    }
+  </style><style>
+    .vw-unique-widget {
+      position: fixed;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(14, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      z-index: 9999;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vw-unique-widget.bottom-right { right: 18px; bottom: 18px; }
+    .vw-unique-widget.bottom-left { left: 18px; bottom: 18px; }
+    .vw-unique-widget.top-right { right: 18px; top: 18px; }
+    .vw-unique-widget.top-left { left: 18px; top: 18px; }
+    .vw-unique-widget .vw-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+      flex: 0 0 auto;
+    }
+    .vw-unique-widget .vw-number {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .vw-unique-widget .vw-label {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      opacity: 0.82;
+    }
+    .vw-unique-widget .vw-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .vw-unique-widget .vw-loading {
+      opacity: 0.72;
+    }
+  </style></head>
+
+<body style="z-index: 0"><section id="top-1" style="display: none;"><a href="https://mobirise.com/builder/ai-website-maker.html">Best AI Website Maker</a> Mobirise v6.1.12 <a href="https://mobirise.com/builder/ai-website-creator.html">Free AI Website Creator</a></section>
+  <div class="overlay" id="overlay"></div>
+
+  <section data-bs-version="5.1" class="menu menu2 cid-v5iWwJlZLP" once="menu" id="menu-5-v5iWwJlZLP">
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg navbar-short">
+      <div class="container">
+        <div class="navbar-brand">
+          <span class="navbar-logo">
+            <a href="../">
+              <img src="../assets/images/simoens-1-214x194.png" alt="" style="height: 5rem;">
+            </a>
+          </span>
+          <span class="navbar-caption-wrap"><a class="navbar-caption text-black text-primary display-4">SiMoEns</a></span>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
+            <li class="nav-item">
+              <a class="nav-link link text-black text-primary display-4" href="../">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link text-black text-primary display-4" href="../#about-us-1-v5iWwJlyUz" aria-expanded="false">Sobre</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link text-black text-primary display-4" href="../#testimonials-5-v5iWwJmiE2">Parceiros</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link link text-black dropdown-toggle display-4" href="#" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Produtos</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown-604">
+                <a class="text-black dropdown-item text-primary display-4" href="../Ensino/">Ensino</a>
+                <a class="text-black dropdown-item text-primary display-4" href="../Modelagem/modelagem.html">Modelagem</a>
+                <a class="text-black dropdown-item text-primary display-4" href="../Simulação/simulacao.html">Simulação</a>
+                <a class="text-black dropdown-item text-primary display-4" href="chatbot.html">Chat inteligente</a>
+              </div>
+            </li>
+          </ul>
+          <div class="icons-menu">
+            <a href="../#contact-form-2-v5iWwJnC3V"><span class="p-2 mbr-iconfont mbrib-letter" style="font-size: 32px;"></span></a>
+            <a href="../#contacts-11-v5iWwJnXpI"><span class="p-2 mbr-iconfont mobi-mbri-map-pin mobi-mbri" style="font-size: 32px;"></span></a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
+
+  <section class="chat-smart-page">
+    <div class="chat-smart-shell">
+      <div class="chat-smart-grid">
+        <aside class="left-rail" id="sidebar">
+          <div class="left-rail-inner">
+            <div class="rail-head">
+              <h2>Conversas</h2>
+              <button class="new-chat-btn" id="newChatBtn" type="button">＋Nova conversa</button>
+            </div>
+
+            
+
+            <input class="sidebar-search" id="historySearch" type="text" placeholder="Buscar no histórico" autocomplete="off">
+
+            <div class="history" id="historyList"><button type="button" class="history-item active">
+      <div class="history-title">Nova conversa</div>
+      <div class="history-snippet">Olá! Sou o Assistente do SiMoEns, seu assistente focado em Química! 🧪 Estou aqui para ajudar com Quími…</div>
+      <div class="history-meta">
+        <span>17/04, 19:53</span>
+        <span class="history-tag">Chat</span>
+      </div>
+    </button><button type="button" class="history-item">
+      <div class="history-title">Quais conteúdos da base tratam de cisplati…</div>
+      <div class="history-snippet">oi</div>
+      <div class="history-meta">
+        <span>17/04, 19:43</span>
+        <span class="history-tag">Chat</span>
+      </div>
+    </button><button type="button" class="history-item">
+      <div class="history-title">OI</div>
+      <div class="history-snippet">ESTRUTURA CRISTALINA</div>
+      <div class="history-meta">
+        <span>17/04, 01:32</span>
+        <span class="history-tag">Chat</span>
+      </div>
+    </button></div>
+
+            
+          </div>
+        </aside>
+
+        <main class="main-stage">
+          <section class="chat-card">
+            <div class="chat-card-head">
+              <div class="chat-card-title">
+                <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Abrir histórico">☰</button>
+                <h3 id="conversationTitle">Nova conversa</h3>
+                <p id="conversationMeta">1 mensagem · atualizada em 17/04, 19:53</p>
+              </div>
+              <div class="chat-actions">
+                <button class="action-pill" id="exportChatBtn" type="button">Exportar conversa</button>
+                <button class="action-pill" id="clearChatBtn" type="button">Limpar conversa</button>
+              </div>
+            </div>
+
+            <div class="chat-card-divider"></div>
+
+            <main class="chat-wrap" id="chatWrap" style="">
+              <div class="chat" id="chat"><div class="message-card bot">
+      <div class="message-role">ASSISTENTE</div>
+      <div class="message-body">Olá! Sou o Assistente do SiMoEns, seu assistente focado em Química! 🧪<br><br>Estou aqui para ajudar com <strong>Química Geral, Inorgânica, Estado Sólido, Cristalografia, Físico-Química e Química de Coordenação</strong>.<br><br><strong>Como falar comigo:</strong><br>Como sou um robô que trabalha através do reconhecimento de palavras-chave estruturadas e não por inteligência artificial, eu funciono muito melhor se você for <strong>direto e objetivo</strong> no assunto, sem textos muito longos ou complexos.<br><br><strong>Experimente digitar:</strong><br>- <em>"O que é uma célula unitária?"</em><br>- <em>"Explique a teoria do campo cristalino"</em><br>- <em>"Quais os defeitos cristalinos?"</em><br>- <em>"Me passe uma questão sobre cristalografia"</em><br>- <em>"Fale sobre o elemento Ouro"</em><br><br>Digite <strong>"Instruções"</strong> a qualquer momento para ver o menu de tudo o que eu consigo fazer por você!<br><br>Nesta versão, suas conversas ficam salvas localmente no navegador.</div>
+    </div></div>
+            </main>
+          </section>
+
+          <section class="prompt-panel">
+            <footer class="composer">
+              <div class="composer-inner">
+                <form id="form" novalidate="">
+                  <div class="field">
+                    <textarea id="input" maxlength="100" placeholder=""></textarea>
+                    <button id="sendBtn" class="send" type="submit" aria-label="Perguntar" disabled="">Perguntar</button>
+                  </div>
+
+                  <div class="composer-bottom"></div>
+
+                  <div class="meta">
+                    
+                    <div class="counter" id="counter">0/100 caracteres</div>
+                  </div>
+                </form>
+              </div>
+            </footer>
+          </section>
+
+          <section class="learn-section">
+            <h2 class="learn-title">O que você pode pedir aqui</h2>
+
+            <div class="learn-grid">
+              <article class="learn-card">
+                <h4>Explicações</h4>
+                <p>Peça conceitos em linguagem mais simples, mais acadêmica ou em etapas, conforme o seu objetivo.</p>
+              </article>
+
+                            <article class="learn-card">
+                <h4>Exercícios</h4>
+                <p>Você pode pedir exercícios com enunciado, gabarito e comentário, focados no tema estudado.</p>
+              </article>
+
+                          </div>
+          </section>
+          </main></div>
+        
+      </div>
+    
+  </section>
+
+  <section data-bs-version="5.1" class="footer3 cid-vdkq0k5vNJ" once="footers" id="footer03-k">
+
+        
+
+    
+
+    <div class="container">
+        <div class="row">
+            
+
+            
+            <div class="col-12 mt-4">
+                <p class="mbr-fonts-style copyright display-7">© 2025-2026 SiMoEns. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</section>  <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="../assets/ytplayer/index.js"></script>
+  <script src="../assets/dropdown/js/navbar-dropdown.js"></script>
+  <script src="../assets/theme/js/script.js"></script>
+
+  <script>
+window.SimoensChatWidgetConfig = {
+  mode: 'embedded',
+  layout: 'legacy-page',
+  startOpen: true,
+  hideToggle: true,
+  allowClose: false,
+  title: 'Assistente do SiMoEns'
+};
+window.SIMOENS_CHAT_WIDGET_CONFIG = window.SimoensChatWidgetConfig;
+</script>
+<script src="widget/chat-widget.js?v=shared-history-20260421a"></script>
+
+
+<script>
+window.VisitWidgetConfig = {
+  functionUrl: 'https://uiziwrtliumlgdfrcddw.supabase.co/functions/v1/count-visit',
+  anonKey: 'sb_publishable_eyD-PP9S5sdNQkonppUeGg_UnktwkTx',
+  siteKey: 'principal',
+  position: 'bottom-left',
+  label: 'Visitas'
+}
+</script>
+<script src="widget/visit-widget-unique.js"></script>
+</body></html>

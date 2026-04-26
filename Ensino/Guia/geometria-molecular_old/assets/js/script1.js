@@ -1,0 +1,908 @@
+'use strict';
+(function(){
+  var canvas = document.getElementById('gl');
+  var angleOverlay = document.getElementById('angleOverlay');
+  var gl = canvas.getContext('webgl', {antialias:false, alpha:false, preserveDrawingBuffer:true, powerPreference:'low-power', desynchronized:true});
+  var actx = angleOverlay.getContext('2d');
+  if(!gl){ alert('Seu navegador não suporta WebGL.'); return; }
+
+  var geom = document.getElementById('geom');
+  var bondLen = document.getElementById('bondLen');
+  var size = document.getElementById('size');
+  var ligandRadius = document.getElementById('ligandRadius');
+  var bondRadius = document.getElementById('bondRadius');
+  var lpScale = document.getElementById('lpScale');
+  var ambient = document.getElementById('ambient');
+  var sat = document.getElementById('sat');
+  var specK = document.getElementById('specK');
+  var refl = document.getElementById('refl');
+  var ligandColor = document.getElementById('ligandColor');
+  var lpColor = document.getElementById('lpColor');
+  var coreColor = document.getElementById('coreColor');
+  var bondType = document.getElementById('bondType');
+  var showAxes = document.getElementById('showAxes');
+  var showAngles = document.getElementById('showAngles');
+  var lightBg = document.getElementById('lightBg');
+  var lightBgQuick = document.getElementById('lightBgQuick');
+  var save = document.getElementById('save');
+  var bgBrightness = document.getElementById('bgBrightness');
+  var bgStars = document.getElementById('bgStars');
+  var rotXS = document.getElementById('rotXS');
+  var rotYS = document.getElementById('rotYS');
+  var rotZS = document.getElementById('rotZS');
+  var rotReset = document.getElementById('rotReset');
+  var infoName = document.getElementById('infoName');
+  var infoArr = document.getElementById('infoArr');
+  var infoIdeal = document.getElementById('infoIdeal');
+  var hud = document.getElementById('hud');
+
+  var axisLabels = {
+    x: document.getElementById('axisXLabel'),
+    y: document.getElementById('axisYLabel'),
+    z: document.getElementById('axisZLabel')
+  };
+
+  function setAxisLabelsVisible(v){
+    axisLabels.x.style.display = v ? 'block' : 'none';
+    axisLabels.y.style.display = v ? 'block' : 'none';
+    axisLabels.z.style.display = v ? 'block' : 'none';
+  }
+
+  function vAdd(a,b){ return [a[0]+b[0], a[1]+b[1], a[2]+b[2]]; }
+  function vSub(a,b){ return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+  function vMul(a,s){ return [a[0]*s, a[1]*s, a[2]*s]; }
+  function vDot(a,b){ return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+  function vCross(a,b){ return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+  function vLen(a){ return Math.hypot(a[0],a[1],a[2]) || 1; }
+  function vNorm(a){ var L=vLen(a); return [a[0]/L,a[1]/L,a[2]/L]; }
+  function rotXYZ(p, r){
+    var x=p[0], y=p[1], z=p[2];
+    var cx=Math.cos(r.x), sx=Math.sin(r.x);
+    var cy=Math.cos(r.y), sy=Math.sin(r.y);
+    var cz=Math.cos(r.z), sz=Math.sin(r.z);
+    var y1 = cx*y - sx*z, z1 = sx*y + cx*z;
+    var x2 = cy*x + sy*z1, z2 = -sy*x + cy*z1;
+    var x3 = cz*x2 - sz*y1, y3 = sz*x2 + cz*y1;
+    return [x3,y3,z2];
+  }
+
+  function projectToCanvas(world, eyePos){
+    var target=[0,0,0], up=[0,1,0];
+    var f=vNorm(vSub(target, eyePos));
+    var useUp = Math.abs(vDot(f, up)) > 0.98 ? [0,0,1] : up;
+    var r=vNorm(vCross(f, useUp));
+    if(!isFinite(r[0])||!isFinite(r[1])||!isFinite(r[2])) r=[1,0,0];
+    var u=vCross(r, f);
+    var q=vSub(world, eyePos);
+    var cx=vDot(q, r), cy=vDot(q, u), cz=vDot(q, f);
+    if(cz <= -0.15) return null;
+    if(cz < 0.05) cz = 0.05;
+    var aspect = (canvas.clientWidth||1)/(canvas.clientHeight||1);
+    var fov = 1.2;
+    var t = Math.tan(fov*0.5);
+    var ndcX = cx/(cz*t*aspect);
+    var ndcY = cy/(cz*t);
+    if(!isFinite(ndcX) || !isFinite(ndcY)) return null;
+    var sx = (ndcX*0.5 + 0.5) * canvas.clientWidth;
+    var sy = (1.0 - (ndcY*0.5 + 0.5)) * canvas.clientHeight;
+    var visible = ndcX>-1.25 && ndcX<1.25 && ndcY>-1.25 && ndcY<1.25;
+    return {x:sx, y:sy, visible:visible};
+  }
+
+  function updateAxisLabels(eyePos){
+    if(!showAxes.checked){ setAxisLabelsVisible(false); return; }
+    var pts = {
+      x: rotXYZ([3.18,0,0], rot),
+      y: rotXYZ([0,3.18,0], rot),
+      z: rotXYZ([0,0,3.18], rot)
+    };
+    setAxisLabelsVisible(true);
+    [['x',axisLabels.x],['y',axisLabels.y],['z',axisLabels.z]].forEach(function(item){
+      var key=item[0], el=item[1];
+      var p = projectToCanvas(pts[key], eyePos);
+      if(!p || !p.visible){ el.style.display='none'; return; }
+      el.style.display='block';
+      el.style.left = p.x + 'px';
+      el.style.top = p.y + 'px';
+    });
+  }
+
+  var lastDpr = 1;
+  function resize(){
+    var renderDpr = Math.max(0.8, Math.min(1, window.devicePixelRatio||1) * 0.9);
+    var overlayDpr = 1;
+    lastDpr = renderDpr;
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    var rw = Math.max(1, Math.round(w*renderDpr));
+    var rh = Math.max(1, Math.round(h*renderDpr));
+    if(canvas.width!==rw||canvas.height!==rh){
+      canvas.width=rw; canvas.height=rh; gl.viewport(0,0,canvas.width,canvas.height);
+    }
+    if(angleOverlay.width!==w*overlayDpr||angleOverlay.height!==h*overlayDpr){
+      angleOverlay.width=w*overlayDpr; angleOverlay.height=h*overlayDpr;
+      actx.setTransform(overlayDpr,0,0,overlayDpr,0,0);
+    }
+  }
+  resize();
+  var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
+  if(ro){ ro.observe(canvas); } else { window.addEventListener('resize', resize); }
+
+  var ui = {
+    geom:geom,bondLen:bondLen,size:size,ligandRadius:ligandRadius,bondRadius:bondRadius,lpScale:lpScale,
+    ambient:ambient,sat:sat,specK:specK,refl:refl,ligandColor:ligandColor,lpColor:lpColor,coreColor:coreColor,
+    bondType:bondType,showAxes:showAxes,showAngles:showAngles,bgStars:bgStars,bgBrightness:bgBrightness,
+    rotXS:rotXS,rotYS:rotYS,rotZS:rotZS
+  };
+
+  Object.keys(ui).forEach(function(k){
+    var el = ui[k];
+    if(!el) return;
+    el.addEventListener('input', sync);
+    el.addEventListener('change', sync);
+  });
+
+  save.addEventListener('click', function(){
+    requestAnimationFrame(function(){
+      var a=document.createElement('a');
+      a.download='geometria_molecular_3d_atualizada.png';
+      a.href=canvas.toDataURL('image/png');
+      a.click();
+    });
+  });
+
+  var __whiteMode = false;
+  function setLightBG(v){
+    __whiteMode = !!v;
+    lightBg.checked = __whiteMode;
+    lightBgQuick.checked = __whiteMode;
+    document.body.classList.toggle('lightBg', __whiteMode);
+    sync();
+  }
+  lightBg.addEventListener('input', function(){ setLightBG(lightBg.checked); });
+  lightBg.addEventListener('change', function(){ setLightBG(lightBg.checked); });
+  lightBgQuick.addEventListener('input', function(){ setLightBG(lightBgQuick.checked); });
+  lightBgQuick.addEventListener('change', function(){ setLightBG(lightBgQuick.checked); });
+
+  var DEG=Math.PI/180;
+  var rot={x:0,y:0,z:0};
+  ['x','y','z'].forEach(function(ax){
+    var el = document.getElementById('rot'+ax.toUpperCase()+'S');
+    el.addEventListener('input', function(e){ rot[ax]=parseFloat(e.target.value||0)*DEG; });
+  });
+  rotReset.addEventListener('click', function(){
+    rot.x=rot.y=rot.z=0;
+    rotXS.value=rotYS.value=rotZS.value='0';
+  });
+
+  var camDist=4.6, rotX=0.35, rotY=-0.6, isDown=false, lastX=0,lastY=0;
+  canvas.addEventListener('mousedown', function(e){ isDown=true; lastX=e.clientX; lastY=e.clientY; });
+  window.addEventListener('mouseup', function(){ isDown=false; });
+  window.addEventListener('mousemove', function(e){
+    if(!isDown) return;
+    var dx=(e.clientX-lastX)/canvas.clientWidth, dy=(e.clientY-lastY)/canvas.clientHeight;
+    lastX=e.clientX; lastY=e.clientY;
+    rotY+=dx*Math.PI;
+    rotX+=dy*Math.PI;
+    rotX=Math.max(-Math.PI/2+.05, Math.min(Math.PI/2-.05, rotX));
+  });
+  canvas.addEventListener('wheel', function(e){
+    e.preventDefault();
+    camDist*=(1+Math.sign(e.deltaY)*0.08);
+    camDist=Math.max(2.2, Math.min(14, camDist));
+  }, {passive:false});
+  canvas.addEventListener('dblclick', function(){
+    camDist=autoDist();
+    rotX=0.35; rotY=-0.6;
+    rot.x=rot.y=rot.z=0;
+    rotXS.value=rotYS.value=rotZS.value='0';
+  });
+
+  var VERT=`
+    attribute vec2 aPos; varying vec2 vUV;
+    void main(){ vUV=aPos*0.5+0.5; gl_Position=vec4(aPos,0.0,1.0); }
+  `;
+
+  var FRAG=`
+    precision highp float;
+    varying vec2 vUV;
+    uniform vec2 uRes;
+    uniform vec3 uEye, uTarget, uUp;
+    uniform int uLigCount; uniform vec3 uLigDirs[8];
+    uniform int uLPCount;  uniform vec3 uLPDirs[8];
+    uniform float uBondLen, uCentralR, uLigR, uBondR, uLPScale, uAmbient, uSat, uSpecK, uRefl;
+    uniform vec3 uLigColor, uLPColor, uCoreColor;
+    uniform bool uShowAxes;
+    uniform int uBondType;
+    uniform vec3 uRot;
+    uniform float uBGStars, uBGBright, uLightBG;
+
+    mat3 look(vec3 f, vec3 up){
+      vec3 w=normalize(f);
+      vec3 up2 = (abs(dot(w, normalize(up)))>0.98) ? vec3(0.0,0.0,1.0) : up;
+      vec3 u=normalize(cross(w,up2));
+      vec3 v=cross(u,w);
+      return mat3(u,v,w);
+    }
+    float sdSphere(vec3 p, float r){ return length(p)-r; }
+    float sdCapsule(vec3 p, vec3 a, vec3 b, float r){
+      vec3 pa=p-a, ba=b-a;
+      float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);
+      return length(pa-ba*h)-r;
+    }
+    struct Hit{ float d; vec3 col; };
+
+    vec3 rotateXYZ(vec3 p, vec3 r){
+      float cx=cos(r.x), sx=sin(r.x);
+      float cy=cos(r.y), sy=sin(r.y);
+      float cz=cos(r.z), sz=sin(r.z);
+      p=vec3(p.x, cx*p.y-sx*p.z, sx*p.y+cx*p.z);
+      p=vec3(cy*p.x+sy*p.z, p.y, -sy*p.x+cy*p.z);
+      p=vec3(cz*p.x-sz*p.y, sz*p.x+cz*p.y, p.z);
+      return p;
+    }
+
+    float hash21(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }
+    vec2 hash22(vec2 p){ return fract(sin(vec2(dot(p,vec2(269.5,183.3)), dot(p,vec2(113.5,271.9))))*43758.5453); }
+    const float PI=3.14159265359;
+    vec2 dirToUV(vec3 dir){
+      dir=normalize(dir);
+      float lon=atan(dir.x, dir.z);
+      float lat=asin(clamp(dir.y,-1.0,1.0));
+      return vec2(lon/(2.0*PI)+0.5, lat/PI+0.5);
+    }
+    float starLayer(vec2 uv, float cells, float baseRadius, float boost){
+      vec2 gv=uv*cells; vec2 id=floor(gv); vec2 f=fract(gv);
+      vec2 sp=hash22(id); vec2 d=f-sp;
+      float dist=length(d);
+      float r=baseRadius*(0.7+0.6*hash21(id+7.3));
+      float star=smoothstep(r, 0.0, dist);
+      float halo=exp(-dist*dist/(r*r*3.0));
+      return (star+0.4*halo)*boost;
+    }
+    vec3 envMap(vec3 dir){
+      vec2 uv=dirToUV(dir);
+      float s=0.0;
+      s += starLayer(uv, 900.0, 0.0020, 0.9);
+      s += starLayer(uv, 1500.0, 0.0017, 0.8);
+      s += starLayer(uv, 2400.0, 0.0015, 0.6);
+
+      float lb = clamp(uLightBG,0.0,1.0);
+      vec3 base = mix(vec3(0.0), vec3(0.945, 0.955, 0.97), lb);
+      vec3 starC = mix(vec3(0.75,0.82,1.0), vec3(0.00,0.34,1.00), lb);
+      float baseBoost = mix(1.0, 0.90, lb);
+      float starBoost = mix(1.0, 2.35, lb);
+
+      vec3 col = base * uBGBright * baseBoost + (starC * s * uBGStars * starBoost);
+      return clamp(col, 0.0, 1.0);
+    }
+
+    Hit map(vec3 p){
+      Hit res; res.d=1e9; res.col=vec3(0.0);
+      vec3 pm=rotateXYZ(p,uRot);
+
+      if(uShowAxes){
+        float ax = sdCapsule(pm, vec3(-3.0,0.0,0.0), vec3(3.0,0.0,0.0), 0.02);
+        float ay = sdCapsule(pm, vec3(0.0,-3.0,0.0), vec3(0.0,3.0,0.0), 0.02);
+        float az = sdCapsule(pm, vec3(0.0,0.0,-3.0), vec3(0.0,0.0,3.0), 0.02);
+        float d=ax;
+        vec3 axisCol=vec3(1.0,0.28,0.28);
+        if(ay<d){ d=ay; axisCol=vec3(0.28,1.0,0.38); }
+        if(az<d){ d=az; axisCol=vec3(0.35,0.62,1.0); }
+        if(d<res.d){ res.d=d; res.col=axisCol; }
+      }
+
+      float dc=sdSphere(pm,uCentralR);
+      if(dc<res.d){ res.d=dc; res.col=uCoreColor; }
+
+      for(int i=0;i<8;i++) if(i<uLigCount){
+        vec3 dir=normalize(uLigDirs[i]);
+        vec3 b=dir*uBondLen;
+
+        if(uBondType==1){
+          float db=sdCapsule(pm, vec3(0.0), b, uBondR);
+          if(db<res.d){ res.d=db; res.col=vec3(0.82,0.9,1.0); }
+        } else if(uBondType==2){
+          vec3 perp=(abs(dir.z)<0.99)?normalize(cross(dir,vec3(0.0,0.0,1.0))):normalize(cross(dir,vec3(0.0,1.0,0.0)));
+          float r2=uBondR*0.6; float off=r2*1.8;
+          float d1=sdCapsule(pm,-perp*off,b-perp*off,r2); if(d1<res.d){ res.d=d1; res.col=vec3(0.82,0.9,1.0); }
+          float d2=sdCapsule(pm, perp*off,b+perp*off,r2); if(d2<res.d){ res.d=d2; res.col=vec3(0.82,0.9,1.0); }
+        } else {
+          vec3 perp=(abs(dir.z)<0.99)?normalize(cross(dir,vec3(0.0,0.0,1.0))):normalize(cross(dir,vec3(0.0,1.0,0.0)));
+          float r3=uBondR*0.5; float off=r3*1.8;
+          float d0=sdCapsule(pm, vec3(0.0), b, r3); if(d0<res.d){ res.d=d0; res.col=vec3(0.82,0.9,1.0); }
+          float d1=sdCapsule(pm,-perp*off,b-perp*off,r3); if(d1<res.d){ res.d=d1; res.col=vec3(0.82,0.9,1.0); }
+          float d2=sdCapsule(pm, perp*off,b+perp*off,r3); if(d2<res.d){ res.d=d2; res.col=vec3(0.82,0.9,1.0); }
+        }
+
+        float dl=sdSphere(pm-b, uLigR);
+        if(dl<res.d){ res.d=dl; res.col=uLigColor; }
+      }
+      return res;
+    }
+
+    vec3 calcNormal(vec3 p){
+      float e=0.0015; vec2 h=vec2(1.0,-1.0)*0.5773;
+      return normalize(
+        h.xyy*map(p+h.xyy*e).d +
+        h.yyx*map(p+h.yyx*e).d +
+        h.yxy*map(p+h.yxy*e).d +
+        h.xxx*map(p+h.xxx*e).d
+      );
+    }
+
+    float softShadow(vec3 ro, vec3 rd){
+      float res=1.0; float t=0.02;
+      for(int i=0;i<18;i++){
+        vec3 p=ro+rd*t;
+        float h=map(p).d;
+        res=min(res,8.0*h/t);
+        t+=clamp(h,0.02,0.25);
+        if(res<0.001||t>10.0) break;
+      }
+      return clamp(res,0.0,1.0);
+    }
+    vec3 saturateColor(vec3 c, float s){
+      float l=dot(c, vec3(0.299,0.587,0.114));
+      return mix(vec3(l), c, s);
+    }
+
+    vec2 raySphereInterval(vec3 ro, vec3 rd, vec3 c, float r){
+      vec3 oc = ro - c;
+      float b = dot(oc, rd);
+      float h = b*b - dot(oc,oc) + r*r;
+      if(h < 0.0) return vec2(1e9, -1e9);
+      h = sqrt(h);
+      return vec2(-b - h, -b + h);
+    }
+
+    float probDots(vec3 p, float seed){
+      float grid = 10.0;
+      vec3 q = p*grid + seed*vec3(7.13, 13.71, 5.17);
+      vec3 cell = floor(q);
+      vec3 f = fract(q);
+
+      vec3 rnd = fract(sin(vec3(
+        dot(cell, vec3(127.1,311.7,74.7)),
+        dot(cell, vec3(269.5,183.3,246.1)),
+        dot(cell, vec3(113.5,271.9,124.6))
+      ))*43758.5453);
+
+      float d = length(f - rnd);
+      float rDot = mix(0.18, 0.30, clamp(uLightBG,0.0,1.0));
+      float m = 1.0 - smoothstep(rDot*0.65, rDot, d);
+      float radial = length(p);
+      m *= smoothstep(1.0, 0.25, radial);
+      return m;
+    }
+
+    void main(){
+      vec3 fwd=normalize(uTarget-uEye);
+      mat3 cam=look(fwd, uUp);
+      vec2 uv=vUV*2.0-1.0; uv.x*=uRes.x/uRes.y;
+      vec3 rd=normalize(cam*normalize(vec3(uv,1.25)));
+      vec3 ro=uEye;
+
+      float t=0.0; vec3 col=vec3(0.0); float fog=0.0; float hitFlag=0.0;
+      Hit h; vec3 p=vec3(0.0);
+      for(int i=0;i<96;i++){
+        p=ro+rd*t; h=map(p);
+        if(h.d<0.0015){
+          vec3 n=calcNormal(p);
+          vec3 ldir=normalize(-uEye);
+          float diff=max(dot(n,ldir),0.0);
+          float sh=softShadow(p+n*0.01, ldir);
+          float spec=pow(max(dot(reflect(-ldir,n), -rd), 0.0), 40.0);
+          float amb=clamp(uAmbient,0.0,1.0);
+          float diff2=max(dot(n, normalize(vec3(0.6,0.5,0.2))), 0.0)*0.35;
+
+          vec3 lit=h.col*(amb+(1.0-amb)*(diff*sh*0.85+diff2));
+          lit=saturateColor(lit,uSat);
+          vec3 env=envMap(reflect(-rd,n));
+          vec3 reflMix=mix(lit,env,clamp(uRefl,0.0,0.8));
+          float rim=pow(1.0-max(dot(n,-rd),0.0),3.0);
+          col=clamp(reflMix+vec3(spec)*uSpecK+vec3(rim)*0.08,0.0,1.0);
+          fog=1.0-exp(-0.05*t); hitFlag=1.0; break;
+        }
+        t+=clamp(h.d, 0.003, 0.55);
+        if(t>30.0) break;
+      }
+
+      vec3 bg=envMap(rd);
+      vec3 colFog=mix(bg,col,1.0-fog);
+      col=mix(bg,colFog,hitFlag);
+
+      float lpDots = 0.0;
+      if(uLPCount>0){
+        vec3 roM = rotateXYZ(ro, uRot);
+        vec3 rdM = normalize(rotateXYZ(rd, uRot));
+
+        float pScale=uLPScale*1.85;
+        float centerDist=uCentralR + 0.58*pScale;
+        float rCloud=0.33*pScale;
+
+        float tMax = (hitFlag>0.5) ? t : 30.0;
+        const int SAMPLES = 7;
+
+        for(int j=0;j<8;j++) if(j<uLPCount){
+          vec3 dir=normalize(uLPDirs[j]);
+          vec3 c = dir*centerDist;
+
+          vec2 iv = raySphereInterval(roM, rdM, c, rCloud);
+          float t0 = iv.x, t1 = iv.y;
+          if(t1 < 0.0) continue;
+
+          float a0 = max(t0, 0.0);
+          float a1 = min(t1, tMax);
+          float seg = max(0.0, a1-a0);
+          if(seg <= 0.0) continue;
+
+          float acc = 0.0;
+          for(int s=0;s<SAMPLES;s++){
+            float u = (float(s)+0.5)/float(SAMPLES);
+            float tt = mix(a0, a1, u);
+            vec3 pS = roM + rdM*tt;
+            vec3 pl = (pS - c)/rCloud;
+            acc = max(acc, probDots(pl, float(j)));
+          }
+          lpDots = max(lpDots, acc);
+        }
+      }
+      float lightBG = clamp(uLightBG,0.0,1.0);
+      lpDots = clamp(lpDots * mix(1.0, 3.8, lightBG), 0.0, 1.0);
+      vec3 lpInkDark = saturateColor(uLPColor, 1.18);
+      vec3 lpInkLight = vec3(0.015,0.015,0.015);
+      col += lpInkDark * 1.05 * lpDots * (1.0-lightBG);
+      col = mix(col, lpInkLight, lpDots * 0.92 * lightBG);
+
+      col=pow(col, vec3(1.0/2.2));
+      gl_FragColor=vec4(col,1.0);
+    }
+  `;
+
+  function compile(type,src){
+    var s=gl.createShader(type);
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){
+      var info=gl.getShaderInfoLog(s)||'erro ao compilar shader';
+      console.error(info);
+      alert(info);
+      throw new Error(info);
+    }
+    return s;
+  }
+  function program(vs,fs){
+    var p=gl.createProgram();
+    gl.attachShader(p,vs); gl.attachShader(p,fs);
+    gl.linkProgram(p);
+    if(!gl.getProgramParameter(p,gl.LINK_STATUS)){
+      var info=gl.getProgramInfoLog(p)||'erro link';
+      console.error(info); alert(info); throw new Error(info);
+    }
+    return p;
+  }
+
+  var prog=program(compile(gl.VERTEX_SHADER, VERT), compile(gl.FRAGMENT_SHADER, FRAG));
+  gl.useProgram(prog);
+  var quad=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+  var aPos=gl.getAttribLocation(prog,'aPos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+
+  var U={
+    uRes:gl.getUniformLocation(prog,'uRes'),
+    uEye:gl.getUniformLocation(prog,'uEye'),
+    uTarget:gl.getUniformLocation(prog,'uTarget'),
+    uUp:gl.getUniformLocation(prog,'uUp'),
+    uLigCount:gl.getUniformLocation(prog,'uLigCount'),
+    uLigDirs:gl.getUniformLocation(prog,'uLigDirs[0]'),
+    uLPCount:gl.getUniformLocation(prog,'uLPCount'),
+    uLPDirs:gl.getUniformLocation(prog,'uLPDirs[0]'),
+    uBondLen:gl.getUniformLocation(prog,'uBondLen'),
+    uCentralR:gl.getUniformLocation(prog,'uCentralR'),
+    uLigR:gl.getUniformLocation(prog,'uLigR'),
+    uBondR:gl.getUniformLocation(prog,'uBondR'),
+    uLPScale:gl.getUniformLocation(prog,'uLPScale'),
+    uAmbient:gl.getUniformLocation(prog,'uAmbient'),
+    uSat:gl.getUniformLocation(prog,'uSat'),
+    uSpecK:gl.getUniformLocation(prog,'uSpecK'),
+    uRefl:gl.getUniformLocation(prog,'uRefl'),
+    uLigColor:gl.getUniformLocation(prog,'uLigColor'),
+    uLPColor:gl.getUniformLocation(prog,'uLPColor'),
+    uCoreColor:gl.getUniformLocation(prog,'uCoreColor'),
+    uShowAxes:gl.getUniformLocation(prog,'uShowAxes'),
+    uBondType:gl.getUniformLocation(prog,'uBondType'),
+    uRot:gl.getUniformLocation(prog,'uRot'),
+    uBGStars:gl.getUniformLocation(prog,'uBGStars'),
+    uBGBright:gl.getUniformLocation(prog,'uBGBright'),
+    uLightBG:gl.getUniformLocation(prog,'uLightBG')
+  };
+
+  function hexToRgb(hex){
+    var h=hex.replace('#','');
+    var v=parseInt(h,16);
+    return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255];
+  }
+  function padVecArray(arr,t){
+    var out=[];
+    for(var i=0;i<arr.length;i++) out.push(arr[i][0],arr[i][1],arr[i][2]);
+    while(out.length<t*3) out.push(0,0,0);
+    return new Float32Array(out.slice(0,t*3));
+  }
+  function autoDist(){
+    var bl=parseFloat(bondLen.value);
+    var R=Math.max(parseFloat(size.value), parseFloat(ligandRadius.value))+bl+0.5;
+    return Math.min(10, Math.max(3.2, R*1.55));
+  }
+
+  function geomPositions(type){
+    var SQ2=Math.sqrt(2), SQ3=Math.sqrt(3);
+    var trig = [
+      [ 1, 0, 0 ],
+      [ -0.5,  SQ3/2, 0 ],
+      [ -0.5, -SQ3/2, 0 ]
+    ];
+    var r = 2*SQ2/3, z = -1/3;
+    var tetra = [
+      [0,0,1],
+      [ r, 0, z],
+      [ r*Math.cos(2*Math.PI/3), r*Math.sin(2*Math.PI/3), z],
+      [ r*Math.cos(4*Math.PI/3), r*Math.sin(4*Math.PI/3), z]
+    ];
+    var tbp = { eq: trig, ax: [[0,0,1],[0,0,-1]] };
+    var oct = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+    function nrm(v){ var L=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/L,v[1]/L,v[2]/L]; }
+    tetra = tetra.map(nrm);
+
+    switch(type){
+      case 'linear': return {lig:[[0,0,1],[0,0,-1]], lp:[], angle:'180°', ideal:'Ângulo 180°', arr:'AX2', label:'Linear'};
+      case 'trigonal_planar': return {lig:trig, lp:[], angle:'120°', ideal:'Ângulos ~120°', arr:'AX3', label:'Trigonal planar'};
+      case 'tetrahedral': return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5°', ideal:'Ângulos ~109,5°', arr:'AX4', label:'Tetraédrica'};
+      case 'trigonal_bipyramidal': return {lig:tbp.eq.concat(tbp.ax), lp:[], angle:'120° / 90° / 180°', ideal:'Eq 120°, Ax 90°/180°', arr:'AX5', label:'Bipirâmide trigonal'};
+      case 'octahedral': return {lig:oct, lp:[], angle:'90° / 180°', ideal:'Ângulos 90°/180°', arr:'AX6', label:'Octaédrica'};
+
+      case 'bent_tp': {
+        var t=60*DEG;
+        var lig=[ [ Math.sin(t),0,-Math.cos(t) ], [ -Math.sin(t),0,-Math.cos(t) ] ];
+        var lp=[ [0,0,1] ];
+        return {lig:lig, lp:lp, angle:'<120°', ideal:'Ângulo <120°', arr:'AX2E', label:'Angular (AX2E)'};
+      }
+      case 'trigonal_pyramidal': {
+        var lig=[tetra[1],tetra[2],tetra[3]];
+        var lp=[tetra[0]];
+        return {lig:lig, lp:lp, angle:'~107°', ideal:'Ângulo <109,5°', arr:'AX3E', label:'Piramidal trigonal'};
+      }
+      case 'bent_tet': {
+        var a=30*DEG, b=52.25*DEG;
+        var lp=[ [ Math.sin(a),0, Math.cos(a) ], [ -Math.sin(a),0, Math.cos(a) ] ];
+        var lig=[ [ Math.sin(b),0,-Math.cos(b) ], [ -Math.sin(b),0,-Math.cos(b) ] ];
+        return {lig:lig, lp:lp, angle:'~104,5°', ideal:'Ângulo ~104,5°', arr:'AX2E2', label:'Angular (AX2E2)'};
+      }
+      case 'see_saw': {
+        var lp1=[tbp.eq[0]];
+        var lig1=[tbp.eq[1],tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig1, lp:lp1, angle:'<120° / <90° / <180°', ideal:'Eq <120°, Ax <90°/<180°', arr:'AX4E', label:'Gangorra / Seesaw'};
+      }
+      case 't_shaped': {
+        var lp2=[tbp.eq[0],tbp.eq[1]];
+        var lig2=[tbp.eq[2],tbp.ax[0],tbp.ax[1]];
+        return {lig:lig2, lp:lp2, angle:'<90° / <180°', ideal:'Ângulos <90° / <180°', arr:'AX3E2', label:'Em T'};
+      }
+      case 'linear_tbp': {
+        var lig3=[tbp.ax[0],tbp.ax[1]];
+        var lp3=tbp.eq.slice();
+        return {lig:lig3, lp:lp3, angle:'180°', ideal:'Ângulo 180°', arr:'AX2E3', label:'Linear (base TBP)'};
+      }
+      case 'square_pyramidal': {
+        var lig4=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,-1]];
+        var lp4=[[0,0,1]];
+        return {lig:lig4, lp:lp4, angle:'<90° / 90° / 180°', ideal:'Ax-Basal <90°; base 90°/180°', arr:'AX5E', label:'Piramidal quadrada'};
+      }
+      case 'square_planar': {
+        var lig5=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];
+        var lp5=[[0,0,1],[0,0,-1]];
+        return {lig:lig5, lp:lp5, angle:'90° / 180°', ideal:'Ângulos 90°/180°', arr:'AX4E2', label:'Quadrada planar'};
+      }
+      default: return {lig:[tetra[0],tetra[1],tetra[2],tetra[3]], lp:[], angle:'109,5°', ideal:'Ângulos ~109,5°', arr:'AX4', label:'Tetraédrica'};
+    }
+  }
+
+  function sync(){
+    var G=geomPositions(geom.value);
+    gl.useProgram(prog);
+    gl.uniform1i(U.uLigCount, G.lig.length);
+    gl.uniform3fv(U.uLigDirs, padVecArray(G.lig,8));
+    gl.uniform1i(U.uLPCount, G.lp.length);
+    gl.uniform3fv(U.uLPDirs, padVecArray(G.lp,8));
+    gl.uniform1f(U.uBondLen, parseFloat(bondLen.value));
+    gl.uniform1f(U.uCentralR, parseFloat(size.value));
+    gl.uniform1f(U.uLigR, parseFloat(ligandRadius.value));
+    gl.uniform1f(U.uBondR, parseFloat(bondRadius.value));
+    gl.uniform1f(U.uLPScale, parseFloat(lpScale.value));
+    gl.uniform1f(U.uAmbient, parseFloat(ambient.value));
+    gl.uniform1f(U.uSat, parseFloat(sat.value));
+    gl.uniform1f(U.uSpecK, parseFloat(specK.value));
+    gl.uniform1f(U.uRefl, parseFloat(refl.value));
+    gl.uniform3fv(U.uLigColor, new Float32Array(hexToRgb(ligandColor.value)));
+    gl.uniform3fv(U.uLPColor, new Float32Array(hexToRgb(lpColor.value)));
+    gl.uniform3fv(U.uCoreColor, new Float32Array(hexToRgb(coreColor.value)));
+    gl.uniform1i(U.uShowAxes, showAxes.checked?1:0);
+    gl.uniform1i(U.uBondType, parseInt(bondType.value,10));
+    gl.uniform1f(U.uBGStars, __whiteMode ? 0.35 : parseFloat(bgStars.value));
+    gl.uniform1f(U.uBGBright, __whiteMode ? 1.0 : parseFloat(bgBrightness.value));
+    gl.uniform1f(U.uLightBG, __whiteMode ? 1.0 : 0.0);
+
+    infoName.textContent = G.label;
+    infoArr.textContent = G.arr;
+    infoIdeal.textContent = G.ideal;
+    hud.innerHTML='<b>'+G.label+'</b> · <span class="small">'+G.arr+' — '+G.ideal+'</span>';
+  }
+
+  function __anglePanelBase(ctx, x, y, w, h){
+    ctx.save();
+    var g=ctx.createLinearGradient(x,y,x,y+h);
+    g.addColorStop(0,'rgba(10,16,30,.78)');
+    g.addColorStop(1,'rgba(8,12,22,.70)');
+    ctx.fillStyle=g;
+    ctx.strokeStyle='rgba(126,125,255,.22)';
+    ctx.lineWidth=1;
+    if(ctx.roundRect){
+      ctx.beginPath(); ctx.roundRect(x,y,w,h,18); ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.rect(x,y,w,h); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function __angleDrawAtom(ctx, x, y, r, fill){
+    ctx.save();
+    ctx.fillStyle=fill;
+    ctx.strokeStyle='rgba(255,255,255,.18)';
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  function __angleDrawBond(ctx, a, b){
+    ctx.save();
+    ctx.strokeStyle='rgba(117,255,235,.96)';
+    ctx.lineWidth=4;
+    ctx.lineCap='round';
+    ctx.shadowColor='rgba(117,255,235,.24)';
+    ctx.shadowBlur=4;
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    ctx.restore();
+  }
+  function __angleClampLabelPos(ctx, x, y, txt){
+    var b = ctx.__angleBounds;
+    if(!b) return {x:x,y:y};
+    var w = ctx.measureText(txt).width;
+    return {
+      x: Math.max(b.x+12+w*0.5, Math.min(b.x+b.w-12-w*0.5, x)),
+      y: Math.max(b.y+18, Math.min(b.y+b.h-16, y))
+    };
+  }
+  function __angleArcLabel(ctx, c, p1, p2, label, rOverride){
+    var a1=Math.atan2(p1.y-c.y,p1.x-c.x), a2=Math.atan2(p2.y-c.y,p2.x-c.x);
+    while(a2<a1) a2+=Math.PI*2;
+    if(a2-a1>Math.PI){ var t=a1; a1=a2; a2=t+Math.PI*2; }
+    var rr=rOverride || Math.max(24, Math.min(42, Math.hypot(p1.x-c.x,p1.y-c.y)*0.5));
+    ctx.save();
+    ctx.strokeStyle='rgba(255,88,88,.95)';
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(c.x,c.y,rr,a1,a2,false); ctx.stroke();
+    var am=(a1+a2)*0.5;
+    var tx=c.x+Math.cos(am)*(rr+14), ty=c.y+Math.sin(am)*(rr+14);
+    ctx.fillStyle='rgba(255,255,255,.98)';
+    ctx.font='700 12px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    var cl=__angleClampLabelPos(ctx, tx, ty, label);
+    ctx.fillText(label, cl.x-ctx.measureText(label).width*0.5, cl.y);
+    ctx.restore();
+  }
+  function __angleArc180(ctx, c, left, right, label){
+    var rr = Math.max(34, Math.abs(right.x-left.x)*0.30);
+    ctx.save();
+    ctx.strokeStyle='rgba(255,88,88,.95)';
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(c.x,c.y,rr,Math.PI,0,false); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.98)';
+    ctx.font='700 12px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    var pTop=__angleClampLabelPos(ctx, c.x, c.y-rr-6, label);
+    ctx.fillText(label, pTop.x-ctx.measureText(label).width*0.5, pTop.y);
+    ctx.restore();
+  }
+
+  function drawAngleSchematic(ctx, data, can){
+    if(!ctx||!data||!can) return;
+    var DEG = Math.PI/180;
+    var w=Math.min(408, Math.max(292, can.w*0.36));
+    var h=(can.h < 500)?170:206;
+    var x=can.w - w - 16;
+    var y=can.h - h - 16;
+    ctx.__angleBounds = {x:x, y:y, w:w, h:h};
+    __anglePanelBase(ctx, x, y, w, h);
+
+    var cx=x+w*0.52, cy=y+h*0.46;
+    var center={x:cx,y:cy}, centerR=12, ligR=9;
+    var exGeom = data.exGeom || '';
+    var arr=data.geom.arr || '';
+    var angleLbl = data.geom.angle || 'θ';
+    function P(dx,dy){ return {x:cx+dx, y:cy+dy}; }
+
+    function footer(text1, text2){
+      var lines = [];
+      [text1,text2].forEach(function(t){ if(t) lines.push(String(t)); });
+      if(!lines.length) return;
+      ctx.save();
+      ctx.fillStyle='rgba(223,234,255,.90)';
+      ctx.font='600 10.5px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+      var maxW = w-22;
+      var out=[];
+      lines.forEach(function(line){
+        var words=String(line).split(/\s+/), cur='';
+        words.forEach(function(word){
+          var test=cur ? (cur+' '+word) : word;
+          if(ctx.measureText(test).width > maxW && cur){ out.push(cur); cur=word; }
+          else cur=test;
+        });
+        if(cur) out.push(cur);
+      });
+      var lineH=12;
+      var maxLines = Math.max(2, Math.floor((h-24)/lineH));
+      if(out.length > maxLines){
+        out = out.slice(0,maxLines);
+        var last = out[out.length-1];
+        while(ctx.measureText(last+'…').width > maxW && last.length>4) last = last.slice(0,-1);
+        out[out.length-1] = last+'…';
+      }
+      var startY = y+h-8 - (out.length-1)*lineH;
+      out.forEach(function(line, i){ ctx.fillText(line, x+12, startY + i*lineH); });
+      ctx.restore();
+    }
+
+    function drawCommon(ligs, opts){
+      opts=opts||{};
+      ligs.forEach(function(p){ __angleDrawBond(ctx, center, p); });
+      __angleDrawAtom(ctx, center.x, center.y, centerR, 'rgba(60,92,255,.95)');
+      ligs.forEach(function(p){ __angleDrawAtom(ctx, p.x, p.y, ligR, 'rgba(255,90,164,.95)'); });
+      if(opts.lp){
+        opts.lp.forEach(function(p){
+          var px = center.x + (p.x - center.x) * 0.90;
+          var py = center.y + (p.y - center.y) * 0.90;
+          ctx.save(); ctx.globalAlpha = 0.70;
+          __angleDrawAtom(ctx, px, py, 8.6, 'rgba(88,112,255,.90)');
+          ctx.restore();
+        });
+      }
+      return ligs;
+    }
+
+    if(exGeom==='bent_tet'){
+      var Rb=70;
+      var ha=52.25*DEG;
+      var dx=Math.sin(ha)*Rb, dy=Math.cos(ha)*Rb;
+      var L=P(-dx,dy), R=P(dx,dy);
+      var LP1=P(-24,-58), LP2=P(24,-58);
+      drawCommon([L,R], {lp:[LP1,LP2]});
+      __angleArcLabel(ctx, center, L, R, '104,5°', 34);
+      footer('AX2E2 (angular): 2 pares livres comprimem o ângulo', 'Ângulo real ~104,5° < 109,5°');
+    } else if(exGeom==='bent_tp'){
+      var Rb2=72;
+      var ha2=60*DEG;
+      var dx2=Math.sin(ha2)*Rb2, dy2=Math.cos(ha2)*Rb2;
+      var L2=P(-dx2,dy2), R2=P(dx2,dy2), LP=P(0,-62);
+      drawCommon([L2,R2], {lp:[LP]});
+      __angleArcLabel(ctx, center, L2, R2, '<120°', 34);
+      footer('AX2E: 1 par livre comprime as duas ligações', 'Ângulo real menor que 120°');
+    } else if(exGeom==='trigonal_pyramidal'){
+      var Rb3=70;
+      var ha3=53.5*DEG;
+      var dx3=Math.sin(ha3)*Rb3, dy3=Math.cos(ha3)*Rb3;
+      var BL=P(-dx3,dy3), BR=P(dx3,dy3), B=P(0, Rb3);
+      drawCommon([BL,BR,B], {lp:[P(0,-66)]});
+      __angleArcLabel(ctx, center, BL, BR, '107°', 33);
+      footer('AX3E: 1 par livre empurra as três ligações', 'Ângulo real ~107°');
+    } else if(exGeom==='see_saw'){
+      var AXu=P(0,-60), AXd=P(0,60), EqL=P(-52,18), EqR=P(52,18);
+      drawCommon([AXu,AXd,EqL,EqR], {lp:[P(-62,-16)]});
+      __angleArcLabel(ctx, center, AXu, EqR, '<90°', 22);
+      __angleArcLabel(ctx, center, EqL, EqR, '<120°', 30);
+      footer('AX4E (gangorra)', 'Ax-Eq <90° | Eq-Eq <120° | Ax-Ax <180°');
+    } else if(exGeom==='t_shaped'){
+      var AX1=P(0,-58), AX2=P(0,58), Eq=P(58,0);
+      drawCommon([AX1,AX2,Eq], {lp:[P(-50,-30),P(-50,30)]});
+      __angleArcLabel(ctx, center, AX1, Eq, '<90°', 22);
+      __angleArc180(ctx, center, AX1, AX2, '<180°');
+      footer('AX3E2 (em T)', 'Ax-Eq <90° e Ax-Ax <180°');
+    } else if(exGeom==='linear_tbp'){
+      var A=P(0,-60), B=P(0,60);
+      drawCommon([A,B], {lp:[P(54,0),P(-27,46),P(-27,-46)]});
+      __angleArc180(ctx, center, A, B, '180°');
+      footer('AX2E3 (linear, base TBP)', 'Ligações ficam opostas: 180°');
+    } else if(exGeom==='square_pyramidal'){
+      var Top=P(0,-64), U=P(0,-38), D=P(0,38), Lq=P(-44,0), Rq=P(44,0);
+      drawCommon([Top,U,Rq,D,Lq], {lp:[P(0,68)]});
+      __angleArcLabel(ctx, center, Top, Rq, '<90°', 22);
+      __angleArcLabel(ctx, center, U, Rq, '90°', 19);
+      __angleArc180(ctx, center, Lq, Rq, '180°');
+      footer('AX5E (piramidal quadrada)', 'Ax-Basal <90° | Base 90° e 180°');
+    } else if(exGeom==='square_planar'){
+      var U2=P(0,-44), D2=P(0,44), L3=P(-44,0), R3=P(44,0);
+      drawCommon([U2,R3,D2,L3], {lp:[P(0,-66),P(0,66)]});
+      __angleArcLabel(ctx, center, U2, R3, '90°', 20);
+      __angleArc180(ctx, center, L3, R3, '180°');
+      footer('AX4E2 (quadrada planar)', 'Ângulos no plano: 90° e 180°');
+    } else if(arr==='AX2'){
+      var L4=P(-62,0), R4=P(62,0);
+      drawCommon([L4,R4]);
+      __angleArc180(ctx, center, L4, R4, '180°');
+      footer('AX2 (linear)', 'Duas direções opostas maximizam afastamento');
+    } else if(arr==='AX3'){
+      var T2=P(0,-56), BL2=P(-52,30), BR2=P(52,30);
+      drawCommon([T2,BL2,BR2]);
+      __angleArcLabel(ctx, center, BL2, BR2, '120°', 28);
+      footer('AX3 (trigonal planar)', 'Três direções no mesmo plano → 120°');
+    } else if(arr==='AX4'){
+      var T3=P(0,-58), L5=P(-54,12), R5=P(54,12), F=P(0,54);
+      drawCommon([T3,L5,R5,F]);
+      __angleArcLabel(ctx, center, T3, R5, '109,5°', 31);
+      footer('AX4 (tetraédrica)', 'No painel 2D, a projeção é só didática');
+    } else if(arr==='AX5'){
+      var AxU=P(0,-64), EqL2=P(-66,0), EqR2=P(66,0), EqBL=P(-38,36), EqBR=P(38,36);
+      drawCommon([AxU,EqL2,EqR2,EqBL,EqBR]);
+      __angleArc180(ctx, center, EqL2, EqR2, '180°');
+      __angleArcLabel(ctx, center, AxU, EqR2, '90°', 22);
+      __angleArcLabel(ctx, center, EqBL, EqBR, '120°', 29);
+      footer('AX5 (bipirâmide trigonal)', 'Eq-Eq 120° | Ax-Eq 90° | Ax-Ax 180°');
+    } else if(arr==='AX6'){
+      var U3=P(0,-66), D3=P(0,66), L6=P(-62,0), R6=P(62,0), F6=P(-30,-24), B6=P(30,24);
+      drawCommon([U3,D3,L6,R6,F6,B6]);
+      __angleArcLabel(ctx, center, U3, R6, '90°', 22);
+      __angleArc180(ctx, center, L6, R6, '180°');
+      footer('AX6 (octaédrica)', 'Adjacentes 90° | Opostos 180°');
+    }
+
+    ctx.save();
+    ctx.fillStyle='rgba(222,235,255,.90)';
+    ctx.font='600 10.5px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    var txt = data.geom.arr+' | '+data.geom.angle;
+    var maxW = w-24;
+    if(ctx.measureText(txt).width > maxW){
+      while(txt.length>8 && ctx.measureText(txt+'…').width > maxW) txt = txt.slice(0,-1);
+      txt += '…';
+    }
+    ctx.fillText(txt, x+12, y+20);
+    ctx.restore();
+  }
+
+  function drawAngleOverlay(){
+    var w = angleOverlay.clientWidth || canvas.clientWidth;
+    var h = angleOverlay.clientHeight || canvas.clientHeight;
+    actx.clearRect(0,0,w,h);
+    if(!showAngles.checked) return;
+    var currentGeom = geomPositions(geom.value);
+    if(currentGeom && currentGeom.lp && currentGeom.lp.length) return;
+    drawAngleSchematic(actx, {geom:currentGeom, exGeom:geom.value}, {w:w, h:h});
+  }
+
+  sync();
+  camDist = autoDist();
+
+  function draw(){
+    resize();
+    gl.clearColor(0,0,0,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    var ex=camDist*Math.cos(rotX)*Math.sin(rotY), ey=camDist*Math.sin(rotX), ez=camDist*Math.cos(rotX)*Math.cos(rotY);
+    gl.uniform3f(U.uEye, ex,ey,ez);
+    gl.uniform3f(U.uTarget, 0,0,0);
+    gl.uniform3f(U.uUp, 0,1,0);
+    gl.uniform3f(U.uRot, rot.x, rot.y, rot.z);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    updateAxisLabels([ex,ey,ez]);
+    drawAngleOverlay();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();

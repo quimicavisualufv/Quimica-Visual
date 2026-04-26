@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+<title>Orbitais de Hidrogenoides</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<aside>
+  <div style="margin-top:14px" class="badge"><span class="dot"></span><span id="entryCountBadge">—</span></div>
+
+  <section class="panel section" style="margin-top:16px;">
+    <div class="section-title"><strong>Estrutura</strong></div>
+    <div class="row">
+      <label>
+        <span>Nível principal</span>
+        <select id="nSelect"></select>
+      </label>
+      <label>
+        <span>Orbital</span>
+        <select id="orbitalSelect"></select>
+      </label>
+    </div>
+    <div class="toolbar-three" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+      <button id="prevBtn" class="secondary">◀</button>
+      <button id="nextBtn" class="secondary">▶</button>
+    </div>
+    <div class="range-wrap" style="margin-top:12px;">
+      <div class="range-head"><span>Zoom</span><span id="zoomValue">0.70x</span></div>
+      <input id="zoomRange" type="range" min="0.05" max="3.2" step="0.01" value="0.70">
+    </div>
+    <div class="range-wrap" style="margin-top:10px;">
+      <div class="range-head"><span>Tamanho do ponto</span><span id="pointValue">2.80x</span></div>
+      <input id="pointRange" type="range" min="0.45" max="3.6" step="0.01" value="2.80">
+    </div>
+    <div class="range-wrap" style="margin-top:10px;">
+      <div class="range-head"><span>Qualidade</span><span id="qualityValue">50%</span></div>
+      <input id="qualityRange" type="range" min="0.15" max="1" step="0.01" value="0.50">
+    </div>
+    <div class="row" style="margin-top:12px;">
+      <label>
+        <span>Colorização 3D</span>
+        <select id="colorMode">
+          <option value="sign">Sinal da função</option>
+          <option value="shell">Camadas</option>
+          <option value="density">Densidade</option>
+        </select>
+      </label>
+      <label>
+        <span>Eixos</span>
+        <select id="axesMode">
+          <option value="show">Mostrar</option>
+          <option value="hide">Ocultar</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <section class="panel section" style="margin-top:16px;">
+    <div class="section-title"><strong>Dados</strong></div>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Pontos 3D</div><div class="v" id="metricPoints">—</div></div>
+      <div class="metric"><div class="k">Extensão</div><div class="v" id="metricExtent">—</div></div>
+      <div class="metric"><div class="k">Nós radiais</div><div class="v" id="metricNodes">—</div></div>
+      <div class="metric"><div class="k">Camadas</div><div class="v" id="metricShells">—</div></div>
+    </div>
+    <div class="footer-note" id="entryNotes" style="margin-top:12px;"></div>
+  </section>
+
+  <section class="panel section" style="margin-top:16px;">
+    <div class="section-title"><strong>Legenda</strong></div>
+    <div class="legend" id="legend"></div>
+  </section>
+</aside>
+
+<main>
+  <section class="panel canvas-card">
+    <div class="canvas-wrap">
+      <canvas id="scene3d"></canvas>
+    </div>
+  </section>
+
+  <section class="views-grid">
+    <article class="panel view-card">
+      <div class="view-head"><h3>Função de onda 2D</h3><div class="view-meta" id="waveMeta">—</div></div>
+      <div class="view-body">
+        <div class="canvas-2d-wrap"><canvas id="waveCanvas" width="720" height="720"></canvas></div>
+        <div class="caption">Mapa assinado em corte plano, com valores positivos em azul e negativos em vermelho.</div>
+      </div>
+    </article>
+    <article class="panel view-card">
+      <div class="view-head"><h3>Densidade 2D</h3><div class="view-meta" id="densityMeta">—</div></div>
+      <div class="view-body">
+        <div class="canvas-2d-wrap"><canvas id="densityCanvas" width="720" height="720"></canvas></div>
+        <div class="caption">Mapa de probabilidade no mesmo corte plano, útil pra ver regiões mais prováveis do elétron.</div>
+      </div>
+    </article>
+    <article class="panel view-card">
+      <div class="view-head"><h3>Radial</h3><div class="view-meta" id="radialMeta">—</div></div>
+      <div class="view-body">
+        <div class="canvas-2d-wrap"><canvas id="radialCanvas" width="800" height="720"></canvas></div>
+        <div class="caption">Curvas de R(r) e da distribuição radial de probabilidade no mesmo painel.</div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

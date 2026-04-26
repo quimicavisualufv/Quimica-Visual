@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+<title>Fórmula unitária na prática</title>
+<link rel="stylesheet" href="assets/css/style1.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    
+    <h1 id="pageTitle">Fórmula unitária na prática</h1>
+    <p id="pageSubtitle" class="subtitle">Exercício de contagem de átomos, fórmula unitária e identificação do tipo de célula. Use o visualizador para isolar espécies, marcar átomos e analisar a célula unitária.</p>
+    <section class="card">
+      <div class="meta">
+        <span class="chip" id="progress">Questão 7/18</span>
+        <span class="chip" id="score">Acertos 0</span>
+      </div>
+      <div class="promptTitle" id="promptTitle">Estrutura 7</div>
+      <p class="promptText" id="promptText">Use o visualizador para contar os átomos, observar a posição deles na célula unitária e marcar a alternativa correta.</p>
+      <div class="options" id="options"><button class="option" type="button">CsCl</button><button class="option" type="button">CaF2</button><button class="option" type="button">FeS2</button><button class="option" type="button">MoS2</button></div>
+      <div class="actions">
+        <button class="btn" id="prevBtn" type="button">Questão anterior</button>
+        <button class="btn primary" id="revealBtn" type="button">Ver resposta</button>
+        <button class="btn" id="nextBtn" type="button">Próxima questão</button>
+      </div>
+      <div class="feedback" id="feedback">Use a célula unitária azul, os filtros de espécies e as marcações por clique para contar os átomos da estrutura.</div>
+    </section>
+    <section class="card controls">
+      <div class="hint">Arraste a área principal para girar. Use o scroll do mouse para aproximar e afastar. No canto superior esquerdo do visualizador, filtre espécies, filtre por posição cristalográfica e marque os átomos para apoiar a contagem.</div>
+    </section>
+  </aside>
+  <main class="stage">
+    <canvas id="scene" width="895" height="526"></canvas>
+    <div class="overlayTop">
+      <div class="viewerTools" id="viewerTools"><div class="toolPanel"><div class="toolTitle">Ferramentas de contagem</div><div class="toolRow"><button type="button" class="toolBtn active"><span class="toolDot"></span><span>Marcar</span></button><button type="button" class="toolBtn"><span class="toolEraser">⌫</span><span>Apagar</span></button></div><div style="margin-top: 8px;"><div class="toolTitle" style="margin-bottom:6px">Cor da marcação</div><div class="colorChoices"><div class="colorChoice"><button type="button" class="colorSwatchBtn active" title="#4aa8ff" style="background: rgb(74, 168, 255);"></button><div class="colorCount">0</div></div><div class="colorChoice"><button type="button" class="colorSwatchBtn" title="#67e8a5" style="background: rgb(103, 232, 165);"></button><div class="colorCount">0</div></div><div class="colorChoice"><button type="button" class="colorSwatchBtn" title="#ffb347" style="background: rgb(255, 179, 71);"></button><div class="colorCount">0</div></div><div class="colorChoice"><button type="button" class="colorSwatchBtn" title="#ff6b81" style="background: rgb(255, 107, 129);"></button><div class="colorCount">0</div></div><div class="colorChoice"><button type="button" class="colorSwatchBtn" title="#b987ff" style="background: rgb(185, 135, 255);"></button><div class="colorCount">0</div></div><div class="colorChoice"><button type="button" class="colorSwatchBtn" title="#ffffff" style="background: rgb(255, 255, 255);"></button><div class="colorCount">0</div></div></div></div></div><div class="atomFilterPanel"><div class="toolTitle">Espécies visíveis</div><div class="filterRow"><button type="button" class="filterChip"><span class="filterSwatch" style="background:#b57100"></span><span>Ferro</span><span class="filterMeta">9</span></button><button type="button" class="filterChip"><span class="filterSwatch" style="background:#fffa00"></span><span>Enxofre</span><span class="filterMeta">6</span></button></div><div class="toolTitle" style="margin-top: 10px;">Filtrar por posição</div><div class="filterRow"><button type="button" class="filterChip"><span class="filterSwatch" style="background:#dce8ff"></span><span>Todos os átomos</span></button><button type="button" class="filterChip off"><span class="filterSwatch" style="background:#b987ff"></span><span>Apenas átomos no interior</span></button><button type="button" class="filterChip off"><span class="filterSwatch" style="background:#48d597"></span><span>Apenas átomos nas arestas</span></button><button type="button" class="filterChip off"><span class="filterSwatch" style="background:#ffb347"></span><span>Apenas átomos no canto</span></button><button type="button" class="filterChip off"><span class="filterSwatch" style="background:#ff6b81"></span><span>Apenas átomos nas faces</span></button></div></div></div>
+      <div></div>
+    </div>
+    <div class="hud" id="hud"><b>Sistema cristalino:</b> ortorrômbico · <b>Parâmetros cristalográficos:</b> a=3.38, b=4.43, c=5.40, α=90.0°, β=90.0°, γ=90.0°</div>
+  </main>
+</div>
+<script src="assets/js/script1.js"></script>
+
+
+</body></html>

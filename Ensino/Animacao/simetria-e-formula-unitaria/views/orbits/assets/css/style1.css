@@ -1,0 +1,30 @@
+:root{
+    --bg:#0f1117; --panel:#141826; --ink:#e5e7eb; --muted:#9ca3af; --outline:#334155;
+    --wire:#cbd5e1;
+    --vtx:#8b5cf6; --edge:#f59e0b; --face:#38bdf8; --center:#ef4444;
+    --A:#93c5fd; --B:#facc15; --C:#ef4444; --D:#5b21b6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+    font:500 15px/1.35 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto}
+  .wrap{display:grid;grid-template-columns:1fr 380px;gap:14px;height:100%;padding:12px}
+  .panel{background:var(--panel);border:1px solid var(--outline);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--outline)}
+  header h1{font-size:16px;margin:0;letter-spacing:.25px}
+  header small{color:var(--muted)}
+  #sceneCanvas{display:block;width:100%;height:calc(100% - 48px);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+  .ui{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:auto;min-height:0 overflow-y:auto; max-height:calc(100vh - 140px);}
+  .ui label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+  .ui select,.ui input[type="range"], .ui button, .ui input[type="checkbox"]{
+    background:#0b0f17;color:var(--ink);border:1px solid var(--outline);border-radius:10px;padding:8px 10px;outline:none}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .col2{grid-column:span 2}
+  .legend{display:flex;gap:10px;align-items:center;padding:8px 10px;background:#0b0e14;border:1px solid var(--outline);border-radius:10px}
+  .chip{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .dot{width:14px;height:14px;border-radius:50%;border:3px solid currentColor;background:transparent}
+  .dot.vtx{color:var(--vtx)} .dot.edge{color:var(--edge)} .dot.face{color:var(--face)} .dot.center{color:var(--center)}
+  .readout{background:#0b0e14;border:1px solid var(--outline);border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,monospace}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+  .hint{color:var(--muted);font-size:12px}
+  .row{display:flex;gap:8px;align-items:center}
+  .badge{font-size:11px;padding:2px 6px;border:1px solid var(--outline);border-radius:8px;background:#0b0e14;color:#cbd5e1}

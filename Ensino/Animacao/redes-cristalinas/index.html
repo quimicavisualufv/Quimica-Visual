@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+
+  <meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Redes Cristalinas</title>
+<link rel="stylesheet" href="assets/css/style1.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel" id="painel-visual">
+      <header>
+        <h1>Lousa</h1>
+        <small>Rolar = zoom • D = resetar visão</small>
+      </header>
+      <div id="alertaEsterico" class="alert-steric" style="display:none;">
+        Alerta! Estrutura improvável com alta repulsão estérica.
+      </div>
+
+      <canvas id="canvas" style="touch-action:none; overscroll-behavior: contain;" width="1400" height="800"></canvas>
+    </div>
+    <div class="panel" id="painel-controles">
+      <header>
+        <h1>Controles</h1>
+        <small></small>
+      </header>
+      <div class="controls">
+        
+    
+        <label class="check" style="display:flex;align-items:center;gap:8px;margin:6px 0 10px 0;">
+          <input type="checkbox" id="projecaoOrto" checked>
+          Projeção ortográfica (sem perspectiva)
+        </label>
+
+        <label>
+          Estrutura
+          <select id="structure">
+            
+<option value="SC">Simples Cúbica (SC)</option>
+              <option value="BCC">Corpo Centrado (BCC)</option>
+              <option value="FCC" selected>Face Centrada (FCC)</option><option value="WS_BCC">Célula de Wigner‑Seitz (BCC)</option><option value="WS_FCC">Célula de Wigner‑Seitz (FCC)</option>
+              <option value="HEX_ABC">Hexagonal (ABA/ABC)</option>
+            
+            
+                            <option value="TETRA_P">Tetragonal (P)</option>
+              <option value="TETRA_I">Tetragonal (I)</option>
+              <option value="ORTHO_P">Ortorrômbico (P)</option>
+              <option value="ORTHO_I">Ortorrômbico (I)</option>
+              <option value="ORTHO_F">Ortorrômbico (F)</option>
+              <option value="ORTHO_C">Ortorrômbico (C)</option>
+              <option value="MONO_P">Monoclínico (P)</option>
+              <option value="MONO_C">Monoclínico (C)</option>
+              <option value="TRICLINIC_P">Triclínico (P)</option>
+              <option value="TRIGONAL_R">Romboédrico (R)</option>
+            
+
+            
+            
+              <option value="NaCl">NaCl (rocha-sal)</option>
+              <option value="CsCl">CsCl</option>
+              <option value="ZnS">ZnS (blenda)</option>
+            
+            
+              <option value="RUTILIO">RUTÍLIO (TiO₂)</option>
+            
+          
+              <option value="DIY">Monte a sua estrutura</option>
+</select>
+        </label>
+
+        <label>
+          Tamanho (células / lado do triângulo)
+          <input type="range" id="cells" min="2" max="6" step="1" value="4" />
+        </label>
+
+        <label>
+          Raio das esferas
+          <input type="range" id="radius" min="2" max="40" step="1" value="12" />
+        </label>
+
+        <div class="row">
+          <label>Distância entre nós
+            <input type="range" id="spacing" min="40" max="300" step="2" value="140" />
+          </label>
+          <label>Brilho
+            <input type="range" id="light" min="0" max="1" step="0.01" value="0.65" />
+          </label>
+        </div>
+
+        
+        
+
+        <label class="check">
+          <input type="checkbox" id="somenteCelula" checked> Recortar à célula unitária
+        </label>
+        <label class="check">
+          <input type="checkbox" id="apenasUmaFace"> Mostrar apenas uma face da célula
+        </label>
+        <div class="row" id="faceRow" style="display:flex;gap:8px;align-items:center;margin:-6px 0 6px 0;">
+          <label style="flex:1 1 auto">Face
+            <select id="seletorFace">
+              <option value="+Z">Frontal (+Z)</option>
+              <option value="-Z">Traseira (-Z)</option>
+              <option value="+X">Direita (+X)</option>
+              <option value="-X">Esquerda (-X)</option>
+              <option value="+Y">Topo (+Y)</option>
+              <option value="-Y">Base (-Y)</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="mostrarArestas" checked> Mostrar arestas da célula
+        </label>
+        
+        
+        
+        <label class="check">
+          <input type="checkbox" id="editBonds"> Adicionar ligações (clique 2 átomos)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="delBonds"> Remover ligações (clique 2 átomos)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="showBonds" checked> Mostrar ligações
+        </label>
+        <div class="row">
+          <button id="exportarLigacoes">Exportar ligações (código)</button>
+          <button id="clearBonds">Limpar ligações desta estrutura</button>
+        </div>
+        
+        
+        <label class="check">
+          <input type="checkbox" id="delAtom"> Remover átomo (clique no átomo)
+        </label>
+        <label class="check">
+          <input type="checkbox" id="addAtom"> Adicionar átomo (clique para escolher posição)
+        </label>
+        <div class="row small">
+          <label for="addAtomType" style="min-width:140px">Tipo do átomo:</label>
+          <select id="addAtomType"></select>
+        </div>
+    
+        <div class="row">
+          
+          
+          <button id="exportAllTxt" class="btn">Exportar TUDO (txt)</button>
+        </div>
+        <textarea id="exportArea" style="display:none;width:100%;height:110px"></textarea>
+
+        <div class="legend">
+          <span class="pill"><span class="dot" style="background:#ef4444"></span> Eixo X</span>
+          <span class="pill"><span class="dot" style="background:#22c55e"></span> Eixo Y</span>
+          <span class="pill"><span class="dot" style="background:#3b82f6"></span> Eixo Z</span>
+          <span class="pill"><span class="dot" style="background:#ff6b6b"></span> Camada A</span>
+          <span class="pill"><span class="dot" style="background:#cfd4dc"></span> Camada B</span>
+          <span class="pill"><span class="dot" style="background:#60a5fa"></span> Camada C</span>
+        </div>
+
+        
+        <div class="row3">
+          <label>
+            Rotação (X): <span id="angleXValue" class="value">52°</span>
+            <input type="range" id="angleX" min="-180" max="180" step="1" value="52" />
+          </label>
+          <label>
+            Rotação (Y): <span id="angleYValue" class="value">-34°</span>
+            <input type="range" id="angleY" min="-180" max="180" step="1" value="-34" />
+          </label>
+          <label>
+            Rotação (Z): <span id="angleZValue" class="value">0°</span>
+            <input type="range" id="angleZ" min="-180" max="180" step="1" value="0" />
+          </label>
+        </div>
+
+      </div>
+      <div class="footer">
+        Dica: use os sliders de rotação para controle fino do ângulo. O mouse continua funcionando para ajustes rápidos (X/Y).
+      </div>
+    </div>
+  </div>
+
+<script src="assets/js/motor-render.js"></script>
+
+<script src="assets/js/estruturas-base.js"></script>
+
+<script src="assets/js/camadas-e-intro.js"></script>
+
+
+
+<script src="assets/js/painel-diy.js"></script>
+
+</body>
+</html>

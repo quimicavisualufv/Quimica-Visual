@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<script>
+(function () {
+  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
+  const b0 = 'simoens_ensino_gate_v2';
+  const c0 = new Set([
+    'Animacao/geometria-cristalografica/',
+    'Guia/geometria-molecular-passo-a-passo/',
+    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
+    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
+    'Exercicio Guiado/batalha-de-polaridade/',
+    'Guia/interacoes_intermoleculares/'
+  ]);
+
+  function d0() {
+    const href = decodeURIComponent(String(window.location.href || '').replace(/\\/g, '/'));
+    const marker = '/Ensino/';
+    const markerIndex = href.lastIndexOf(marker);
+    if (markerIndex === -1) return '';
+    return href.slice(markerIndex + marker.length).replace(/index\.html(?:[?#].*)?$/i, '');
+  }
+
+  async function e0(value) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    return f0(value);
+  }
+
+  function f0(value) {
+    function rightRotate(value, amount) {
+      return (value >>> amount) | (value << (32 - amount));
+    }
+    const mathPow = Math.pow;
+    const maxWord = mathPow(2, 32);
+    const lengthProperty = 'length';
+    let i;
+    let j;
+    let result = '';
+    const words = [];
+    value = unescape(encodeURIComponent(value));
+    const asciiBitLength = value[lengthProperty] * 8;
+    let hash = f0.h = f0.h || [];
+    const k = f0.k = f0.k || [];
+    let primeCounter = k[lengthProperty];
+    const isComposite = {};
+    for (let candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      }
+    }
+    value += '\x80';
+    while (value[lengthProperty] % 64 - 56) value += '\x00';
+    for (i = 0; i < value[lengthProperty]; i++) {
+      j = value.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+    words[words[lengthProperty]] = asciiBitLength;
+    for (j = 0; j < words[lengthProperty];) {
+      const w = words.slice(j, j += 16);
+      const oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        const w15 = w[i - 15];
+        const w2 = w[i - 2];
+        const a = hash[0];
+        const e = hash[4];
+        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        const b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  function g0() {
+    const fallbackUrl = new URL('../../', window.location.href).href;
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.replace(document.referrer);
+    } else {
+      window.location.replace(fallbackUrl);
+    }
+  }
+
+  (async function () {
+    const h0 = d0();
+    if (c0.has(h0)) return;
+    if (sessionStorage.getItem(b0) === a0) return;
+    const i0 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
+    if (i0 === null) {
+      g0();
+      return;
+    }
+    const j0 = await e0(i0);
+    if (j0 === a0) {
+      sessionStorage.setItem(b0, a0);
+      return;
+    }
+    window.alert('Senha incorreta.');
+    g0();
+  })();
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+<title>Modelos Atômicos • de Dalton a Schrödinger</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="app">
+<section class="panel stage">
+<div class="view-wrap">
+<canvas id="view"></canvas>
+<div class="guide-float" id="guideFloat">
+<div class="guide-float-step" id="guideFloatStep">Passo 1 de 16</div>
+<div class="guide-float-title" id="guideFloatTitle">Panorama do percurso</div>
+<div class="guide-float-text" id="guideFloatText">Do modelo macroscópico de esfera indivisível até a interpretação quântica probabilística.</div>
+</div>
+<div class="hud-strip" id="hudStrip">
+<div class="hud-pill" id="hudScene">Linha histórica</div>
+<div class="hud-pill" id="hudCount">Orbital 1s</div>
+<div class="hud-pill" id="hudEnergy">Eₙ = -13,61 eV</div>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="equation-banner" id="equationBanner"><span class="eq-main">ψ<sub>n,l,m</sub>(r,θ,φ) = R<sub>n,l</sub>(r)·Y<sub>l</sub><sup>m</sup>(θ,φ)</span></div>
+</div>
+</section>
+<aside class="panel sidebar">
+<div class="head">
+<div>
+<h1>Modelos Atômicos</h1>
+<small>Roteiro guiado da evolução dos modelos atômicos, do átomo como esfera maciça até Schrödinger e a leitura probabilística do átomo moderno.</small>
+</div>
+</div>
+<div class="scroll">
+<section class="section guide-card">
+<div class="guide-kicker" id="guideKicker">Percurso didático</div>
+<h2 class="guide-heading" id="guideHeading">Panorama do percurso</h2>
+<div class="guide-text" id="guideText"></div>
+<div class="guide-callout" id="guideCallout"></div>
+<div class="guide-nav-top">
+<div class="tutorialStepTag" id="tutorialStepTag">Passo 1 / 16</div>
+</div>
+<div class="tutorialActions">
+<button class="tbtn ghost" id="tutorialPrev">← Anterior</button>
+<button class="tbtn primary" id="tutorialNext">Próximo →</button>
+</div>
+</section>
+<section class="section">
+<h3>Visualização</h3>
+<div>
+<label>Zoom<input id="zoom" type="range" min="0.8" max="3.4" step="0.01" value="0.8"></label>
+</div>
+<div class="grid2" style="margin-top:10px">
+<label class="check"><input id="showAxes" type="checkbox" checked> Mostrar eixos</label>
+<label class="check"><input id="showLabels" type="checkbox" checked> Mostrar rótulos</label>
+</div>
+<div class="grid2" style="display:none">
+<label>Rotação automática<input id="autorotate" type="range" min="0" max="1.6" step="0.01" value="0"></label>
+<label>Inclinação<input id="pitch" type="range" min="-1.2" max="1.2" step="0.01" value="0.32"></label>
+<label>Brilho da cena<input id="glow" type="range" min="0.2" max="1.6" step="0.01" value="0.9"></label>
+<label class="check"><input id="showWave" type="checkbox" checked> Mostrar camada ondulatória</label>
+<label class="check"><input id="showTrails" type="checkbox" checked> Mostrar trilhas</label>
+<button class="ghost" id="resetView" type="button">Resetar câmera</button>
+<button class="ghost" id="fitScene" type="button">Reenquadrar</button>
+</div>
+</section>
+<section class="section" id="formulaSection">
+<h3>Equação e leitura da etapa</h3>
+<div class="formula-card" id="formulaCard"></div>
+</section>
+<section class="section" id="hydrogenoidSection" style="display:none">
+<div class="card-top">
+<h3 style="margin:0">Explorador hidrogenoide</h3>
+<div class="pill-mini" id="speciesTag">H</div>
+</div>
+<div class="grid2">
+<label>Número atômico Z<input id="zValue" type="range" min="1" max="8" step="1" value="1"></label>
+<label>Densidade da nuvem<input id="sampleCount" type="range" min="900" max="3200" step="100" value="1600"></label>
+</div>
+<div class="grid3" style="margin-top:10px">
+<label>n<select id="nValue"></select></label>
+<label>l<select id="lValue"></select></label>
+<label>m<select id="mValue"></select></label>
+</div>
+<div class="view-switch" id="orbitalViewSwitch">
+<button type="button" data-view="2d" class="active">Corte 2D</button>
+<button type="button" data-view="3d">Orbital 3D</button>
+</div>
+<div class="orbital-presets" id="orbitalPresets"></div>
+<div class="card-top" style="margin-top:12px"><h3 style="margin:0;font-size:12px">Galeria dos orbitais do hidrogênio</h3><div class="pill-mini" id="orbitalAtlasTag">corte analítico</div></div>
+<div class="orbital-atlas-grid" id="orbitalAtlas"></div>
+<div class="stats-grid" id="statsGrid"></div>
+<canvas id="radialGraph" width="360" height="180"></canvas>
+<div class="note" id="orbitalNote"></div>
+</section>
+<section class="section" style="display:none">
+<h3>Mapa do roteiro</h3>
+<div class="steps-grid" id="stepsGrid"></div>
+</section>
+<section class="section" style="display:none">
+<h3>Como navegar</h3>
+<div class="note">Arraste a lousa para rotacionar o modelo. Use as setas do teclado para avançar ou voltar. Este arquivo concentra a sequência histórica dos modelos atômicos e dos experimentos que levaram ao átomo moderno.</div>
+</section>
+</div>
+</aside>
+</div>
+<script src="assets/js/app.js"></script>

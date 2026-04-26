@@ -454,6 +454,17 @@
     autoSaveScene();
     applyToMain(false);
   }
+  function setTransformUniform(id,type,value){
+    id=normalizeTransformInstance(id);
+    const numeric=Number(value);
+    if(!Number.isFinite(numeric))return;
+    const base=getTransform(id);
+    base[type]=[numeric,numeric,numeric];
+    structure.transforms={...(structure.transforms||{}),[id]:base};
+    autoSaveScene();
+    applyToMain(false);
+    renderPanel();
+  }
   function updateAnimation(instanceId,animId,patch,rerender=false){
     const cleanPatch={...patch};
     if("enabled" in cleanPatch){cleanPatch.armed=!!cleanPatch.enabled;delete cleanPatch.enabled}
@@ -596,7 +607,12 @@
   function renderTransformInputs(){
     const t=getTransform(selectedInstance);
     const labels={position:"Posição",scale:"Escala",rotation:"Rotação"};
-    return Object.entries(labels).map(([type,label])=>`<h3>${label}</h3><div class="am-grid">${["X","Y","Z"].map((axis,index)=>`<label class="am-field"><span>${axis}</span><input data-transform="${type}" data-axis="${index}" type="number" step="0.05" value="${escapeText(Number((t[type]||[])[index]??(type==='scale'?1:0)).toFixed(2))}"></label>`).join("")}</div>`).join("");
+    return Object.entries(labels).map(([type,label])=>{
+      const values=t[type]||[];
+      const uniformValue=type==="scale"?`<label class="am-field"><span>XYZ</span><input data-transform-all="scale" type="number" step="0.05" value="${escapeText(Number((((values[0]??1)+(values[1]??1)+(values[2]??1))/3).toFixed(2)))}"></label>`:"";
+      const axisFields=["X","Y","Z"].map((axis,index)=>`<label class="am-field"><span>${axis}</span><input data-transform="${type}" data-axis="${index}" type="number" step="0.05" value="${escapeText(Number((values||[])[index]??(type==='scale'?1:0)).toFixed(2))}"></label>`).join("");
+      return `<h3>${label}</h3><div class="am-grid ${type==='scale'?'four':''}">${uniformValue}${axisFields}</div>`;
+    }).join("");
   }
   function renderAnimations(){
     const anims=getAnimations();
@@ -664,6 +680,7 @@
     const sceneNameInput=root.querySelector("[data-scene-name]");if(sceneNameInput)sceneNameInput.onchange=e=>setSceneName(e.target.value);
     const objectNameInput=root.querySelector("[data-object-name]");if(objectNameInput)objectNameInput.onchange=e=>setObjectLabel(selectedInstance,e.target.value);
     root.querySelectorAll("[data-transform]").forEach(input=>input.oninput=e=>setTransformValue(selectedInstance,e.target.dataset.transform,Number(e.target.dataset.axis),e.target.value));
+    root.querySelectorAll("[data-transform-all]").forEach(input=>input.onchange=e=>setTransformUniform(selectedInstance,e.target.dataset.transformAll,e.target.value));
     root.querySelectorAll("[data-anim-enabled]").forEach(input=>input.onchange=e=>updateAnimation(selectedInstance,e.target.dataset.animEnabled,{enabled:e.target.checked}));
     root.querySelectorAll("[data-anim-duration]").forEach(input=>input.oninput=e=>updateAnimation(selectedInstance,e.target.dataset.animDuration,{duration:Number(e.target.value)||0}));
     root.querySelectorAll("[data-anim-scale]").forEach(input=>input.oninput=e=>updateAnimation(selectedInstance,e.target.dataset.animScale,{scale:Number(e.target.value)||0}));

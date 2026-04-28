@@ -45,13 +45,13 @@ const shapeModels = {
   },
   bentTwoLP:{
     atoms:[
-      {x:-1.02,y:-0.38,z:0.92,kind:'ligand'},
+      {x:1.03,y:0,z:0.8,kind:'ligand'},
       {x:0,y:0,z:0,kind:'center'},
-      {x:1.02,y:-0.38,z:0.92,kind:'ligand'}
+      {x:-1.03,y:0,z:0.8,kind:'ligand'}
     ],
     bonds:[[0,1],[1,2]],
-    lonePairs:[{x:-0.9,y:0.92,z:-0.64},{x:0.9,y:0.92,z:-0.64}],
-    dipoles:[{from:[-1.24,-0.44,1.08],to:[-1.6,-0.56,1.42]},{from:[1.24,-0.44,1.08],to:[1.6,-0.56,1.42]}]
+    lonePairs:[{x:0,y:1.06,z:-0.75},{x:0,y:-1.06,z:-0.75}],
+    dipoles:[{from:[1.2,0,0.93],to:[1.56,0,1.21]},{from:[-1.2,0,0.93],to:[-1.56,0,1.21]}]
   },
   trigonal:{
     atoms:[

@@ -470,7 +470,7 @@
     var ligR = (apiRef && apiRef.ui && apiRef.ui.ligandRadius) ? (parseFloat(apiRef.ui.ligandRadius.value)||0.44) : 0.44;
     var lpScaleVal = (apiRef && apiRef.ui && apiRef.ui.lpScale) ? (parseFloat(apiRef.ui.lpScale.value)||1.6) : 1.6;
     var lpRadius = ligR * Math.max(0.22, Math.min(0.95, lpScaleVal * 0.42));
-    var lpDist = Math.max(0.06, rCenter * 0.22 + lpRadius * 0.06);
+    var lpDist = bl;
     var lps = (G.lp||[]).map(function(d){
       return {dir:d, pos:vMul(d, lpDist), size:lpRadius, radial:lpRadius*0.82};
     });
@@ -1316,8 +1316,7 @@ function __buildVolumetricShell(data, view, can){
     var centerR = __elementRadiusWorld(centerLabel, 'center');
     var majorR = ((lp&&lp.size) || (centerR*0.50));
     var radialR = ((lp&&lp.radial) || (majorR*0.68));
-    var lpDist = centerR + radialR * 0.98;
-    var lpPos = vMul(lpDir, lpDist);
+    var lpPos = lp.pos || vMul(lpDir, data.bondLen || 1.55);
     pushEllipsoid(lpPos, side, majorR*0.88, lpDir, radialR*0.84, [120,205,255], 0.098, {kind:'lpCore', idx:idx});
     pushEllipsoid(vAdd(lpPos, vMul(lpDir, radialR*0.14)), side, majorR*0.74, lpDir, radialR*0.68, [120,205,255], 0.078, {kind:'lpHead', idx:idx});
     pushEllipsoid(vAdd(lpPos, vMul(up2, majorR*0.08)), side, majorR*0.60, lpDir, radialR*0.50, [120,205,255], 0.050, {kind:'lpWing', idx:idx});

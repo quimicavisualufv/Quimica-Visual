@@ -1,5 +1,4 @@
-<html lang="pt-BR"><head>
-
+<html lang="pt-BR"><head><meta content="Animação educacional interativa do SiMoEns sobre Estruturas Blobby, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -115,155 +114,140 @@
   })();
 })();
 </script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
 <title>Visualizador de Orbitais atômicos e moleculares</title>
-<link rel="stylesheet" href="assets/css/styles.css">
-</head>
+<link href="assets/css/styles.css" rel="stylesheet"/>
+<meta content="Visualizador de Orbitais atômicos e moleculares" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Estruturas Blobby, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
-<canvas id="gl"></canvas>
-
-<svg class="axesOverlay" id="axesOverlay" viewBox="0 0 152 152" preserveAspectRatio="xMidYMid meet">
-  <defs>
-    <marker id="axisArrowX" markerWidth="8" markerHeight="8" refX="6.2" refY="4" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M0,0 L8,4 L0,8 z" class="axisX"></path>
-    </marker>
-    <marker id="axisArrowY" markerWidth="8" markerHeight="8" refX="6.2" refY="4" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M0,0 L8,4 L0,8 z" class="axisY"></path>
-    </marker>
-    <marker id="axisArrowZ" markerWidth="8" markerHeight="8" refX="6.2" refY="4" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M0,0 L8,4 L0,8 z" class="axisZ"></path>
-    </marker>
-  </defs>
-  <rect class="axisFrame" x="10" y="10" width="132" height="132" rx="16"></rect>
-  <line id="axisLineXNeg" class="axisX axisNeg" x1="76.00" y1="76.00" x2="64.37" y2="68.41" style="opacity: 0.18;"></line>
-  <line id="axisLineYNeg" class="axisY axisNeg" x1="76.00" y1="76.00" x2="76.00" y2="109.03" style="opacity: 0.18;"></line>
-  <line id="axisLineZNeg" class="axisZ axisNeg" x1="76.00" y1="76.00" x2="44.05" y2="78.77" style="opacity: 0.24;"></line>
-  <line id="axisLineXPos" class="axisX axisPos" marker-end="url(#axisArrowX)" x1="76.00" y1="76.00" x2="87.63" y2="83.59" style="opacity: 0.98;"></line>
-  <line id="axisLineYPos" class="axisY axisPos" marker-end="url(#axisArrowY)" x1="76.00" y1="76.00" x2="76.00" y2="42.97" style="opacity: 0.79;"></line>
-  <line id="axisLineZPos" class="axisZ axisPos" marker-end="url(#axisArrowZ)" x1="76.00" y1="76.00" x2="107.95" y2="73.23" style="opacity: 0.72;"></line>
-  <circle id="axisOrigin" class="axisCore" cx="76.00" cy="76.00" r="3.2"></circle>
-  <text id="axisLabelXPos" class="axisLabelX" x="97.63" y="84.59" style="opacity: 0.98;">X</text>
-  <text id="axisLabelXNeg" class="axisLabelX axisLabelNeg" x="54.37" y="69.41">-X</text>
-  <text id="axisLabelYPos" class="axisLabelY" x="76.00" y="32.97" style="opacity: 0.86;">Y</text>
-  <text id="axisLabelYNeg" class="axisLabelY axisLabelNeg" x="76.00" y="119.03">-Y</text>
-  <text id="axisLabelZPos" class="axisLabelZ" x="115.95" y="65.23" style="opacity: 0.82;">Z</text>
-  <text id="axisLabelZNeg" class="axisLabelZ axisLabelNeg" x="36.05" y="86.77">-Z</text>
+<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<svg class="axesOverlay" id="axesOverlay" preserveaspectratio="xMidYMid meet" viewbox="0 0 152 152">
+<defs>
+<marker id="axisArrowX" markerheight="8" markerunits="userSpaceOnUse" markerwidth="8" orient="auto" refx="6.2" refy="4">
+<path class="axisX" d="M0,0 L8,4 L0,8 z"></path>
+</marker>
+<marker id="axisArrowY" markerheight="8" markerunits="userSpaceOnUse" markerwidth="8" orient="auto" refx="6.2" refy="4">
+<path class="axisY" d="M0,0 L8,4 L0,8 z"></path>
+</marker>
+<marker id="axisArrowZ" markerheight="8" markerunits="userSpaceOnUse" markerwidth="8" orient="auto" refx="6.2" refy="4">
+<path class="axisZ" d="M0,0 L8,4 L0,8 z"></path>
+</marker>
+</defs>
+<rect class="axisFrame" height="132" rx="16" width="132" x="10" y="10"></rect>
+<line class="axisX axisNeg" id="axisLineXNeg" style="opacity: 0.18;" x1="76.00" x2="64.37" y1="76.00" y2="68.41"></line>
+<line class="axisY axisNeg" id="axisLineYNeg" style="opacity: 0.18;" x1="76.00" x2="76.00" y1="76.00" y2="109.03"></line>
+<line class="axisZ axisNeg" id="axisLineZNeg" style="opacity: 0.24;" x1="76.00" x2="44.05" y1="76.00" y2="78.77"></line>
+<line class="axisX axisPos" id="axisLineXPos" marker-end="url(#axisArrowX)" style="opacity: 0.98;" x1="76.00" x2="87.63" y1="76.00" y2="83.59"></line>
+<line class="axisY axisPos" id="axisLineYPos" marker-end="url(#axisArrowY)" style="opacity: 0.79;" x1="76.00" x2="76.00" y1="76.00" y2="42.97"></line>
+<line class="axisZ axisPos" id="axisLineZPos" marker-end="url(#axisArrowZ)" style="opacity: 0.72;" x1="76.00" x2="107.95" y1="76.00" y2="73.23"></line>
+<circle class="axisCore" cx="76.00" cy="76.00" id="axisOrigin" r="3.2"></circle>
+<text class="axisLabelX" id="axisLabelXPos" style="opacity: 0.98;" x="97.63" y="84.59">X</text>
+<text class="axisLabelX axisLabelNeg" id="axisLabelXNeg" x="54.37" y="69.41">-X</text>
+<text class="axisLabelY" id="axisLabelYPos" style="opacity: 0.86;" x="76.00" y="32.97">Y</text>
+<text class="axisLabelY axisLabelNeg" id="axisLabelYNeg" x="76.00" y="119.03">-Y</text>
+<text class="axisLabelZ" id="axisLabelZPos" style="opacity: 0.82;" x="115.95" y="65.23">Z</text>
+<text class="axisLabelZ axisLabelNeg" id="axisLabelZNeg" x="36.05" y="86.77">-Z</text>
 </svg>
-
 <div class="structuresPanel">
-  <div class="structuresTitle">Estruturas</div>
-  <div class="structuresGrid">
-    <div class="structCard" data-type="s">s</div>
-    <div class="structCard" data-type="px">px</div>
-    <div class="structCard" data-type="py">py</div>
-    <div class="structCard" data-type="pz">pz</div>
-    <div class="structCard" data-type="dxy">dxy</div>
-    <div class="structCard" data-type="dyz">dyz</div>
-    <div class="structCard" data-type="dxz">dxz</div>
-    <div class="structCard" data-type="dz2">dz2</div>
-    <div class="structCard" data-type="dx2-y2">dx2-y2</div>
-    <div class="structCard" data-type="fz3">fz3</div>
-    <div class="structCard" data-type="fxz2">fxz2</div>
-    <div class="structCard" data-type="fyz2">fyz2</div>
-    <div class="structCard" data-type="fxyz">fxyz</div>
-    <div class="structCard" data-type="fzx2-y2">fzx2-y2</div>
-    <div class="structCard" data-type="fxx2-3y2">fxx2-3y2</div>
-    <div class="structCard" data-type="fy3x2-y2">fy3x2-y2</div>
-    <div class="structCard" data-type="anel">anel</div>
-  </div>
-  <div class="structuresHint">A cena começa vazia. Dê 2 cliques em um quadrado para adicionar. Arrastar gira a câmera no ambiente 3D. Dê 2 cliques numa estrutura no canvas para selecionar e editar.</div>
+<div class="structuresTitle">Estruturas</div>
+<div class="structuresGrid">
+<div class="structCard" data-type="s">s</div>
+<div class="structCard" data-type="px">px</div>
+<div class="structCard" data-type="py">py</div>
+<div class="structCard" data-type="pz">pz</div>
+<div class="structCard" data-type="dxy">dxy</div>
+<div class="structCard" data-type="dyz">dyz</div>
+<div class="structCard" data-type="dxz">dxz</div>
+<div class="structCard" data-type="dz2">dz2</div>
+<div class="structCard" data-type="dx2-y2">dx2-y2</div>
+<div class="structCard" data-type="fz3">fz3</div>
+<div class="structCard" data-type="fxz2">fxz2</div>
+<div class="structCard" data-type="fyz2">fyz2</div>
+<div class="structCard" data-type="fxyz">fxyz</div>
+<div class="structCard" data-type="fzx2-y2">fzx2-y2</div>
+<div class="structCard" data-type="fxx2-3y2">fxx2-3y2</div>
+<div class="structCard" data-type="fy3x2-y2">fy3x2-y2</div>
+<div class="structCard" data-type="anel">anel</div>
 </div>
-
+<div class="structuresHint">A cena começa vazia. Dê 2 cliques em um quadrado para adicionar. Arrastar gira a câmera no ambiente 3D. Dê 2 cliques numa estrutura no canvas para selecionar e editar.</div>
+</div>
 <div class="ui">
-  <h1>Estruturas Blobby</h1>
-  <p>Projeto baseado em estruturas Blobby e Metaball, para a visualização de orbitais moleculares ligantes e antiligantes, ou para visualização da hibridização local.</p>
-
-  <div class="grid">
-    <div style="display:none">
-      <div class="row"><label for="posX">Posição X</label><div class="value" id="posXValue">-1.35</div></div>
-      <input id="posX" type="range" min="-2.40" max="2.40" step="0.01" value="0">
-    </div>
-
-    <div style="display:none">
-      <div class="row"><label for="posY">Posição Y</label><div class="value" id="posYValue">0.85</div></div>
-      <input id="posY" type="range" min="-2.10" max="2.10" step="0.01" value="0">
-    </div>
-
-    <div style="display:none">
-      <div class="row"><label for="posZ">Posição Z</label><div class="value" id="posZValue">0.00</div></div>
-      <input id="posZ" type="range" min="-2.10" max="2.10" step="0.01" value="0">
-    </div>
-
-    <div class="sectionTitle">Partes da estrutura selecionada</div>
-    <div id="editorWrap">
-      <div class="editorGrid" id="editorGrid">
-        <div class="colorCell" id="part1Cell" style="display: block;">
-          <label id="part1Label" for="part1Color">Lóbulo 1</label>
-          <input id="part1Color" type="color" value="#2563eb">
-          <label class="editorToggle"><input id="part1Negative" type="checkbox"> <span id="part1NegText">Negative</span></label>
-        </div>
-        <div class="colorCell" id="part2Cell" style="display: block;">
-          <label id="part2Label" for="part2Color">Lóbulo 2</label>
-          <input id="part2Color" type="color" value="#ef4444">
-          <label class="editorToggle"><input id="part2Negative" type="checkbox"> <span id="part2NegText">Negative</span></label>
-        </div>
-        <div class="colorCell" id="part3Cell" style="display: block;">
-          <label id="part3Label" for="part3Color">Lóbulo 3</label>
-          <input id="part3Color" type="color" value="#22c55e">
-          <label class="editorToggle"><input id="part3Negative" type="checkbox"> <span id="part3NegText">Negative</span></label>
-        </div>
-        <div class="colorCell" id="part4Cell" style="display: block;">
-          <label id="part4Label" for="part4Color">Lóbulo 4</label>
-          <input id="part4Color" type="color" value="#f59e0b">
-          <label class="editorToggle"><input id="part4Negative" type="checkbox"> <span id="part4NegText">Negative</span></label>
-        </div>
-        <div class="colorCell" id="part5Cell" style="display: none;">
-          <label id="part5Label" for="part5Color">Parte 5</label>
-          <input id="part5Color" type="color" value="#a855f7">
-          <label class="editorToggle"><input id="part5Negative" type="checkbox"> <span id="part5NegText">Negative</span></label>
-        </div>
-        <div class="colorCell" id="part6Cell" style="display: none;">
-          <label id="part6Label" for="part6Color">Parte 6</label>
-          <input id="part6Color" type="color" value="#06b6d4">
-          <label class="editorToggle"><input id="part6Negative" type="checkbox"> <span id="part6NegText">Negative</span></label>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="row"><label for="radius">Raio</label><div class="value" id="radiusValue">0.20</div></div>
-      <input id="radius" type="range" min="0.12" max="0.90" step="0.01" value="0.36">
-    </div>
-
-
-
-
-
-    <div class="switches">
-      <label class="toggle" style="display:none"><input id="autorotate" type="checkbox"> Autorotate</label>
-      <label class="toggle"><input id="showAxes" type="checkbox" checked=""> Eixos cartesianos</label>
-      <label class="toggle"><input id="view2D" type="checkbox"> Modo 2D</label>
-    </div>
-  </div>
-
-  <div class="hint" id="selectionHint">Estrutura selecionada: nenhuma. Arrastar orbita a câmera, Shift+arrastar move a câmera e o scroll controla o zoom.</div>
+<h1>Estruturas Blobby</h1>
+<p>Projeto baseado em estruturas Blobby e Metaball, para a visualização de orbitais moleculares ligantes e antiligantes, ou para visualização da hibridização local.</p>
+<div class="grid">
+<div style="display:none">
+<div class="row"><label for="posX">Posição X</label><div class="value" id="posXValue">-1.35</div></div>
+<input id="posX" max="2.40" min="-2.40" step="0.01" type="range" value="0"/>
 </div>
-
+<div style="display:none">
+<div class="row"><label for="posY">Posição Y</label><div class="value" id="posYValue">0.85</div></div>
+<input id="posY" max="2.10" min="-2.10" step="0.01" type="range" value="0"/>
+</div>
+<div style="display:none">
+<div class="row"><label for="posZ">Posição Z</label><div class="value" id="posZValue">0.00</div></div>
+<input id="posZ" max="2.10" min="-2.10" step="0.01" type="range" value="0"/>
+</div>
+<div class="sectionTitle">Partes da estrutura selecionada</div>
+<div id="editorWrap">
+<div class="editorGrid" id="editorGrid">
+<div class="colorCell" id="part1Cell" style="display: block;">
+<label for="part1Color" id="part1Label">Lóbulo 1</label>
+<input id="part1Color" type="color" value="#2563eb"/>
+<label class="editorToggle"><input id="part1Negative" type="checkbox"/> <span id="part1NegText">Negative</span></label>
+</div>
+<div class="colorCell" id="part2Cell" style="display: block;">
+<label for="part2Color" id="part2Label">Lóbulo 2</label>
+<input id="part2Color" type="color" value="#ef4444"/>
+<label class="editorToggle"><input id="part2Negative" type="checkbox"/> <span id="part2NegText">Negative</span></label>
+</div>
+<div class="colorCell" id="part3Cell" style="display: block;">
+<label for="part3Color" id="part3Label">Lóbulo 3</label>
+<input id="part3Color" type="color" value="#22c55e"/>
+<label class="editorToggle"><input id="part3Negative" type="checkbox"/> <span id="part3NegText">Negative</span></label>
+</div>
+<div class="colorCell" id="part4Cell" style="display: block;">
+<label for="part4Color" id="part4Label">Lóbulo 4</label>
+<input id="part4Color" type="color" value="#f59e0b"/>
+<label class="editorToggle"><input id="part4Negative" type="checkbox"/> <span id="part4NegText">Negative</span></label>
+</div>
+<div class="colorCell" id="part5Cell" style="display: none;">
+<label for="part5Color" id="part5Label">Parte 5</label>
+<input id="part5Color" type="color" value="#a855f7"/>
+<label class="editorToggle"><input id="part5Negative" type="checkbox"/> <span id="part5NegText">Negative</span></label>
+</div>
+<div class="colorCell" id="part6Cell" style="display: none;">
+<label for="part6Color" id="part6Label">Parte 6</label>
+<input id="part6Color" type="color" value="#06b6d4"/>
+<label class="editorToggle"><input id="part6Negative" type="checkbox"/> <span id="part6NegText">Negative</span></label>
+</div>
+</div>
+</div>
+<div>
+<div class="row"><label for="radius">Raio</label><div class="value" id="radiusValue">0.20</div></div>
+<input id="radius" max="0.90" min="0.12" step="0.01" type="range" value="0.36"/>
+</div>
+<div class="switches">
+<label class="toggle" style="display:none"><input id="autorotate" type="checkbox"/> Autorotate</label>
+<label class="toggle"><input checked="" id="showAxes" type="checkbox"/> Eixos cartesianos</label>
+<label class="toggle"><input id="view2D" type="checkbox"/> Modo 2D</label>
+</div>
+</div>
+<div class="hint" id="selectionHint">Estrutura selecionada: nenhuma. Arrastar orbita a câmera, Shift+arrastar move a câmera e o scroll controla o zoom.</div>
+</div>
 <div class="badge" id="badge">Canvas vazio • fundo escuro</div>
 <button class="removeBtn" id="removeBtn">×</button>
 <svg class="gizmoOverlay" id="gizmoOverlay">
-  <line id="gizmoAxisX" class="gizmoAxis gizmoAxisX" x1="409.11" y1="320.02" x2="458.79" y2="359.28"></line>
-  <line id="gizmoAxisY" class="gizmoAxis gizmoAxisY" x1="409.11" y1="320.02" x2="409.11" y2="149.27"></line>
-  <line id="gizmoAxisZ" class="gizmoAxis gizmoAxisZ" x1="409.11" y1="320.02" x2="545.55" y2="305.72"></line>
-  <circle id="gizmoHandleX" class="gizmoHandle gizmoHandleX" cx="458.79" cy="359.28" r="7"></circle>
-  <circle id="gizmoHandleY" class="gizmoHandle gizmoHandleY" cx="409.11" cy="149.27" r="7"></circle>
-  <circle id="gizmoHandleZ" class="gizmoHandle gizmoHandleZ" cx="545.55" cy="305.72" r="7"></circle>
-  <text id="gizmoLabelX" class="gizmoLabel gizmoLabelX" x="470.79" y="349.28">X</text>
-  <text id="gizmoLabelY" class="gizmoLabel gizmoLabelY" x="421.11" y="139.27">Y</text>
-  <text id="gizmoLabelZ" class="gizmoLabel gizmoLabelZ" x="557.55" y="295.72">Z</text>
+<line class="gizmoAxis gizmoAxisX" id="gizmoAxisX" x1="409.11" x2="458.79" y1="320.02" y2="359.28"></line>
+<line class="gizmoAxis gizmoAxisY" id="gizmoAxisY" x1="409.11" x2="409.11" y1="320.02" y2="149.27"></line>
+<line class="gizmoAxis gizmoAxisZ" id="gizmoAxisZ" x1="409.11" x2="545.55" y1="320.02" y2="305.72"></line>
+<circle class="gizmoHandle gizmoHandleX" cx="458.79" cy="359.28" id="gizmoHandleX" r="7"></circle>
+<circle class="gizmoHandle gizmoHandleY" cx="409.11" cy="149.27" id="gizmoHandleY" r="7"></circle>
+<circle class="gizmoHandle gizmoHandleZ" cx="545.55" cy="305.72" id="gizmoHandleZ" r="7"></circle>
+<text class="gizmoLabel gizmoLabelX" id="gizmoLabelX" x="470.79" y="349.28">X</text>
+<text class="gizmoLabel gizmoLabelY" id="gizmoLabelY" x="421.11" y="139.27">Y</text>
+<text class="gizmoLabel gizmoLabelZ" id="gizmoLabelZ" x="557.55" y="295.72">Z</text>
 </svg>
-
 <script src="assets/js/app.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body></html>

@@ -494,10 +494,10 @@
       atoms.push({ pos:pos, atom:{ color:colorize(ligandColor.value, parseFloat(sat.value)||1), scale:86 * clamp(ligR/0.34, 0.8, 2.3), label:'' }, kind:'ligand', dir:rotXYZ(dir, rot), radius:ligR });
       bonds.push({ a:centerPos, b:pos, kind:parseInt(bondType.value,10) || 1, color:rgba('#d5deee', 0.96), opacity:1 });
     });
+    var lpDist = bl * 0.80;
     G.lp.forEach(function(dir, idx){
-      var dRot = rotXYZ(dir, rot);
-      var lpOffset = Math.max(0.08, coreR * 0.18);
-      var pos = vAdd(vMul(dRot, lpOffset), __sceneMolOffset);
+      var dRot = [dir[0], dir[1], dir[2]];
+      var pos = vAdd(vMul(dir, lpDist), __sceneMolOffset);
       var seedKey = (geom && geom.value ? geom.value : 'lp') + '|' + idx + '|' + G.lp.length;
       var seed = 2166136261 >>> 0;
       for(var si=0;si<seedKey.length;si++){
@@ -1428,10 +1428,7 @@
   function drawLonePair(entry){
     var base = 13.2 * clamp(entry.radius / 0.24, 0.82, 1.9) * getScreenZoomScale();
     var dirWorld = (entry && entry.dir) ? entry.dir : [0,0,1];
-    var coreR = parseFloat(size.value) || 0.64;
-    var attachWorld = Math.max(0.08, coreR * 0.18);
-    var centerWorld = vAdd(__sceneMolOffset, vMul(vNorm(dirWorld), attachWorld));
-    var p = project(centerWorld);
+    var p = project(entry.pos);
     if(!p || !isFinite(p.x) || !isFinite(p.y)) return;
 
     drawElectronPointCloud(
@@ -1546,16 +1543,8 @@
     var items=[];
     (world.balloons||[]).forEach(function(entry){ items.push({ type:'balloon', z:rotateCamera(vSub(entry.pos, state.center))[2], order:0, data:entry }); });
     (world.bonds||[]).forEach(function(bd){ items.push({ type:'bond', z:(rotateCamera(vSub(bd.a,state.center))[2]+rotateCamera(vSub(bd.b,state.center))[2])*0.5, order:1, data:bd }); });
-    (world.lps||[]).forEach(function(entry, idx){
+    (world.lps||[]).forEach(function(entry){
       var z = rotateCamera(vSub(entry.pos, state.center))[2];
-      var pulse = __lpHold || 0;
-      if(__lpPulseStart>=0){
-        var now = performance.now();
-        var tt = (now-__lpPulseStart) / __lpPulseDur;
-        if(tt>=1){ __lpPulseStart=-1; __lpHold=1; pulse=1; }
-        else { pulse = 1 - Math.pow(1-clamp(tt,0,1),3); __lpHold = pulse; requestRender(); }
-      }
-      entry.radius = entry.radius * (geom.value==='square_planar' ? 1 : (1 + (idx%2===0 ? 0.08 : 0.12) * pulse));
       items.push({ type:'lp', z:z, order:2, data:entry });
     });
     (world.atoms||[]).forEach(function(entry){ items.push({ type:'atom', z:rotateCamera(vSub(entry.pos, state.center))[2], order:3, data:entry }); });

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+
+<html lang="pt-BR">
+<head><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." name="description"/>
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Quebra-cabeça de Íons — offline (v5)</title>
 <style>
   :root{
@@ -208,60 +209,50 @@
   #board .tile .sym{font-size:26px; padding:0; line-height:1.1;}
   #board .tile.cat, #board .tile.an{min-height:240px;}
 </style>
-
 <style>#addPlus,#addArrow,#addEq{display:none!important}</style>
-</head>
+<meta content="Quebra-cabeça de Íons — offline (v5)" property="og:title"/><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." property="og:description"/></head>
 <body>
 <header>
-  <h1>⚗️ Quebra-cabeça de Íons</h1>
-  <span class="spacer"></span>
-  <button id="toggleSide" class="toggleSide">Esconder Leitura & Dicas</button>
-
+<h1>⚗️ Quebra-cabeça de Íons</h1>
+<span class="spacer"></span>
+<button class="toggleSide" id="toggleSide">Esconder Leitura &amp; Dicas</button>
 </header>
-
 <main>
-  
-  <section class="col" id="leftCol">
-    <h2><span>Biblioteca</span><input id="searchBox" type="search" placeholder="Pesquisar..." aria-label="Pesquisar" /></h2>
-    <div id="library"></div>
-    <div class="toolbar">
-      <button id="clearBoard" title="Limpar mesa">Limpar</button>
-      
-    </div>
-  </section>
-
-  
-  <section class="col">
-    <h2>Mesa de montagem</h2>
-    <div id="boardWrap" class="boardWrap"><div id="board" aria-label="Área de montagem"></div></div>
-    <div class="toolbar">
-      <button id="check" class="ok">Conferir eletroneutralidade</button>
-      <button id="deleteSel" class="bad">Remover seleção</button>
-      <span style="flex:1"></span>
-      <button id="addPlus" title="Adicionar sinal de +">+ (adicionar)</button>
-      <button id="addArrow" title="Adicionar seta de reação">→ (reação)</button>
-      <button id="addEq" title="Adicionar seta de equilíbrio">⇌ (equilíbrio)</button>
-    </div>
-  </section>
-
-  
-  <aside class="col" id="side">
-    <h2>Leitura & Dicas</h2>
-    <div id="calc">
-      <div class="row"><span>Carga total (íons)</span><span id="charge" class="badge">0</span></div>
-      <div class="row"><span>Peças na mesa</span><span id="count" class="badge">0</span></div>
-      <div class="hr"></div>
-      <div class="row"><span id="formulaOut" class="big">—</span></div>
-      <div class="note">
-        <div><b>Regras de encaixe:</b> cada <i>porta</i> liga com no máx. 1 oposto; nº de portas = |carga|.</div>
-        <div style="margin-top:6px">Dica: arraste até as bolinhas ficarem <b>sobrepostas</b> — elas se alinham exatamente.</div>
-      </div>
-    </div>
-    <div class="hr"></div>
-    <div class="list" id="legend"></div>
-  </aside>
+<section class="col" id="leftCol">
+<h2><span>Biblioteca</span><input aria-label="Pesquisar" id="searchBox" placeholder="Pesquisar..." type="search"/></h2>
+<div id="library"></div>
+<div class="toolbar">
+<button id="clearBoard" title="Limpar mesa">Limpar</button>
+</div>
+</section>
+<section class="col">
+<h2>Mesa de montagem</h2>
+<div class="boardWrap" id="boardWrap"><div aria-label="Área de montagem" id="board"></div></div>
+<div class="toolbar">
+<button class="ok" id="check">Conferir eletroneutralidade</button>
+<button class="bad" id="deleteSel">Remover seleção</button>
+<span style="flex:1"></span>
+<button id="addPlus" title="Adicionar sinal de +">+ (adicionar)</button>
+<button id="addArrow" title="Adicionar seta de reação">→ (reação)</button>
+<button id="addEq" title="Adicionar seta de equilíbrio">⇌ (equilíbrio)</button>
+</div>
+</section>
+<aside class="col" id="side">
+<h2>Leitura &amp; Dicas</h2>
+<div id="calc">
+<div class="row"><span>Carga total (íons)</span><span class="badge" id="charge">0</span></div>
+<div class="row"><span>Peças na mesa</span><span class="badge" id="count">0</span></div>
+<div class="hr"></div>
+<div class="row"><span class="big" id="formulaOut">—</span></div>
+<div class="note">
+<div><b>Regras de encaixe:</b> cada <i>porta</i> liga com no máx. 1 oposto; nº de portas = |carga|.</div>
+<div style="margin-top:6px">Dica: arraste até as bolinhas ficarem <b>sobrepostas</b> — elas se alinham exatamente.</div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="list" id="legend"></div>
+</aside>
 </main>
-
 <script>
 
 
@@ -775,5 +766,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 </script>
+<script src="../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

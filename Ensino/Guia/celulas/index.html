@@ -1,7 +1,7 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
+<!DOCTYPE html>
 
+<html lang="pt-BR">
+<head><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,156 +117,137 @@
   })();
 })();
 </script>
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
-  <title>Células unitárias e parâmetros de rede</title>
-  <link rel="stylesheet" href="assets/css/style1.css" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<title>Células unitárias e parâmetros de rede</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Células unitárias e parâmetros de rede" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Redes Cristalinas</h1>
-          <p></p>
-        </div>
-      </div>
-
-      <div class="chip" title="Sistema cristalino atual">
-        <label for="systemSel">Sistema</label>
-        <select id="systemSel">
-          <option value="cubic">Cúbico</option>
-          <option value="tetragonal">Tetragonal</option>
-          <option value="orthorhombic">Ortorrombico</option>
-          <option value="hexagonal">Hexagonal</option>
-                    <option value="rhombohedral">Romboédrico</option>
-<option value="monoclinic">Monoclínico</option>
-          <option value="triclinic">Triclínico</option>
-        </select>
-      </div>
-
-      <div class="chip" title="Estilo de rede (opcional)">
-        <label for="latticeSel">Modelo de Esferas</label>
-        <select id="latticeSel">
-          <option value="none">Nenhuma</option>
-          <option value="corners">Primitiva (só cantos)</option>
-          <option value="base">Base centrada</option>
-          <option value="bcc">Corpo centrado</option>
-          <option value="fcc">Faces centradas</option>
-</select>
-      </div>
-
-      <div class="spacer"></div>
-
-      <button id="resetBtn" class="btnGhost" title="Voltar a câmera ao padrão">Reset câmera</button>
-</header>
-
-    <div class="main">
-            
-      <aside class="card sidebar sidebarLeft" id="leftCard">
-        <div class="sideTop">
-          <h2 id="sideH2">Parte 1 — Células unitárias em 3D</h2>
-          <p>Você está vendo uma célula unitária construída por vetores (a, b, c) e ângulos (α, β, γ).</p>
-        </div>
-
-        <div class="content" id="content">
-          <h3 class="stepTitle" id="stepTitle">01 — O que você está vendo</h3>
-          <p id="stepBody"></p>
-          <div class="callout" id="callout">
-            <b>Macete visual</b>
-            <span id="calloutBody"></span>
-          </div>
-          <p class="hint" id="hint">Atalho mental: mudar o sistema cristalino = mudar relações entre a,b,c e α,β,γ.</p>
-        </div>
-
-        <div class="footerNav">
-          <button id="prevBtn" class="btnGhost">◀ Anterior</button>
-          <div class="progress" aria-label="Progresso do tutorial"><div class="bar" id="bar"></div></div>
-          <button id="nextBtn" class="btnAccent">Próximo ▶</button>
-        </div>
-      </aside>
-
-
-      <section class="card viewer" id="viewerCard">
-        <div class="viewerTop">>
-          <div class="mini"><b>Parâmetros:</b> <span id="paramReadout">a=1.00 b=1.00 c=1.00 | α=90° β=90° γ=90°</span></div>
-        </div>
-        <canvas id="cv" aria-label="Visualização 3D da célula unitária"></canvas>
-      </section>
-
-      
-
-      
-      <aside class="card sidebar sidebarRight" id="rightCard">
-        <div class="sideTop">
-          <h2>Controles</h2>
-          <p>Ajuste dimensões, ângulos (quando liberados pelo sistema), e marque opções visuais.</p>
-        </div>
-
-        <div class="controls" id="controls">
-          <div class="row">
-            <div class="field" id="fa">
-              <div class="label"><b>a</b><em><span id="va">1.00</span></em></div>
-              <input id="sa" type="range" min="0.60" max="2.00" value="1.00" step="0.01" />
-            </div>
-            <div class="field" id="fb">
-              <div class="label"><b>b</b><em><span id="vb">1.00</span></em></div>
-              <input id="sb" type="range" min="0.60" max="2.00" value="1.00" step="0.01" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="field" id="fc">
-              <div class="label"><b>c</b><em><span id="vc">1.00</span></em></div>
-              <input id="sc" type="range" min="0.60" max="2.40" value="1.00" step="0.01" />
-            </div>
-            <div class="field" id="falpha">
-              <div class="label"><b>α</b><em><span id="valpha">90</span>°</em></div>
-              <input id="salpha" type="range" min="55" max="125" value="90" step="1" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="field" id="fbeta">
-              <div class="label"><b>β</b><em><span id="vbeta">90</span>°</em></div>
-              <input id="sbeta" type="range" min="55" max="125" value="90" step="1" />
-            </div>
-            <div class="field" id="fgamma">
-              <div class="label"><b>γ</b><em><span id="vgamma">90</span>°</em></div>
-              <input id="sgamma" type="range" min="55" max="125" value="90" step="1" />
-            </div>
-          </div>
-
-          <div class="toggles">
-            <label class="toggle" title="Mostra eixos a, b, c">
-              <input id="tAxes" type="checkbox" checked />
-              <span>Eixos</span>
-            </label>
-            <label class="toggle" title="Mostra rótulos a, b, c">
-              <input id="tLabels" type="checkbox" checked />
-              <span>Rótulos</span>
-            </label>
-            <label class="toggle" title="Repete a célula em 3×3×3 (visão de rede)">
-              <input id="tRep" type="checkbox" />
-              <span>Repetir 3×3×3</span>
-            </label>
-
-            <label class="toggle" title="Mostra arcos dos ângulos α, β, γ">
-              <input id="tAngles" type="checkbox" checked />
-              <span>Ângulos</span>
-            </label>
-
-            <label class="toggle" title="Esferas opacas (sem alpha)">
-              <input id="tAlpha" type="checkbox" checked />
-              <span>Esferas opacas</span>
-            </label>
-
-          </div>
-        </div>
-      </aside>
+<div class="app">
+<header>
+<div class="brand">
+<div aria-hidden="true" class="logo"></div>
+<div>
+<h1>Redes Cristalinas</h1>
+<p></p>
 </div>
-  </div>
-
+</div>
+<div class="chip" title="Sistema cristalino atual">
+<label for="systemSel">Sistema</label>
+<select id="systemSel">
+<option value="cubic">Cúbico</option>
+<option value="tetragonal">Tetragonal</option>
+<option value="orthorhombic">Ortorrombico</option>
+<option value="hexagonal">Hexagonal</option>
+<option value="rhombohedral">Romboédrico</option>
+<option value="monoclinic">Monoclínico</option>
+<option value="triclinic">Triclínico</option>
+</select>
+</div>
+<div class="chip" title="Estilo de rede (opcional)">
+<label for="latticeSel">Modelo de Esferas</label>
+<select id="latticeSel">
+<option value="none">Nenhuma</option>
+<option value="corners">Primitiva (só cantos)</option>
+<option value="base">Base centrada</option>
+<option value="bcc">Corpo centrado</option>
+<option value="fcc">Faces centradas</option>
+</select>
+</div>
+<div class="spacer"></div>
+<button class="btnGhost" id="resetBtn" title="Voltar a câmera ao padrão">Reset câmera</button>
+</header>
+<div class="main">
+<aside class="card sidebar sidebarLeft" id="leftCard">
+<div class="sideTop">
+<h2 id="sideH2">Parte 1 — Células unitárias em 3D</h2>
+<p>Você está vendo uma célula unitária construída por vetores (a, b, c) e ângulos (α, β, γ).</p>
+</div>
+<div class="content" id="content">
+<h3 class="stepTitle" id="stepTitle">01 — O que você está vendo</h3>
+<p id="stepBody"></p>
+<div class="callout" id="callout">
+<b>Macete visual</b>
+<span id="calloutBody"></span>
+</div>
+<p class="hint" id="hint">Atalho mental: mudar o sistema cristalino = mudar relações entre a,b,c e α,β,γ.</p>
+</div>
+<div class="footerNav">
+<button class="btnGhost" id="prevBtn">◀ Anterior</button>
+<div aria-label="Progresso do tutorial" class="progress"><div class="bar" id="bar"></div></div>
+<button class="btnAccent" id="nextBtn">Próximo ▶</button>
+</div>
+</aside>
+<section class="card viewer" id="viewerCard">
+<div class="viewerTop">&gt;
+          <div class="mini"><b>Parâmetros:</b> <span id="paramReadout">a=1.00 b=1.00 c=1.00 | α=90° β=90° γ=90°</span></div>
+</div>
+<canvas aria-label="Visualização 3D da célula unitária" id="cv" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+</section>
+<aside class="card sidebar sidebarRight" id="rightCard">
+<div class="sideTop">
+<h2>Controles</h2>
+<p>Ajuste dimensões, ângulos (quando liberados pelo sistema), e marque opções visuais.</p>
+</div>
+<div class="controls" id="controls">
+<div class="row">
+<div class="field" id="fa">
+<div class="label"><b>a</b><em><span id="va">1.00</span></em></div>
+<input aria-label="Ajustar parâmetro de rede a" id="sa" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede a" type="range" value="1.00"/>
+</div>
+<div class="field" id="fb">
+<div class="label"><b>b</b><em><span id="vb">1.00</span></em></div>
+<input aria-label="Ajustar parâmetro de rede b" id="sb" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede b" type="range" value="1.00"/>
+</div>
+</div>
+<div class="row">
+<div class="field" id="fc">
+<div class="label"><b>c</b><em><span id="vc">1.00</span></em></div>
+<input aria-label="Ajustar parâmetro de rede c" id="sc" max="2.40" min="0.60" step="0.01" title="Ajustar parâmetro de rede c" type="range" value="1.00"/>
+</div>
+<div class="field" id="falpha">
+<div class="label"><b>α</b><em><span id="valpha">90</span>°</em></div>
+<input aria-label="Ajustar ângulo alfa" id="salpha" max="125" min="55" step="1" title="Ajustar ângulo alfa" type="range" value="90"/>
+</div>
+</div>
+<div class="row">
+<div class="field" id="fbeta">
+<div class="label"><b>β</b><em><span id="vbeta">90</span>°</em></div>
+<input aria-label="Ajustar ângulo beta" id="sbeta" max="125" min="55" step="1" title="Ajustar ângulo beta" type="range" value="90"/>
+</div>
+<div class="field" id="fgamma">
+<div class="label"><b>γ</b><em><span id="vgamma">90</span>°</em></div>
+<input aria-label="Ajustar ângulo gama" id="sgamma" max="125" min="55" step="1" title="Ajustar ângulo gama" type="range" value="90"/>
+</div>
+</div>
+<div class="toggles">
+<label class="toggle" title="Mostra eixos a, b, c">
+<input checked="" id="tAxes" type="checkbox"/>
+<span>Eixos</span>
+</label>
+<label class="toggle" title="Mostra rótulos a, b, c">
+<input checked="" id="tLabels" type="checkbox"/>
+<span>Rótulos</span>
+</label>
+<label class="toggle" title="Repete a célula em 3×3×3 (visão de rede)">
+<input id="tRep" type="checkbox"/>
+<span>Repetir 3×3×3</span>
+</label>
+<label class="toggle" title="Mostra arcos dos ângulos α, β, γ">
+<input checked="" id="tAngles" type="checkbox"/>
+<span>Ângulos</span>
+</label>
+<label class="toggle" title="Esferas opacas (sem alpha)">
+<input checked="" id="tAlpha" type="checkbox"/>
+<span>Esferas opacas</span>
+</label>
+</div>
+</div>
+</aside>
+</div>
+</div>
 <script src="assets/js/script1.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

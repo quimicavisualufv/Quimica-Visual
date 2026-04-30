@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
 
+<html lang="pt-BR">
+<head><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D • Sistemas Cristalinos, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,52 +117,50 @@
   })();
 })();
 </script>
-
-<meta charset="utf-8" />
-<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Geometria Cristalográfica</title>
-<link rel="stylesheet" href="assets/css/style1.css" />
-</head>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Geometria Cristalográfica" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D • Sistemas Cristalinos, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
-  <header>
-    <h1>Modelos 3D • Sistemas Cristalinos</h1>
-    <div class="hint">Arraste para girar • Role para zoom • <span class="kbd">R</span> reset</div>
-  </header>
-
-  <aside class="sidebar" id="sidebar"></aside>
-
-  <main class="main">
-    <canvas id="viewport"></canvas>
-    <div class="panel">
-      <div class="info">
-        <div class="title" id="shapeTitle">Selecione uma figura</div>
-        <div class="desc" id="shapeDesc">Cada modelo inicia em rotação 0°,0°,0° e com zoom padrão menor.</div>
-      </div>
-      <div class="controls">
-        <div class="row">
-          <label for="edgeColor">Arestas</label>
-          <input type="color" id="edgeColor" value="#1B2140" />
-        </div>
-        <div class="row">
-          <label for="fillEnable">Preencher faces</label>
-          <input type="checkbox" id="fillEnable" checked />
-        </div>
-        <div class="row">
-          <label for="faceColor">Cor das faces</label>
-          <input type="color" id="faceColor" value="#7AA2FF" />
-        </div>
-        <div class="col">
-          <div class="row"><label>Rot. X</label><input type="range" id="rx" min="-180" max="180" value="0"><span class="tiny" id="rxv">0°</span></div>
-          <div class="row"><label>Rot. Y</label><input type="range" id="ry" min="-180" max="180" value="0"><span class="tiny" id="ryv">0°</span></div>
-          <div class="row"><label>Rot. Z</label><input type="range" id="rz" min="-180" max="180" value="0"><span class="tiny" id="rzv">0°</span></div>
-        </div>
-        <button class="btn" id="resetBtn">Resetar vista</button>
-        <button class="btn" id="fitBtn">Enquadrar</button>
-        <span class="badge"></span>
-      </div>
-    </div>
-  </main>
-
+<header>
+<h1>Modelos 3D • Sistemas Cristalinos</h1>
+<div class="hint">Arraste para girar • Role para zoom • <span class="kbd">R</span> reset</div>
+</header>
+<aside class="sidebar" id="sidebar"></aside>
+<main class="main">
+<canvas aria-label="Visualização 3D interativa de geometria cristalográfica." id="viewport" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<div class="panel">
+<div class="info">
+<div class="title" id="shapeTitle">Selecione uma figura</div>
+<div class="desc" id="shapeDesc">Cada modelo inicia em rotação 0°,0°,0° e com zoom padrão menor.</div>
+</div>
+<div class="controls">
+<div class="row">
+<label for="edgeColor">Arestas</label>
+<input id="edgeColor" type="color" value="#1B2140"/>
+</div>
+<div class="row">
+<label for="fillEnable">Preencher faces</label>
+<input checked="" id="fillEnable" type="checkbox"/>
+</div>
+<div class="row">
+<label for="faceColor">Cor das faces</label>
+<input id="faceColor" type="color" value="#7AA2FF"/>
+</div>
+<div class="col">
+<div class="row"><label>Rot. X</label><input aria-label="Controlar rotação no eixo X" id="rx" max="180" min="-180" title="Controlar rotação no eixo X" type="range" value="0"/><span class="tiny" id="rxv">0°</span></div>
+<div class="row"><label>Rot. Y</label><input aria-label="Controlar rotação no eixo Y" id="ry" max="180" min="-180" title="Controlar rotação no eixo Y" type="range" value="0"/><span class="tiny" id="ryv">0°</span></div>
+<div class="row"><label>Rot. Z</label><input aria-label="Controlar rotação no eixo Z" id="rz" max="180" min="-180" title="Controlar rotação no eixo Z" type="range" value="0"/><span class="tiny" id="rzv">0°</span></div>
+</div>
+<button class="btn" id="resetBtn">Resetar vista</button>
+<button class="btn" id="fitBtn">Enquadrar</button>
+<span class="badge"></span>
+</div>
+</div>
+</main>
 <script src="assets/js/script1.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

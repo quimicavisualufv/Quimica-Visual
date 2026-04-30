@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+
+<html lang="pt-BR">
+<head><meta content="Jogo educacional offline do SiMoEns sobre 🧪 Quebra-cabeça Covalente, com atividades de aprendizagem e revisão de conteúdos científicos." name="description"/>
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Quebra-cabeça Covalente</title>
 <style>
   :root{
@@ -120,68 +121,60 @@
   #board .tile{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
   #board .tile .sym{font-size:24px; padding:0; line-height:1.1;}
 </style>
-</head>
+<meta content="Quebra-cabeça Covalente" property="og:title"/><meta content="Jogo educacional offline do SiMoEns sobre 🧪 Quebra-cabeça Covalente, com atividades de aprendizagem e revisão de conteúdos científicos." property="og:description"/></head>
 <body>
 <header>
-  <h1>🧪 Quebra-cabeça Covalente</h1>
-  <span class="spacer"></span>
-  <button id="toggleSide" class="toggleSide">Esconder Leitura & Dicas</button>
+<h1>🧪 Quebra-cabeça Covalente</h1>
+<span class="spacer"></span>
+<button class="toggleSide" id="toggleSide">Esconder Leitura &amp; Dicas</button>
 </header>
-
 <main>
-  <section class="col" id="leftCol">
-    <h2><span>Biblioteca</span><input id="searchBox" type="search" placeholder="Pesquisar..." aria-label="Pesquisar" /></h2>
-    <div id="library">
-      <div class="lib-section" id="atomsSec">
-        <div class="lib-title">Átomos</div>
-        <div class="grid" id="atomsGrid"></div>
-      </div>
-      <div class="lib-section" id="symbolsSec">
-        <div class="lib-title">Símbolos de reação</div>
-        <div class="grid" id="symbolsGrid"></div>
-      </div>
-    </div>
-    <div class="toolbar">
-      <button id="rmBond" class="danger">Remover ligação</button>
-      <button id="clearBoard" class="ghostBtn">Limpar</button>
-    </div>
-  </section>
-
-  <section class="col">
-    <h2>Mesa de montagem</h2>
-    <div id="boardWrap" class="boardWrap"><div id="board" aria-label="Área de montagem"></div></div>
-    <div class="toolbar"></div>
-  </section>
-
-  <aside class="col" id="side">
-    <h2>Leitura & Dicas</h2>
-    <div id="calc">
-      <div class="row"><span>Pares (ligações)</span><span id="bondCount" class="badge">0</span></div>
-      <div class="row"><span>Peças na mesa</span><span id="count" class="badge">0</span></div>
-      <div class="hr"></div>
-
-      <div>
-        <div class="lib-title" style="margin-bottom:6px">Espécies (clusters)</div>
-        <div class="row" style="justify-content:flex-start; gap:10px; align-items:center; flex-wrap:wrap;">
-          <span id="formulaOut" class="big">—</span>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <div class="row" style="font-size:12.5px; color:#374151">
-        <div>
+<section class="col" id="leftCol">
+<h2><span>Biblioteca</span><input aria-label="Pesquisar" id="searchBox" placeholder="Pesquisar..." type="search"/></h2>
+<div id="library">
+<div class="lib-section" id="atomsSec">
+<div class="lib-title">Átomos</div>
+<div class="grid" id="atomsGrid"></div>
+</div>
+<div class="lib-section" id="symbolsSec">
+<div class="lib-title">Símbolos de reação</div>
+<div class="grid" id="symbolsGrid"></div>
+</div>
+</div>
+<div class="toolbar">
+<button class="danger" id="rmBond">Remover ligação</button>
+<button class="ghostBtn" id="clearBoard">Limpar</button>
+</div>
+</section>
+<section class="col">
+<h2>Mesa de montagem</h2>
+<div class="boardWrap" id="boardWrap"><div aria-label="Área de montagem" id="board"></div></div>
+<div class="toolbar"></div>
+</section>
+<aside class="col" id="side">
+<h2>Leitura &amp; Dicas</h2>
+<div id="calc">
+<div class="row"><span>Pares (ligações)</span><span class="badge" id="bondCount">0</span></div>
+<div class="row"><span>Peças na mesa</span><span class="badge" id="count">0</span></div>
+<div class="hr"></div>
+<div>
+<div class="lib-title" style="margin-bottom:6px">Espécies (clusters)</div>
+<div class="row" style="justify-content:flex-start; gap:10px; align-items:center; flex-wrap:wrap;">
+<span class="big" id="formulaOut">—</span>
+</div>
+</div>
+<div class="hr"></div>
+<div class="row" style="font-size:12.5px; color:#374151">
+<div>
           • Qualquer átomo (exceto gases nobres, removidos) pode ligar com qualquer outro.<br/>
 • Para ligar: <b>duplo clique</b> em um elétron para armar o arraste, <b>arraste</b> até o elétron de outro átomo e solte.<br/>
           • Para desfazer: ative <b>Remover ligação</b> e clique na ligação; o modo desativa em seguida.
         </div>
-      </div>
-    </div>
-  </aside>
+</div>
+</div>
+</aside>
 </main>
-
-
-<div id="guide"><canvas></canvas></div>
-
+<div id="guide"><canvas aria-label="Visualização interativa da página Quebra-cabeça Covalente." role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
 <script>
 
 
@@ -744,5 +737,7 @@ function showToast(msg, kind='info'){
   toastTimer=setTimeout(()=>{ t.style.opacity='0'; }, 2200);
 }
 </script>
+<script src="../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

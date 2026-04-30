@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 
 <html lang="pt-BR">
-<head>
-
-
-
+<head><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
 <meta charset="utf-8"/>
 <meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Geometria Molecular 3D</title>
 <link href="assets/css/style1.css" rel="stylesheet"/>
-</head>
+<meta content="Geometria Molecular 3D" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
 <body>
 <div class="app">
 <aside>
@@ -125,9 +122,9 @@
 </div>
 </aside>
 <main>
-<canvas id="gl"></canvas>
-<canvas id="angleOverlay"></canvas>
-<div aria-hidden="true" id="miniAxesWrap"><canvas id="miniAxes"></canvas></div>
+<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<canvas aria-label="Camada visual dos ângulos moleculares." id="angleOverlay" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<div aria-hidden="true" id="miniAxesWrap"><canvas aria-label="Miniatura dos eixos de orientação 3D." id="miniAxes" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
 <div class="axesToggle" id="axesToggle"><label><input checked="" id="axesToggleChk" type="checkbox"/> Mostrar eixos</label></div>
 <div aria-label="Ângulos da molécula" class="angleLegendPanel" id="angleLegendPanel"></div>
 <div class="axisLabel" id="axisXLabel" style="color:#ff7a7a">X</div>
@@ -140,5 +137,7 @@
 </div>
 <script src="assets/js/script1.js"></script>
 <script src="assets/js/script2.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

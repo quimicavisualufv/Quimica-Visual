@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
 
+<html lang="pt-BR">
+<head><meta content="Animação educacional interativa do SiMoEns sobre Função de onda 2D, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,112 +117,107 @@
   })();
 })();
 </script>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Orbitais de Hidrogenoides</title>
-<link rel="stylesheet" href="assets/css/styles.css">
-</head>
+<link href="assets/css/styles.css" rel="stylesheet"/>
+<meta content="Orbitais de Hidrogenoides" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Função de onda 2D, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
 <aside>
-  <div style="margin-top:14px" class="badge"><span class="dot"></span><span id="entryCountBadge">—</span></div>
-
-  <section class="panel section" style="margin-top:16px;">
-    <div class="section-title"><strong>Estrutura</strong></div>
-    <div class="row">
-      <label>
-        <span>Nível principal</span>
-        <select id="nSelect"></select>
-      </label>
-      <label>
-        <span>Orbital</span>
-        <select id="orbitalSelect"></select>
-      </label>
-    </div>
-    <div class="toolbar-three" style="grid-template-columns:repeat(2,minmax(0,1fr));">
-      <button id="prevBtn" class="secondary">◀</button>
-      <button id="nextBtn" class="secondary">▶</button>
-    </div>
-    <div class="range-wrap" style="margin-top:12px;">
-      <div class="range-head"><span>Zoom</span><span id="zoomValue">0.70x</span></div>
-      <input id="zoomRange" type="range" min="0.05" max="3.2" step="0.01" value="0.70">
-    </div>
-    <div class="range-wrap" style="margin-top:10px;">
-      <div class="range-head"><span>Tamanho do ponto</span><span id="pointValue">2.80x</span></div>
-      <input id="pointRange" type="range" min="0.45" max="3.6" step="0.01" value="2.80">
-    </div>
-    <div class="range-wrap" style="margin-top:10px;">
-      <div class="range-head"><span>Qualidade</span><span id="qualityValue">50%</span></div>
-      <input id="qualityRange" type="range" min="0.15" max="1" step="0.01" value="0.50">
-    </div>
-    <div class="row" style="margin-top:12px;">
-      <label>
-        <span>Colorização 3D</span>
-        <select id="colorMode">
-          <option value="sign">Sinal da função</option>
-          <option value="shell">Camadas</option>
-          <option value="density">Densidade</option>
-        </select>
-      </label>
-      <label>
-        <span>Eixos</span>
-        <select id="axesMode">
-          <option value="show">Mostrar</option>
-          <option value="hide">Ocultar</option>
-        </select>
-      </label>
-    </div>
-  </section>
-
-  <section class="panel section" style="margin-top:16px;">
-    <div class="section-title"><strong>Dados</strong></div>
-    <div class="metric-grid">
-      <div class="metric"><div class="k">Pontos 3D</div><div class="v" id="metricPoints">—</div></div>
-      <div class="metric"><div class="k">Extensão</div><div class="v" id="metricExtent">—</div></div>
-      <div class="metric"><div class="k">Nós radiais</div><div class="v" id="metricNodes">—</div></div>
-      <div class="metric"><div class="k">Camadas</div><div class="v" id="metricShells">—</div></div>
-    </div>
-    <div class="footer-note" id="entryNotes" style="margin-top:12px;"></div>
-  </section>
-
-  <section class="panel section" style="margin-top:16px;">
-    <div class="section-title"><strong>Legenda</strong></div>
-    <div class="legend" id="legend"></div>
-  </section>
+<div class="badge" style="margin-top:14px"><span class="dot"></span><span id="entryCountBadge">—</span></div>
+<section class="panel section" style="margin-top:16px;">
+<div class="section-title"><strong>Estrutura</strong></div>
+<div class="row">
+<label>
+<span>Nível principal</span>
+<select id="nSelect"></select>
+</label>
+<label>
+<span>Orbital</span>
+<select id="orbitalSelect"></select>
+</label>
+</div>
+<div class="toolbar-three" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+<button class="secondary" id="prevBtn">◀</button>
+<button class="secondary" id="nextBtn">▶</button>
+</div>
+<div class="range-wrap" style="margin-top:12px;">
+<div class="range-head"><span>Zoom</span><span id="zoomValue">0.70x</span></div>
+<input aria-label="Controlar aproximação da visualização" id="zoomRange" max="3.2" min="0.05" step="0.01" title="Controlar aproximação da visualização" type="range" value="0.70"/>
+</div>
+<div class="range-wrap" style="margin-top:10px;">
+<div class="range-head"><span>Tamanho do ponto</span><span id="pointValue">2.80x</span></div>
+<input aria-label="Controlar tamanho dos pontos" id="pointRange" max="3.6" min="0.45" step="0.01" title="Controlar tamanho dos pontos" type="range" value="2.80"/>
+</div>
+<div class="range-wrap" style="margin-top:10px;">
+<div class="range-head"><span>Qualidade</span><span id="qualityValue">50%</span></div>
+<input aria-label="Controlar qualidade da visualização" id="qualityRange" max="1" min="0.15" step="0.01" title="Controlar qualidade da visualização" type="range" value="0.50"/>
+</div>
+<div class="row" style="margin-top:12px;">
+<label>
+<span>Colorização 3D</span>
+<select id="colorMode">
+<option value="sign">Sinal da função</option>
+<option value="shell">Camadas</option>
+<option value="density">Densidade</option>
+</select>
+</label>
+<label>
+<span>Eixos</span>
+<select id="axesMode">
+<option value="show">Mostrar</option>
+<option value="hide">Ocultar</option>
+</select>
+</label>
+</div>
+</section>
+<section class="panel section" style="margin-top:16px;">
+<div class="section-title"><strong>Dados</strong></div>
+<div class="metric-grid">
+<div class="metric"><div class="k">Pontos 3D</div><div class="v" id="metricPoints">—</div></div>
+<div class="metric"><div class="k">Extensão</div><div class="v" id="metricExtent">—</div></div>
+<div class="metric"><div class="k">Nós radiais</div><div class="v" id="metricNodes">—</div></div>
+<div class="metric"><div class="k">Camadas</div><div class="v" id="metricShells">—</div></div>
+</div>
+<div class="footer-note" id="entryNotes" style="margin-top:12px;"></div>
+</section>
+<section class="panel section" style="margin-top:16px;">
+<div class="section-title"><strong>Legenda</strong></div>
+<div class="legend" id="legend"></div>
+</section>
 </aside>
-
 <main>
-  <section class="panel canvas-card">
-    <div class="canvas-wrap">
-      <canvas id="scene3d"></canvas>
-    </div>
-  </section>
-
-  <section class="views-grid">
-    <article class="panel view-card">
-      <div class="view-head"><h3>Função de onda 2D</h3><div class="view-meta" id="waveMeta">—</div></div>
-      <div class="view-body">
-        <div class="canvas-2d-wrap"><canvas id="waveCanvas" width="720" height="720"></canvas></div>
-        <div class="caption">Mapa assinado em corte plano, com valores positivos em azul e negativos em vermelho.</div>
-      </div>
-    </article>
-    <article class="panel view-card">
-      <div class="view-head"><h3>Densidade 2D</h3><div class="view-meta" id="densityMeta">—</div></div>
-      <div class="view-body">
-        <div class="canvas-2d-wrap"><canvas id="densityCanvas" width="720" height="720"></canvas></div>
-        <div class="caption">Mapa de probabilidade no mesmo corte plano, útil pra ver regiões mais prováveis do elétron.</div>
-      </div>
-    </article>
-    <article class="panel view-card">
-      <div class="view-head"><h3>Radial</h3><div class="view-meta" id="radialMeta">—</div></div>
-      <div class="view-body">
-        <div class="canvas-2d-wrap"><canvas id="radialCanvas" width="800" height="720"></canvas></div>
-        <div class="caption">Curvas de R(r) e da distribuição radial de probabilidade no mesmo painel.</div>
-      </div>
-    </article>
-  </section>
+<section class="panel canvas-card">
+<div class="canvas-wrap">
+<canvas aria-label="Visualização tridimensional de orbitais hidrogenoides." id="scene3d" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+</div>
+</section>
+<section class="views-grid">
+<article class="panel view-card">
+<div class="view-head"><h3>Função de onda 2D</h3><div class="view-meta" id="waveMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap"><canvas aria-label="Gráfico da função de onda." height="720" id="waveCanvas" role="img" width="720">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">Mapa assinado em corte plano, com valores positivos em azul e negativos em vermelho.</div>
+</div>
+</article>
+<article class="panel view-card">
+<div class="view-head"><h3>Densidade 2D</h3><div class="view-meta" id="densityMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap"><canvas aria-label="Gráfico de densidade eletrônica." height="720" id="densityCanvas" role="img" width="720">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">Mapa de probabilidade no mesmo corte plano, útil pra ver regiões mais prováveis do elétron.</div>
+</div>
+</article>
+<article class="panel view-card">
+<div class="view-head"><h3>Radial</h3><div class="view-meta" id="radialMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap"><canvas aria-label="Gráfico radial do orbital." height="720" id="radialCanvas" role="img" width="800">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">Curvas de R(r) e da distribuição radial de probabilidade no mesmo painel.</div>
+</div>
+</article>
+</section>
 </main>
-
 <script src="assets/js/app.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

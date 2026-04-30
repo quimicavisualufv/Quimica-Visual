@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
 
+<html lang="pt-BR">
+<head><meta content="Animação educacional interativa do SiMoEns sobre Lousa, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,196 +117,154 @@
   })();
 })();
 </script>
-
-  <meta charset="utf-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Redes Cristalinas</title>
-<link rel="stylesheet" href="assets/css/style1.css" />
-</head>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+</meta><meta content="Redes Cristalinas" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Lousa, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
-  <div class="wrap">
-    <div class="panel" id="painel-visual">
-      <header>
-        <h1>Lousa</h1>
-        <small>Rolar = zoom • D = resetar visão</small>
-      </header>
-      <div id="alertaEsterico" class="alert-steric" style="display:none;">
+<div class="wrap">
+<div class="panel" id="painel-visual">
+<header>
+<h1>Lousa</h1>
+<small>Rolar = zoom • D = resetar visão</small>
+</header>
+<div class="alert-steric" id="alertaEsterico" style="display:none;">
         Alerta! Estrutura improvável com alta repulsão estérica.
       </div>
-
-      <canvas id="canvas" style="touch-action:none; overscroll-behavior: contain;" width="1400" height="800"></canvas>
-    </div>
-    <div class="panel" id="painel-controles">
-      <header>
-        <h1>Controles</h1>
-        <small></small>
-      </header>
-      <div class="controls">
-        
-    
-        <label class="check" style="display:flex;align-items:center;gap:8px;margin:6px 0 10px 0;">
-          <input type="checkbox" id="projecaoOrto" checked>
+<canvas aria-label="Área de visualização interativa." height="800" id="canvas" role="img" style="touch-action:none; overscroll-behavior: contain;" width="1400">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+</div>
+<div class="panel" id="painel-controles">
+<header>
+<h1>Controles</h1>
+<small></small>
+</header>
+<div class="controls">
+<label class="check" style="display:flex;align-items:center;gap:8px;margin:6px 0 10px 0;">
+<input checked="" id="projecaoOrto" type="checkbox"/>
           Projeção ortográfica (sem perspectiva)
         </label>
-
-        <label>
+<label>
           Estrutura
           <select id="structure">
-            
 <option value="SC">Simples Cúbica (SC)</option>
-              <option value="BCC">Corpo Centrado (BCC)</option>
-              <option value="FCC" selected>Face Centrada (FCC)</option><option value="WS_BCC">Célula de Wigner‑Seitz (BCC)</option><option value="WS_FCC">Célula de Wigner‑Seitz (FCC)</option>
-              <option value="HEX_ABC">Hexagonal (ABA/ABC)</option>
-            
-            
-                            <option value="TETRA_P">Tetragonal (P)</option>
-              <option value="TETRA_I">Tetragonal (I)</option>
-              <option value="ORTHO_P">Ortorrômbico (P)</option>
-              <option value="ORTHO_I">Ortorrômbico (I)</option>
-              <option value="ORTHO_F">Ortorrômbico (F)</option>
-              <option value="ORTHO_C">Ortorrômbico (C)</option>
-              <option value="MONO_P">Monoclínico (P)</option>
-              <option value="MONO_C">Monoclínico (C)</option>
-              <option value="TRICLINIC_P">Triclínico (P)</option>
-              <option value="TRIGONAL_R">Romboédrico (R)</option>
-            
-
-            
-            
-              <option value="NaCl">NaCl (rocha-sal)</option>
-              <option value="CsCl">CsCl</option>
-              <option value="ZnS">ZnS (blenda)</option>
-            
-            
-              <option value="RUTILIO">RUTÍLIO (TiO₂)</option>
-            
-          
-              <option value="DIY">Monte a sua estrutura</option>
+<option value="BCC">Corpo Centrado (BCC)</option>
+<option selected="" value="FCC">Face Centrada (FCC)</option><option value="WS_BCC">Célula de Wigner‑Seitz (BCC)</option><option value="WS_FCC">Célula de Wigner‑Seitz (FCC)</option>
+<option value="HEX_ABC">Hexagonal (ABA/ABC)</option>
+<option value="TETRA_P">Tetragonal (P)</option>
+<option value="TETRA_I">Tetragonal (I)</option>
+<option value="ORTHO_P">Ortorrômbico (P)</option>
+<option value="ORTHO_I">Ortorrômbico (I)</option>
+<option value="ORTHO_F">Ortorrômbico (F)</option>
+<option value="ORTHO_C">Ortorrômbico (C)</option>
+<option value="MONO_P">Monoclínico (P)</option>
+<option value="MONO_C">Monoclínico (C)</option>
+<option value="TRICLINIC_P">Triclínico (P)</option>
+<option value="TRIGONAL_R">Romboédrico (R)</option>
+<option value="NaCl">NaCl (rocha-sal)</option>
+<option value="CsCl">CsCl</option>
+<option value="ZnS">ZnS (blenda)</option>
+<option value="RUTILIO">RUTÍLIO (TiO₂)</option>
+<option value="DIY">Monte a sua estrutura</option>
 </select>
-        </label>
-
-        <label>
+</label>
+<label>
           Tamanho (células / lado do triângulo)
-          <input type="range" id="cells" min="2" max="6" step="1" value="4" />
-        </label>
-
-        <label>
+          <input id="cells" max="6" min="2" step="1" type="range" value="4">
+</input></label>
+<label>
           Raio das esferas
-          <input type="range" id="radius" min="2" max="40" step="1" value="12" />
+          <input id="radius" max="40" min="2" step="1" type="range" value="12"/>
+</label>
+<div class="row">
+<label>Distância entre nós
+            <input id="spacing" max="300" min="40" step="2" type="range" value="140"/>
+</label>
+<label>Brilho
+            <input id="light" max="1" min="0" step="0.01" type="range" value="0.65"/>
+</label>
+</div>
+<label class="check">
+<input checked="" id="somenteCelula" type="checkbox"/> Recortar à célula unitária
         </label>
-
-        <div class="row">
-          <label>Distância entre nós
-            <input type="range" id="spacing" min="40" max="300" step="2" value="140" />
-          </label>
-          <label>Brilho
-            <input type="range" id="light" min="0" max="1" step="0.01" value="0.65" />
-          </label>
-        </div>
-
-        
-        
-
-        <label class="check">
-          <input type="checkbox" id="somenteCelula" checked> Recortar à célula unitária
+<label class="check">
+<input id="apenasUmaFace" type="checkbox"/> Mostrar apenas uma face da célula
         </label>
-        <label class="check">
-          <input type="checkbox" id="apenasUmaFace"> Mostrar apenas uma face da célula
-        </label>
-        <div class="row" id="faceRow" style="display:flex;gap:8px;align-items:center;margin:-6px 0 6px 0;">
-          <label style="flex:1 1 auto">Face
+<div class="row" id="faceRow" style="display:flex;gap:8px;align-items:center;margin:-6px 0 6px 0;">
+<label style="flex:1 1 auto">Face
             <select id="seletorFace">
-              <option value="+Z">Frontal (+Z)</option>
-              <option value="-Z">Traseira (-Z)</option>
-              <option value="+X">Direita (+X)</option>
-              <option value="-X">Esquerda (-X)</option>
-              <option value="+Y">Topo (+Y)</option>
-              <option value="-Y">Base (-Y)</option>
-            </select>
-          </label>
-        </div>
-
-        <label class="check">
-          <input type="checkbox" id="mostrarArestas" checked> Mostrar arestas da célula
+<option value="+Z">Frontal (+Z)</option>
+<option value="-Z">Traseira (-Z)</option>
+<option value="+X">Direita (+X)</option>
+<option value="-X">Esquerda (-X)</option>
+<option value="+Y">Topo (+Y)</option>
+<option value="-Y">Base (-Y)</option>
+</select>
+</label>
+</div>
+<label class="check">
+<input checked="" id="mostrarArestas" type="checkbox"/> Mostrar arestas da célula
         </label>
-        
-        
-        
-        <label class="check">
-          <input type="checkbox" id="editBonds"> Adicionar ligações (clique 2 átomos)
+<label class="check">
+<input id="editBonds" type="checkbox"/> Adicionar ligações (clique 2 átomos)
         </label>
-        <label class="check">
-          <input type="checkbox" id="delBonds"> Remover ligações (clique 2 átomos)
+<label class="check">
+<input id="delBonds" type="checkbox"/> Remover ligações (clique 2 átomos)
         </label>
-        <label class="check">
-          <input type="checkbox" id="showBonds" checked> Mostrar ligações
+<label class="check">
+<input checked="" id="showBonds" type="checkbox"/> Mostrar ligações
         </label>
-        <div class="row">
-          <button id="exportarLigacoes">Exportar ligações (código)</button>
-          <button id="clearBonds">Limpar ligações desta estrutura</button>
-        </div>
-        
-        
-        <label class="check">
-          <input type="checkbox" id="delAtom"> Remover átomo (clique no átomo)
+<div class="row">
+<button id="exportarLigacoes">Exportar ligações (código)</button>
+<button id="clearBonds">Limpar ligações desta estrutura</button>
+</div>
+<label class="check">
+<input id="delAtom" type="checkbox"/> Remover átomo (clique no átomo)
         </label>
-        <label class="check">
-          <input type="checkbox" id="addAtom"> Adicionar átomo (clique para escolher posição)
+<label class="check">
+<input id="addAtom" type="checkbox"/> Adicionar átomo (clique para escolher posição)
         </label>
-        <div class="row small">
-          <label for="addAtomType" style="min-width:140px">Tipo do átomo:</label>
-          <select id="addAtomType"></select>
-        </div>
-    
-        <div class="row">
-          
-          
-          <button id="exportAllTxt" class="btn">Exportar TUDO (txt)</button>
-        </div>
-        <textarea id="exportArea" style="display:none;width:100%;height:110px"></textarea>
-
-        <div class="legend">
-          <span class="pill"><span class="dot" style="background:#ef4444"></span> Eixo X</span>
-          <span class="pill"><span class="dot" style="background:#22c55e"></span> Eixo Y</span>
-          <span class="pill"><span class="dot" style="background:#3b82f6"></span> Eixo Z</span>
-          <span class="pill"><span class="dot" style="background:#ff6b6b"></span> Camada A</span>
-          <span class="pill"><span class="dot" style="background:#cfd4dc"></span> Camada B</span>
-          <span class="pill"><span class="dot" style="background:#60a5fa"></span> Camada C</span>
-        </div>
-
-        
-        <div class="row3">
-          <label>
-            Rotação (X): <span id="angleXValue" class="value">52°</span>
-            <input type="range" id="angleX" min="-180" max="180" step="1" value="52" />
-          </label>
-          <label>
-            Rotação (Y): <span id="angleYValue" class="value">-34°</span>
-            <input type="range" id="angleY" min="-180" max="180" step="1" value="-34" />
-          </label>
-          <label>
-            Rotação (Z): <span id="angleZValue" class="value">0°</span>
-            <input type="range" id="angleZ" min="-180" max="180" step="1" value="0" />
-          </label>
-        </div>
-
-      </div>
-      <div class="footer">
+<div class="row small">
+<label for="addAtomType" style="min-width:140px">Tipo do átomo:</label>
+<select id="addAtomType"></select>
+</div>
+<div class="row">
+<button class="btn" id="exportAllTxt">Exportar TUDO (txt)</button>
+</div>
+<textarea aria-label="Projeção ortográfica (sem perspectiva) Estrutura Simples Cúbica (SC) Corpo Centrado (BCC) Face Centrada (FCC) Célula de " id="exportArea" style="display:none;width:100%;height:110px" title="Projeção ortográfica (sem perspectiva) Estrutura Simples Cúbica (SC) Corpo Centrado (BCC) Face Centrada (FCC) Célula de "></textarea>
+<div class="legend">
+<span class="pill"><span class="dot" style="background:#ef4444"></span> Eixo X</span>
+<span class="pill"><span class="dot" style="background:#22c55e"></span> Eixo Y</span>
+<span class="pill"><span class="dot" style="background:#3b82f6"></span> Eixo Z</span>
+<span class="pill"><span class="dot" style="background:#ff6b6b"></span> Camada A</span>
+<span class="pill"><span class="dot" style="background:#cfd4dc"></span> Camada B</span>
+<span class="pill"><span class="dot" style="background:#60a5fa"></span> Camada C</span>
+</div>
+<div class="row3">
+<label>
+            Rotação (X): <span class="value" id="angleXValue">52°</span>
+<input id="angleX" max="180" min="-180" step="1" type="range" value="52">
+</input></label>
+<label>
+            Rotação (Y): <span class="value" id="angleYValue">-34°</span>
+<input id="angleY" max="180" min="-180" step="1" type="range" value="-34">
+</input></label>
+<label>
+            Rotação (Z): <span class="value" id="angleZValue">0°</span>
+<input id="angleZ" max="180" min="-180" step="1" type="range" value="0">
+</input></label>
+</div>
+</div>
+<div class="footer">
         Dica: use os sliders de rotação para controle fino do ângulo. O mouse continua funcionando para ajustes rápidos (X/Y).
       </div>
-    </div>
-  </div>
-
+</div>
+</div>
 <script src="assets/js/motor-render.js"></script>
-
 <script src="assets/js/estruturas-base.js"></script>
-
 <script src="assets/js/camadas-e-intro.js"></script>
-
-
-
 <script src="assets/js/painel-diy.js"></script>
-
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
 </body>
 </html>

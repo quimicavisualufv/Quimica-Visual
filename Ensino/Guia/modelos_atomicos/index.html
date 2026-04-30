@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
 
+<html lang="pt-BR">
+<head><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,17 +117,16 @@
   })();
 })();
 </script>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+<meta charset="utf-8"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Modelos Atômicos • de Dalton a Schrödinger</title>
-<link rel="stylesheet" href="assets/css/styles.css">
-</head>
+<link href="assets/css/styles.css" rel="stylesheet"/>
+<meta content="Modelos Atômicos • de Dalton a Schrödinger" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
 <body>
 <div class="app">
 <section class="panel stage">
 <div class="view-wrap">
-<canvas id="view"></canvas>
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." id="view" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
 <div class="guide-float" id="guideFloat">
 <div class="guide-float-step" id="guideFloatStep">Passo 1 de 16</div>
 <div class="guide-float-title" id="guideFloatTitle">Panorama do percurso</div>
@@ -166,18 +165,18 @@
 <section class="section">
 <h3>Visualização</h3>
 <div>
-<label>Zoom<input id="zoom" type="range" min="0.8" max="3.4" step="0.01" value="0.8"></label>
+<label>Zoom<input id="zoom" max="3.4" min="0.8" step="0.01" type="range" value="0.8"/></label>
 </div>
 <div class="grid2" style="margin-top:10px">
-<label class="check"><input id="showAxes" type="checkbox" checked> Mostrar eixos</label>
-<label class="check"><input id="showLabels" type="checkbox" checked> Mostrar rótulos</label>
+<label class="check"><input checked="" id="showAxes" type="checkbox"/> Mostrar eixos</label>
+<label class="check"><input checked="" id="showLabels" type="checkbox"/> Mostrar rótulos</label>
 </div>
 <div class="grid2" style="display:none">
-<label>Rotação automática<input id="autorotate" type="range" min="0" max="1.6" step="0.01" value="0"></label>
-<label>Inclinação<input id="pitch" type="range" min="-1.2" max="1.2" step="0.01" value="0.32"></label>
-<label>Brilho da cena<input id="glow" type="range" min="0.2" max="1.6" step="0.01" value="0.9"></label>
-<label class="check"><input id="showWave" type="checkbox" checked> Mostrar camada ondulatória</label>
-<label class="check"><input id="showTrails" type="checkbox" checked> Mostrar trilhas</label>
+<label>Rotação automática<input id="autorotate" max="1.6" min="0" step="0.01" type="range" value="0"/></label>
+<label>Inclinação<input id="pitch" max="1.2" min="-1.2" step="0.01" type="range" value="0.32"/></label>
+<label>Brilho da cena<input id="glow" max="1.6" min="0.2" step="0.01" type="range" value="0.9"/></label>
+<label class="check"><input checked="" id="showWave" type="checkbox"/> Mostrar camada ondulatória</label>
+<label class="check"><input checked="" id="showTrails" type="checkbox"/> Mostrar trilhas</label>
 <button class="ghost" id="resetView" type="button">Resetar câmera</button>
 <button class="ghost" id="fitScene" type="button">Reenquadrar</button>
 </div>
@@ -192,8 +191,8 @@
 <div class="pill-mini" id="speciesTag">H</div>
 </div>
 <div class="grid2">
-<label>Número atômico Z<input id="zValue" type="range" min="1" max="8" step="1" value="1"></label>
-<label>Densidade da nuvem<input id="sampleCount" type="range" min="900" max="3200" step="100" value="1600"></label>
+<label>Número atômico Z<input id="zValue" max="8" min="1" step="1" type="range" value="1"/></label>
+<label>Densidade da nuvem<input id="sampleCount" max="3200" min="900" step="100" type="range" value="1600"/></label>
 </div>
 <div class="grid3" style="margin-top:10px">
 <label>n<select id="nValue"></select></label>
@@ -201,14 +200,14 @@
 <label>m<select id="mValue"></select></label>
 </div>
 <div class="view-switch" id="orbitalViewSwitch">
-<button type="button" data-view="2d" class="active">Corte 2D</button>
-<button type="button" data-view="3d">Orbital 3D</button>
+<button class="active" data-view="2d" type="button">Corte 2D</button>
+<button data-view="3d" type="button">Orbital 3D</button>
 </div>
 <div class="orbital-presets" id="orbitalPresets"></div>
 <div class="card-top" style="margin-top:12px"><h3 style="margin:0;font-size:12px">Galeria dos orbitais do hidrogênio</h3><div class="pill-mini" id="orbitalAtlasTag">corte analítico</div></div>
 <div class="orbital-atlas-grid" id="orbitalAtlas"></div>
 <div class="stats-grid" id="statsGrid"></div>
-<canvas id="radialGraph" width="360" height="180"></canvas>
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." height="180" id="radialGraph" role="img" width="360">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
 <div class="note" id="orbitalNote"></div>
 </section>
 <section class="section" style="display:none">
@@ -223,3 +222,7 @@
 </aside>
 </div>
 <script src="assets/js/app.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
+</body>
+</html>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
+<head><meta charset="utf-8"><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description">
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,12 +116,12 @@
   })();
 })();
 </script>
-<meta charset="utf-8"/>
-<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport">
 <title>Geometria Molecular 3D </title>
-<link href="assets/css/style1.css" rel="stylesheet"/>
-<meta content="Geometria Molecular 3D" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
+<link href="assets/css/style1.css" rel="stylesheet">
+<meta content="Geometria Molecular 3D" property="og:title"><meta content="Guia educacional do SiMoEns sobre Geometria Molecular 3D, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"></head>
 <body>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
 <div class="app">
 <aside>
 <h1>Geometria Molecular 3D</h1>
@@ -149,30 +148,30 @@
 </optgroup>
 </select>
 <div class="row">
-<div><label for="bondLen">Comprimento de ligação</label><input id="bondLen" max="2.2" min="0.6" step="0.01" type="range" value="1.25"/></div>
-<div><label for="size">Raio do átomo central</label><input id="size" max="1.2" min="0.35" step="0.01" type="range" value="0.64"/></div>
+<div><label for="bondLen">Comprimento de ligação</label><input id="bondLen" max="2.2" min="0.6" step="0.01" type="range" value="1.25"></div>
+<div><label for="size">Raio do átomo central</label><input id="size" max="1.2" min="0.35" step="0.01" type="range" value="0.64"></div>
 </div>
 <div class="row">
-<div><label for="ligandRadius">Raio dos ligantes</label><input id="ligandRadius" max="0.8" min="0.18" step="0.01" type="range" value="0.44"/></div>
-<div><label for="bondRadius">Raio da ligação</label><input id="bondRadius" max="0.18" min="0.03" step="0.005" type="range" value="0.085"/></div>
+<div><label for="ligandRadius">Raio dos ligantes</label><input id="ligandRadius" max="0.8" min="0.18" step="0.01" type="range" value="0.44"></div>
+<div><label for="bondRadius">Raio da ligação</label><input id="bondRadius" max="0.18" min="0.03" step="0.005" type="range" value="0.085"></div>
 </div>
 <div class="row">
-<div><label for="lpScale">Tamanho do par não-ligante</label><input id="lpScale" max="1.8" min="0.6" step="0.01" type="range" value="1.0"/></div>
-<div><label for="ambient">Luz ambiente</label><input id="ambient" max="1" min="0" step="0.01" type="range" value="0.45"/></div>
+<div><label for="lpScale">Tamanho do par não-ligante</label><input id="lpScale" max="1.8" min="0.6" step="0.01" type="range" value="1.0"></div>
+<div><label for="ambient">Luz ambiente</label><input id="ambient" max="1" min="0" step="0.01" type="range" value="0.45"></div>
 </div>
 <div class="row">
-<div><label for="sat">Saturação</label><input id="sat" max="2" min="0" step="0.01" type="range" value="1.25"/></div>
-<div><label for="specK">Brilho especular</label><input id="specK" max="0.6" min="0" step="0.005" type="range" value="0"/></div>
+<div><label for="sat">Saturação</label><input id="sat" max="2" min="0" step="0.01" type="range" value="1.25"></div>
+<div><label for="specK">Brilho especular</label><input id="specK" max="0.6" min="0" step="0.005" type="range" value="0"></div>
 </div>
 <div class="row">
-<div><label for="refl">Reflexo (ambiente)</label><input id="refl" max="0.8" min="0" step="0.01" type="range" value="0"/></div>
+<div><label for="refl">Reflexo (ambiente)</label><input id="refl" max="0.8" min="0" step="0.01" type="range" value="0"></div>
 <div></div>
 </div>
 <div class="row">
-<div><label for="ligandColor">Cor dos ligantes</label><input id="ligandColor" type="color" value="#0b2e87"/></div>
-<div><label for="lpColor">Cor dos pares não-ligantes</label><input id="lpColor" type="color" value="#1100ff"/></div>
+<div><label for="ligandColor">Cor dos ligantes</label><input id="ligandColor" type="color" value="#0b2e87"></div>
+<div><label for="lpColor">Cor dos pares não-ligantes</label><input id="lpColor" type="color" value="#1100ff"></div>
 </div>
-<div><label for="coreColor">Cor do átomo central</label><input id="coreColor" type="color" value="#ffffff"/></div>
+<div><label for="coreColor">Cor do átomo central</label><input id="coreColor" type="color" value="#ffffff"></div>
 <div class="row">
 <div>
 <label for="bondType">Tipo de ligação</label>
@@ -183,13 +182,13 @@
 </select>
 </div>
 <div>
-<label class="small"><input checked="" id="showAxes" type="checkbox"/> Mostrar eixos XYZ</label>
+<label class="small"><input checked="" id="showAxes" type="checkbox"> Mostrar eixos XYZ</label>
 </div>
 <div>
-<label class="small"><input checked="" id="showAngles" type="checkbox"/> Mostrar ângulos entre ligações</label>
+<label class="small"><input checked="" id="showAngles" type="checkbox"> Mostrar ângulos entre ligações</label>
 </div>
 <div>
-<label class="small"><input id="lightBgQuick" type="checkbox"/> Fundo branco</label>
+<label class="small"><input id="lightBgQuick" type="checkbox"> Fundo branco</label>
 </div>
 </div>
 <button class="btn" id="save">Salvar imagem (PNG)</button>
@@ -197,17 +196,17 @@
 <fieldset>
 <legend>Fundo espacial</legend>
 <div class="row">
-<div><label for="bgBrightness">Brilho</label><input id="bgBrightness" max="1.6" min="0" step="0.01" type="range" value="0"/></div>
-<div><label for="bgStars">Densidade de estrelas</label><input id="bgStars" max="2.5" min="0" step="0.01" type="range" value="0"/></div>
+<div><label for="bgBrightness">Brilho</label><input id="bgBrightness" max="1.6" min="0" step="0.01" type="range" value="0"></div>
+<div><label for="bgStars">Densidade de estrelas</label><input id="bgStars" max="2.5" min="0" step="0.01" type="range" value="0"></div>
 </div>
-<div style="margin-top:10px"><label class="small"><input id="lightBg" type="checkbox"/> Fundo branco</label></div>
+<div style="margin-top:10px"><label class="small"><input id="lightBg" type="checkbox"> Fundo branco</label></div>
 </fieldset>
 <fieldset>
 <legend>Rotação do modelo</legend>
 <div class="row3">
-<div><label for="rotXS">Ângulo X (°)</label><input id="rotXS" max="180" min="-180" step="1" type="range" value="0"/></div>
-<div><label for="rotYS">Ângulo Y (°)</label><input id="rotYS" max="180" min="-180" step="1" type="range" value="0"/></div>
-<div class="rotZControl"><label for="rotZS">Rotação Z (°)</label><input id="rotZS" max="360" min="0" step="1" type="range" value="0"/></div>
+<div><label for="rotXS">Ângulo X (°)</label><input id="rotXS" max="180" min="-180" step="1" type="range" value="0"></div>
+<div><label for="rotYS">Ângulo Y (°)</label><input id="rotYS" max="180" min="-180" step="1" type="range" value="0"></div>
+<div class="rotZControl"><label for="rotZS">Rotação Z (°)</label><input id="rotZS" max="360" min="0" step="1" type="range" value="0"></div>
 </div>
 <button class="btn" id="rotReset">Resetar rotação</button>
 </fieldset>
@@ -233,7 +232,7 @@
 <div class="zrHint">Atalho rápido: gira o modelo em torno de Z sem mexer na câmera.</div>
 </div>
 <div class="tutorialToggles" id="tutorialToggles">
-<label><input id="tutorialLightBg" type="checkbox"/> Fundo branco</label>
+<label><input id="tutorialLightBg" type="checkbox"> Fundo branco</label>
 </div>
 <div class="tutorialProgress"><i id="tutorialProgressBar"></i></div>
 <div class="tutorialActions">
@@ -245,10 +244,10 @@
 </div>
 </div>
 </aside>
-<main>
-<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
-<div aria-hidden="true" id="miniAxesWrap"><canvas aria-label="Miniatura dos eixos de orientação 3D." id="miniAxes" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
-<div class="axesToggle" id="axesToggle"><label><input checked="" id="axesToggleChk" type="checkbox"/> Mostrar eixos</label></div>
+<main id="conteudo-principal">
+<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img" aria-describedby="gl-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="gl-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Geometria Molecular 3D. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div aria-hidden="true" id="miniAxesWrap"><canvas aria-label="Miniatura dos eixos de orientação 3D." id="miniAxes" role="img" aria-describedby="miniAxes-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="miniAxes-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Geometria Molecular 3D. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p></div>
+<div class="axesToggle" id="axesToggle"><label><input checked="" id="axesToggleChk" type="checkbox"> Mostrar eixos</label></div>
 <div class="axisLabel" id="axisXLabel" style="color:#ff7a7a">x</div>
 <div class="axisLabel" id="axisYLabel" style="color:#6dffb0">y</div>
 <div class="axisLabel" id="axisZLabel" style="color:#7ec8ff">z</div>

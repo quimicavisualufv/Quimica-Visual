@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Animação educacional interativa do SiMoEns sobre Translação — Células Unitárias (contagem por fórmula), com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
-<meta charset="utf-8"/>
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Translação — Células Unitárias (contagem por fórmula), com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Translação — Células Unitárias (contagem por fórmula)</title>
 <link href="assets/css/style1.css" rel="stylesheet"/>
 <meta content="Translação — Células Unitárias (contagem por fórmula)" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Translação — Células Unitárias (contagem por fórmula), com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
-<div class="wrap">
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
+<div role="main" class="wrap" id="conteudo-principal">
 <div class="panel">
-<header>
+<header role="presentation">
 <h1>Translação — Células Unitárias</h1>
 <small>drag = girar • scroll = zoom • D = reset • ortográfica</small>
 </header>
-<canvas aria-label="Visualização interativa de célula unitária e contagem por simetria." height="840" id="sceneCanvas" role="img" width="1400">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<canvas aria-label="Visualização interativa de célula unitária e contagem por simetria." height="840" id="sceneCanvas" role="img" width="1400" aria-describedby="sceneCanvas-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="sceneCanvas-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Translação — Células Unitárias (contagem por fórmula). Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 </div>
 <div class="panel" id="right">
-<header><h1>Controles</h1><small>Método da simetria de translação</small></header>
+<header role="presentation"><h2>Controles</h2><small>Método da simetria de translação</small></header>
 <div class="ui"><label>Translação X (a·u)
           <input id="tx" max="1" min="-1" step="0.01" type="range" value="0"/>
 </label><label>Translação Y (b·u)

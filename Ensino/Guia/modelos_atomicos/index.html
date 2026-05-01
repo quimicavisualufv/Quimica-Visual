@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
+<head><meta charset="utf-8"><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description">
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,16 +116,16 @@
   })();
 })();
 </script>
-<meta charset="utf-8"/>
-<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport">
 <title>Modelos Atômicos • de Dalton a Schrödinger</title>
-<link href="assets/css/styles.css" rel="stylesheet"/>
-<meta content="Modelos Atômicos • de Dalton a Schrödinger" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
+<link href="assets/css/styles.css" rel="stylesheet">
+<meta content="Modelos Atômicos • de Dalton a Schrödinger" property="og:title"><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"><style>.simoens-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}</style></head>
 <body>
-<div class="app">
-<section class="panel stage">
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
+<div role="main" class="app" id="conteudo-principal">
+<div class="panel stage"><span class="simoens-visually-hidden">Painel interativo</span>
 <div class="view-wrap">
-<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." id="view" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." id="view" role="img" aria-describedby="view-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="view-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Modelos Atômicos • de Dalton a Schrödinger. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 <div class="guide-float" id="guideFloat">
 <div class="guide-float-step" id="guideFloatStep">Passo 1 de 16</div>
 <div class="guide-float-title" id="guideFloatTitle">Panorama do percurso</div>
@@ -140,8 +139,8 @@
 <div class="overlay" id="overlay"></div>
 <div class="equation-banner" id="equationBanner"><span class="eq-main">ψ<sub>n,l,m</sub>(r,θ,φ) = R<sub>n,l</sub>(r)·Y<sub>l</sub><sup>m</sup>(θ,φ)</span></div>
 </div>
-</section>
-<aside class="panel sidebar">
+</div>
+<div aria-label="Painel lateral" class="panel sidebar" role="group">
 <div class="head">
 <div>
 <h1>Modelos Atômicos</h1>
@@ -165,18 +164,18 @@
 <section class="section">
 <h3>Visualização</h3>
 <div>
-<label>Zoom<input id="zoom" max="3.4" min="0.8" step="0.01" type="range" value="0.8"/></label>
+<label>Zoom<input id="zoom" max="3.4" min="0.8" step="0.01" type="range" value="0.8"></label>
 </div>
 <div class="grid2" style="margin-top:10px">
-<label class="check"><input checked="" id="showAxes" type="checkbox"/> Mostrar eixos</label>
-<label class="check"><input checked="" id="showLabels" type="checkbox"/> Mostrar rótulos</label>
+<label class="check"><input checked="" id="showAxes" type="checkbox"> Mostrar eixos</label>
+<label class="check"><input checked="" id="showLabels" type="checkbox"> Mostrar rótulos</label>
 </div>
 <div class="grid2" style="display:none">
-<label>Rotação automática<input id="autorotate" max="1.6" min="0" step="0.01" type="range" value="0"/></label>
-<label>Inclinação<input id="pitch" max="1.2" min="-1.2" step="0.01" type="range" value="0.32"/></label>
-<label>Brilho da cena<input id="glow" max="1.6" min="0.2" step="0.01" type="range" value="0.9"/></label>
-<label class="check"><input checked="" id="showWave" type="checkbox"/> Mostrar camada ondulatória</label>
-<label class="check"><input checked="" id="showTrails" type="checkbox"/> Mostrar trilhas</label>
+<label>Rotação automática<input id="autorotate" max="1.6" min="0" step="0.01" type="range" value="0"></label>
+<label>Inclinação<input id="pitch" max="1.2" min="-1.2" step="0.01" type="range" value="0.32"></label>
+<label>Brilho da cena<input id="glow" max="1.6" min="0.2" step="0.01" type="range" value="0.9"></label>
+<label class="check"><input checked="" id="showWave" type="checkbox"> Mostrar camada ondulatória</label>
+<label class="check"><input checked="" id="showTrails" type="checkbox"> Mostrar trilhas</label>
 <button class="ghost" id="resetView" type="button">Resetar câmera</button>
 <button class="ghost" id="fitScene" type="button">Reenquadrar</button>
 </div>
@@ -191,8 +190,8 @@
 <div class="pill-mini" id="speciesTag">H</div>
 </div>
 <div class="grid2">
-<label>Número atômico Z<input id="zValue" max="8" min="1" step="1" type="range" value="1"/></label>
-<label>Densidade da nuvem<input id="sampleCount" max="3200" min="900" step="100" type="range" value="1600"/></label>
+<label>Número atômico Z<input id="zValue" max="8" min="1" step="1" type="range" value="1"></label>
+<label>Densidade da nuvem<input id="sampleCount" max="3200" min="900" step="100" type="range" value="1600"></label>
 </div>
 <div class="grid3" style="margin-top:10px">
 <label>n<select id="nValue"></select></label>
@@ -207,7 +206,7 @@
 <div class="card-top" style="margin-top:12px"><h3 style="margin:0;font-size:12px">Galeria dos orbitais do hidrogênio</h3><div class="pill-mini" id="orbitalAtlasTag">corte analítico</div></div>
 <div class="orbital-atlas-grid" id="orbitalAtlas"></div>
 <div class="stats-grid" id="statsGrid"></div>
-<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." height="180" id="radialGraph" role="img" width="360">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." height="180" id="radialGraph" role="img" width="360" aria-describedby="radialGraph-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="radialGraph-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Modelos Atômicos • de Dalton a Schrödinger. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 <div class="note" id="orbitalNote"></div>
 </section>
 <section class="section" style="display:none">
@@ -219,7 +218,7 @@
 <div class="note">Arraste a lousa para rotacionar o modelo. Use as setas do teclado para avançar ou voltar. Este arquivo concentra a sequência histórica dos modelos atômicos e dos experimentos que levaram ao átomo moderno.</div>
 </section>
 </div>
-</aside>
+</div>
 </div>
 <script src="assets/js/app.js"></script>
 <script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>

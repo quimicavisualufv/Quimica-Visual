@@ -1,4 +1,5 @@
-<html lang="pt-BR"><head><meta content="Animação educacional interativa do SiMoEns sobre Estruturas Blobby, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Estruturas Blobby, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -114,13 +115,14 @@
   })();
 })();
 </script>
-<meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
 <title>Visualizador de Orbitais atômicos e moleculares</title>
 <link href="assets/css/styles.css" rel="stylesheet"/>
 <meta content="Visualizador de Orbitais atômicos e moleculares" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Estruturas Blobby, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
-<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
+<main style="display:contents" id="conteudo-principal">
+<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img" aria-describedby="gl-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="gl-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Visualizador de Orbitais atômicos e moleculares. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 <svg class="axesOverlay" id="axesOverlay" preserveaspectratio="xMidYMid meet" viewbox="0 0 152 152">
 <defs>
 <marker id="axisArrowX" markerheight="8" markerunits="userSpaceOnUse" markerwidth="8" orient="auto" refx="6.2" refy="4">
@@ -247,6 +249,7 @@
 <text class="gizmoLabel gizmoLabelY" id="gizmoLabelY" x="421.11" y="139.27">Y</text>
 <text class="gizmoLabel gizmoLabelZ" id="gizmoLabelZ" x="557.55" y="295.72">Z</text>
 </svg>
+</main>
 <script src="assets/js/app.js"></script>
 <script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
 <script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>

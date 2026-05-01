@@ -9,7 +9,7 @@
   .wrap{display:grid; grid-template-columns:1fr 360px; gap:14px; height:100%; padding:12px}
   .panel{background:var(--panel); border:1px solid var(--outline); border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.35)}
   header{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--outline)}
-  header h1{font-size:16px; margin:0; letter-spacing:.25px}
+  header h1, header h2{font-size:16px; margin:0; letter-spacing:.25px}
   header small{color:var(--muted)}
   #sceneCanvas{display:block; width:100%; flex:1; height:auto}
   .ui{padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px; align-content:start; flex:1; min-height:0; overflow:auto;}

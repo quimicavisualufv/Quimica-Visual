@@ -32,7 +32,6 @@ function setActive(id){
     const el = document.getElementById(btnId);
     const on = btnId === id;
     el.setAttribute('aria-selected', on ? 'true' : 'false');
-    el.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
 }
 

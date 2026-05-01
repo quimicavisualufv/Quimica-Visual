@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Animação educacional interativa do SiMoEns sobre Geometria Molecular 3D, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
-<meta charset="utf-8"/>
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Geometria Molecular 3D, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Geometria Molecular 3D</title>
 <link href="assets/css/style1.css" rel="stylesheet"/>
 <meta content="Geometria Molecular 3D" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Geometria Molecular 3D, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
 <div class="app">
 <aside>
 <h1>Geometria Molecular 3D</h1>
@@ -65,7 +64,8 @@
 </div>
 <div></div>
 </div>
-<input aria-label="Mostrar ou ocultar eixos XYZ" checked="" hidden="" id="showAxes" title="Mostrar ou ocultar eixos XYZ" type="checkbox"/>
+<input checked="" hidden="" id="showAxes" type="checkbox"/>
+<label class="simoens-visually-hidden" for="showAxes">Mostrar eixo cartesiano</label>
 <div class="row">
 <div><label class="small"><input checked="" id="showAngles" type="checkbox"/> Mostrar ângulos</label></div>
 <div><label class="small"><input id="lightBgQuick" type="checkbox"/> Fundo branco</label></div>
@@ -92,15 +92,15 @@
 </div>
 </div>
 </aside>
-<main>
-<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
-<canvas aria-label="Camada visual dos ângulos moleculares." id="angleOverlay" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<main id="conteudo-principal">
+<canvas aria-label="Visualização 3D interativa da geometria molecular." id="gl" role="img" aria-describedby="gl-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="gl-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Geometria Molecular 3D. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<canvas aria-label="Camada visual dos ângulos moleculares." id="angleOverlay" role="img" aria-describedby="angleOverlay-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="angleOverlay-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Geometria Molecular 3D. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 <label class="viewerToggle axesToggle"><input checked="" id="axesToggleChk" type="checkbox"/> <span>Mostrar eixo</span></label>
-<div aria-label="Ângulos da molécula" class="angleLegendPanel" id="angleLegendPanel"></div>
+<div aria-label="Ângulos da molécula" class="angleLegendPanel" id="angleLegendPanel" role="group"></div>
 <div class="axisLabel" id="axisXLabel" style="color:#ff6262">X</div>
 <div class="axisLabel" id="axisYLabel" style="color:#62ff82">Y</div>
 <div class="axisLabel" id="axisZLabel" style="color:#6ea7ff">Z</div>
-<div aria-hidden="true" id="miniAxesWrap"><canvas aria-label="Miniatura dos eixos de orientação 3D." id="miniAxes" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div aria-hidden="true" id="miniAxesWrap"><canvas aria-label="Miniatura dos eixos de orientação 3D." id="miniAxes" role="img" aria-describedby="miniAxes-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="miniAxes-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Geometria Molecular 3D. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p></div>
 <div class="hud" id="hud">—</div>
 </main>
 </div>

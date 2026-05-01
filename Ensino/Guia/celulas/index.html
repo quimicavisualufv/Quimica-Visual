@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
+<head><meta charset="utf-8"><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description">
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,14 +116,14 @@
   })();
 })();
 </script>
-<meta charset="utf-8"/>
-<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport">
 <title>Células unitárias e parâmetros de rede</title>
-<link href="assets/css/style1.css" rel="stylesheet"/>
-<meta content="Células unitárias e parâmetros de rede" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/></head>
+<link href="assets/css/style1.css" rel="stylesheet">
+<meta content="Células unitárias e parâmetros de rede" property="og:title"><meta content="Guia educacional do SiMoEns sobre Redes Cristalinas, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"><style>.simoens-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}</style></head>
 <body>
-<div class="app">
-<header>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
+<div role="main" class="app" id="conteudo-principal">
+<header role="presentation">
 <div class="brand">
 <div aria-hidden="true" class="logo"></div>
 <div>
@@ -158,7 +157,7 @@
 <button class="btnGhost" id="resetBtn" title="Voltar a câmera ao padrão">Reset câmera</button>
 </header>
 <div class="main">
-<aside class="card sidebar sidebarLeft" id="leftCard">
+<div aria-label="Painel lateral" class="card sidebar sidebarLeft" id="leftCard" role="group">
 <div class="sideTop">
 <h2 id="sideH2">Parte 1 — Células unitárias em 3D</h2>
 <p>Você está vendo uma célula unitária construída por vetores (a, b, c) e ângulos (α, β, γ).</p>
@@ -174,17 +173,17 @@
 </div>
 <div class="footerNav">
 <button class="btnGhost" id="prevBtn">◀ Anterior</button>
-<div aria-label="Progresso do tutorial" class="progress"><div class="bar" id="bar"></div></div>
+<div aria-label="Progresso do tutorial" class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" id="bar"></div></div>
 <button class="btnAccent" id="nextBtn">Próximo ▶</button>
 </div>
-</aside>
-<section class="card viewer" id="viewerCard">
+</div>
+<section class="card viewer" id="viewerCard"><h2 class="simoens-visually-hidden">Seção complementar</h2>
 <div class="viewerTop">&gt;
           <div class="mini"><b>Parâmetros:</b> <span id="paramReadout">a=1.00 b=1.00 c=1.00 | α=90° β=90° γ=90°</span></div>
 </div>
-<canvas aria-label="Visualização 3D da célula unitária" id="cv" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<canvas aria-label="Visualização 3D da célula unitária" id="cv" role="img" aria-describedby="cv-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="cv-descricao-acessivel" style="position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;">Visualização interativa relacionada a Células unitárias e parâmetros de rede. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
 </section>
-<aside class="card sidebar sidebarRight" id="rightCard">
+<div aria-label="Painel lateral" class="card sidebar sidebarRight" id="rightCard" role="group">
 <div class="sideTop">
 <h2>Controles</h2>
 <p>Ajuste dimensões, ângulos (quando liberados pelo sistema), e marque opções visuais.</p>
@@ -193,57 +192,57 @@
 <div class="row">
 <div class="field" id="fa">
 <div class="label"><b>a</b><em><span id="va">1.00</span></em></div>
-<input aria-label="Ajustar parâmetro de rede a" id="sa" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede a" type="range" value="1.00"/>
+<input aria-label="Ajustar parâmetro de rede a" id="sa" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede a" type="range" value="1.00">
 </div>
 <div class="field" id="fb">
 <div class="label"><b>b</b><em><span id="vb">1.00</span></em></div>
-<input aria-label="Ajustar parâmetro de rede b" id="sb" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede b" type="range" value="1.00"/>
+<input aria-label="Ajustar parâmetro de rede b" id="sb" max="2.00" min="0.60" step="0.01" title="Ajustar parâmetro de rede b" type="range" value="1.00">
 </div>
 </div>
 <div class="row">
 <div class="field" id="fc">
 <div class="label"><b>c</b><em><span id="vc">1.00</span></em></div>
-<input aria-label="Ajustar parâmetro de rede c" id="sc" max="2.40" min="0.60" step="0.01" title="Ajustar parâmetro de rede c" type="range" value="1.00"/>
+<input aria-label="Ajustar parâmetro de rede c" id="sc" max="2.40" min="0.60" step="0.01" title="Ajustar parâmetro de rede c" type="range" value="1.00">
 </div>
 <div class="field" id="falpha">
 <div class="label"><b>α</b><em><span id="valpha">90</span>°</em></div>
-<input aria-label="Ajustar ângulo alfa" id="salpha" max="125" min="55" step="1" title="Ajustar ângulo alfa" type="range" value="90"/>
+<input aria-label="Ajustar ângulo alfa" id="salpha" max="125" min="55" step="1" title="Ajustar ângulo alfa" type="range" value="90">
 </div>
 </div>
 <div class="row">
 <div class="field" id="fbeta">
 <div class="label"><b>β</b><em><span id="vbeta">90</span>°</em></div>
-<input aria-label="Ajustar ângulo beta" id="sbeta" max="125" min="55" step="1" title="Ajustar ângulo beta" type="range" value="90"/>
+<input aria-label="Ajustar ângulo beta" id="sbeta" max="125" min="55" step="1" title="Ajustar ângulo beta" type="range" value="90">
 </div>
 <div class="field" id="fgamma">
 <div class="label"><b>γ</b><em><span id="vgamma">90</span>°</em></div>
-<input aria-label="Ajustar ângulo gama" id="sgamma" max="125" min="55" step="1" title="Ajustar ângulo gama" type="range" value="90"/>
+<input aria-label="Ajustar ângulo gama" id="sgamma" max="125" min="55" step="1" title="Ajustar ângulo gama" type="range" value="90">
 </div>
 </div>
 <div class="toggles">
 <label class="toggle" title="Mostra eixos a, b, c">
-<input checked="" id="tAxes" type="checkbox"/>
+<input checked="" id="tAxes" type="checkbox">
 <span>Eixos</span>
 </label>
 <label class="toggle" title="Mostra rótulos a, b, c">
-<input checked="" id="tLabels" type="checkbox"/>
+<input checked="" id="tLabels" type="checkbox">
 <span>Rótulos</span>
 </label>
 <label class="toggle" title="Repete a célula em 3×3×3 (visão de rede)">
-<input id="tRep" type="checkbox"/>
+<input id="tRep" type="checkbox">
 <span>Repetir 3×3×3</span>
 </label>
 <label class="toggle" title="Mostra arcos dos ângulos α, β, γ">
-<input checked="" id="tAngles" type="checkbox"/>
+<input checked="" id="tAngles" type="checkbox">
 <span>Ângulos</span>
 </label>
 <label class="toggle" title="Esferas opacas (sem alpha)">
-<input checked="" id="tAlpha" type="checkbox"/>
+<input checked="" id="tAlpha" type="checkbox">
 <span>Esferas opacas</span>
 </label>
 </div>
 </div>
-</aside>
+</div>
 </div>
 </div>
 <script src="assets/js/script1.js"></script>

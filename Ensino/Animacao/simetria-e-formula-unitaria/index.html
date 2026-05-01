@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Animação educacional interativa do SiMoEns sobre Hub, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Hub, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
 <script>
 (function () {
   const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
@@ -117,22 +116,23 @@
   })();
 })();
 </script>
-<meta charset="utf-8"/>
 <meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
 <title>Hub</title>
 <link href="assets/css/style1.css" rel="stylesheet"/>
 <meta content="Hub" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Hub, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/></head>
 <body>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
 <header>
 <nav aria-label="Mini menu" class="menu" role="tablist">
-<button aria-pressed="true" aria-selected="true" class="btn" id="tab-cubicas" role="tab">1) Cúbicas</button>
-<button aria-pressed="false" aria-selected="false" class="btn" id="tab-celulas" role="tab">2) Translação — Células</button>
-<button aria-pressed="false" aria-selected="false" class="btn" id="tab-orbits" role="tab">3) Simetria (orbits)</button>
-<button aria-pressed="false" aria-selected="false" class="btn" id="tab-fracoes" role="tab">4) Frações — Células</button>
-<button aria-pressed="false" aria-selected="false" class="btn" id="tab-modelos" role="tab">5) Modelos — Posições</button>
+<button aria-selected="true" class="btn" id="tab-cubicas" role="tab">1) Cúbicas</button>
+<button aria-selected="false" class="btn" id="tab-celulas" role="tab">2) Translação — Células</button>
+<button aria-selected="false" class="btn" id="tab-orbits" role="tab">3) Simetria (orbits)</button>
+<button aria-selected="false" class="btn" id="tab-fracoes" role="tab">4) Frações — Células</button>
+<button aria-selected="false" class="btn" id="tab-modelos" role="tab">5) Modelos — Posições</button>
 </nav>
 </header>
-<main>
+<main id="conteudo-principal">
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Hub</h1>
 <iframe id="stage" title="app"></iframe>
 </main>
 <script src="assets/js/app.js"></script>

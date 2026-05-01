@@ -7,7 +7,7 @@
 #painel-controles{display:flex;flex-direction:column;min-height:0}
 #painel-controles header,#painel-controles .footer{flex:0 0 auto}
   header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #232636}
-  header h1{font-size:16px;margin:0;letter-spacing:.2px}
+  header h1, header h2{font-size:16px;margin:0;letter-spacing:.2px}
   header small{color:var(--muted)}
   #canvas{width:100%;height:calc(100% - 56px);display:block;background: radial-gradient(1200px 600px at 60% 10%, rgba(125,211,252,.08), transparent 50%)}
   .controls{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1 1 auto;overflow-y:auto;min-height:0}

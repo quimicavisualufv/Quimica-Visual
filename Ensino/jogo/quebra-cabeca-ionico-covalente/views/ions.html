@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-<head><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." name="description"/>
-<meta charset="utf-8"/>
-<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport"/>
+<head><meta charset="utf-8"><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." name="description">
+<meta content="width=1280, initial-scale=0.25, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" name="viewport">
 <title>Quebra-cabeça de Íons — offline (v5)</title>
 <style>
   :root{
@@ -142,12 +140,12 @@
   .chip.fam-cat, .chip.fam-nit, .chip.fam-fos, .chip.fam-sul, .chip.fam-hal, .chip.fam-carb, .chip.fam-out{
     background:linear-gradient(#fff,#fff), linear-gradient(90deg,var(--fam),#fff);
     background-clip:padding-box,border-box;
-    border-width:2px; border-color: color-mix(in srgb, var(--fam) 60%, var(--grid));
+    border-width:2px; border-color:var(--fam);
   }
   #board .tile{ background:linear-gradient(#fff,#f9fafb); }
   #board .tile.fam-cat, #board .tile.fam-nit, #board .tile.fam-fos, #board .tile.fam-sul, #board .tile.fam-hal, #board .tile.fam-carb, #board .tile.fam-out{
-    box-shadow:0 6px 24px #00000018, inset 0 0 0 5px color-mix(in srgb, var(--fam) 65%, transparent);
-    border:2px solid color-mix(in srgb, var(--fam) 65%, var(--grid));
+    box-shadow:0 6px 24px #00000018, inset 0 0 0 5px var(--fam);
+    border:2px solid var(--fam);
   }
   .badge.s{ background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
   .badge.aq{ background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
@@ -210,16 +208,17 @@
   #board .tile.cat, #board .tile.an{min-height:240px;}
 </style>
 <style>#addPlus,#addArrow,#addEq{display:none!important}</style>
-<meta content="Quebra-cabeça de Íons — offline (v5)" property="og:title"/><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." property="og:description"/></head>
+<meta content="Quebra-cabeça de Íons — offline (v5)" property="og:title"><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." property="og:description"></head>
 <body>
+<a class="acess-skip-link" href="#conteudo-principal" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
 <header>
 <h1>⚗️ Quebra-cabeça de Íons</h1>
 <span class="spacer"></span>
 <button class="toggleSide" id="toggleSide">Esconder Leitura &amp; Dicas</button>
 </header>
-<main>
+<main id="conteudo-principal">
 <section class="col" id="leftCol">
-<h2><span>Biblioteca</span><input aria-label="Pesquisar" id="searchBox" placeholder="Pesquisar..." type="search"/></h2>
+<h2><span>Biblioteca</span><input aria-label="Pesquisar" id="searchBox" placeholder="Pesquisar..." type="search"></h2>
 <div id="library"></div>
 <div class="toolbar">
 <button id="clearBoard" title="Limpar mesa">Limpar</button>
@@ -227,7 +226,7 @@
 </section>
 <section class="col">
 <h2>Mesa de montagem</h2>
-<div class="boardWrap" id="boardWrap"><div aria-label="Área de montagem" id="board"></div></div>
+<div class="boardWrap" id="boardWrap"><div aria-label="Área de montagem" id="board" role="group"></div></div>
 <div class="toolbar">
 <button class="ok" id="check">Conferir eletroneutralidade</button>
 <button class="bad" id="deleteSel">Remover seleção</button>
@@ -237,7 +236,7 @@
 <button id="addEq" title="Adicionar seta de equilíbrio">⇌ (equilíbrio)</button>
 </div>
 </section>
-<aside class="col" id="side">
+<section class="col" id="side">
 <h2>Leitura &amp; Dicas</h2>
 <div id="calc">
 <div class="row"><span>Carga total (íons)</span><span class="badge" id="charge">0</span></div>
@@ -251,7 +250,7 @@
 </div>
 <div class="hr"></div>
 <div class="list" id="legend"></div>
-</aside>
+</section>
 </main>
 <script>
 
@@ -766,7 +765,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 </script>
-<script src="../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
-<script defer src="../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
+<script>
+(function(){
+  if (window.self !== window.top) return;
+  [
+    '../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b',
+    '../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a'
+  ].forEach(function(src){
+    var s = document.createElement('script');
+    s.src = src;
+    document.body.appendChild(s);
+  });
+})();
+</script>
 </body>
 </html>

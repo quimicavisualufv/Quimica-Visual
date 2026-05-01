@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 140" role="img" aria-labelledby="title desc">
+<title id="title">W3C</title>
+<desc id="desc">Logotipo textual W3C em azul e preto</desc>
+<rect width="360" height="140" rx="20" fill="#ffffff"/>
+<text x="24" y="92" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="700" fill="#005A9C">W3C</text>
+<path d="M256 29c17 0 32 6 43 17l-15 15c-7-7-16-11-27-11-21 0-37 17-37 39s16 39 37 39c11 0 20-4 27-11l15 15c-11 11-26 17-43 17-34 0-60-26-60-60s26-60 60-60z" fill="#111111" opacity=".9"/>
+<path d="M279 74l18 15-18 15" fill="none" stroke="#005A9C" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

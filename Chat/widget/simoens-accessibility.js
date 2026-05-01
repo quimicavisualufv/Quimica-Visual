@@ -12,7 +12,10 @@
     guide: false,
     grayscale: false,
     colorblind: false,
-    colorblindType: 'redgreen'
+    colorblindType: 'redgreen',
+    speechVolume: 1,
+    speechRate: 0.95,
+    speechVoiceGender: 'female'
   };
 
   function getScriptBase() {
@@ -27,6 +30,126 @@
   }
 
   var scriptBase = getScriptBase();
+
+  function isXadrezQuimicoPage() {
+    return /\/Ensino\/jogo\/xadrez-quimico\/?(?:index\.html)?/i.test(decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/'));
+  }
+
+  function updateXadrezVoiceButton(active) {
+    var button = document.querySelector('[data-a11y-action="chess-voice"]');
+    if (!button) return;
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    button.textContent = active ? 'Modo voz xadrez ligado' : 'Modo voz xadrez';
+  }
+
+  function loadXadrezVoiceExtension(callback) {
+    if (!isXadrezQuimicoPage()) {
+      if (callback) callback();
+      return;
+    }
+    if (window.SiMoEnsChessVoice) {
+      updateXadrezVoiceButton(!!window.SiMoEnsChessVoice.isActive());
+      if (callback) callback();
+      return;
+    }
+    var existing = document.querySelector('script[data-simoens-xadrez-voice]');
+    if (existing) {
+      existing.addEventListener('load', function () {
+        updateXadrezVoiceButton(!!(window.SiMoEnsChessVoice && window.SiMoEnsChessVoice.isActive()));
+        if (callback) callback();
+      }, { once: true });
+      return;
+    }
+    var script = document.createElement('script');
+    script.src = scriptBase + 'simoens-xadrez-voice.js?v=xadrez-voice-final-20260501g';
+    script.defer = true;
+    script.setAttribute('data-simoens-xadrez-voice', 'true');
+    script.addEventListener('load', function () {
+      updateXadrezVoiceButton(!!(window.SiMoEnsChessVoice && window.SiMoEnsChessVoice.isActive()));
+      if (callback) callback();
+    });
+    document.head.appendChild(script);
+  }
+
+  window.addEventListener('simoens-xadrez-voice-state', function (event) {
+    updateXadrezVoiceButton(!!(event.detail && event.detail.active));
+  });
+
+  var lastReadableSelection = '';
+  var lastReadableSelectionAt = 0;
+  var selectionCapturedForWidget = false;
+  var selectionMemoryInstalled = false;
+
+  function nodeInsideWidget(node) {
+    var element = node && (node.nodeType === 1 ? node : node.parentElement);
+    return !!(element && element.closest && element.closest('.simoens-a11y-widget, .simoens-a11y-modal, [vw], [vw-access-button], [vw-plugin-wrapper]'));
+  }
+
+  function currentSelectionText() {
+    if (!window.getSelection) return '';
+    var selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return '';
+    return text(selection.toString()).slice(0, 6500);
+  }
+
+  function rememberReadableSelection() {
+    var value = currentSelectionText();
+    if (value) {
+      lastReadableSelection = value;
+      lastReadableSelectionAt = Date.now();
+      return lastReadableSelection;
+    }
+    return '';
+  }
+
+  function clearReadableSelection(removeBrowserSelection) {
+    lastReadableSelection = '';
+    lastReadableSelectionAt = 0;
+    selectionCapturedForWidget = false;
+    if (removeBrowserSelection === false) return;
+    try {
+      if (window.getSelection) window.getSelection().removeAllRanges();
+    } catch (error) {}
+  }
+
+  function selectedTextForSpeech() {
+    var liveSelection = currentSelectionText();
+    if (liveSelection) {
+      lastReadableSelection = liveSelection;
+      lastReadableSelectionAt = Date.now();
+      selectionCapturedForWidget = false;
+      return liveSelection;
+    }
+    var saved = '';
+    if (lastReadableSelection && selectionCapturedForWidget && Date.now() - lastReadableSelectionAt < 5000) {
+      saved = lastReadableSelection;
+    }
+    clearReadableSelection(false);
+    return saved;
+  }
+
+  function installSelectionMemory() {
+    if (selectionMemoryInstalled) return;
+    selectionMemoryInstalled = true;
+    var timer = 0;
+    function scheduleRemember() {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        var value = currentSelectionText();
+        if (value) {
+          lastReadableSelection = value;
+          lastReadableSelectionAt = Date.now();
+        } else if (!selectionCapturedForWidget) {
+          lastReadableSelection = '';
+          lastReadableSelectionAt = 0;
+        }
+      }, 35);
+    }
+    document.addEventListener('selectionchange', scheduleRemember, true);
+    document.addEventListener('mouseup', scheduleRemember, true);
+    document.addEventListener('keyup', scheduleRemember, true);
+    document.addEventListener('touchend', scheduleRemember, true);
+  }
 
   function text(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
@@ -607,6 +730,50 @@ html.simoens-a11y-focus :focus,
         min-height: 42px;
       }
 
+      .simoens-a11y-voice-settings {
+        display: grid;
+        gap: 9px;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid rgba(17,24,39,0.12);
+        border-radius: 16px;
+        background: rgba(249,250,251,0.86);
+      }
+
+      .simoens-a11y-voice-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+        font-size: 12.5px;
+        color: #374151;
+        font-weight: 750;
+      }
+
+      .simoens-a11y-voice-row input[type=range] {
+        grid-column: 1 / -1;
+        width: 100%;
+        accent-color: #111827;
+      }
+
+      .simoens-a11y-voice-row select {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid rgba(17,24,39,0.16);
+        border-radius: 12px;
+        background: #ffffff;
+        color: #111827;
+        padding: 8px 10px;
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .simoens-a11y-voice-value {
+        color: #111827;
+        font-weight: 850;
+      }
+
       .simoens-a11y-guide-line {
         position: fixed;
         left: 0;
@@ -898,12 +1065,144 @@ html.simoens-a11y-focus :focus,
     updateFontScaling();
   }
 
-  function selectedOrPageText() {
-    var selection = text(window.getSelection ? window.getSelection().toString() : '');
-    if (selection.length > 0) return selection.slice(0, 6500);
+  function clampNumber(value, min, max, fallback) {
+    var number = parseFloat(value);
+    if (!Number.isFinite(number)) number = fallback;
+    return Math.min(max, Math.max(min, number));
+  }
+
+  function speechSettings() {
+    var settings = {
+      volume: clampNumber(state.speechVolume, 0, 2, 1),
+      rate: clampNumber(state.speechRate, 0.5, 3, 0.95),
+      gender: state.speechVoiceGender === 'male' ? 'male' : 'female'
+    };
+    try {
+      window.__simoensA11yVoiceSettings = { volume: settings.volume, rate: settings.rate, gender: settings.gender, updatedAt: Date.now() };
+    } catch (error) {}
+    return settings;
+  }
+
+  function readSpeechSettingsNow() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      var volume = Object.prototype.hasOwnProperty.call(saved, 'speechVolume') ? saved.speechVolume : state.speechVolume;
+      var rate = Object.prototype.hasOwnProperty.call(saved, 'speechRate') ? saved.speechRate : state.speechRate;
+      var gender = Object.prototype.hasOwnProperty.call(saved, 'speechVoiceGender') ? saved.speechVoiceGender : state.speechVoiceGender;
+      return {
+        volume: clampNumber(volume, 0, 2, 1),
+        rate: clampNumber(rate, 0.5, 3, 0.95),
+        gender: gender === 'male' ? 'male' : 'female'
+      };
+    } catch (error) {
+      return speechSettings();
+    }
+  }
+
+  function voiceMatchesGender(voice, gender) {
+    var name = String((voice && voice.name) || '').toLowerCase();
+    var uri = String((voice && voice.voiceURI) || '').toLowerCase();
+    var source = name + ' ' + uri;
+    var femaleHints = ['female', 'feminina', 'mulher', 'woman', 'maria', 'luciana', 'francisca', 'helena', 'yara', 'camila', 'vitória', 'vitoria', 'beatriz', 'isabela', 'leticia', 'letícia', 'eloquence brazilian portuguese female', 'português do brasil female', 'portuguese brazil female'];
+    var maleHints = ['male', 'masculina', 'masculino', 'homem', 'man', 'daniel', 'felipe', 'ricardo', 'joaquim', 'antonio', 'antônio', 'carlos', 'paulo', 'thiago', 'rafael', 'brasil male', 'brazilian portuguese male', 'português do brasil male', 'portuguese brazil male'];
+    var hints = gender === 'male' ? maleHints : femaleHints;
+    return hints.some(function (hint) { return source.indexOf(hint) !== -1; });
+  }
+
+  function preferredVoices() {
+    if (!('speechSynthesis' in window) || typeof window.speechSynthesis.getVoices !== 'function') return [];
+    var voices = window.speechSynthesis.getVoices() || [];
+    var ptBr = voices.filter(function (voice) { return /^pt[-_]br$/i.test(String(voice.lang || '')); });
+    var pt = voices.filter(function (voice) { return /^pt/i.test(String(voice.lang || '')); });
+    return ptBr.length ? ptBr : pt;
+  }
+
+  function pickSpeechVoice(gender) {
+    var voices = preferredVoices();
+    if (!voices.length) return null;
+    var matched = voices.find(function (voice) { return voiceMatchesGender(voice, gender); });
+    return matched || voices[0] || null;
+  }
+
+  function applySpeechSettingsToUtterance(utterance) {
+    if (!utterance) return utterance;
+    var settings = readSpeechSettingsNow();
+    utterance.lang = 'pt-BR';
+    utterance.volume = Math.max(0, Math.min(1, settings.volume));
+    utterance.rate = clampNumber(settings.rate, 0.5, 3, 0.95);
+    utterance.pitch = settings.gender === 'male' ? 0.55 : 1.45;
+    var voice = pickSpeechVoice(settings.gender);
+    if (voice) {
+      utterance.voice = voice;
+      utterance.lang = voice.lang || 'pt-BR';
+    }
+    utterance.__simoensVoiceApplied = true;
+    return utterance;
+  }
+
+  function installSpeechSynthesisInterceptor() {
+    if (!('speechSynthesis' in window) || !window.speechSynthesis || window.speechSynthesis.__simoensA11yPatched) return;
+    try {
+      var nativeSpeak = window.speechSynthesis.speak.bind(window.speechSynthesis);
+      window.speechSynthesis.speak = function (utterance) {
+        try {
+          if (utterance && window.SpeechSynthesisUtterance && utterance instanceof SpeechSynthesisUtterance) {
+            applySpeechSettingsToUtterance(utterance);
+          }
+        } catch (error) {}
+        return nativeSpeak(utterance);
+      };
+      window.speechSynthesis.__simoensA11yPatched = true;
+    } catch (error) {}
+  }
+
+  function refreshVoiceControls() {
+    var settings = speechSettings();
+    document.querySelectorAll('[data-a11y-voice-control]').forEach(function (control) {
+      var key = control.getAttribute('data-a11y-voice-control');
+      if (key === 'volume') control.value = String(Math.round(settings.volume * 100));
+      if (key === 'rate') control.value = String(settings.rate);
+      if (key === 'gender') control.value = settings.gender;
+    });
+    document.querySelectorAll('[data-a11y-voice-value]').forEach(function (node) {
+      var key = node.getAttribute('data-a11y-voice-value');
+      if (key === 'volume') node.textContent = Math.round(settings.volume * 100) + '%';
+      if (key === 'rate') node.textContent = settings.rate.toFixed(2).replace('.', ',') + '×';
+      if (key === 'gender') node.textContent = settings.gender === 'male' ? 'masculina' : 'feminina';
+    });
+  }
+
+  function setVoiceSetting(key, value) {
+    if (key === 'volume') state.speechVolume = clampNumber(value / 100, 0, 2, 1);
+    if (key === 'rate') state.speechRate = clampNumber(value, 0.5, 3, 0.95);
+    if (key === 'gender') state.speechVoiceGender = value === 'male' ? 'male' : 'female';
+    saveState();
+    var settings = speechSettings();
+    refreshVoiceControls();
+    window.dispatchEvent(new CustomEvent('simoens-a11y-voice-settings-change', { detail: settings }));
+  }
+
+  window.SiMoEnsA11yVoice = {
+    getSettings: speechSettings,
+    applyToUtterance: applySpeechSettingsToUtterance,
+    stop: stopSpeechEngines
+  };
+
+  function currentChessSelectionTextForSpeech() {
+    if (!isXadrezQuimicoPage()) return '';
+    try {
+      if (window.SiMoEnsChessVoice && typeof window.SiMoEnsChessVoice.getCurrentSelectionText === 'function') {
+        return text(window.SiMoEnsChessVoice.getCurrentSelectionText());
+      }
+      if (window.__simoensChessVoiceCurrentSelectionText) return text(window.__simoensChessVoiceCurrentSelectionText);
+    } catch (error) {}
+    return '';
+  }
+
+  function pageTextForSpeech() {
     var root = document.querySelector('main, [role="main"], article, .content, .page-content') || document.body;
     var clone = root.cloneNode(true);
-    clone.querySelectorAll('script, style, noscript, svg, canvas, nav, footer, header, .simoens-a11y-widget, [vw], [vw-plugin-wrapper], iframe').forEach(function (node) {
+    clone.querySelectorAll('script, style, noscript, svg, canvas, nav, footer, header, .simoens-a11y-widget, .simoens-a11y-modal, [vw], [vw-plugin-wrapper], iframe').forEach(function (node) {
       node.remove();
     });
     var parts = [];
@@ -914,23 +1213,85 @@ html.simoens-a11y-focus :focus,
     return parts.join('. ').slice(0, 6500);
   }
 
-  function speakPage() {
+  function speechState() {
+    window.__simoensA11ySpeech = window.__simoensA11ySpeech || { token: 0, stopped: true };
+    return window.__simoensA11ySpeech;
+  }
+
+  function hardCancelSpeech(cancelToken) {
+    if (!('speechSynthesis' in window)) return;
+    function shouldKeepCancelling() {
+      var shared = speechState();
+      return shared.stopped && shared.token === cancelToken;
+    }
+    function cancelNow() {
+      try { window.speechSynthesis.cancel(); } catch (error) {}
+    }
+    try {
+      cancelNow();
+      if (window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch (error) {}
+        cancelNow();
+      }
+      [25, 75, 150, 300, 600].forEach(function (delay) {
+        window.setTimeout(function () {
+          if (shouldKeepCancelling()) cancelNow();
+        }, delay);
+      });
+    } catch (error) {}
+  }
+
+  function stopSpeechEngines() {
+    var shared = speechState();
+    shared.token += 1;
+    shared.stopped = true;
+    var cancelToken = shared.token;
+    if (window.simoensStopAccessibleSpeech && window.simoensStopAccessibleSpeech !== stopSpeechEngines) {
+      try { window.simoensStopAccessibleSpeech(true); } catch (error) {}
+    }
+    hardCancelSpeech(cancelToken);
+  }
+
+  function speakContent(content, message) {
     if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) {
       announce('Seu navegador não oferece leitura em voz nesta página.');
       return;
     }
-    window.speechSynthesis.cancel();
-    var content = selectedOrPageText();
+    stopSpeechEngines();
     if (!content) {
       announce('Não encontrei texto suficiente para leitura.');
       return;
     }
+    var shared = speechState();
+    shared.token += 1;
+    shared.stopped = false;
+    var token = shared.token;
     var utterance = new SpeechSynthesisUtterance(content);
-    utterance.lang = 'pt-BR';
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
+    applySpeechSettingsToUtterance(utterance);
+    utterance.onend = function () { if (speechState().token === token) speechState().stopped = true; };
+    utterance.onerror = function () { if (speechState().token === token) speechState().stopped = true; };
     window.speechSynthesis.speak(utterance);
-    announce('Leitura em voz iniciada.');
+    announce(message || 'Leitura em voz iniciada.');
+  }
+
+  function speakPage() {
+    var selected = selectedTextForSpeech();
+    if (selected) {
+      speakContent(selected, 'Leitura do texto selecionado iniciada.');
+      clearReadableSelection();
+      return;
+    }
+    clearReadableSelection();
+    var chessSelection = currentChessSelectionTextForSpeech();
+    if (chessSelection) {
+      speakContent(chessSelection, 'Leitura da seleção do xadrez iniciada.');
+      return;
+    }
+    if (window.simoensReadAccessibleDescription && window.simoensReadAccessibleDescription()) {
+      announce('Leitura do texto acessível iniciada.');
+      return;
+    }
+    speakContent(pageTextForSpeech(), 'Leitura em voz iniciada.');
   }
 
   function pauseSpeech() {
@@ -945,7 +1306,7 @@ html.simoens-a11y-focus :focus,
   }
 
   function stopSpeech() {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    stopSpeechEngines();
     announce('Leitura em voz interrompida.');
   }
 
@@ -1003,11 +1364,28 @@ html.simoens-a11y-focus :focus,
         <div class="simoens-a11y-section">
           <p class="simoens-a11y-section-title">Leitura</p>
           <div class="simoens-a11y-reader">
-            <button class="simoens-a11y-action" type="button" data-a11y-action="speak" title="Lê em voz alta o texto selecionado ou, se nada estiver selecionado, o conteúdo principal da página.">Ouvir</button>
+            <button class="simoens-a11y-action" type="button" data-a11y-action="speak" title="Lê em voz alta o texto selecionado. Sem seleção ativa, lê o texto acessível da página ou o conteúdo principal.">Ouvir</button>
             <button class="simoens-a11y-action" type="button" data-a11y-action="pause" title="Pausa a leitura em voz. Se já estiver pausada, retoma a leitura.">Pausar</button>
             <button class="simoens-a11y-action" type="button" data-a11y-action="stop" title="Interrompe a leitura em voz e encerra a fala atual.">Parar</button>
           </div>
-          <p class="simoens-a11y-note">Se houver texto selecionado, o botão ouvir lê apenas a seleção.</p>
+          <div class="simoens-a11y-voice-settings" aria-label="Configurações da voz de leitura">
+            <label class="simoens-a11y-voice-row">
+              <span>Volume</span><span class="simoens-a11y-voice-value" data-a11y-voice-value="volume">100%</span>
+              <input type="range" min="0" max="200" step="5" value="100" data-a11y-voice-control="volume" aria-label="Volume da voz">
+            </label>
+            <label class="simoens-a11y-voice-row">
+              <span>Velocidade</span><span class="simoens-a11y-voice-value" data-a11y-voice-value="rate">0,95×</span>
+              <input type="range" min="0.5" max="3" step="0.05" value="0.95" data-a11y-voice-control="rate" aria-label="Velocidade da voz">
+            </label>
+            <label class="simoens-a11y-voice-row">
+              <span>Voz</span><span class="simoens-a11y-voice-value" data-a11y-voice-value="gender">feminina</span>
+              <select data-a11y-voice-control="gender" aria-label="Tipo de voz">
+                <option value="female">Feminina</option>
+                <option value="male">Masculina</option>
+              </select>
+            </label>
+          </div>
+          <p class="simoens-a11y-note">Se houver texto selecionado na página, o botão Ouvir lê apenas a seleção e depois limpa essa seleção para não repetir na próxima leitura.</p>
         </div>
         <div class="simoens-a11y-section">
           <p class="simoens-a11y-section-title">Visual</p>
@@ -1034,6 +1412,20 @@ html.simoens-a11y-focus :focus,
       </section>
     `;
     document.body.appendChild(widget);
+    refreshVoiceControls();
+    if ('speechSynthesis' in window && typeof window.speechSynthesis.getVoices === 'function') {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = refreshVoiceControls;
+    }
+    if (isXadrezQuimicoPage()) {
+      var navigationSection = widget.querySelector('.simoens-a11y-section:nth-of-type(3)');
+      var chessSection = document.createElement('div');
+      chessSection.className = 'simoens-a11y-section';
+      chessSection.innerHTML = '<p class="simoens-a11y-section-title">Xadrez Químico</p><div class="simoens-a11y-grid"><button class="simoens-a11y-action is-wide" type="button" data-a11y-action="chess-voice" aria-pressed="false" title="Ativa a narração dinâmica das peças, vidrarias, casas, movimentos, capturas, xeque e xeque-mate no Xadrez Químico.">Modo voz xadrez</button></div><p class="simoens-a11y-note">Com o modo voz ativo, o jogo aguarda a narração terminar antes de executar a jogada. O sistema narra peça, vidraria, casa, opções de movimento, capturas, movimentos da máquina, xeque e xeque-mate usando o volume, a velocidade e a voz escolhidos acima.</p>';
+      if (navigationSection && navigationSection.parentNode) navigationSection.parentNode.insertBefore(chessSection, navigationSection);
+      else widget.querySelector('.simoens-a11y-panel').appendChild(chessSection);
+      loadXadrezVoiceExtension();
+    }
     widget.classList.add('simoens-a11y-safe');
     live.classList.add('simoens-a11y-safe');
     guide.classList.add('simoens-a11y-safe');
@@ -1042,6 +1434,30 @@ html.simoens-a11y-focus :focus,
     var trigger = widget.querySelector('.simoens-a11y-trigger');
     var panel = widget.querySelector('.simoens-a11y-panel');
     var close = widget.querySelector('.simoens-a11y-close');
+
+    function captureSelectionBeforeSpeakAction() {
+      var value = currentSelectionText();
+      if (value) {
+        lastReadableSelection = value;
+        lastReadableSelectionAt = Date.now();
+        selectionCapturedForWidget = true;
+      } else {
+        clearReadableSelection(false);
+      }
+    }
+
+    panel.addEventListener('pointerdown', function (event) {
+      var button = event.target && event.target.closest ? event.target.closest('button') : null;
+      if (!button || button.getAttribute('data-a11y-action') !== 'speak') return;
+      captureSelectionBeforeSpeakAction();
+    }, true);
+
+    panel.addEventListener('keydown', function (event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      var button = event.target && event.target.closest ? event.target.closest('button') : null;
+      if (!button || button.getAttribute('data-a11y-action') !== 'speak') return;
+      captureSelectionBeforeSpeakAction();
+    }, true);
 
     function setOpen(open) {
       panel.classList.toggle('is-open', open);
@@ -1059,6 +1475,19 @@ html.simoens-a11y-focus :focus,
     close.addEventListener('click', function () {
       setOpen(false);
       trigger.focus();
+    });
+
+    panel.addEventListener('input', function (event) {
+      var control = event.target && event.target.closest ? event.target.closest('[data-a11y-voice-control]') : null;
+      if (!control) return;
+      setVoiceSetting(control.getAttribute('data-a11y-voice-control'), control.value);
+    });
+
+    panel.addEventListener('change', function (event) {
+      var control = event.target && event.target.closest ? event.target.closest('[data-a11y-voice-control]') : null;
+      if (!control) return;
+      setVoiceSetting(control.getAttribute('data-a11y-voice-control'), control.value);
+      if (control.tagName && control.tagName.toLowerCase() === 'select') announce('Voz ' + (control.value === 'male' ? 'masculina' : 'feminina') + ' selecionada.');
     });
 
     document.addEventListener('keydown', function (event) {
@@ -1106,15 +1535,34 @@ html.simoens-a11y-focus :focus,
       }
       if (action === 'speak') speakPage();
       if (action === 'pause') pauseSpeech();
-      if (action === 'stop') stopSpeech();
+      if (action === 'stop') {
+        stopSpeech();
+        if (window.SiMoEnsChessVoice && typeof window.SiMoEnsChessVoice.stop === 'function') window.SiMoEnsChessVoice.stop();
+      }
+      if (action === 'chess-voice') {
+        loadXadrezVoiceExtension(function () {
+          if (window.SiMoEnsChessVoice && typeof window.SiMoEnsChessVoice.toggle === 'function') {
+            updateXadrezVoiceButton(window.SiMoEnsChessVoice.toggle());
+          } else {
+            announce('Modo voz do Xadrez Químico não foi carregado nesta página.');
+          }
+        });
+      }
       if (action === 'skip') focusMain();
       if (action === 'reset') {
         Object.keys(state).forEach(function (key) {
-          state[key] = key === 'font' ? 0 : (key === 'colorblindType' ? 'redgreen' : false);
+          if (key === 'font') state[key] = 0;
+          else if (key === 'colorblindType') state[key] = 'redgreen';
+          else if (key === 'speechVolume') state[key] = 1;
+          else if (key === 'speechRate') state[key] = 0.95;
+          else if (key === 'speechVoiceGender') state[key] = 'female';
+          else state[key] = false;
         });
         saveState();
         stopSpeech();
         applyPreferences();
+        refreshVoiceControls();
+        window.dispatchEvent(new CustomEvent('simoens-a11y-voice-settings-change', { detail: speechSettings() }));
         announce('Ajustes de acessibilidade restaurados.');
       }
     });
@@ -1140,7 +1588,7 @@ html.simoens-a11y-focus :focus,
   function loadAnimationAccessibilityExtension() {
     if (document.querySelector('script[data-simoens-animation-accessibility]')) return;
     var script = document.createElement('script');
-    script.src = scriptBase + 'simoens-animation-accessibility.js';
+    script.src = scriptBase + 'simoens-animation-accessibility.js?v=a11y-md-20260501c';
     script.defer = true;
     script.setAttribute('data-simoens-animation-accessibility', 'true');
     document.head.appendChild(script);
@@ -1149,8 +1597,12 @@ html.simoens-a11y-focus :focus,
   function start() {
     injectStyle();
     loadState();
+    installSelectionMemory();
+    installSpeechSynthesisInterceptor();
+    speechSettings();
     buildWidget();
     loadAnimationAccessibilityExtension();
+    loadXadrezVoiceExtension();
     applyPreferences();
     applyFixes();
     var observer = new MutationObserver(function () {

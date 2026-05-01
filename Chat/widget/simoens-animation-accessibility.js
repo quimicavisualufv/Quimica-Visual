@@ -1205,18 +1205,91 @@
     ]
   }
 };
-  var GLOSSARY = {
-  "célula unitária": "Menor porção repetitiva que representa a organização espacial de uma rede cristalina.",
-  "rede cristalina": "Conjunto de pontos que se repetem periodicamente no espaço.",
-  "coordenação": "Número de vizinhos mais próximos ao redor de uma partícula ou espécie central.",
-  "interstício": "Espaço vazio entre partículas em um empacotamento cristalino.",
-  "geometria molecular": "Arranjo tridimensional dos átomos em uma molécula.",
-  "polaridade": "Distribuição desigual de cargas que pode produzir momento dipolar resultante.",
-  "orbital": "Região associada à função de onda do elétron, normalmente representada por densidade de probabilidade.",
-  "fase": "Estado físico ou região de estabilidade de uma substância sob certas condições de temperatura e pressão."
-};
   var STORAGE_KEY = 'simoens.accessibility.animation.preferences.v1';
   var currentSpeech = null;
+  var speechQueue = [];
+
+  function speechState() {
+    window.__simoensA11ySpeech = window.__simoensA11ySpeech || { token: 0, stopped: true };
+    return window.__simoensA11ySpeech;
+  }
+
+  function hardCancelSpeech(cancelToken) {
+    if (!('speechSynthesis' in window)) return;
+    function shouldKeepCancelling() {
+      var shared = speechState();
+      return shared.stopped && shared.token === cancelToken;
+    }
+    function cancelNow() {
+      try { window.speechSynthesis.cancel(); } catch (error) {}
+    }
+    try {
+      cancelNow();
+      if (window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch (error) {}
+        cancelNow();
+      }
+      [25, 75, 150, 300, 600].forEach(function (delay) {
+        window.setTimeout(function () {
+          if (shouldKeepCancelling()) cancelNow();
+        }, delay);
+      });
+    } catch (error) {}
+  }
+  function getScriptBase() {
+    var current = document.currentScript;
+    if (current && current.src) return current.src.replace(/[^/]*$/, '');
+    var scripts = Array.prototype.slice.call(document.querySelectorAll('script[src]')).reverse();
+    for (var i = 0; i < scripts.length; i += 1) {
+      var src = scripts[i].getAttribute('src') || '';
+      if (src.indexOf('simoens-animation-accessibility.js') !== -1) return src.replace(/[^/]*$/, '');
+    }
+    return '';
+  }
+
+  var scriptBase = getScriptBase();
+  var mdCache = {};
+  var MD_MAP = {
+    "ensino/animacao/": "textos-acessibilidade/animacoes/README.md",
+    "ensino/guia/": "textos-acessibilidade/guias/00_indice_guias.md",
+    "ensino/exercicio guiado/": "textos-acessibilidade/exercicios-guiados/00_indice_exercicios_guiados.md",
+    "ensino/animacao/buracos-e-empacotamento/": "textos-acessibilidade/animacoes/01_animacao_empacotamento_de_esferas.md",
+    "ensino/animacao/catalogo-de-vidrarias-animado/": "textos-acessibilidade/animacoes/02_animacao_catalogo_de_vidrarias_e_equipamentos.md",
+    "ensino/animacao/geometria-cristalografica/": "textos-acessibilidade/animacoes/03_animacao_geometria_cristalografica.md",
+    "ensino/animacao/geometria-molecular/": "textos-acessibilidade/animacoes/04_animacao_geometria_molecular.md",
+    "ensino/animacao/redes-cristalinas/": "textos-acessibilidade/animacoes/05_animacao_redes_cristalinas.md",
+    "ensino/animacao/simetria-e-formula-unitaria/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/simetria-e-formula-unitaria/views/celulas/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/simetria-e-formula-unitaria/views/cubicas/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/simetria-e-formula-unitaria/views/fracoes/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/simetria-e-formula-unitaria/views/modelos/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/simetria-e-formula-unitaria/views/orbits/": "textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+    "ensino/animacao/visualizador_de_hidrogenoides/": "textos-acessibilidade/animacoes/07_animacao_visualizador_de_hidrogenoides.md",
+    "ensino/animacao/visualizador-orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
+    "ensino/animacao/visualizador_orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
+    "ensino/guia/atlas_termodinamico/": "textos-acessibilidade/guias/01_guia_atlas_termodinamico.md",
+    "ensino/guia/celulas/": "textos-acessibilidade/guias/02_guia_celulas_unitarias.md",
+    "ensino/guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/": "textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md",
+    "ensino/guia/complexos e polimorfismo/": "textos-acessibilidade/guias/04_guia_complexos_e_polimorfismo.md",
+    "ensino/guia/eq_de_ondas_hidrogenoides/": "textos-acessibilidade/guias/05_guia_equacoes_de_onda_hidrogenoides.md",
+    "ensino/guia/fases_da_agua/": "textos-acessibilidade/guias/06_guia_fases_da_agua.md",
+    "ensino/guia/geometria-molecular-passo-a-passo/": "textos-acessibilidade/guias/07_guia_geometria_molecular_passo_a_passo.md",
+    "ensino/guia/interacoes_intermoleculares/": "textos-acessibilidade/guias/08_guia_interacoes_intermoleculares.md",
+    "ensino/guia/modelos_atomicos/": "textos-acessibilidade/guias/09_guia_modelos_atomicos.md",
+    "ensino/guia/polaridade-molecular-tutorial-guiado-passo-a-passo/": "textos-acessibilidade/guias/10_guia_polaridade_molecular.md",
+    "ensino/exercicio guiado/contagem-de-atomo/": "textos-acessibilidade/exercicios-guiados/01_exercicio_guiado_contagem_de_atomo_formula_unitaria.md",
+    "ensino/exercicio guiado/polaridade-e-geometria-molecular/": "textos-acessibilidade/exercicios-guiados/02_exercicio_guiado_polaridade_e_geometria_molecular.md",
+    "ensino/exercicio guiado/batalha-de-polaridade/": "textos-acessibilidade/exercicios-guiados/03_exercicio_guiado_batalha_de_polaridade.md",
+    "ensino/exercicio guiado/buracos-cristalinos/": "textos-acessibilidade/exercicios-guiados/04_exercicio_guiado_buracos_cristalinos.md",
+    "ensino/exercicio guiado/caca-ao-sitio-cristalino/": "textos-acessibilidade/exercicios-guiados/05_exercicio_guiado_caca_ao_sitio_cristalino.md",
+    "ensino/exercicio guiado/coordenacao-empacotamento/": "textos-acessibilidade/exercicios-guiados/06_exercicio_guiado_coordenacao_e_empacotamento.md",
+    "ensino/exercicio guiado/defeitos-cristalinos/": "textos-acessibilidade/exercicios-guiados/07_exercicio_guiado_defeitos_cristalinos.md",
+    "ensino/exercicio guiado/nome-da-celula/": "textos-acessibilidade/exercicios-guiados/08_exercicio_guiado_nome_da_celula.md",
+    "ensino/jogo/xadrez-quimico/": "textos-acessibilidade/jogos/01_jogo_xadrez_quimico_modo_narrador.md",
+    "ensino/jogo/quebra-cabeca-ionico-covalente/": "textos-acessibilidade/jogos/02_jogo_quebra_cabeca_ionico_covalente_modo_narrador.md",
+    "ensino/jogo/caça-palavras/": "textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md",
+    "ensino/jogo/ca#u00e7a-palavras/": "textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md"
+  };
 
   function text(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
@@ -1264,6 +1337,213 @@
   function listHtml(items) {
     if (!items || !items.length) return '<p>Não há itens mapeados para esta seção.</p>';
     return '<ul>' + items.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul>';
+  }
+
+  function currentDocPath() {
+    var path = normalizePath(window.location.pathname);
+    var bestKey = '';
+    Object.keys(MD_MAP).forEach(function (key) {
+      var normalized = normalizePath(key);
+      if (path.indexOf(normalized) !== -1 && normalized.length > bestKey.length) bestKey = key;
+      if (path.endsWith(normalized) && normalized.length > bestKey.length) bestKey = key;
+    });
+    return bestKey ? MD_MAP[bestKey] : '';
+  }
+
+  function markdownUrlCandidates(docPath) {
+    var clean = String(docPath || '').replace(/^\/+/, '');
+    var urls = [];
+    function add(value) {
+      if (!value || urls.indexOf(value) !== -1) return;
+      urls.push(value);
+    }
+    try { add(new URL(clean, scriptBase || window.location.href).href); } catch (error) {}
+    if (scriptBase) add(scriptBase.replace(/\/?$/, '/') + clean);
+    try {
+      var scriptUrl = new URL(scriptBase || '', window.location.href).href;
+      var match = scriptUrl.match(/^(.*\/Chat\/widget\/)/i);
+      if (match && match[1]) add(match[1] + clean);
+    } catch (error) {}
+    try {
+      var pagePath = window.location.pathname || '';
+      var ensinoIndex = pagePath.toLowerCase().indexOf('/ensino/');
+      if (ensinoIndex >= 0) add(window.location.origin + pagePath.slice(0, ensinoIndex) + '/Chat/widget/' + clean);
+      add(window.location.origin + '/Chat/widget/' + clean);
+    } catch (error) {}
+    return urls;
+  }
+
+  function fetchMarkdownSequential(urls, index) {
+    if (!urls || index >= urls.length) return Promise.reject(new Error('Arquivo de descrição não encontrado.'));
+    return fetch(urls[index], { cache: 'no-store' }).then(function (response) {
+      if (!response.ok) throw new Error('Falha ao carregar ' + urls[index]);
+      return response.text();
+    }).catch(function () {
+      return fetchMarkdownSequential(urls, index + 1);
+    });
+  }
+
+  function markdownUnavailableHtml(docPath, urls) {
+    var urlList = (urls || []).map(function (url) { return '<li><code>' + escapeHtml(url) + '</code></li>'; }).join('');
+    return '<div class="simoens-a11y-md"><h2>Texto acessível não carregado</h2><p>Esta página está mapeada para um arquivo <code>.md</code>, então o widget não vai usar o texto antigo como substituto.</p><p>Verifique se a pasta <code>Chat/widget/textos-acessibilidade/</code> foi enviada junto com o widget e se o arquivo existe neste caminho:</p><p><code>' + escapeHtml(docPath) + '</code></p>' + (urlList ? '<h3>Caminhos testados</h3><ul>' + urlList + '</ul>' : '') + '</div>';
+  }
+
+  function markdownUnavailableSpeech(docPath) {
+    return 'Texto acessível não carregado. Esta página está mapeada para um arquivo markdown, então o widget não vai usar o texto antigo. Verifique se a pasta Chat/widget/textos-acessibilidade foi enviada junto com o widget e se existe o arquivo ' + docPath + '.';
+  }
+
+  function loadMarkdown(callback) {
+    var docPath = currentDocPath();
+    if (!docPath) {
+      callback(null, { mapped: false, path: '', urls: [] });
+      return;
+    }
+    if (!window.fetch) {
+      callback(null, { mapped: true, path: docPath, urls: [], error: 'fetch-indisponivel' });
+      return;
+    }
+    var urls = markdownUrlCandidates(docPath);
+    var cacheKey = docPath + '|' + urls.join('|');
+    if (Object.prototype.hasOwnProperty.call(mdCache, cacheKey)) {
+      callback(mdCache[cacheKey], { mapped: true, path: docPath, urls: urls, cached: true });
+      return;
+    }
+    fetchMarkdownSequential(urls, 0)
+      .then(function (markdown) {
+        mdCache[cacheKey] = markdown || null;
+        callback(mdCache[cacheKey], { mapped: true, path: docPath, urls: urls });
+      })
+      .catch(function () {
+        mdCache[cacheKey] = null;
+        callback(null, { mapped: true, path: docPath, urls: urls, error: 'nao-carregado' });
+      });
+  }
+
+  function stripMarkdown(value) {
+    return text(String(value || '')
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/^#{1,6}\s*/gm, '')
+      .replace(/^\s*[-*+]\s+/gm, '')
+      .replace(/^\s*\d+\.\s+/gm, '')
+      .replace(/[*_`>#|]/g, ' ')
+      .replace(/-{3,}/g, ' ')
+    );
+  }
+
+  function inlineMarkdownHtml(value) {
+    return escapeHtml(value)
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function markdownToHtml(markdown) {
+    var lines = String(markdown || '').replace(/\r\n/g, '\n').split('\n');
+    var html = [];
+    var paragraph = [];
+    var listType = '';
+
+    function flushParagraph() {
+      if (!paragraph.length) return;
+      html.push('<p>' + inlineMarkdownHtml(paragraph.join(' ')) + '</p>');
+      paragraph = [];
+    }
+
+    function closeList() {
+      if (!listType) return;
+      html.push('</' + listType + '>');
+      listType = '';
+    }
+
+    lines.forEach(function (line) {
+      var raw = line.replace(/\s+$/g, '');
+      var trimmed = raw.trim();
+
+      if (!trimmed) {
+        flushParagraph();
+        closeList();
+        return;
+      }
+
+      if (/^#{1,6}\s+/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        var level = Math.min(5, Math.max(3, (trimmed.match(/^#+/) || [''])[0].length + 1));
+        html.push('<h' + level + '>' + inlineMarkdownHtml(trimmed.replace(/^#{1,6}\s+/, '')) + '</h' + level + '>');
+        return;
+      }
+
+      if (/^[-*+]\s+/.test(trimmed)) {
+        flushParagraph();
+        if (listType !== 'ul') {
+          closeList();
+          html.push('<ul>');
+          listType = 'ul';
+        }
+        html.push('<li>' + inlineMarkdownHtml(trimmed.replace(/^[-*+]\s+/, '')) + '</li>');
+        return;
+      }
+
+      if (/^\d+\.\s+/.test(trimmed)) {
+        flushParagraph();
+        if (listType !== 'ol') {
+          closeList();
+          html.push('<ol>');
+          listType = 'ol';
+        }
+        html.push('<li>' + inlineMarkdownHtml(trimmed.replace(/^\d+\.\s+/, '')) + '</li>');
+        return;
+      }
+
+      if (/^---+$/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        html.push('<hr>');
+        return;
+      }
+
+      closeList();
+      paragraph.push(trimmed);
+    });
+
+    flushParagraph();
+    closeList();
+    return html.join('');
+  }
+
+  function entryBodyHtml(item) {
+    return '<p><strong>Tipo:</strong> ' + escapeHtml(item.type) + '</p>' +
+      '<p>' + escapeHtml(item.summary) + '</p>' +
+      '<h3>O que aparece no 3D/canvas</h3><p>' + escapeHtml(item.visual3d) + '</p>' +
+      '<h3>O que aparece no 2D/interface</h3><p>' + escapeHtml(item.visual2d) + '</p>' +
+      '<h3>Animações e mudanças visuais</h3>' + listHtml(item.animations) +
+      '<h3>Etapas de leitura</h3>' + listHtml(item.stages);
+  }
+
+  function entrySpeech(item) {
+    return [item.title, item.type, item.summary, item.visual3d, item.visual2d]
+      .concat(item.animations || [], item.stages || [])
+      .join('. ');
+  }
+
+  function setCanvasDescription(description, item) {
+    var hidden = document.getElementById('simoens-canvas-description');
+    if (!hidden) {
+      hidden = document.createElement('div');
+      hidden.id = 'simoens-canvas-description';
+      hidden.className = 'simoens-a11y-visually-hidden-description';
+      document.body.appendChild(hidden);
+    }
+    hidden.textContent = description;
+    document.querySelectorAll('canvas').forEach(function (canvas, index) {
+      canvas.setAttribute('tabindex', canvas.getAttribute('tabindex') || '0');
+      canvas.setAttribute('role', canvas.getAttribute('role') || 'img');
+      canvas.setAttribute('aria-describedby', 'simoens-canvas-description');
+      if (!canvas.getAttribute('aria-label') || canvas.getAttribute('aria-label').indexOf('Visualização interativa') === 0) {
+        canvas.setAttribute('aria-label', index === 0 ? item.visual3d : item.visual2d);
+      }
+    });
   }
 
   function detectedControls() {
@@ -1395,6 +1675,25 @@
         line-height: 1.6;
       }
 
+      .simoens-a11y-md h3,
+      .simoens-a11y-md h4,
+      .simoens-a11y-md h5 {
+        margin: 20px 0 8px;
+        line-height: 1.25;
+      }
+
+      .simoens-a11y-md code {
+        padding: 2px 6px;
+        border-radius: 8px;
+        background: #f3f4f6;
+      }
+
+      .simoens-a11y-md hr {
+        border: 0;
+        border-top: 1px solid rgba(17,24,39,0.14);
+        margin: 18px 0;
+      }
+
       .simoens-a11y-modal-actions {
         display: flex;
         flex-wrap: wrap;
@@ -1474,47 +1773,110 @@
     if (modal) modal.classList.remove('is-open');
   }
 
-  function speak(content) {
-    if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) return;
-    stopSpeak();
-    currentSpeech = new SpeechSynthesisUtterance(text(content).slice(0, 9000));
+  function splitSpeech(content) {
+    var clean = text(content);
+    var chunks = [];
+    while (clean.length) {
+      var part = clean.slice(0, 1800);
+      var cut = Math.max(part.lastIndexOf('. '), part.lastIndexOf('! '), part.lastIndexOf('? '), part.lastIndexOf('; '));
+      if (cut < 700 || clean.length <= 1800) cut = part.length;
+      chunks.push(text(part.slice(0, cut + 1)));
+      clean = text(clean.slice(cut + 1));
+    }
+    return chunks.filter(Boolean);
+  }
+
+  function speakNextChunk(token) {
+    var shared = speechState();
+    if (shared.stopped || token !== shared.token) return;
+    if (!speechQueue.length) {
+      currentSpeech = null;
+      shared.stopped = true;
+      return;
+    }
+    var chunk = speechQueue.shift();
+    currentSpeech = new SpeechSynthesisUtterance(chunk);
     currentSpeech.lang = 'pt-BR';
     currentSpeech.rate = 0.95;
+    currentSpeech.onend = function () {
+      var latest = speechState();
+      if (!latest.stopped && latest.token === token) speakNextChunk(token);
+    };
+    currentSpeech.onerror = function () {
+      var latest = speechState();
+      if (!latest.stopped && latest.token === token) speakNextChunk(token);
+    };
+    if (speechState().stopped || speechState().token !== token) return;
     window.speechSynthesis.speak(currentSpeech);
   }
 
-  function stopSpeak() {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  function speak(content) {
+    if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) return;
+    stopSpeak(true);
+    speechQueue = splitSpeech(content);
+    if (!speechQueue.length) return;
+    var shared = speechState();
+    shared.token += 1;
+    shared.stopped = false;
+    speakNextChunk(shared.token);
+  }
+
+  function stopSpeak(silent) {
+    var shared = speechState();
+    shared.token += 1;
+    shared.stopped = true;
+    var cancelToken = shared.token;
+    speechQueue = [];
+    if (currentSpeech) {
+      currentSpeech.onend = null;
+      currentSpeech.onerror = null;
+      currentSpeech.onboundary = null;
+      currentSpeech.onpause = null;
+      currentSpeech.onresume = null;
+      currentSpeech.onstart = null;
+    }
     currentSpeech = null;
+    hardCancelSpeech(cancelToken);
   }
 
   function explainPage() {
     var item = currentEntry();
-    var body = '<p><strong>Tipo:</strong> ' + escapeHtml(item.type) + '</p>' +
-      '<p>' + escapeHtml(item.summary) + '</p>' +
-      '<h3>O que aparece no 3D/canvas</h3><p>' + escapeHtml(item.visual3d) + '</p>' +
-      '<h3>O que aparece no 2D/interface</h3><p>' + escapeHtml(item.visual2d) + '</p>' +
-      '<h3>Animações e mudanças visuais</h3>' + listHtml(item.animations) +
-      '<h3>Etapas de leitura</h3>' + listHtml(item.stages);
-    openModal('Explicação da visualização — ' + item.title, body);
+    loadMarkdown(function (markdown, meta) {
+      if (markdown) {
+        var speechFromMarkdown = stripMarkdown(markdown);
+        openModal('Explicar visualização — ' + item.title, '<div class="simoens-a11y-md">' + markdownToHtml(markdown) + '</div>', speechFromMarkdown);
+        speak(speechFromMarkdown);
+        return;
+      }
+      if (meta && meta.mapped) {
+        var unavailableSpeech = markdownUnavailableSpeech(meta.path);
+        openModal('Texto acessível não carregado — ' + item.title, markdownUnavailableHtml(meta.path, meta.urls), unavailableSpeech);
+        speak(unavailableSpeech);
+        return;
+      }
+      var speech = entrySpeech(item);
+      openModal('Explicação da visualização — ' + item.title, entryBodyHtml(item), speech);
+      speak(speech);
+    });
   }
 
-  function narratedSteps() {
+  function readAccessibleDocument() {
+    if (!currentDocPath()) return false;
     var item = currentEntry();
-    var body = '<p>Sequência narrada sugerida para acompanhar esta atividade.</p><ol>' + (item.stages || []).map(function (step) { return '<li>' + escapeHtml(step) + '</li>'; }).join('') + '</ol>';
-    var speech = item.title + '. ' + (item.stages || []).join('. ');
-    openModal('Passo narrado — ' + item.title, body, speech);
-    speak(speech);
-  }
-
-  function glossary() {
-    var item = currentEntry();
-    var terms = item.glossary && item.glossary.length ? item.glossary : Object.keys(GLOSSARY);
-    var body = '<p>Glossário de termos úteis para interpretar esta página.</p><dl>' + terms.map(function (term) {
-      var key = String(term).toLowerCase();
-      return '<dt><strong>' + escapeHtml(term) + '</strong></dt><dd>' + escapeHtml(GLOSSARY[key] || 'Termo relacionado à visualização atual. Consulte o texto da página para o contexto específico.') + '</dd>';
-    }).join('') + '</dl>';
-    openModal('Glossário acessível', body);
+    loadMarkdown(function (markdown, meta) {
+      if (markdown) {
+        var speech = stripMarkdown(markdown);
+        openModal('Texto acessível — ' + item.title, '<div class="simoens-a11y-md">' + markdownToHtml(markdown) + '</div>', speech);
+        speak(speech);
+        return;
+      }
+      if (meta && meta.mapped) {
+        var unavailableSpeech = markdownUnavailableSpeech(meta.path);
+        openModal('Texto acessível não carregado — ' + item.title, markdownUnavailableHtml(meta.path, meta.urls), unavailableSpeech);
+        speak(unavailableSpeech);
+      }
+    });
+    return true;
   }
 
   function keyboardHelp() {
@@ -1551,7 +1913,7 @@
   }
 
   function declaration() {
-    var body = '<p>O SiMoEns oferece recursos de acessibilidade complementares: VLibras, leitura em voz, contraste, fonte ajustável, tons de cinza, redução de efeitos, guia de leitura, descrições de visualizações e alternativas de teclado.</p><p>As visualizações em canvas recebem descrições textuais e mapas de etapas para apoiar pessoas cegas, baixa visão, usuários de teclado e estudantes que precisam de leitura mais orientada.</p><p>Para melhor experiência com leitor de tela, recomenda-se navegar pelos títulos, botões e controles, usando Tab, Enter, Espaço e Esc.</p>';
+    var body = '<p>O SiMoEns oferece recursos de acessibilidade complementares: VLibras, leitura em voz, contraste, fonte ajustável, tons de cinza, filtros para daltonismo, redução de efeitos, guia de leitura, descrições textuais de visualizações, alternativas de teclado e modo voz contextual no Xadrez Químico.</p><p>As páginas com canvas, animações, guias, exercícios guiados e jogos podem carregar textos acessíveis em arquivos Markdown. Ao acionar “Explicar visualização”, o widget abre o texto completo correspondente à página e inicia a leitura em voz.</p><p>No Xadrez Químico, o modo voz fica em um arquivo JavaScript próprio e não usa Markdown: ao ser ativado, narra peça, vidraria, posição, opções de movimento, capturas, movimentos da máquina, xeque e xeque-mate.</p><p>Quando houver texto selecionado na página, o botão “Ouvir” lê apenas a seleção. Sem seleção ativa, a leitura volta para o texto acessível da página ou para o conteúdo principal disponível.</p><p>Para melhor experiência com leitor de tela, recomenda-se navegar pelos títulos, botões e controles usando Tab, Shift + Tab, Enter, Espaço e Esc.</p>';
     openModal('Declaração de acessibilidade', body);
   }
 
@@ -1574,21 +1936,10 @@
   function enhanceCanvasDescriptions() {
     var item = currentEntry();
     var description = [item.title, item.summary, item.visual3d, item.visual2d].filter(Boolean).join(' ');
-    var hidden = document.getElementById('simoens-canvas-description');
-    if (!hidden) {
-      hidden = document.createElement('div');
-      hidden.id = 'simoens-canvas-description';
-      hidden.className = 'simoens-a11y-visually-hidden-description';
-      document.body.appendChild(hidden);
-    }
-    hidden.textContent = description;
-    document.querySelectorAll('canvas').forEach(function (canvas, index) {
-      canvas.setAttribute('tabindex', canvas.getAttribute('tabindex') || '0');
-      canvas.setAttribute('role', canvas.getAttribute('role') || 'img');
-      canvas.setAttribute('aria-describedby', 'simoens-canvas-description');
-      if (!canvas.getAttribute('aria-label') || canvas.getAttribute('aria-label').indexOf('Visualização interativa') === 0) {
-        canvas.setAttribute('aria-label', index === 0 ? item.visual3d : item.visual2d);
-      }
+    setCanvasDescription(description, item);
+    loadMarkdown(function (markdown) {
+      if (!markdown) return;
+      setCanvasDescription([item.title, stripMarkdown(markdown).slice(0, 1800)].filter(Boolean).join('. '), item);
     });
   }
 
@@ -1611,7 +1962,7 @@
     var section = document.createElement('div');
     section.className = 'simoens-a11y-section simoens-a11y-extra-section';
     section.setAttribute('data-simoens-extra-section', 'true');
-    section.innerHTML = '<p class="simoens-a11y-section-title">Conteúdo acessível</p><div class="simoens-a11y-grid"><button class="simoens-a11y-action" type="button" data-simoens-extra="explain" title="Explica em texto o que aparece na visualização 3D, no apoio 2D e nas animações.">Explicar visualização</button><button class="simoens-a11y-action" type="button" data-simoens-extra="narrated" title="Mostra e lê uma sequência passo a passo para acompanhar a atividade.">Passo narrado</button><button class="simoens-a11y-action" type="button" data-simoens-extra="glossary" title="Abre um glossário de termos científicos da página.">Glossário</button><button class="simoens-a11y-action" type="button" data-simoens-extra="reading" aria-pressed="false" title="Ativa uma leitura visual mais limpa, com menos distrações e melhor espaçamento.">Modo leitura</button><button class="simoens-a11y-action" type="button" data-simoens-extra="keyboard" title="Mostra atalhos e instruções para usar o site sem mouse.">Ajuda teclado</button><button class="simoens-a11y-action" type="button" data-simoens-extra="controls" title="Mostra alternativas para manipular visualizações 3D e controles interativos.">Controles 3D</button><button class="simoens-a11y-action is-wide" type="button" data-simoens-extra="declaration" title="Mostra a declaração de acessibilidade do site.">Declaração de acessibilidade</button></div>';
+    section.innerHTML = '<p class="simoens-a11y-section-title">Conteúdo acessível</p><div class="simoens-a11y-grid"><button class="simoens-a11y-action" type="button" data-simoens-extra="explain" title="Abre e lê o texto acessível completo da visualização atual.">Explicar visualização</button><button class="simoens-a11y-action" type="button" data-simoens-extra="reading" aria-pressed="false" title="Ativa uma leitura visual mais limpa, com menos distrações e melhor espaçamento.">Modo leitura</button><button class="simoens-a11y-action" type="button" data-simoens-extra="keyboard" title="Mostra atalhos e instruções para usar o site sem mouse.">Ajuda teclado</button><button class="simoens-a11y-action" type="button" data-simoens-extra="controls" title="Mostra alternativas para manipular visualizações 3D e controles interativos.">Controles 3D</button><button class="simoens-a11y-action is-wide" type="button" data-simoens-extra="declaration" title="Mostra a declaração de acessibilidade do site.">Declaração de acessibilidade</button></div>';
     var navSection = panel.querySelector('.simoens-a11y-section:last-of-type');
     panel.insertBefore(section, navSection || null);
     panel.addEventListener('click', function (event) {
@@ -1619,8 +1970,6 @@
       if (!button) return;
       var action = button.getAttribute('data-simoens-extra');
       if (action === 'explain') explainPage();
-      if (action === 'narrated') narratedSteps();
-      if (action === 'glossary') glossary();
       if (action === 'reading') toggleReading(button);
       if (action === 'keyboard') keyboardHelp();
       if (action === 'controls') controlsHelp();
@@ -1630,6 +1979,8 @@
   }
 
   function start() {
+    window.simoensReadAccessibleDescription = readAccessibleDocument;
+    window.simoensStopAccessibleSpeech = stopSpeak;
     injectStyle();
     appendButtons();
     enhanceCanvasDescriptions();

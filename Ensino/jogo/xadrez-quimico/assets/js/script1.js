@@ -621,6 +621,166 @@ function King({ material, liquid, liquidRef, themeId }) {
         'k': { name: 'Frasco de Drechsel (Rei)', desc: 'Poderoso lavador de gases engenhado magistralmente com sistema de fluxo vedante contendo tubo mergulhado interno onde fluidos gasosos passam inibitivamente num contínuo e exaustivo borbulhar processado.' }
     }
 };
+const CHESS_VOICE_PIECES = {
+    p: 'Peão',
+    r: 'Torre',
+    n: 'Cavalo',
+    b: 'Bispo',
+    q: 'Rainha',
+    k: 'Rei'
+};
+function chessVoiceGlassware(theme, type) {
+    const name = GLASSWARE_THEMES[theme]?.[type]?.name || 'Vidraria';
+    return String(name).replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+function chessVoicePieceData(chess, theme, square, piece, extra) {
+    const data = Object.assign({
+        type: piece?.type || '',
+        color: piece?.color || '',
+        pieceName: CHESS_VOICE_PIECES[piece?.type] || 'Peça',
+        glassware: chessVoiceGlassware(theme, piece?.type),
+        square
+    }, extra || {});
+    return data;
+}
+function chessVoiceFindKing(chess, theme, color) {
+    const board = chess.board();
+    for (let r = 0; r < 8; r += 1) {
+        for (let c = 0; c < 8; c += 1) {
+            const piece = board[r][c];
+            if (piece && piece.type === 'k' && piece.color === color) {
+                const square = `${['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'][c]}${8 - r}`;
+                return chessVoicePieceData(chess, theme, square, piece);
+            }
+        }
+    }
+    return null;
+}
+function chessVoiceFenForTurn(chess, color) {
+    const parts = chess.fen().split(' ');
+    parts[1] = color;
+    parts[3] = '-';
+    return parts.join(' ');
+}
+function chessVoiceCaptureCard(theme, type) {
+    const item = GLASSWARE_THEMES[theme]?.[type] || null;
+    return {
+        title: 'Vidraria Capturada!',
+        name: item?.name || 'Vidraria',
+        heading: 'Uso em Laboratório',
+        desc: item?.desc || 'Descrição não encontrada.'
+    };
+}
+function chessVoiceCaptureMovesForColor(chess, theme, color) {
+    try {
+        const probe = new Chess(chessVoiceFenForTurn(chess, color));
+        return probe.moves({ verbose: true }).filter(move => move.captured).map(move => {
+            const capturedSquare = move.flags && move.flags.includes('e') ? move.to[0] + move.from[1] : move.to;
+            const attackerPiece = chess.get(move.from) || { type: move.piece, color };
+            const targetPiece = chess.get(capturedSquare) || { type: move.captured, color: color === 'w' ? 'b' : 'w' };
+            return {
+                from: move.from,
+                to: capturedSquare,
+                attacker: chessVoicePieceData(chess, theme, move.from, attackerPiece),
+                target: chessVoicePieceData(chess, theme, capturedSquare, targetPiece)
+            };
+        });
+    } catch (error) {
+        return [];
+    }
+}
+function chessVoiceTacticalState(chess, theme, includeEmpty = false) {
+    return {
+        includeEmpty,
+        enemyThreats: chessVoiceCaptureMovesForColor(chess, theme, 'b'),
+        allyCaptures: chessVoiceCaptureMovesForColor(chess, theme, 'w')
+    };
+}
+function chessVoiceEmit(detail) {
+    try {
+        const type = detail?.type || detail?.action || '';
+        if (type === 'select') {
+            const piece = detail.piece || {};
+            const options = (detail.options || []).map(v => String(v || '').toUpperCase()).join(', ') || 'nenhuma opção disponível';
+            window.__simoensChessVoiceCurrentSelectionText = `Selecionado: ${piece.pieceName || 'Peça'}, ${piece.glassware || 'vidraria não identificada'}, ${String(piece.square || '').toUpperCase()}. Opções: ${options}.`;
+        } else if (type === 'move' || type === 'capture' || (type === 'status' && (detail.status === 'reset' || detail.status === 'cancel'))) {
+            window.__simoensChessVoiceCurrentSelectionText = '';
+        }
+        window.dispatchEvent(new CustomEvent('simoens-chess-voice', { detail }));
+    } catch (error) {}
+}
+function chessVoiceController() {
+    return window.SiMoEnsChessVoice && typeof window.SiMoEnsChessVoice.isActive === 'function' ? window.SiMoEnsChessVoice : null;
+}
+function chessVoiceIsActive() {
+    const voice = chessVoiceController();
+    return !!(voice && voice.isActive());
+}
+function chessVoiceRunAfterSpeech(detail, callback) {
+    const voice = chessVoiceController();
+    if (voice && voice.isActive() && typeof voice.runAfterSpeech === 'function') {
+        voice.runAfterSpeech(detail || '', callback);
+        return true;
+    }
+    callback();
+    return false;
+}
+function chessVoiceAfterCurrentSpeech(callback) {
+    const voice = chessVoiceController();
+    if (voice && voice.isActive() && typeof voice.runAfterSpeech === 'function') {
+        voice.runAfterSpeech('', callback);
+        return true;
+    }
+    callback();
+    return false;
+}
+function chessVoiceMoveActionMessage(chess, theme, move) {
+    const movingPiece = chess.get(move.from);
+    const moving = chessVoicePieceData(chess, theme, move.from, movingPiece || { type: move.piece, color: chess.turn() }, { from: move.from, to: move.to });
+    let capturedSquare = move.to;
+    if (move.flags && move.flags.includes('e')) capturedSquare = move.to[0] + move.from[1];
+    const capturedPiece = move.captured ? chess.get(capturedSquare) || { type: move.captured, color: moving.color === 'w' ? 'b' : 'w' } : null;
+    const from = String(move.from || '').toUpperCase();
+    const to = String(move.to || '').toUpperCase();
+    if (capturedPiece) {
+        const captured = chessVoicePieceData(chess, theme, capturedSquare, capturedPiece);
+        return 'Ação escolhida: ' + moving.pieceName + ', ' + moving.glassware + ', de ' + from + ' para ' + to + '. Vai capturar ' + captured.pieceName + ', ' + captured.glassware + ' em ' + String(capturedSquare).toUpperCase() + '.';
+    }
+    return 'Ação escolhida: mover ' + moving.pieceName + ', ' + moving.glassware + ', de ' + from + ' para ' + to + '.';
+}
+function chessVoiceMoveDetail(chess, theme, result, capturedSquare) {
+    const movingPiece = { type: result.piece, color: result.color };
+    const capturedPiece = result.captured ? { type: result.captured, color: result.color === 'w' ? 'b' : 'w' } : null;
+    return {
+        type: result.captured ? 'capture' : 'move',
+        from: result.from,
+        to: result.to,
+        turn: chess.turn(),
+        check: chess.inCheck(),
+        checkmate: chess.isCheckmate(),
+        inCheckColor: chess.inCheck() ? chess.turn() : '',
+        moving: chessVoicePieceData(chess, theme, result.to, movingPiece, { from: result.from, to: result.to }),
+        captured: capturedPiece ? chessVoicePieceData(chess, theme, capturedSquare || result.to, capturedPiece) : null,
+        captureCard: capturedPiece ? chessVoiceCaptureCard(theme, result.captured) : null,
+        tactical: chessVoiceTacticalState(chess, theme, false),
+        kings: {
+            w: chessVoiceFindKing(chess, theme, 'w'),
+            b: chessVoiceFindKing(chess, theme, 'b')
+        }
+    };
+}
+function chessVoiceSelectDetail(chess, theme, square, piece, moves) {
+    return {
+        type: 'select',
+        piece: chessVoicePieceData(chess, theme, square, piece),
+        options: (moves || []).map(m => m.to),
+        tactical: chessVoiceTacticalState(chess, theme, false),
+        kings: {
+            w: chessVoiceFindKing(chess, theme, 'w'),
+            b: chessVoiceFindKing(chess, theme, 'b')
+        }
+    };
+}
 function App() {
     const [chess] = useState(() => new Chess());
     const [fen, setFen] = useState(chess.fen());
@@ -635,6 +795,7 @@ function App() {
     const [isAnimatingCapture, setIsAnimatingCapture] = useState(false);
     const [capturePopup, setCapturePopup] = useState(null);
     const aiMoveQueuedRef = useRef(false);
+    const voiceActionPendingRef = useRef(false);
     const workerRef = useRef(null);
     // Initialize the AI worker
     useEffect(() => {
@@ -647,7 +808,13 @@ function App() {
                 return;
             }
             if (bestMove) {
-                executeMove(bestMove);
+                chessVoiceAfterCurrentSpeech(() => {
+                    executeMove(bestMove);
+                    chessVoiceAfterCurrentSpeech(() => {
+                        setIsEngineThinking(false);
+                    });
+                });
+                return;
             }
             setIsEngineThinking(false);
         };
@@ -658,11 +825,15 @@ function App() {
     // Handle deferred AI move
     const triggerAIMove = () => {
         if (aiMoveQueuedRef.current && chess.turn() === 'b' && !chess.isGameOver()) {
-            aiMoveQueuedRef.current = false;
-            workerRef.current?.postMessage({
-                fen: chess.fen(),
-                difficulty
-            });
+            const sendMoveRequest = () => {
+                if (!aiMoveQueuedRef.current || chess.turn() !== 'b' || chess.isGameOver()) return;
+                aiMoveQueuedRef.current = false;
+                workerRef.current?.postMessage({
+                    fen: chess.fen(),
+                    difficulty
+                });
+            };
+            chessVoiceAfterCurrentSpeech(sendMoveRequest);
         }
     };
     // Trigger whenever popup is closed (if AI move is pending)
@@ -696,11 +867,11 @@ function App() {
     const executeMove = (moveInput) => {
         try {
             const result = chess.move(moveInput);
+            let capPos = result.to;
             if (result.captured) {
                 playGlassBreakSound();
                 setIsAnimatingCapture(true);
                 setTimeout(() => setIsAnimatingCapture(false), 3500);
-                let capPos = result.to;
                 if (result.flags.includes('e')) {
                     // Adjust for En Passant
                     capPos = (result.to[0] + result.from[1]);
@@ -714,15 +885,17 @@ function App() {
                     }]);
                 // Delay the popup so user can see it break first
                 setTimeout(() => {
-                    setCapturePopup({ type: result.captured, team: result.color === 'w' ? 'b' : 'w' });
+                    setCapturePopup({ type: result.captured, team: result.color === 'w' ? 'b' : 'w', card: chessVoiceCaptureCard(theme, result.captured) });
                 }, 1200);
             }
             else {
                 playGlassClink();
             }
+            const voiceDetail = chessVoiceMoveDetail(chess, theme, result, result.captured ? capPos : result.to);
             setFen(chess.fen());
             setSelectedSquare(null);
             setValidMoves([]);
+            chessVoiceEmit(voiceDetail);
             checkGameOver();
             if (chess.history().length === 1 || chess.history().length === 2) {
                 setIsMenuOpen(false); // Hide menu organically when match starts
@@ -735,36 +908,65 @@ function App() {
         }
     };
     const handleSquareClick = (square) => {
-        playClickSound(); // Audio feedback
-        if (isEngineThinking || chess.turn() === 'b' || gameOver || isAnimatingCapture)
+        if (voiceActionPendingRef.current) {
             return;
+        }
+        playClickSound();
+        if (isEngineThinking || chess.turn() === 'b' || gameOver || isAnimatingCapture) {
+            if (!chessVoiceIsActive()) {
+                chessVoiceEmit({ type: 'status', status: 'blocked', message: isEngineThinking || chess.turn() === 'b' ? 'Aguarde. Movimento da máquina em andamento.' : 'Aguarde a animação atual terminar.' });
+            }
+            return;
+        }
         if (selectedSquare) {
             // Trying to move
             const move = validMoves.find((m) => m.to === square);
             if (move) {
-                const result = executeMove(move);
-                if (result && !chess.isGameOver()) {
-                    setIsEngineThinking(true);
-                    aiMoveQueuedRef.current = true;
-                    if (!result.captured) {
-                        // Wait a small delay for normal move
-                        setTimeout(() => {
-                            triggerAIMove();
-                        }, 1500);
+                let moveAlreadyExecuted = false;
+                const runMove = () => {
+                    if (moveAlreadyExecuted) return;
+                    moveAlreadyExecuted = true;
+                    const result = executeMove(move);
+                    voiceActionPendingRef.current = false;
+                    if (result && !chess.isGameOver()) {
+                        setIsEngineThinking(true);
+                        aiMoveQueuedRef.current = true;
+                        if (!result.captured) {
+                            const delay = chessVoiceIsActive() ? 650 : 1500;
+                            setTimeout(() => {
+                                triggerAIMove();
+                            }, delay);
+                        }
                     }
-                    // If captured, triggerAIMove will be fired by the useEffect when the popup is closed by the user!
+                };
+                if (chessVoiceIsActive()) {
+                    voiceActionPendingRef.current = true;
+                    const pendingWatchdog = setTimeout(() => {
+                        if (voiceActionPendingRef.current) {
+                            runMove();
+                        }
+                    }, 18000);
+                    chessVoiceRunAfterSpeech(chessVoiceMoveActionMessage(chess, theme, move), () => {
+                        clearTimeout(pendingWatchdog);
+                        runMove();
+                    });
+                } else {
+                    runMove();
                 }
             }
             else {
                 // Did we click another piece of ours?
                 const piece = chess.get(square);
                 if (piece && piece.color === 'w') {
+                    const moves = chess.moves({ square, verbose: true });
                     setSelectedSquare(square);
-                    setValidMoves(chess.moves({ square, verbose: true }));
+                    setValidMoves(moves);
+                    chessVoiceEmit(chessVoiceSelectDetail(chess, theme, square, piece, moves));
                 }
                 else {
                     setSelectedSquare(null);
                     setValidMoves([]);
+                    chessVoiceEmit({ type: 'status', status: piece ? 'invalid' : 'cancel', message: piece ? 'Esta peça pertence ao inimigo. Selecione uma peça branca.' : 'Seleção cancelada.' });
                 }
             }
         }
@@ -772,8 +974,13 @@ function App() {
             // Select piece
             const piece = chess.get(square);
             if (piece && piece.color === 'w') {
+                const moves = chess.moves({ square, verbose: true });
                 setSelectedSquare(square);
-                setValidMoves(chess.moves({ square, verbose: true }));
+                setValidMoves(moves);
+                chessVoiceEmit(chessVoiceSelectDetail(chess, theme, square, piece, moves));
+            }
+            else if (piece) {
+                chessVoiceEmit({ type: 'status', status: 'invalid', message: 'Esta peça pertence ao inimigo. Selecione uma peça branca.' });
             }
         }
     };
@@ -785,7 +992,9 @@ function App() {
         setCapturedPieces([]);
         setGameOver('');
         setIsEngineThinking(false);
+        voiceActionPendingRef.current = false;
         setIsMenuOpen(true);
+        chessVoiceEmit({ type: 'status', status: 'reset' });
     };
     const gameHistory = chess.history();
     const historyPairs = [];
@@ -821,7 +1030,7 @@ function App() {
                                             ? 'bg-cyan-900/30 border-cyan-800 text-cyan-200 animate-pulse'
                                             : isAnimatingCapture
                                                 ? 'bg-amber-900/30 border-amber-800 text-amber-200'
-                                                : 'bg-emerald-900/30 border-emerald-800 text-emerald-200'}`, children: isEngineThinking ? 'A Máquina está pensando...' : isAnimatingCapture ? 'Garantindo reações químicas...' : 'Sua vez de jogar (Brancas)' })), chess.inCheck() && !gameOver && (_jsx("div", { className: "bg-yellow-900/30 border border-yellow-800 rounded-lg p-3 text-yellow-200", children: _jsx("span", { className: "font-bold", children: "Aviso: Voc\u00EA est\u00E1 em Xeque!" }) }))] })] }), _jsx("button", { onClick: resetGame, className: "w-full py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg font-bold text-white transition-colors", children: "Reiniciar Partida" }), _jsx("div", { className: "text-xs text-center text-gray-600 space-y-1" })] }), _jsx("div", { className: "flex-1 relative w-full h-full", children: _jsxs(Canvas, { camera: { position: [0, 6, 8], fov: 45 }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("spotLight", { position: [10, 15, 10], angle: 0.3, penumbra: 1, intensity: 2, castShadow: true }), _jsx("pointLight", { position: [-10, 10, -10], intensity: 1, color: "#e0f7fa" }), _jsx(Environment, { preset: "city" }), _jsxs("group", { position: [0, -0.5, 0], children: [_jsx(ChessBoardFloor, { onSquareClick: handleSquareClick, highlightedSquares: validMoves.map(m => m.to) }), pieces, gameOver && chess.isCheckmate() && (_jsx(Text, { position: [0, 4, 0], fontSize: 1.5, color: chess.turn() === 'w' ? '#0ea5e9' : '#10b981', anchorX: "center", anchorY: "middle", outlineWidth: 0.05, outlineColor: "#ffffff", depthOffset: -1, rotation: [-Math.PI / 6, 0, 0], children: "VIT\u00D3RIA" })), _jsx(ContactShadows, { position: [0, -0.29, 0], opacity: 0.5, scale: 15, blur: 2.5, far: 4.5 })] }), _jsx(OrbitControls, { minPolarAngle: 0, maxPolarAngle: Math.PI / 2 - 0.1, minDistance: 4, maxDistance: 15 })] }) }), capturePopup && (_jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4", children: _jsxs("div", { className: "bg-gray-900 border border-gray-700/50 rounded-2xl shadow-2xl p-6 max-w-md w-full relative", children: [_jsxs("div", { className: "text-center mb-4", children: [_jsx("h3", { className: "text-2xl font-bold text-white mb-1", children: "Vidraria Capturada!" }), _jsx("p", { className: "text-emerald-400 font-medium", children: GLASSWARE_THEMES[theme]?.[capturePopup.type]?.name || 'Vidraria' })] }), _jsx("div", { className: "h-64 w-full rounded-xl bg-gradient-to-tr from-gray-800 to-gray-900 border border-gray-800 mb-6 overflow-hidden relative shadow-inner", children: _jsxs(Canvas, { camera: { position: [0, 1.5, 3.5], fov: 40 }, children: [_jsx("ambientLight", { intensity: 0.6 }), _jsx("spotLight", { position: [5, 10, 5], angle: 0.3, penumbra: 1, intensity: 2 }), _jsx(Environment, { preset: "city" }), _jsx("group", { position: [0, -0.6, 0], children: _jsx(ChessPiece, { type: capturePopup.type, team: capturePopup.team, position: [0, 0, 0], isHighlighted: false, themeId: theme }) }), _jsx(OrbitControls, { autoRotate: true, autoRotateSpeed: 4, enableZoom: false, enablePan: false, maxPolarAngle: Math.PI / 2 + 0.2, minPolarAngle: 0.2 })] }) }), _jsxs("div", { className: "bg-gray-800/60 p-4 rounded-lg mb-6 border border-gray-700", children: [_jsx("h4", { className: "text-xs uppercase tracking-wider text-gray-500 font-bold mb-2", children: "Uso em Laborat\u00F3rio" }), _jsx("p", { className: "text-gray-300 text-sm leading-relaxed", children: GLASSWARE_THEMES[theme]?.[capturePopup.type]?.desc || 'Descrição não encontrada.' })] }), _jsx("button", { onClick: () => setCapturePopup(null), className: "w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-900/30 active:scale-[0.98]", children: "Entendi!" })] }) }))] }));
+                                                : 'bg-emerald-900/30 border-emerald-800 text-emerald-200'}`, children: isEngineThinking ? 'A Máquina está pensando...' : isAnimatingCapture ? 'Garantindo reações químicas...' : 'Sua vez de jogar (Brancas)' })), chess.inCheck() && !gameOver && (_jsx("div", { className: "bg-yellow-900/30 border border-yellow-800 rounded-lg p-3 text-yellow-200", children: _jsx("span", { className: "font-bold", children: "Aviso: Voc\u00EA est\u00E1 em Xeque!" }) }))] })] }), _jsx("button", { onClick: resetGame, className: "w-full py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg font-bold text-white transition-colors", children: "Reiniciar Partida" }), _jsx("div", { className: "text-xs text-center text-gray-600 space-y-1" })] }), _jsx("div", { className: "flex-1 relative w-full h-full", children: _jsxs(Canvas, { camera: { position: [0, 6, 8], fov: 45 }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("spotLight", { position: [10, 15, 10], angle: 0.3, penumbra: 1, intensity: 2, castShadow: true }), _jsx("pointLight", { position: [-10, 10, -10], intensity: 1, color: "#e0f7fa" }), _jsx(Environment, { preset: "city" }), _jsxs("group", { position: [0, -0.5, 0], children: [_jsx(ChessBoardFloor, { onSquareClick: handleSquareClick, highlightedSquares: validMoves.map(m => m.to) }), pieces, gameOver && chess.isCheckmate() && (_jsx(Text, { position: [0, 4, 0], fontSize: 1.5, color: chess.turn() === 'w' ? '#0ea5e9' : '#10b981', anchorX: "center", anchorY: "middle", outlineWidth: 0.05, outlineColor: "#ffffff", depthOffset: -1, rotation: [-Math.PI / 6, 0, 0], children: "VIT\u00D3RIA" })), _jsx(ContactShadows, { position: [0, -0.29, 0], opacity: 0.5, scale: 15, blur: 2.5, far: 4.5 })] }), _jsx(OrbitControls, { minPolarAngle: 0, maxPolarAngle: Math.PI / 2 - 0.1, minDistance: 4, maxDistance: 15 })] }) }), capturePopup && (_jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4", children: _jsxs("div", { className: "bg-gray-900 border border-gray-700/50 rounded-2xl shadow-2xl p-6 max-w-md w-full relative", children: [_jsxs("div", { className: "text-center mb-4", children: [_jsx("h3", { className: "text-2xl font-bold text-white mb-1", children: "Vidraria Capturada!" }), _jsx("p", { className: "text-emerald-400 font-medium", children: capturePopup.card?.name || GLASSWARE_THEMES[theme]?.[capturePopup.type]?.name || 'Vidraria' })] }), _jsx("div", { className: "h-64 w-full rounded-xl bg-gradient-to-tr from-gray-800 to-gray-900 border border-gray-800 mb-6 overflow-hidden relative shadow-inner", children: _jsxs(Canvas, { camera: { position: [0, 1.5, 3.5], fov: 40 }, children: [_jsx("ambientLight", { intensity: 0.6 }), _jsx("spotLight", { position: [5, 10, 5], angle: 0.3, penumbra: 1, intensity: 2 }), _jsx(Environment, { preset: "city" }), _jsx("group", { position: [0, -0.6, 0], children: _jsx(ChessPiece, { type: capturePopup.type, team: capturePopup.team, position: [0, 0, 0], isHighlighted: false, themeId: theme }) }), _jsx(OrbitControls, { autoRotate: true, autoRotateSpeed: 4, enableZoom: false, enablePan: false, maxPolarAngle: Math.PI / 2 + 0.2, minPolarAngle: 0.2 })] }) }), _jsxs("div", { className: "bg-gray-800/60 p-4 rounded-lg mb-6 border border-gray-700", children: [_jsx("h4", { className: "text-xs uppercase tracking-wider text-gray-500 font-bold mb-2", children: "Uso em Laborat\u00F3rio" }), _jsx("p", { className: "text-gray-300 text-sm leading-relaxed", children: capturePopup.card?.desc || GLASSWARE_THEMES[theme]?.[capturePopup.type]?.desc || 'Descrição não encontrada.' })] }), _jsx("button", { onClick: () => setCapturePopup(null), className: "w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-emerald-900/30 active:scale-[0.98]", children: "Entendi!" })] }) }))] }));
 }
 
     createRoot(document.getElementById('root')).render(

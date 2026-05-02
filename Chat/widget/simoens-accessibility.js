@@ -1571,6 +1571,30 @@ html.simoens-a11y-focus :focus,
     }, { passive: true });
   }
 
+  function remove3DFocusShortcutButtons() {
+    var labels = ['Focar primeiro controle da página', 'Focar visualização'];
+    var parents = [];
+    document.querySelectorAll('button, a, [role="button"], input[type="button"], input[type="submit"]').forEach(function (control) {
+      if (control.closest && control.closest('.simoens-a11y-widget')) return;
+      var label = text(control.textContent || control.value || control.getAttribute('aria-label') || control.getAttribute('title') || '');
+      if (labels.indexOf(label) === -1) return;
+      if (control.parentElement) parents.push(control.parentElement);
+      control.remove();
+    });
+    parents.forEach(function (parent) {
+      var current = parent;
+      while (current && current !== document.body && current !== document.documentElement) {
+        if (current.children && current.children.length === 0 && !text(current.textContent)) {
+          var next = current.parentElement;
+          current.remove();
+          current = next;
+        } else {
+          break;
+        }
+      }
+    });
+  }
+
   function applyFixes() {
     if (!document.documentElement.getAttribute('lang')) document.documentElement.setAttribute('lang', 'pt-BR');
     ensureSkipLink();
@@ -1581,6 +1605,7 @@ html.simoens-a11y-focus :focus,
     ensureVLibras();
     ensureChat();
     protectAssistiveWidgets();
+    remove3DFocusShortcutButtons();
   }
 
   function loadAnimationAccessibilityExtension() {

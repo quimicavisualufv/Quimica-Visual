@@ -229,7 +229,6 @@
     }
     return false;
   }
-
   function updateFontScaling() {
     var scaleMap = [1, 1.125, 1.25, 1.375];
     var scale = scaleMap[state.font] || 1;
@@ -482,30 +481,30 @@
       }
 
       html.simoens-a11y-colorblind-redgreen .simoens-a11y-colorblind-layer {
-        -webkit-backdrop-filter: url("#simoens-a11y-filter-redgreen") saturate(1.18) contrast(1.12) brightness(1.02) !important;
-        backdrop-filter: url("#simoens-a11y-filter-redgreen") saturate(1.18) contrast(1.12) brightness(1.02) !important;
+        -webkit-backdrop-filter: saturate(1.38) contrast(1.18) brightness(1.03) hue-rotate(-8deg) !important;
+        backdrop-filter: saturate(1.38) contrast(1.18) brightness(1.03) hue-rotate(-8deg) !important;
         filter: none !important;
       }
 
       html.simoens-a11y-colorblind-blueyellow .simoens-a11y-colorblind-layer {
-        -webkit-backdrop-filter: url("#simoens-a11y-filter-blueyellow") saturate(1.2) contrast(1.14) brightness(1.02) !important;
-        backdrop-filter: url("#simoens-a11y-filter-blueyellow") saturate(1.2) contrast(1.14) brightness(1.02) !important;
+        -webkit-backdrop-filter: saturate(1.32) contrast(1.2) brightness(1.04) hue-rotate(14deg) !important;
+        backdrop-filter: saturate(1.32) contrast(1.2) brightness(1.04) hue-rotate(14deg) !important;
         filter: none !important;
       }
 
       html.simoens-a11y-motion.simoens-a11y-colorblind-redgreen .simoens-a11y-colorblind-layer,
       html.simoens-a11y-colorblind-redgreen.simoens-a11y-motion .simoens-a11y-colorblind-layer {
         display: block !important;
-        -webkit-backdrop-filter: url("#simoens-a11y-filter-redgreen") saturate(1.18) contrast(1.12) brightness(1.02) !important;
-        backdrop-filter: url("#simoens-a11y-filter-redgreen") saturate(1.18) contrast(1.12) brightness(1.02) !important;
+        -webkit-backdrop-filter: saturate(1.38) contrast(1.18) brightness(1.03) hue-rotate(-8deg) !important;
+        backdrop-filter: saturate(1.38) contrast(1.18) brightness(1.03) hue-rotate(-8deg) !important;
         filter: none !important;
       }
 
       html.simoens-a11y-motion.simoens-a11y-colorblind-blueyellow .simoens-a11y-colorblind-layer,
       html.simoens-a11y-colorblind-blueyellow.simoens-a11y-motion .simoens-a11y-colorblind-layer {
         display: block !important;
-        -webkit-backdrop-filter: url("#simoens-a11y-filter-blueyellow") saturate(1.2) contrast(1.14) brightness(1.02) !important;
-        backdrop-filter: url("#simoens-a11y-filter-blueyellow") saturate(1.2) contrast(1.14) brightness(1.02) !important;
+        -webkit-backdrop-filter: saturate(1.32) contrast(1.2) brightness(1.04) hue-rotate(14deg) !important;
+        backdrop-filter: saturate(1.32) contrast(1.2) brightness(1.04) hue-rotate(14deg) !important;
         filter: none !important;
       }
 
@@ -529,7 +528,6 @@
       html.simoens-a11y-colorblind .simoens-a11y-widget {
         z-index: 2147483600 !important;
       }
-
 html.simoens-a11y-focus :focus,
       html.simoens-a11y-focus :focus-visible,
       .simoens-a11y-widget button:focus-visible,
@@ -1394,8 +1392,8 @@ html.simoens-a11y-focus :focus,
             <button class="simoens-a11y-action" type="button" data-a11y-action="font-down" title="Reduz o tamanho dos textos da página, voltando em direção ao tamanho original.">Diminuir fonte</button>
             <button class="simoens-a11y-action" type="button" data-a11y-toggle="contrast" aria-pressed="false" title="Escurece o fundo e clareia os textos e contornos para aumentar a legibilidade.">Alto contraste</button>
             <button class="simoens-a11y-action" type="button" data-a11y-toggle="grayscale" aria-pressed="false" title="Aplica tons de cinza ao conteúdo principal da página, sem afetar os widgets flutuantes.">Tons de cinza</button>
-            <button class="simoens-a11y-action" type="button" data-a11y-action="colorblind-redgreen" data-a11y-colorblind="redgreen" aria-pressed="false" title="Aplica filtro para daltonismo verde/vermelho, o tipo mais comum.">Daltônico V/V</button>
-            <button class="simoens-a11y-action" type="button" data-a11y-action="colorblind-blueyellow" data-a11y-colorblind="blueyellow" aria-pressed="false" title="Aplica filtro para daltonismo azul/amarelo.">Daltônico A/A</button>
+            <button class="simoens-a11y-action" type="button" data-a11y-action="colorblind-redgreen" data-a11y-colorblind="redgreen" aria-pressed="false" title="Aplica filtro visual para daltonismo vermelho/verde, comum em protanopia e deuteranopia.">Daltônico: vermelho/verde</button>
+            <button class="simoens-a11y-action" type="button" data-a11y-action="colorblind-blueyellow" data-a11y-colorblind="blueyellow" aria-pressed="false" title="Aplica filtro visual para daltonismo azul/amarelo, relacionado à tritanopia.">Daltônico: azul/amarelo</button>
             <button class="simoens-a11y-action" type="button" data-a11y-toggle="links" aria-pressed="false" title="Realça os links com sublinhado e contorno para facilitar sua identificação.">Destacar links</button>
             <button class="simoens-a11y-action" type="button" data-a11y-toggle="spacing" aria-pressed="false" title="Aumenta espaçamento entre letras, palavras e linhas para melhorar a leitura.">Espaçar texto</button>
             <button class="simoens-a11y-action" type="button" data-a11y-toggle="motion" aria-pressed="false" title="Reduz animações, transições, parallax, sombras fortes, filtros e outros efeitos visuais que podem causar desconforto.">Reduzir efeitos</button>
@@ -1518,7 +1516,7 @@ html.simoens-a11y-focus :focus,
         }
         saveState();
         applyPreferences();
-        announce(state.colorblind ? (selectedType === 'blueyellow' ? 'Filtro daltônico azul e amarelo ativado.' : 'Filtro daltônico verde e vermelho ativado.') : 'Filtro daltônico desativado.');
+        announce(state.colorblind ? (selectedType === 'blueyellow' ? 'Filtro daltônico azul/amarelo ativado.' : 'Filtro daltônico vermelho/verde ativado.') : 'Filtro daltônico desativado.');
       }
 
       if (action === 'font-up') {

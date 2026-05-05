@@ -1,0 +1,2921 @@
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor SVG Web</title>
+<style>
+:root {
+  --bg: #0b0c10;
+  --panel: #12141b;
+  --panel-2: #171a22;
+  --line: #2a3040;
+  --line-soft: #232836;
+  --text: #eef2ff;
+  --muted: #9aa3b7;
+  --accent: #8b5cf6;
+  --accent-2: #22c55e;
+  --danger: #ef4444;
+  --shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  --radius: 16px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(139,92,246,.14), transparent 34%),
+    linear-gradient(180deg, #090a0f 0%, #0d1016 100%);
+  color: var(--text);
+  overflow: hidden;
+}
+button, input, textarea {
+  font: inherit;
+}
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 12px;
+}
+.topbar, .statusbar {
+  background: rgba(18,20,27,.88);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.brand-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(139,92,246,.24), rgba(34,197,94,.18));
+  border: 1px solid rgba(255,255,255,.08);
+  font-weight: 800;
+}
+.brand-copy {
+  min-width: 0;
+}
+.brand-copy h1 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.1;
+}
+.brand-copy p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.btn, .file-btn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, #1b2030 0%, #151926 100%);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: .18s ease;
+  user-select: none;
+}
+.btn:hover, .file-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(139,92,246,.45);
+}
+.btn:active, .file-btn:active {
+  transform: translateY(0);
+}
+.btn.primary {
+  background: linear-gradient(180deg, #8b5cf6 0%, #6d38ea 100%);
+  border-color: rgba(255,255,255,.12);
+}
+.btn.success {
+  background: linear-gradient(180deg, #22c55e 0%, #159947 100%);
+  border-color: rgba(255,255,255,.12);
+}
+.btn.danger {
+  background: linear-gradient(180deg, #ef4444 0%, #c52f2f 100%);
+  border-color: rgba(255,255,255,.12);
+}
+.btn.ghost {
+  background: rgba(255,255,255,.03);
+}
+.btn[disabled] {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+#openFileInput,
+#addLayerInput {
+  display: none;
+}
+.main {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 290px 1fr 320px;
+  gap: 12px;
+}
+.panel {
+  min-height: 0;
+  background: rgba(18,20,27,.88);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panel-head h2 {
+  margin: 0;
+  font-size: 14px;
+}
+.panel-head span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.panel-body {
+  min-height: 0;
+  padding: 10px;
+  overflow: auto;
+}
+.panel-section {
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 16px;
+}
+.panel-section:last-child {
+  margin-bottom: 0;
+}
+.panel-section h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+.stage-wrap {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stage-top {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.stage-top .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.stage-top .meta strong {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stage-top .meta span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.stage-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.zoom-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+.zoom-wrap input[type="range"] {
+  width: 110px;
+}
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background:
+    linear-gradient(45deg, #111521 25%, transparent 25%),
+    linear-gradient(-45deg, #111521 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #111521 75%),
+    linear-gradient(-45deg, transparent 75%, #111521 75%);
+  background-size: 28px 28px;
+  background-position: 0 0, 0 14px, 14px -14px, -14px 0;
+  overflow: auto;
+  padding: 28px;
+}
+.canvas-box {
+  min-width: 100%;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+}
+.canvas-shell {
+  position: relative;
+  display: inline-block;
+  transform-origin: center center;
+}
+.svg-host {
+  position: relative;
+  display: inline-block;
+  border-radius: 18px;
+  background: rgba(255,255,255,.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+.svg-host svg {
+  display: block;
+  max-width: none;
+  max-height: none;
+}
+#overlaySvg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.empty-state {
+  position: absolute;
+  inset: 24px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(255,255,255,.12);
+  border-radius: 24px;
+  background: rgba(7,9,14,.25);
+  text-align: center;
+  padding: 24px;
+}
+.empty-state.hidden {
+  display: none;
+}
+.empty-card {
+  max-width: 460px;
+}
+.empty-card h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+.empty-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  font-size: 11px;
+}
+.layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.layer-row {
+  display: grid;
+  grid-template-columns: 24px 32px 32px 1fr 28px;
+  gap: 6px;
+  align-items: center;
+}
+.layer-toggle, .layer-eye, .layer-lock, .layer-drag {
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  color: var(--text);
+  cursor: pointer;
+}
+.layer-eye.is-hidden, .layer-lock.is-locked { color: var(--muted); opacity: .75; }
+.layer-drag { cursor: grab; color: var(--muted); }
+.layer-item.is-hidden { opacity: .65; }
+.layer-children {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 16px;
+  padding-left: 12px;
+  border-left: 1px dashed rgba(255,255,255,.08);
+}
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.layer-item:hover {
+  border-color: rgba(139,92,246,.28);
+  background: rgba(139,92,246,.08);
+}
+.layer-item.active {
+  border-color: rgba(139,92,246,.45);
+  background: rgba(139,92,246,.14);
+}
+.layer-depth {
+  flex: 0 0 auto;
+  width: 12px;
+}
+.layer-tag {
+  color: #a78bfa;
+  font-weight: 700;
+  font-size: 12px;
+}
+.layer-name {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 8px 10px;
+  align-items: start;
+}
+.info-grid dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.info-grid dd {
+  margin: 0;
+  font-size: 12px;
+  word-break: break-word;
+}
+.input, .textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+.shortcuts {
+  display: grid;
+  gap: 8px;
+}
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+.shortcut-row span:last-child {
+  color: var(--muted);
+  text-align: right;
+}
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.status-left, .status-right {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.badge {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--text);
+}
+#marquee {
+  position: absolute;
+  border: 1px dashed rgba(139,92,246,.9);
+  background: rgba(139,92,246,.14);
+  display: none;
+  pointer-events: none;
+  border-radius: 8px;
+}
+.drop-active .empty-state {
+  border-color: rgba(34,197,94,.65);
+  background: rgba(34,197,94,.09);
+}
+.mini-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mini-actions .btn {
+  flex: 1 1 calc(50% - 4px);
+}
+.notice {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.select {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.field.full {
+  grid-column: 1 / -1;
+}
+@media (max-width: 1240px) {
+  .main {
+    grid-template-columns: 250px 1fr 280px;
+  }
+}
+@media (max-width: 980px) {
+  .app {
+    overflow: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .main {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(260px, auto);
+  }
+  .stage {
+    min-height: 56vh;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-badge">SVG</div>
+      <div class="brand-copy">
+        <h1>Editor SVG</h1>
+        <p id="fileLabel">exemplo.svg</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <label class="file-btn" for="openFileInput">Abrir/Substituir</label>
+      <input type="file" id="openFileInput" accept=".svg,image/svg+xml">
+      <label class="file-btn" for="addLayerInput">Adicionar como layer</label>
+      <input type="file" id="addLayerInput" accept=".svg,image/svg+xml" multiple="">
+      <button class="btn ghost" id="loadExampleBtn">Carregar exemplo</button>
+      <button class="btn ghost" id="pasteSvgBtn">Colar SVG</button>
+      <button class="btn ghost" id="undoBtn" disabled="">↶ Voltar</button>
+      <button class="btn ghost" id="redoBtn" disabled="">↷ Avançar</button>
+      <button class="btn" id="copyBtn" disabled="">Copiar</button>
+      <button class="btn" id="pasteBtn" disabled="">Colar</button>
+      <button class="btn" id="duplicateBtn" disabled="">Duplicar</button>
+      <button class="btn danger" id="deleteBtn" disabled="">Apagar</button>
+      <button class="btn" id="frontBtn" disabled="">Trazer frente</button>
+      <button class="btn" id="backBtn" disabled="">Enviar trás</button>
+      <button class="btn primary" id="downloadBtn">Exportar SVG</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Layers</h2>
+        <span id="layerCount">11 layers</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3>Seleção</h3>
+          <div class="mini-actions">
+            <button class="btn ghost" id="clearSelectionBtn" disabled="">Limpar</button>
+            <button class="btn ghost" id="selectAllBtn">Selecionar tudo</button>
+            <button class="btn ghost" id="groupBtn" disabled="">Agrupar</button>
+            <button class="btn ghost" id="ungroupBtn" disabled="">Desagrupar</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Pilha de layers</h3>
+          <div class="layer-list" id="layerList"><div class="layer-row" data-key="40" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="36" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="21" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">vector-art</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="12" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="7" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="6" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="5" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="4" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="3" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="2" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">rect</span><span class="layer-name">rect</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="1" draggable="true"><button type="button" class="layer-toggle" disabled="" style="margin-left: 0px;">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">rect</span><span class="layer-name">rect</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="panel stage-wrap">
+      <div class="stage-top">
+        <div class="meta">
+          <strong id="stageTitle">exemplo.svg</strong>
+          <span id="stageMeta">Clique para selecionar, arraste para mover, esconda camadas, desfaça/refaça e exporte quando terminar.</span>
+        </div>
+        <div class="stage-controls">
+          <div class="zoom-wrap">
+            <span>Zoom</span>
+            <input type="range" id="zoomRange" min="25" max="300" value="100">
+            <strong id="zoomValue">100%</strong>
+          </div>
+          <button class="btn ghost" id="fitBtn">Ajustar</button>
+        </div>
+      </div>
+      <div class="stage" id="stage">
+        <div class="canvas-box">
+          <div class="canvas-shell" id="canvasShell" style="width: 512px; height: 512px; transform: none;">
+            <div class="svg-host" id="svgHost"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" data-editor-original-width="512" data-editor-original-height="512" style="width: 512px; height: 512px;">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1A1C29"></stop>
+      <stop offset="100%" stop-color="#0D0E15"></stop>
+    </radialGradient>
+
+    <!-- Card Gradient -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26293C"></stop>
+      <stop offset="100%" stop-color="#151722"></stop>
+    </linearGradient>
+
+    <!-- Shape Gradients -->
+    <linearGradient id="cyan-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"></stop>
+      <stop offset="100%" stop-color="#0057FF"></stop>
+    </linearGradient>
+
+    <linearGradient id="magenta-orange" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF007A"></stop>
+      <stop offset="100%" stop-color="#FF7A00"></stop>
+    </linearGradient>
+
+    <linearGradient id="yellow-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE600"></stop>
+      <stop offset="100%" stop-color="#FF00E5"></stop>
+    </linearGradient>
+
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#FFFFFF" stroke-opacity="0.03" stroke-width="1"></path>
+    </pattern>
+
+    <!-- Dot Pattern -->
+    <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#FFFFFF" fill-opacity="0.1"></circle>
+    </pattern>
+
+    <!-- Filters -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"></feDropShadow>
+    </filter>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+    </filter>
+
+    <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"></feGaussianBlur>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+    </filter>
+  </defs>
+
+  <!-- Main Background -->
+  <rect width="512" height="512" fill="url(#bg-grad)" data-editor-key="1" style="cursor: move;"></rect>
+  <rect width="512" height="512" fill="url(#dots)" data-editor-key="2" style="cursor: move;"></rect>
+
+  <!-- Background Code Snippets -->
+  <text x="24" y="40" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="3" style="cursor: move;">&lt;svg viewBox="0 0 512 512"&gt;</text>
+  <text x="360" y="480" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="4" style="cursor: move;">&lt;/svg&gt;</text>
+  <text x="420" y="80" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="5" style="cursor: move;">&lt;g id="art"&gt;</text>
+  <text x="24" y="450" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="6" style="cursor: move;">&lt;path d="M..."/&gt;</text>
+
+  <!-- Main Card -->
+  <g filter="url(#drop-shadow)" data-editor-key="7" style="cursor: move;">
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#card-grad)" data-editor-key="8" style="cursor: move;"></rect>
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#grid)" data-editor-key="9" style="cursor: move;"></rect>
+    <!-- Card Inner Border -->
+    <rect x="49" y="65" width="414" height="382" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2" data-editor-key="10" style="cursor: move;"></rect>
+    
+    <!-- Large Faint Background Text -->
+    <text x="256" y="320" font-family="sans-serif" font-weight="900" font-size="200" fill="#FFFFFF" opacity="0.02" text-anchor="middle" letter-spacing="-10" data-editor-key="11" style="cursor: move;">&lt;/&gt;</text>
+  </g>
+
+  <!-- Geometric Shapes (Translucent & Overlapping) -->
+  <g filter="url(#drop-shadow)" data-editor-key="12" style="cursor: move;">
+    <!-- Cyan Circle -->
+    <circle cx="160" cy="280" r="80" fill="url(#cyan-blue)" opacity="0.85" data-editor-key="13" style="cursor: move;"></circle>
+    <!-- Circle Inner Highlight -->
+    <circle cx="160" cy="280" r="79" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="14" style="cursor: move;"></circle>
+
+    <!-- Yellow/Pink Square -->
+    <g transform="translate(340, 160) rotate(15)" data-editor-key="15" style="cursor: move;">
+      <rect x="-60" y="-60" width="120" height="120" rx="20" fill="url(#yellow-pink)" opacity="0.85" data-editor-key="16" style="cursor: move;"></rect>
+      <rect x="-59" y="-59" width="118" height="118" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="17" style="cursor: move;"></rect>
+    </g>
+
+    <!-- Magenta/Orange Triangle -->
+    <g transform="translate(256, 360)" data-editor-key="18" style="cursor: move;">
+      <path d="M 0 -70 L 80 60 L -80 60 Z" fill="url(#magenta-orange)" opacity="0.85" data-editor-key="19" style="cursor: move;"></path>
+      <path d="M 0 -68 L 78 58 L -78 58 Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="20" style="cursor: move;"></path>
+    </g>
+  </g>
+
+  <!-- Vector Path & Nodes -->
+  <g id="vector-art" data-editor-key="21" style="cursor: move;">
+    <!-- Handle Lines -->
+    <path d="M 32 256 L 140 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="22" style="cursor: move;"></path>
+    <path d="M 256 256 L 256 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="23" style="cursor: move;"></path>
+    <path d="M 256 256 L 256 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="24" style="cursor: move;"></path>
+    <path d="M 480 256 L 372 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="25" style="cursor: move;"></path>
+
+    <!-- Main Bezier Curve (Glow Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#00F0FF" stroke-width="8" filter="url(#glow-strong)" opacity="0.6" data-editor-key="26" style="cursor: move;"></path>
+    
+    <!-- Main Bezier Curve (Core Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#FFFFFF" stroke-width="4" filter="url(#glow)" stroke-linecap="round" data-editor-key="27" style="cursor: move;"></path>
+
+    <!-- Control Handles (Nodes) -->
+    <circle cx="140" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="28" style="cursor: move;"></circle>
+    <circle cx="256" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="29" style="cursor: move;"></circle>
+    <circle cx="256" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="30" style="cursor: move;"></circle>
+    <circle cx="372" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="31" style="cursor: move;"></circle>
+
+    <!-- Active Selection Box around Center Anchor -->
+    <rect x="244" y="244" width="24" height="24" fill="none" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="4 4" data-editor-key="32" style="cursor: move;"></rect>
+
+    <!-- Anchor Points -->
+    <circle cx="32" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="33" style="cursor: move;"></circle>
+    <circle cx="256" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="34" style="cursor: move;"></circle>
+    <circle cx="480" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="35" style="cursor: move;"></circle>
+  </g>
+
+  <!-- Top Badge / Label -->
+  <g filter="url(#drop-shadow)" transform="translate(196, 24)" data-editor-key="36" style="cursor: move;">
+    <rect x="0" y="0" width="120" height="40" rx="20" fill="url(#cyan-blue)" data-editor-key="37" style="cursor: move;"></rect>
+    <!-- Badge Inner Highlight -->
+    <rect x="1" y="1" width="118" height="38" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" data-editor-key="38" style="cursor: move;"></rect>
+    <text x="60" y="26" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" text-anchor="middle" letter-spacing="3" data-editor-key="39" style="cursor: move;">SVG</text>
+  </g>
+
+  <!-- Decorative Crosses -->
+  <g stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" data-editor-key="40" style="cursor: move;">
+    <!-- Top Left -->
+    <path d="M 80 120 L 90 120 M 85 115 L 85 125" data-editor-key="41" style="cursor: move;"></path>
+    <!-- Bottom Right -->
+    <path d="M 420 380 L 430 380 M 425 375 L 425 385" data-editor-key="42" style="cursor: move;"></path>
+  </g>
+</svg></div>
+            <svg id="overlaySvg" viewBox="0 0 512 512" width="512" height="512" style="width: 512px; height: 512px;"></svg>
+          </div>
+        </div>
+        <div class="empty-state hidden" id="emptyState">
+          <div class="empty-card">
+            <h3>Abre teu SVG e vai mexendo tudo localmente</h3>
+            <p>Use <strong>Abrir/Substituir</strong> para trocar o documento atual ou <strong>Adicionar como layer</strong> para juntar um ou vários SVGs no mesmo arquivo. Seleciona com clique, arrasta para mover, usa <span class="kbd">Shift</span> + clique para multisseleção, faz caixa de seleção arrastando no vazio, duplica, apaga e exporta de volta como <strong>.svg</strong>. Tudo offline.</p>
+          </div>
+        </div>
+        <div id="marquee" style="display: none; left: 322px; top: 90px; width: 7px; height: 7px;"></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Inspeção</h2>
+        <span id="selectionCount">0 selecionados</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3>Elemento ativo</h3>
+          <dl class="info-grid" id="infoGrid"><dt>Tag</dt><dd>—</dd><dt>ID</dt><dd>—</dd><dt>Classe</dt><dd>—</dd><dt>Layer</dt><dd>—</dd><dt>Transform</dt><dd>—</dd><dt>Caixa</dt><dd>—</dd></dl>
+        </div>
+        <div class="panel-section">
+          <h3>Transform</h3>
+          <input class="input" id="transformInput" placeholder="translate(10 20) rotate(5)" disabled="">
+          <div style="height:8px"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyTransformBtn" disabled="">Aplicar</button>
+            <button class="btn ghost" id="resetTransformBtn" disabled="">Limpar transform</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Tela útil</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="canvasWidthInput">Largura do viewBox</label>
+              <input class="input" id="canvasWidthInput" type="number" min="1" step="1" placeholder="1200">
+            </div>
+            <div class="field">
+              <label for="canvasHeightInput">Altura do viewBox</label>
+              <input class="input" id="canvasHeightInput" type="number" min="1" step="1" placeholder="800">
+            </div>
+            <div class="field full">
+              <label for="aspectPreset">Preset de proporção</label>
+              <select class="select" id="aspectPreset">
+                <option value="custom">Personalizado</option>
+                <option value="1:1">Quadrado · 1:1</option>
+                <option value="4:3">Clássico · 4:3</option>
+                <option value="3:4">Retrato · 3:4</option>
+                <option value="16:9">Widescreen · 16:9</option>
+                <option value="9:16">Vertical · 9:16</option>
+                <option value="21:9">Ultrawide · 21:9</option>
+                <option value="a4-landscape">A4 horizontal</option>
+                <option value="a4-portrait">A4 vertical</option>
+              </select>
+            </div>
+          </div>
+          <div style="height:8px"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyCanvasSizeBtn">Aplicar tela</button>
+            <button class="btn ghost" id="resetCanvasSizeBtn">Voltar ao original</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Nome da layer</h3>
+          <input class="input" id="layerNameInput" placeholder="ex.: capa.svg" disabled="">
+          <div style="height:8px"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyLayerNameBtn" disabled="">Renomear</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Opacidade e mesclagem</h3>
+          <div class="field full">
+            <label for="opacityRange">Opacidade</label>
+            <input id="opacityRange" type="range" min="0" max="100" value="100" disabled="">
+            <div id="opacityValue" class="notice">100%</div>
+          </div>
+          <div class="field full">
+            <label for="blendModeSelect">Modo de mesclagem</label>
+            <select class="select" id="blendModeSelect" disabled="">
+              <option value="normal">Normal</option>
+              <option value="multiply">Multiply</option>
+              <option value="screen">Screen</option>
+              <option value="overlay">Overlay</option>
+              <option value="darken">Darken</option>
+              <option value="lighten">Lighten</option>
+              <option value="color-dodge">Color Dodge</option>
+              <option value="color-burn">Color Burn</option>
+              <option value="hard-light">Hard Light</option>
+              <option value="soft-light">Soft Light</option>
+              <option value="difference">Difference</option>
+              <option value="exclusion">Exclusion</option>
+              <option value="hue">Hue</option>
+              <option value="saturation">Saturation</option>
+              <option value="color">Color</option>
+              <option value="luminosity">Luminosity</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Atalhos</h3>
+          <div class="shortcuts">
+            <div class="shortcut-row"><span><span class="kbd">Clique</span></span><span>Selecionar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Shift</span> + clique</span><span>Multisseleção</span></div>
+            <div class="shortcut-row"><span>Arrastar no vazio</span><span>Caixa de seleção</span></div>
+            <div class="shortcut-row"><span>Arrastar seleção</span><span>Mover elementos</span></div>
+            <div class="shortcut-row"><span>Alças da caixa</span><span>Redimensionar</span></div>
+            <div class="shortcut-row"><span>Bolinha verde</span><span>Rotacionar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">C</span></span><span>Copiar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">V</span></span><span>Colar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">D</span></span><span>Duplicar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></span><span>Desfazer</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">Y</span></span><span>Refazer</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Del</span></span><span>Apagar</span></div>
+            <div class="shortcut-row"><span>Setas</span><span>Mover 1px</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Shift</span> + setas</span><span>Mover 10px</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Esc</span></span><span>Limpar seleção</span></div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Colar SVG bruto</h3>
+          <textarea class="textarea" id="rawSvgInput" placeholder="Cole aqui o código completo do SVG"></textarea>
+          <div style="height:8px"></div>
+          <button class="btn success" id="loadRawBtn">Carregar código colado</button>
+        </div>
+        
+      </div>
+    </aside>
+  </div>
+
+  <div class="statusbar">
+    <div class="status-left">
+      <span class="badge" id="statusText">SVG carregado</span>
+      <span id="viewBoxText">viewBox: 0 0 512.0 512.0</span>
+    </div>
+    <div class="status-right">
+      <span id="sizeText">Tamanho: 512 × 512</span>
+      <span id="clipboardText">Clipboard: vazio</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  svgRoot: null,
+  selected: new Set(),
+  clipboard: [],
+  loadedName: '',
+  keyCounter: 0,
+  drag: null,
+  marquee: null,
+  zoom: 1,
+  fitScale: 1,
+  baseCanvasWidth: 0,
+  baseCanvasHeight: 0,
+  transformOp: null,
+  history: [],
+  historyIndex: -1,
+  restoringHistory: false,
+  savedHistoryIndex: -1,
+  dragLayerKey: null
+};
+
+const openFileInput = document.getElementById('openFileInput');
+const addLayerInput = document.getElementById('addLayerInput');
+const fileLabel = document.getElementById('fileLabel');
+const loadExampleBtn = document.getElementById('loadExampleBtn');
+const pasteSvgBtn = document.getElementById('pasteSvgBtn');
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
+const copyBtn = document.getElementById('copyBtn');
+const pasteBtn = document.getElementById('pasteBtn');
+const duplicateBtn = document.getElementById('duplicateBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const frontBtn = document.getElementById('frontBtn');
+const backBtn = document.getElementById('backBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const groupBtn = document.getElementById('groupBtn');
+const ungroupBtn = document.getElementById('ungroupBtn');
+const applyTransformBtn = document.getElementById('applyTransformBtn');
+const resetTransformBtn = document.getElementById('resetTransformBtn');
+const transformInput = document.getElementById('transformInput');
+const loadRawBtn = document.getElementById('loadRawBtn');
+const rawSvgInput = document.getElementById('rawSvgInput');
+const stage = document.getElementById('stage');
+const svgHost = document.getElementById('svgHost');
+const overlaySvg = document.getElementById('overlaySvg');
+const emptyState = document.getElementById('emptyState');
+const marquee = document.getElementById('marquee');
+const layerList = document.getElementById('layerList');
+const layerCount = document.getElementById('layerCount');
+const selectionCount = document.getElementById('selectionCount');
+const infoGrid = document.getElementById('infoGrid');
+const stageTitle = document.getElementById('stageTitle');
+const stageMeta = document.getElementById('stageMeta');
+const statusText = document.getElementById('statusText');
+const viewBoxText = document.getElementById('viewBoxText');
+const sizeText = document.getElementById('sizeText');
+const clipboardText = document.getElementById('clipboardText');
+const zoomRange = document.getElementById('zoomRange');
+const zoomValue = document.getElementById('zoomValue');
+const canvasShell = document.getElementById('canvasShell');
+const fitBtn = document.getElementById('fitBtn');
+const canvasWidthInput = document.getElementById('canvasWidthInput');
+const canvasHeightInput = document.getElementById('canvasHeightInput');
+const aspectPreset = document.getElementById('aspectPreset');
+const applyCanvasSizeBtn = document.getElementById('applyCanvasSizeBtn');
+const resetCanvasSizeBtn = document.getElementById('resetCanvasSizeBtn');
+const layerNameInput = document.getElementById('layerNameInput');
+const applyLayerNameBtn = document.getElementById('applyLayerNameBtn');
+const opacityRange = document.getElementById('opacityRange');
+const opacityValue = document.getElementById('opacityValue');
+const blendModeSelect = document.getElementById('blendModeSelect');
+
+const parser = new DOMParser();
+const serializer = new XMLSerializer();
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+const exampleSvg = `<svg viewBox="0 0 512 512" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1A1C29" />
+      <stop offset="100%" stop-color="#0D0E15" />
+    </radialGradient>
+
+    <!-- Card Gradient -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26293C" />
+      <stop offset="100%" stop-color="#151722" />
+    </linearGradient>
+
+    <!-- Shape Gradients -->
+    <linearGradient id="cyan-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="100%" stop-color="#0057FF" />
+    </linearGradient>
+
+    <linearGradient id="magenta-orange" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF007A" />
+      <stop offset="100%" stop-color="#FF7A00" />
+    </linearGradient>
+
+    <linearGradient id="yellow-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE600" />
+      <stop offset="100%" stop-color="#FF00E5" />
+    </linearGradient>
+
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#FFFFFF" stroke-opacity="0.03" stroke-width="1" />
+    </pattern>
+
+    <!-- Dot Pattern -->
+    <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#FFFFFF" fill-opacity="0.1" />
+    </pattern>
+
+    <!-- Filters -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Main Background -->
+  <rect width="512" height="512" fill="url(#bg-grad)" />
+  <rect width="512" height="512" fill="url(#dots)" />
+
+  <!-- Background Code Snippets -->
+  <text x="24" y="40" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15">&lt;svg viewBox="0 0 512 512"&gt;</text>
+  <text x="360" y="480" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15">&lt;/svg&gt;</text>
+  <text x="420" y="80" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15">&lt;g id="art"&gt;</text>
+  <text x="24" y="450" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15">&lt;path d="M..."/&gt;</text>
+
+  <!-- Main Card -->
+  <g filter="url(#drop-shadow)">
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#card-grad)" />
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#grid)" />
+    <!-- Card Inner Border -->
+    <rect x="49" y="65" width="414" height="382" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2" />
+    
+    <!-- Large Faint Background Text -->
+    <text x="256" y="320" font-family="sans-serif" font-weight="900" font-size="200" fill="#FFFFFF" opacity="0.02" text-anchor="middle" letter-spacing="-10">&lt;/&gt;</text>
+  </g>
+
+  <!-- Geometric Shapes (Translucent & Overlapping) -->
+  <g filter="url(#drop-shadow)">
+    <!-- Cyan Circle -->
+    <circle cx="160" cy="280" r="80" fill="url(#cyan-blue)" opacity="0.85" />
+    <!-- Circle Inner Highlight -->
+    <circle cx="160" cy="280" r="79" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" />
+
+    <!-- Yellow/Pink Square -->
+    <g transform="translate(340, 160) rotate(15)">
+      <rect x="-60" y="-60" width="120" height="120" rx="20" fill="url(#yellow-pink)" opacity="0.85" />
+      <rect x="-59" y="-59" width="118" height="118" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" />
+    </g>
+
+    <!-- Magenta/Orange Triangle -->
+    <g transform="translate(256, 360)">
+      <path d="M 0 -70 L 80 60 L -80 60 Z" fill="url(#magenta-orange)" opacity="0.85" />
+      <path d="M 0 -68 L 78 58 L -78 58 Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" />
+    </g>
+  </g>
+
+  <!-- Vector Path & Nodes -->
+  <g id="vector-art">
+    <!-- Handle Lines -->
+    <path d="M 32 256 L 140 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" />
+    <path d="M 256 256 L 256 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" />
+    <path d="M 256 256 L 256 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" />
+    <path d="M 480 256 L 372 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" />
+
+    <!-- Main Bezier Curve (Glow Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#00F0FF" stroke-width="8" filter="url(#glow-strong)" opacity="0.6" />
+    
+    <!-- Main Bezier Curve (Core Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#FFFFFF" stroke-width="4" filter="url(#glow)" stroke-linecap="round" />
+
+    <!-- Control Handles (Nodes) -->
+    <circle cx="140" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" />
+    <circle cx="256" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" />
+    <circle cx="256" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" />
+    <circle cx="372" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" />
+
+    <!-- Active Selection Box around Center Anchor -->
+    <rect x="244" y="244" width="24" height="24" fill="none" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="4 4" />
+
+    <!-- Anchor Points -->
+    <circle cx="32" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" />
+    <circle cx="256" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" />
+    <circle cx="480" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" />
+  </g>
+
+  <!-- Top Badge / Label -->
+  <g filter="url(#drop-shadow)" transform="translate(196, 24)">
+    <rect x="0" y="0" width="120" height="40" rx="20" fill="url(#cyan-blue)" />
+    <!-- Badge Inner Highlight -->
+    <rect x="1" y="1" width="118" height="38" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" />
+    <text x="60" y="26" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">SVG</text>
+  </g>
+
+  <!-- Decorative Crosses -->
+  <g stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round">
+    <!-- Top Left -->
+    <path d="M 80 120 L 90 120 M 85 115 L 85 125" />
+    <!-- Bottom Right -->
+    <path d="M 420 380 L 430 380 M 425 375 L 425 385" />
+  </g>
+</svg>`;
+
+function setStatus(text) {
+  statusText.textContent = text;
+}
+
+function clamp(n, min, max) {
+  return Math.min(max, Math.max(min, n));
+}
+
+function sanitizeSvgString(svgString) {
+  return String(svgString || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
+    .trim();
+}
+
+function resetTransientUiState() {
+  state.drag = null;
+  state.marquee = null;
+  state.transformOp = null;
+  state.dragLayerKey = null;
+  marquee.style.display = 'none';
+  marquee.style.width = '0px';
+  marquee.style.height = '0px';
+}
+
+function resetEditorDocument() {
+  resetTransientUiState();
+  state.svgRoot = null;
+  state.selected.clear();
+  state.loadedName = '';
+  state.keyCounter = 0;
+  state.history = [];
+  state.historyIndex = -1;
+  state.savedHistoryIndex = -1;
+  svgHost.innerHTML = '';
+  overlaySvg.innerHTML = '';
+  updateLayerList();
+  updateInspector();
+  updateButtons();
+  syncCanvasSizeInputs();
+  syncHistoryButtons();
+  emptyState.classList.remove('hidden');
+}
+
+function collectElementIds(root) {
+  if (!(root instanceof Element)) return [];
+  const ids = new Set();
+  if (root.getAttribute && root.getAttribute('id')) ids.add(root.getAttribute('id'));
+  root.querySelectorAll('[id]').forEach(el => {
+    const id = el.getAttribute('id');
+    if (id) ids.add(id);
+  });
+  return Array.from(ids).sort((a, b) => b.length - a.length);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function rewriteCssText(cssText, prefix, ids = []) {
+  let next = String(cssText || '');
+  next = next.replace(/url\((['"]?)#([^)"']+)\1\)/g, (match, quote, id) => {
+    return `url(${quote || ''}#${prefix}${id}${quote || ''})`;
+  });
+  ids.forEach(id => {
+    const escapedId = escapeRegExp(id);
+    next = next.replace(new RegExp(`(?<![\\w-])#${escapedId}(?![\\w-])`, 'g'), `#${prefix}${id}`);
+  });
+  return next;
+}
+
+function parseSvg(svgString) {
+  const cleaned = sanitizeSvgString(svgString);
+  const doc = parser.parseFromString(cleaned, 'image/svg+xml');
+  const svg = doc.documentElement;
+  if (!svg || svg.nodeName.toLowerCase() !== 'svg') {
+    throw new Error('Arquivo inválido: o conteúdo não parece ser um SVG.');
+  }
+  if (doc.querySelector('parsererror')) {
+    throw new Error('O SVG tem erro de sintaxe e não pôde ser carregado.');
+  }
+  return svg;
+}
+
+function ensureViewBox(svg) {
+  const hasViewBox = svg.hasAttribute('viewBox');
+  let width = parseFloat(svg.getAttribute('width'));
+  let height = parseFloat(svg.getAttribute('height'));
+  if (!Number.isFinite(width) || width <= 0) width = 1200;
+  if (!Number.isFinite(height) || height <= 0) height = 800;
+  if (!hasViewBox) svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  if (!svg.getAttribute('width')) svg.setAttribute('width', width);
+  if (!svg.getAttribute('height')) svg.setAttribute('height', height);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+}
+
+function isSelectable(el) {
+  if (!(el instanceof SVGElement)) return false;
+  if (!(el instanceof SVGGraphicsElement)) return false;
+  const tag = el.tagName.toLowerCase();
+  if (tag === 'svg') return false;
+  if (['defs', 'symbol', 'clipPath', 'mask', 'pattern', 'linearGradient', 'radialGradient', 'filter', 'marker', 'metadata', 'desc', 'title', 'style', 'script'].includes(tag)) return false;
+  if (el.closest('defs, clipPath, mask, pattern, linearGradient, radialGradient, filter, marker, symbol')) return false;
+  return true;
+}
+
+function allSelectableElements() {
+  if (!state.svgRoot) return [];
+  return Array.from(state.svgRoot.querySelectorAll('*')).filter(isSelectable);
+}
+
+function labelForElement(el) {
+  const tag = el.tagName.toLowerCase();
+  const id = el.getAttribute('id');
+  const cls = (el.getAttribute('class') || '').trim().replace(/\s+/g, '.');
+  let extra = '';
+  if (id) extra += `#${id}`;
+  if (cls) extra += `.${cls}`;
+  return `${tag}${extra}`;
+}
+
+function assignEditorKeys() {
+  state.keyCounter = 0;
+  allSelectableElements().forEach(el => {
+    state.keyCounter += 1;
+    el.dataset.editorKey = String(state.keyCounter);
+    el.style.cursor = 'move';
+  });
+}
+
+function getDepth(el) {
+  let depth = 0;
+  let current = el.parentElement;
+  while (current && current !== state.svgRoot) {
+    depth += 1;
+    current = current.parentElement;
+  }
+  return depth;
+}
+
+
+function isElementHidden(el) {
+  return (el.getAttribute('display') || '').trim() === 'none' || (el.style && el.style.display === 'none');
+}
+
+function getSvgViewBoxData(svg = state.svgRoot) {
+  if (!svg) return { x: 0, y: 0, width: 1200, height: 800 };
+  const vb = svg.viewBox && svg.viewBox.baseVal ? svg.viewBox.baseVal : null;
+  const x = vb && Number.isFinite(vb.x) ? vb.x : 0;
+  const y = vb && Number.isFinite(vb.y) ? vb.y : 0;
+  const width = vb && vb.width ? vb.width : parseFloat(svg.getAttribute('width')) || 1200;
+  const height = vb && vb.height ? vb.height : parseFloat(svg.getAttribute('height')) || 800;
+  return { x, y, width, height };
+}
+
+function syncCanvasSizeInputs() {
+  const hasSvg = !!state.svgRoot;
+  [canvasWidthInput, canvasHeightInput, aspectPreset, applyCanvasSizeBtn, resetCanvasSizeBtn].forEach(el => el.disabled = !hasSvg);
+  if (!hasSvg) {
+    canvasWidthInput.value = '';
+    canvasHeightInput.value = '';
+    aspectPreset.value = 'custom';
+    return;
+  }
+  const vb = getSvgViewBoxData();
+  canvasWidthInput.value = Math.round(vb.width);
+  canvasHeightInput.value = Math.round(vb.height);
+}
+
+function applyAspectPresetValue(value) {
+  if (!state.svgRoot) return;
+  const ratios = {
+    '1:1': 1,
+    '4:3': 4 / 3,
+    '3:4': 3 / 4,
+    '16:9': 16 / 9,
+    '9:16': 9 / 16,
+    '21:9': 21 / 9,
+    'a4-landscape': 297 / 210,
+    'a4-portrait': 210 / 297
+  };
+  const ratio = ratios[value];
+  if (!ratio) return;
+  let width = parseFloat(canvasWidthInput.value);
+  let height = parseFloat(canvasHeightInput.value);
+  if (!Number.isFinite(width) || width <= 0) width = getSvgViewBoxData().width || 1200;
+  if (!Number.isFinite(height) || height <= 0) height = getSvgViewBoxData().height || 800;
+  if (ratio >= 1) {
+    height = Math.max(1, Math.round(width / ratio));
+  } else {
+    width = Math.max(1, Math.round(height * ratio));
+  }
+  canvasWidthInput.value = Math.round(width);
+  canvasHeightInput.value = Math.round(height);
+}
+
+function applyCanvasSize(width, height, options = {}) {
+  if (!state.svgRoot) return;
+  const { recordHistory = true, label = 'Tela redimensionada' } = options;
+  width = Math.round(Number(width));
+  height = Math.round(Number(height));
+  if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) {
+    alert('Largura e altura da tela precisam ser números maiores que zero.');
+    return;
+  }
+  const vb = getSvgViewBoxData();
+  state.svgRoot.setAttribute('viewBox', `${vb.x} ${vb.y} ${width} ${height}`);
+  state.svgRoot.setAttribute('width', String(width));
+  state.svgRoot.setAttribute('height', String(height));
+  setCanvasSizeFromSvg(state.svgRoot);
+  renderSelectionOverlay();
+  syncCanvasSizeInputs();
+  if (recordHistory) pushHistory(label);
+  setStatus(`Tela útil ajustada para ${width} × ${height}`);
+}
+
+function resetCanvasSize() {
+  if (!state.svgRoot) return;
+  const fallbackWidth = 1200;
+  const fallbackHeight = 800;
+  const originalWidth = parseFloat(state.svgRoot.getAttribute('data-editor-original-width')) || fallbackWidth;
+  const originalHeight = parseFloat(state.svgRoot.getAttribute('data-editor-original-height')) || fallbackHeight;
+  applyCanvasSize(originalWidth, originalHeight, { label: 'Tela restaurada' });
+  aspectPreset.value = 'custom';
+}
+
+function syncHistoryButtons() {
+  undoBtn.disabled = !state.svgRoot || state.historyIndex <= 0;
+  redoBtn.disabled = !state.svgRoot || state.historyIndex >= state.history.length - 1;
+}
+
+function snapshotCurrentState() {
+  if (!state.svgRoot) return null;
+  return {
+    svg: serializer.serializeToString(state.svgRoot),
+    name: state.loadedName || 'arquivo.svg'
+  };
+}
+
+function pushHistory(label = 'Alteração') {
+  if (!state.svgRoot || state.restoringHistory) {
+    syncHistoryButtons();
+    return;
+  }
+  const snapshot = snapshotCurrentState();
+  const current = state.history[state.historyIndex];
+  if (current && current.svg === snapshot.svg) {
+    syncHistoryButtons();
+    return;
+  }
+  state.history = state.history.slice(0, state.historyIndex + 1);
+  state.history.push({ ...snapshot, label });
+  if (state.history.length > 120) state.history.shift();
+  state.historyIndex = state.history.length - 1;
+  syncHistoryButtons();
+}
+
+function restoreHistorySnapshot(snapshot, statusLabel) {
+  if (!snapshot) return;
+  state.restoringHistory = true;
+  try {
+    loadSvgString(snapshot.svg, snapshot.name, { recordHistory: false });
+  } finally {
+    state.restoringHistory = false;
+  }
+  clearSelection();
+  syncHistoryButtons();
+  setStatus(statusLabel || snapshot.label || 'Histórico restaurado');
+}
+
+function undoHistory() {
+  if (state.historyIndex <= 0) return;
+  state.historyIndex -= 1;
+  restoreHistorySnapshot(state.history[state.historyIndex], 'Desfeito');
+}
+
+function redoHistory() {
+  if (state.historyIndex >= state.history.length - 1) return;
+  state.historyIndex += 1;
+  restoreHistorySnapshot(state.history[state.historyIndex], 'Refeito');
+}
+
+function toggleElementVisibility(el) {
+  if (!el) return;
+  const willHide = !isElementHidden(el);
+  if (willHide) {
+    el.setAttribute('display', 'none');
+    if (state.selected.has(el)) {
+      el.removeAttribute('data-selected');
+      state.selected.delete(el);
+    }
+  } else {
+    el.removeAttribute('display');
+    if (el.style) el.style.display = '';
+    if (el.getAttribute('style') === '') el.removeAttribute('style');
+  }
+  renderSelectionOverlay();
+  updateInspector();
+  updateButtons();
+  updateLayerList();
+  pushHistory(willHide ? 'Ocultar camada' : 'Mostrar camada');
+  setStatus(willHide ? 'Camada escondida' : 'Camada exibida');
+}
+
+function renderLayerNodes(container, nodes, depth = 0) {
+  nodes.slice().reverse().forEach(el => {
+    const row = document.createElement('div');
+    row.className = 'layer-row';
+    row.dataset.key = el.dataset.editorKey || '';
+    row.draggable = true;
+    if (state.dragLayerKey === row.dataset.key) row.classList.add('dragging');
+
+    row.addEventListener('dragstart', event => {
+      state.dragLayerKey = el.dataset.editorKey || '';
+      row.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', state.dragLayerKey);
+    });
+
+    row.addEventListener('dragend', () => {
+      state.dragLayerKey = null;
+      updateLayerList();
+    });
+
+    row.addEventListener('dragover', event => {
+      const draggedKey = state.dragLayerKey || event.dataTransfer.getData('text/plain');
+      const dragged = state.svgRoot ? state.svgRoot.querySelector(`[data-editor-key="${draggedKey}"]`) : null;
+      if (!dragged || dragged === el) return;
+      if (dragged.contains && dragged.contains(el)) return;
+      event.preventDefault();
+      row.classList.add('drag-over');
+    });
+
+    row.addEventListener('dragleave', () => {
+      row.classList.remove('drag-over');
+      btn.classList.remove('drop-inside');
+    });
+
+    row.addEventListener('drop', event => {
+      event.preventDefault();
+      row.classList.remove('drag-over');
+      btn.classList.remove('drop-inside');
+      const draggedKey = state.dragLayerKey || event.dataTransfer.getData('text/plain');
+      const dragged = state.svgRoot ? state.svgRoot.querySelector(`[data-editor-key="${draggedKey}"]`) : null;
+      if (!dragged || dragged === el) return;
+      if (dragged.contains && dragged.contains(el)) return;
+      const rect = row.getBoundingClientRect();
+      const y = event.clientY - rect.top;
+      const ratio = y / rect.height;
+      if (isGroupLayer(el) && ratio > 0.33 && ratio < 0.66) {
+        moveLayerIntoGroup(dragged, el);
+      } else if (ratio < 0.5) {
+        moveLayerBeforeNode(dragged, el);
+      } else {
+        moveLayerAfterNode(dragged, el);
+      }
+    });
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'layer-toggle';
+    if (isGroupLayer(el)) {
+      const collapsed = el.getAttribute('data-collapsed') === '1';
+      toggle.textContent = collapsed ? '▸' : '▾';
+      toggle.addEventListener('click', () => {
+        el.setAttribute('data-collapsed', collapsed ? '0' : '1');
+        updateLayerList();
+      });
+    } else {
+      toggle.textContent = '•';
+      toggle.disabled = true;
+    }
+    toggle.style.marginLeft = `${depth * 14}px`;
+
+    const eye = document.createElement('button');
+    eye.type = 'button';
+    eye.className = 'layer-eye';
+    if (isLayerHidden(el)) eye.classList.add('is-hidden');
+    eye.textContent = isLayerHidden(el) ? '◌' : '◉';
+    eye.addEventListener('click', e => { e.stopPropagation(); toggleLayerVisibility(el); });
+
+    const lock = document.createElement('button');
+    lock.type = 'button';
+    lock.className = 'layer-lock';
+    if (isLayerLocked(el)) lock.classList.add('is-locked');
+    lock.textContent = isLayerLocked(el) ? '🔒' : '🔓';
+    lock.addEventListener('click', e => { e.stopPropagation(); toggleLayerLock(el); });
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'layer-item';
+    if (state.selected.has(el)) btn.classList.add('active');
+    if (isLayerHidden(el)) btn.classList.add('is-hidden');
+    btn.innerHTML = `<span class="layer-tag">${isGroupLayer(el) ? 'grupo' : el.tagName.toLowerCase()}</span><span class="layer-name">${escapeHtml(getElementDisplayName(el))}</span>`;
+    btn.addEventListener('click', event => selectElement(el, event.shiftKey));
+
+    const drag = document.createElement('button');
+    drag.type = 'button';
+    drag.className = 'layer-drag';
+    drag.textContent = '↕';
+    drag.title = 'Arraste pra reordenar';
+    drag.addEventListener('mousedown', e => e.preventDefault());
+
+    row.addEventListener('dragover', event => {
+      const draggedKey = state.dragLayerKey || event.dataTransfer.getData('text/plain');
+      const dragged = state.svgRoot ? state.svgRoot.querySelector(`[data-editor-key="${draggedKey}"]`) : null;
+      if (!dragged || dragged === el) return;
+      if (dragged.contains && dragged.contains(el)) return;
+      const rect = row.getBoundingClientRect();
+      const y = event.clientY - rect.top;
+      const ratio = y / rect.height;
+      if (isGroupLayer(el) && ratio > 0.33 && ratio < 0.66) btn.classList.add('drop-inside');
+      else btn.classList.remove('drop-inside');
+    });
+
+    row.append(toggle, eye, lock, btn, drag);
+    container.appendChild(row);
+
+    if (isGroupLayer(el) && el.getAttribute('data-collapsed') !== '1') {
+      const children = getLayerChildren(el);
+      if (children.length) {
+        const childWrap = document.createElement('div');
+        childWrap.className = 'layer-children';
+        container.appendChild(childWrap);
+        renderLayerNodes(childWrap, children, depth + 1);
+      }
+    }
+  });
+}
+
+function updateLayerList() {
+  layerList.innerHTML = '';
+  const items = getTopLevelLayers();
+  layerCount.textContent = `${items.length} layers`;
+  renderLayerNodes(layerList, items, 0);
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+
+
+function defaultLayerNameForNode(node, index = 0) {
+  if (!node || !node.tagName) return `Layer ${index + 1}`;
+  const tag = node.tagName.toLowerCase();
+  const id = node.getAttribute('id');
+  if (id) return `${tag}#${id}`;
+  const cls = node.getAttribute('class');
+  if (cls) return `${tag}.${cls.trim().replace(/\s+/g, '.')}`;
+  return `${tag} ${index + 1}`;
+}
+
+function isBuiltInLayerContainer(el) {
+  if (!el || !el.tagName) return false;
+  const tag = el.tagName.toLowerCase();
+  if (tag !== 'g') return false;
+  return !el.closest('defs, clipPath, mask, pattern, marker, symbol, linearGradient, radialGradient, filter');
+}
+
+function normalizeLayerTree(root) {
+  if (!root) return;
+  const nodes = [];
+  if (root instanceof Element && root.tagName && root.tagName.toLowerCase() !== 'svg') nodes.push(root);
+  if (root.querySelectorAll) nodes.push(...Array.from(root.querySelectorAll('*')));
+  nodes.forEach((node, index) => {
+    if (!node.tagName) return;
+    const tag = node.tagName.toLowerCase();
+    if (tag === 'defs') return;
+    if (isBuiltInLayerContainer(node)) node.setAttribute('data-layer-group', '1');
+    if (tag !== 'svg' && !node.hasAttribute('data-layer-name')) {
+      node.setAttribute('data-layer-name', defaultLayerNameForNode(node, index));
+    }
+  });
+}
+
+function assignNamesRecursively(parent) {
+  const children = Array.from(parent.children || []).filter(el => el.tagName && el.tagName.toLowerCase() !== 'defs');
+  children.forEach((child, index) => {
+    if (!child.hasAttribute('data-layer-name')) child.setAttribute('data-layer-name', defaultLayerNameForNode(child, index));
+    if (isGroupLayer(child)) assignNamesRecursively(child);
+  });
+}
+
+function getTopLevelLayers() {
+  if (!state.svgRoot) return [];
+  return Array.from(state.svgRoot.children).filter(el => el.tagName && el.tagName.toLowerCase() !== 'defs');
+}
+
+function getLayerChildren(layer) {
+  return Array.from(layer.children || []).filter(el => el.tagName && el.tagName.toLowerCase() !== 'defs');
+}
+
+function isGroupLayer(el) {
+  return !!(el && ((el.getAttribute && el.getAttribute('data-layer-group') === '1') || isBuiltInLayerContainer(el)));
+}
+
+function isLayerHidden(el) {
+  return (el.getAttribute('display') || '').trim() === 'none' || (el.style && el.style.display === 'none');
+}
+
+function isLayerLocked(el) {
+  return el.getAttribute('data-locked') === '1';
+}
+
+function getElementDisplayName(el) {
+  return el.getAttribute('data-layer-name') || el.getAttribute('id') || el.getAttribute('class') || labelForElement(el);
+}
+
+function getLayerOpacity(el) {
+  const raw = (el.style && el.style.opacity) || el.getAttribute('opacity') || '';
+  const value = parseFloat(raw);
+  return Number.isFinite(value) ? Math.round(value * 100) : 100;
+}
+
+function getLayerBlendMode(el) {
+  return (el.style && el.style.mixBlendMode) || 'normal';
+}
+
+function setLayerOpacity(el, value) {
+  const op = Math.max(0, Math.min(100, parseFloat(value || 100))) / 100;
+  el.style.opacity = String(op);
+  if (op === 1) el.style.opacity = '';
+}
+
+function setLayerBlendMode(el, mode) {
+  el.style.mixBlendMode = mode && mode !== 'normal' ? mode : '';
+}
+
+function applyLayerName() {
+  if (state.selected.size !== 1) return;
+  const first = Array.from(state.selected)[0];
+  const nextName = (layerNameInput.value || '').trim();
+  if (!nextName) return;
+  first.setAttribute('data-layer-name', nextName);
+  updateLayerList();
+  updateInspector();
+  pushHistory('Renomear layer');
+}
+
+function applyOpacity() {
+  if (state.selected.size !== 1) return;
+  const first = Array.from(state.selected)[0];
+  setLayerOpacity(first, opacityRange.value);
+  opacityValue.textContent = `${opacityRange.value}%`;
+  pushHistory('Opacidade');
+}
+
+function applyBlendMode() {
+  if (state.selected.size !== 1) return;
+  const first = Array.from(state.selected)[0];
+  setLayerBlendMode(first, blendModeSelect.value);
+  pushHistory('Mesclagem');
+}
+
+function toggleLayerVisibility(el) {
+  if (isLayerHidden(el)) {
+    el.removeAttribute('display');
+    if (el.style) el.style.display = '';
+  } else {
+    el.setAttribute('display', 'none');
+    if (state.selected.has(el)) {
+      el.removeAttribute('data-selected');
+      state.selected.delete(el);
+    }
+  }
+  updateLayerList();
+  renderSelectionOverlay();
+  updateButtons();
+  updateInspector();
+  pushHistory('Visibilidade');
+}
+
+function toggleLayerLock(el) {
+  if (isLayerLocked(el)) el.removeAttribute('data-locked');
+  else el.setAttribute('data-locked', '1');
+  updateLayerList();
+  updateInspector();
+  pushHistory('Bloqueio');
+}
+
+function createBlankSvg(width = 1200, height = 800) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('xmlns', SVG_NS);
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('width', width);
+  svg.setAttribute('height', height);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  svg.appendChild(defs);
+  return svg;
+}
+
+function ensureRootDefs() {
+  if (!state.svgRoot) return null;
+  let defs = state.svgRoot.querySelector(':scope > defs');
+  if (!defs) {
+    defs = document.createElementNS(SVG_NS, 'defs');
+    state.svgRoot.insertBefore(defs, state.svgRoot.firstChild || null);
+  }
+  return defs;
+}
+
+function rewriteIdReferences(node, prefix, ids = []) {
+  if (!(node instanceof Element)) return;
+  if (node.tagName && node.tagName.toLowerCase() === 'style') {
+    node.textContent = rewriteCssText(node.textContent, prefix, ids);
+  }
+  const id = node.getAttribute('id');
+  if (id) node.setAttribute('id', prefix + id);
+  const attrs = ['fill', 'stroke', 'filter', 'clip-path', 'mask', 'marker-start', 'marker-mid', 'marker-end', 'href', 'xlink:href'];
+  attrs.forEach(attr => {
+    if (!node.hasAttribute(attr)) return;
+    const value = node.getAttribute(attr);
+    if (!value) return;
+    if (value.startsWith('#')) node.setAttribute(attr, '#' + prefix + value.slice(1));
+    else node.setAttribute(attr, value.replace(/url\((['"]?)#([^)"']+)\1\)/g, (match, quote, refId) => `url(${quote || ''}#${prefix}${refId}${quote || ''})`));
+  });
+  if (node.hasAttribute('style')) {
+    node.setAttribute('style', rewriteCssText(node.getAttribute('style'), prefix, ids));
+  }
+  Array.from(node.children).forEach(child => rewriteIdReferences(child, prefix, ids));
+}
+
+function importSvgAsLayer(svgString, name = 'camada.svg') {
+  const imported = parseSvg(svgString);
+  ensureViewBox(imported);
+  normalizeLayerTree(imported);
+  const importedVb = getSvgViewBoxData(imported);
+  if (!state.svgRoot) {
+    state.svgRoot = createBlankSvg(importedVb.width, importedVb.height);
+    state.loadedName = 'composicao.svg';
+    svgHost.innerHTML = '';
+    svgHost.appendChild(state.svgRoot);
+    setCanvasSizeFromSvg(state.svgRoot);
+    syncCanvasSizeInputs();
+    emptyState.classList.add('hidden');
+    fileLabel.textContent = state.loadedName;
+    stageTitle.textContent = state.loadedName;
+  }
+  const defs = ensureRootDefs();
+  const prefix = `imp${Date.now().toString(36)}_${Math.random().toString(36).slice(2,7)}_`;
+  const importedIds = collectElementIds(imported);
+  Array.from(imported.children).forEach(child => {
+    if (!child.tagName) return;
+    const tag = child.tagName.toLowerCase();
+    if (tag === 'defs') {
+      Array.from(child.children).forEach(defChild => {
+        const copy = defChild.cloneNode(true);
+        rewriteIdReferences(copy, prefix, importedIds);
+        defs.appendChild(copy);
+      });
+    }
+  });
+
+  const group = document.createElementNS(SVG_NS, 'g');
+  group.setAttribute('data-layer-name', name);
+  group.setAttribute('data-layer-group', '1');
+  group.setAttribute('data-editor-layer', '1');
+
+  const importViewBox = imported.getAttribute('viewBox');
+  if (importViewBox && !group.hasAttribute('data-import-viewBox')) group.setAttribute('data-import-viewBox', importViewBox);
+
+  const children = Array.from(imported.childNodes).filter(node => node.nodeType === 1 && node.tagName.toLowerCase() !== 'defs');
+  children.forEach((node, index) => {
+    const copy = document.importNode(node, true);
+    rewriteIdReferences(copy, prefix, importedIds);
+    if (!copy.hasAttribute('data-layer-name')) copy.setAttribute('data-layer-name', defaultLayerNameForNode(copy, index));
+    if (copy.tagName && copy.tagName.toLowerCase() === 'g') copy.setAttribute('data-layer-group', '1');
+    group.appendChild(copy);
+    if (isGroupLayer(copy)) assignNamesRecursively(copy);
+  });
+
+  normalizeLayerTree(group);
+  state.svgRoot.appendChild(group);
+  assignEditorKeys();
+  updateLayerList();
+  updateButtons();
+  renderSelectionOverlay();
+  setCanvasSizeFromSvg(state.svgRoot);
+  syncCanvasSizeInputs();
+}
+
+
+function moveLayerBeforeNode(dragged, target) {
+  if (!dragged || !target || dragged === target) return;
+  if (dragged.contains && dragged.contains(target)) return;
+  const parent = target.parentNode;
+  if (!parent) return;
+  parent.insertBefore(dragged, target);
+  assignEditorKeys();
+  updateLayerList();
+  renderSelectionOverlay();
+  pushHistory('Reordenar layers');
+}
+
+function moveLayerAfterNode(dragged, target) {
+  if (!dragged || !target || dragged === target) return;
+  if (dragged.contains && dragged.contains(target)) return;
+  const parent = target.parentNode;
+  if (!parent) return;
+  parent.insertBefore(dragged, target.nextSibling);
+  assignEditorKeys();
+  updateLayerList();
+  renderSelectionOverlay();
+  pushHistory('Reordenar layers');
+}
+
+function moveLayerIntoGroup(dragged, group) {
+  if (!dragged || !group || dragged === group) return;
+  if (!isGroupLayer(group)) return;
+  if (dragged.contains && dragged.contains(group)) return;
+  group.appendChild(dragged);
+  assignEditorKeys();
+  updateLayerList();
+  renderSelectionOverlay();
+  pushHistory('Mover para grupo');
+}
+
+function createGroupFromSelection() {
+
+  const selected = Array.from(state.selected);
+  if (selected.length < 2) return;
+  const parent = selected[0].parentElement;
+  if (!selected.every(el => el.parentElement === parent)) {
+    alert('Pra agrupar, selecione layers irmãs (no mesmo nível).');
+    return;
+  }
+  const group = document.createElementNS(SVG_NS, 'g');
+  group.setAttribute('data-layer-group', '1');
+  group.setAttribute('data-layer-name', `Grupo ${Date.now()}`);
+  parent.insertBefore(group, selected[0]);
+  selected.forEach(el => group.appendChild(el));
+  clearSelection();
+  assignEditorKeys();
+  selectElement(group);
+  updateLayerList();
+  pushHistory('Agrupar');
+}
+
+function ungroupSelection() {
+  const selected = Array.from(state.selected).filter(isGroupLayer);
+  if (!selected.length) return;
+  selected.forEach(group => {
+    const parent = group.parentElement;
+    while (group.firstChild) parent.insertBefore(group.firstChild, group);
+    group.remove();
+  });
+  clearSelection();
+  assignEditorKeys();
+  updateLayerList();
+  pushHistory('Desagrupar');
+}
+
+function hasUnsavedChanges() {
+  return state.svgRoot && state.savedHistoryIndex !== state.historyIndex;
+}
+
+async function openFiles(files) {
+  if (!files || !files.length) return;
+  try {
+    const file = files[0];
+    resetEditorDocument();
+    const text = await file.text();
+    loadSvgString(text, file.name);
+    adjustToFit();
+    if (files.length > 1) setStatus(`Documento aberto: ${file.name}. Os outros ${files.length - 1} arquivo(s) foram ignorados nessa ação.`);
+  } catch (err) {
+    alert(err.message || 'Não foi possível abrir o arquivo.');
+  }
+}
+
+async function addFilesAsLayers(files) {
+  if (!files || !files.length) return;
+  try {
+    for (const file of files) {
+      const text = await file.text();
+      importSvgAsLayer(text, file.name);
+    }
+    clearSelection();
+    updateLayerList();
+    updateButtons();
+    pushHistory(files.length > 1 ? 'Importação de layers' : 'Adicionar layer');
+    adjustToFit();
+    setStatus(files.length > 1 ? `${files.length} SVGs adicionados como layers` : `Layer adicionada: ${files[0].name}`);
+  } catch (err) {
+    alert(err.message || 'Não foi possível adicionar o(s) arquivo(s) como layer.');
+  }
+}
+
+function clearSelection() {
+  state.selected.forEach(el => el.removeAttribute('data-selected'));
+  state.selected.clear();
+  renderSelectionOverlay();
+  updateInspector();
+  updateButtons();
+  updateLayerList();
+}
+
+function selectElement(el, additive = false) {
+  if (!el || !isSelectable(el)) return;
+  if (!additive) clearSelection();
+  if (additive && state.selected.has(el)) {
+    el.removeAttribute('data-selected');
+    state.selected.delete(el);
+  } else {
+    state.selected.add(el);
+    el.setAttribute('data-selected', '1');
+  }
+  renderSelectionOverlay();
+  updateInspector();
+  updateButtons();
+  updateLayerList();
+}
+
+function selectElements(elements, additive = false) {
+  if (!additive) clearSelection();
+  elements.forEach(el => {
+    if (isSelectable(el)) {
+      state.selected.add(el);
+      el.setAttribute('data-selected', '1');
+    }
+  });
+  renderSelectionOverlay();
+  updateInspector();
+  updateButtons();
+  updateLayerList();
+}
+
+function updateInspector() {
+  const selected = Array.from(state.selected);
+  selectionCount.textContent = `${selected.length} selecionados`;
+  const first = selected[0];
+  if (!first) {
+    infoGrid.innerHTML = `<dt>Tag</dt><dd>—</dd><dt>ID</dt><dd>—</dd><dt>Classe</dt><dd>—</dd><dt>Layer</dt><dd>—</dd><dt>Transform</dt><dd>—</dd><dt>Caixa</dt><dd>—</dd>`;
+    transformInput.value = '';
+    transformInput.disabled = true;
+    applyTransformBtn.disabled = true;
+    resetTransformBtn.disabled = true;
+    layerNameInput.value = '';
+    layerNameInput.disabled = true;
+    applyLayerNameBtn.disabled = true;
+    opacityRange.disabled = true;
+    blendModeSelect.disabled = true;
+    opacityValue.textContent = '100%';
+    blendModeSelect.value = 'normal';
+    return;
+  }
+  let bboxText = '—';
+  try {
+    const box = first.getBBox();
+    bboxText = `${box.x.toFixed(1)}, ${box.y.toFixed(1)} · ${box.width.toFixed(1)} × ${box.height.toFixed(1)}`;
+  } catch {}
+  const transform = first.getAttribute('transform') || '—';
+  infoGrid.innerHTML = `
+    <dt>Tag</dt><dd>${escapeHtml(first.tagName.toLowerCase())}</dd>
+    <dt>ID</dt><dd>${escapeHtml(first.getAttribute('id') || '—')}</dd>
+    <dt>Classe</dt><dd>${escapeHtml(first.getAttribute('class') || '—')}</dd>
+    <dt>Layer</dt><dd>${escapeHtml(getElementDisplayName(first))}</dd>
+    <dt>Transform</dt><dd>${escapeHtml(transform)}</dd>
+    <dt>Caixa</dt><dd>${escapeHtml(bboxText)}</dd>
+  `;
+  transformInput.value = selected.length === 1 ? (first.getAttribute('transform') || '') : '';
+  transformInput.disabled = false;
+  applyTransformBtn.disabled = false;
+  resetTransformBtn.disabled = false;
+  if (selected.length === 1) {
+    layerNameInput.value = getElementDisplayName(first);
+    layerNameInput.disabled = false;
+    applyLayerNameBtn.disabled = false;
+    opacityRange.disabled = false;
+    blendModeSelect.disabled = false;
+    opacityRange.value = String(getLayerOpacity(first));
+    opacityValue.textContent = `${opacityRange.value}%`;
+    blendModeSelect.value = getLayerBlendMode(first);
+  } else {
+    layerNameInput.value = '';
+    layerNameInput.disabled = true;
+    applyLayerNameBtn.disabled = true;
+    opacityRange.disabled = true;
+    blendModeSelect.disabled = true;
+  }
+}
+
+function updateButtons() {
+  const hasSvg = !!state.svgRoot;
+  const hasSelection = state.selected.size > 0;
+  copyBtn.disabled = !hasSelection;
+  duplicateBtn.disabled = !hasSelection;
+  deleteBtn.disabled = !hasSelection;
+  frontBtn.disabled = !hasSelection;
+  backBtn.disabled = !hasSelection;
+  downloadBtn.disabled = !hasSvg;
+  clearSelectionBtn.disabled = !hasSelection;
+  selectAllBtn.disabled = !hasSvg;
+  groupBtn.disabled = state.selected.size < 2;
+  ungroupBtn.disabled = !Array.from(state.selected).some(isGroupLayer);
+  pasteBtn.disabled = state.clipboard.length === 0 || !hasSvg;
+  [canvasWidthInput, canvasHeightInput, aspectPreset, applyCanvasSizeBtn, resetCanvasSizeBtn].forEach(el => el.disabled = !hasSvg);
+  if (!hasSelection) { layerNameInput.disabled = true; applyLayerNameBtn.disabled = true; opacityRange.disabled = true; blendModeSelect.disabled = true; }
+  clipboardText.textContent = `Clipboard: ${state.clipboard.length ? `${state.clipboard.length} item(ns)` : 'vazio'}`;
+  syncHistoryButtons();
+}
+
+
+function setCanvasSizeFromSvg(svg) {
+  const viewBox = svg.viewBox.baseVal;
+  const vbw = viewBox && viewBox.width ? viewBox.width : parseFloat(svg.getAttribute('width')) || 1200;
+  const vbh = viewBox && viewBox.height ? viewBox.height : parseFloat(svg.getAttribute('height')) || 800;
+  state.baseCanvasWidth = vbw;
+  state.baseCanvasHeight = vbh;
+  overlaySvg.setAttribute('viewBox', `0 0 ${vbw} ${vbh}`);
+  viewBoxText.textContent = `viewBox: 0 0 ${Number(vbw).toFixed(1)} ${Number(vbh).toFixed(1)}`;
+  sizeText.textContent = `Tamanho: ${Math.round(vbw)} × ${Math.round(vbh)}`;
+  applyZoom(state.zoom || (parseFloat(zoomRange.value) / 100) || 1);
+}
+
+function loadSvgString(svgString, name = 'arquivo.svg', options = {}) {
+  const { recordHistory = true } = options;
+  resetTransientUiState();
+  const svg = parseSvg(svgString);
+  ensureViewBox(svg);
+  svgHost.innerHTML = '';
+  overlaySvg.innerHTML = '';
+  state.svgRoot = document.importNode(svg, true);
+  normalizeLayerTree(state.svgRoot);
+  state.loadedName = name;
+  state.selected.clear();
+  svgHost.appendChild(state.svgRoot);
+  const initialVb = getSvgViewBoxData(state.svgRoot);
+  if (!state.svgRoot.hasAttribute('data-editor-original-width')) state.svgRoot.setAttribute('data-editor-original-width', String(initialVb.width));
+  if (!state.svgRoot.hasAttribute('data-editor-original-height')) state.svgRoot.setAttribute('data-editor-original-height', String(initialVb.height));
+  setCanvasSizeFromSvg(state.svgRoot);
+  syncCanvasSizeInputs();
+  assignEditorKeys();
+  updateLayerList();
+  updateInspector();
+  updateButtons();
+  applyZoom(parseFloat(zoomRange.value) / 100);
+  emptyState.classList.add('hidden');
+  fileLabel.textContent = name;
+  stageTitle.textContent = name;
+  stageMeta.textContent = 'Use Abrir/Substituir para trocar o documento inteiro ou Adicionar como layer para juntar SVGs. Clique para selecionar, arraste para mover, use Alt para pegar o grupo pai, esconda camadas, desfaça/refaça e exporte quando terminar.';
+  setStatus('SVG carregado');
+  if (recordHistory) {
+    state.history = [];
+    state.historyIndex = -1;
+    pushHistory('Carregamento');
+    state.savedHistoryIndex = state.historyIndex;
+  }
+  syncHistoryButtons();
+}
+
+function applyZoom(zoom) {
+  state.zoom = zoom;
+  const baseWidth = state.baseCanvasWidth || (state.svgRoot?.viewBox?.baseVal?.width) || parseFloat(state.svgRoot?.getAttribute?.('width')) || 1200;
+  const baseHeight = state.baseCanvasHeight || (state.svgRoot?.viewBox?.baseVal?.height) || parseFloat(state.svgRoot?.getAttribute?.('height')) || 800;
+  const scaledWidth = Math.max(1, baseWidth * zoom);
+  const scaledHeight = Math.max(1, baseHeight * zoom);
+  if (state.svgRoot) {
+    state.svgRoot.style.width = `${scaledWidth}px`;
+    state.svgRoot.style.height = `${scaledHeight}px`;
+  }
+  overlaySvg.setAttribute('width', scaledWidth);
+  overlaySvg.setAttribute('height', scaledHeight);
+  overlaySvg.style.width = `${scaledWidth}px`;
+  overlaySvg.style.height = `${scaledHeight}px`;
+  canvasShell.style.width = `${scaledWidth}px`;
+  canvasShell.style.height = `${scaledHeight}px`;
+  canvasShell.style.transform = 'none';
+  zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+}
+
+function adjustToFit() {
+  if (!state.svgRoot) return;
+  const stageRect = stage.getBoundingClientRect();
+  const vb = state.svgRoot.viewBox.baseVal;
+  const contentWidth = vb.width || parseFloat(state.svgRoot.getAttribute('width')) || 1200;
+  const contentHeight = vb.height || parseFloat(state.svgRoot.getAttribute('height')) || 800;
+  const maxW = Math.max(100, stageRect.width - 90);
+  const maxH = Math.max(100, stageRect.height - 90);
+  const scale = clamp(Math.min(maxW / contentWidth, maxH / contentHeight, 1), 0.25, 3);
+  zoomRange.value = String(Math.round(scale * 100));
+  applyZoom(scale);
+}
+
+function getClientToSvgPoint(clientX, clientY) {
+  if (!state.svgRoot) return { x: 0, y: 0 };
+  const rect = state.svgRoot.getBoundingClientRect();
+  const vb = getSvgViewBoxData();
+  if (!rect.width || !rect.height) return { x: vb.x, y: vb.y };
+  return {
+    x: vb.x + ((clientX - rect.left) / rect.width) * vb.width,
+    y: vb.y + ((clientY - rect.top) / rect.height) * vb.height
+  };
+}
+
+function getIdentityMatrix() {
+  return typeof DOMMatrix === 'function'
+    ? new DOMMatrix([1, 0, 0, 1, 0, 0])
+    : state.svgRoot.createSVGMatrix();
+}
+
+function normalizeMatrix(matrix) {
+  if (!matrix) return getIdentityMatrix();
+  if (typeof DOMMatrix === 'function') {
+    if (matrix instanceof DOMMatrix) return matrix;
+    if (typeof DOMMatrix.fromMatrix === 'function') return DOMMatrix.fromMatrix(matrix);
+    return new DOMMatrix([matrix.a || 1, matrix.b || 0, matrix.c || 0, matrix.d || 1, matrix.e || 0, matrix.f || 0]);
+  }
+  return matrix;
+}
+
+function multiplyMatrices(a, b) {
+  const ma = normalizeMatrix(a);
+  const mb = normalizeMatrix(b);
+  return ma.multiply(mb);
+}
+
+function getRootNormalizedMatrix(matrix) {
+  if (!state.svgRoot || !matrix) return getIdentityMatrix();
+  const rootCTM = state.svgRoot.getScreenCTM ? state.svgRoot.getScreenCTM() : null;
+  if (!rootCTM) return normalizeMatrix(matrix);
+  return multiplyMatrices(rootCTM.inverse(), matrix);
+}
+
+function getMatrixToRoot(el) {
+  if (!state.svgRoot || !el || el === state.svgRoot) return getIdentityMatrix();
+  const ctm = el.getScreenCTM ? el.getScreenCTM() : null;
+  if (!ctm) return getIdentityMatrix();
+  return getRootNormalizedMatrix(ctm);
+}
+
+function getLocalTransformMatrix(el) {
+  try {
+    const baseVal = el.transform && el.transform.baseVal;
+    if (!baseVal || baseVal.numberOfItems === 0) return getIdentityMatrix();
+    const consolidated = baseVal.consolidate();
+    return consolidated ? normalizeMatrix(consolidated.matrix) : getIdentityMatrix();
+  } catch {
+    return getIdentityMatrix();
+  }
+}
+
+function matrixToTransformAttr(matrix) {
+  const a = Number(matrix.a.toFixed(8));
+  const b = Number(matrix.b.toFixed(8));
+  const c = Number(matrix.c.toFixed(8));
+  const d = Number(matrix.d.toFixed(8));
+  const e = Number(matrix.e.toFixed(8));
+  const f = Number(matrix.f.toFixed(8));
+  return `matrix(${a} ${b} ${c} ${d} ${e} ${f})`;
+}
+
+function getSelectionBounds() {
+  const boxes = Array.from(state.selected).map(getTransformedBBox).filter(Boolean);
+  if (!boxes.length) return null;
+  const minX = Math.min(...boxes.map(box => box.x));
+  const minY = Math.min(...boxes.map(box => box.y));
+  const maxX = Math.max(...boxes.map(box => box.x + box.width));
+  const maxY = Math.max(...boxes.map(box => box.y + box.height));
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+function applyGlobalTransformToSelection(globalMatrix) {
+  if (!state.selected.size || !state.transformOp) return;
+  state.transformOp.items.forEach(item => {
+    const parentToRoot = item.parentToRoot;
+    const localDelta = multiplyMatrices(multiplyMatrices(parentToRoot.inverse(), globalMatrix), parentToRoot);
+    const nextLocal = multiplyMatrices(localDelta, item.baseLocalMatrix);
+    item.el.setAttribute('transform', matrixToTransformAttr(nextLocal));
+  });
+  renderSelectionOverlay();
+  updateInspector();
+}
+
+function startOverlayTransform(event, type, handle) {
+  if (!state.selected.size || !state.svgRoot) return;
+  const bounds = getSelectionBounds();
+  if (!bounds) return;
+  const center = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+  const rootPoint = getClientToSvgPoint(event.clientX, event.clientY);
+  const startHandlePoints = {
+    nw: { x: bounds.x, y: bounds.y },
+    n: { x: center.x, y: bounds.y },
+    ne: { x: bounds.x + bounds.width, y: bounds.y },
+    e: { x: bounds.x + bounds.width, y: center.y },
+    se: { x: bounds.x + bounds.width, y: bounds.y + bounds.height },
+    s: { x: center.x, y: bounds.y + bounds.height },
+    sw: { x: bounds.x, y: bounds.y + bounds.height },
+    w: { x: bounds.x, y: center.y }
+  };
+  const anchors = {
+    nw: { x: bounds.x + bounds.width, y: bounds.y + bounds.height },
+    n: { x: center.x, y: bounds.y + bounds.height },
+    ne: { x: bounds.x, y: bounds.y + bounds.height },
+    e: { x: bounds.x, y: center.y },
+    se: { x: bounds.x, y: bounds.y },
+    s: { x: center.x, y: bounds.y },
+    sw: { x: bounds.x + bounds.width, y: bounds.y },
+    w: { x: bounds.x + bounds.width, y: center.y }
+  };
+  state.transformOp = {
+    type,
+    handle,
+    bounds,
+    center,
+    startPoint: rootPoint,
+    startHandlePoint: startHandlePoints[handle] || rootPoint,
+    anchorPoint: anchors[handle] || center,
+    startAngle: Math.atan2(rootPoint.y - center.y, rootPoint.x - center.x),
+    items: Array.from(state.selected).map(el => ({
+      el,
+      baseLocalMatrix: getLocalTransformMatrix(el),
+      parentToRoot: el.parentElement && el.parentElement !== state.svgRoot ? getMatrixToRoot(el.parentElement) : getIdentityMatrix()
+    }))
+  };
+}
+
+function updateOverlayTransform(event) {
+  if (!state.transformOp || !state.svgRoot) return;
+  const op = state.transformOp;
+  const point = getClientToSvgPoint(event.clientX, event.clientY);
+  op.changed = true;
+  if (op.type === 'rotate') {
+    let delta = Math.atan2(point.y - op.center.y, point.x - op.center.x) - op.startAngle;
+    let deg = delta * 180 / Math.PI;
+    if (event.shiftKey) deg = Math.round(deg / 15) * 15;
+    const g = getIdentityMatrix()
+      .translate(op.center.x, op.center.y)
+      .rotate(deg)
+      .translate(-op.center.x, -op.center.y);
+    applyGlobalTransformToSelection(g);
+    return;
+  }
+
+  const anchor = op.anchorPoint;
+  const handle0 = op.startHandlePoint;
+  let sx = 1;
+  let sy = 1;
+
+  const denX = handle0.x - anchor.x;
+  const denY = handle0.y - anchor.y;
+  const isHorizontal = ['e', 'w'].includes(op.handle);
+  const isVertical = ['n', 's'].includes(op.handle);
+
+  if (!isVertical && Math.abs(denX) > 0.0001) sx = (point.x - anchor.x) / denX;
+  if (!isHorizontal && Math.abs(denY) > 0.0001) sy = (point.y - anchor.y) / denY;
+
+  if (isHorizontal) sy = 1;
+  if (isVertical) sx = 1;
+
+  if (event.shiftKey && !isHorizontal && !isVertical) {
+    const signX = sx < 0 ? -1 : 1;
+    const signY = sy < 0 ? -1 : 1;
+    const uni = Math.max(Math.abs(sx), Math.abs(sy), 0.02);
+    sx = uni * signX;
+    sy = uni * signY;
+  }
+
+  if (Math.abs(sx) < 0.02) sx = 0.02 * (sx < 0 ? -1 : 1);
+  if (Math.abs(sy) < 0.02) sy = 0.02 * (sy < 0 ? -1 : 1);
+
+  const g = getIdentityMatrix()
+    .translate(anchor.x, anchor.y)
+    .scaleNonUniform(sx, sy)
+    .translate(-anchor.x, -anchor.y);
+
+  applyGlobalTransformToSelection(g);
+}
+
+function endOverlayTransform() {
+  if (!state.transformOp) return;
+  const opType = state.transformOp.type;
+  const changed = !!state.transformOp.changed;
+  state.transformOp = null;
+  renderSelectionOverlay();
+  updateInspector();
+  updateLayerList();
+  if (changed) pushHistory(opType === 'rotate' ? 'Rotação' : 'Redimensionamento');
+  setStatus('Transformação aplicada');
+}
+
+function getTransformedBBox(el) {
+  try {
+    const bbox = el.getBBox();
+    const ctm = getMatrixToRoot(el);
+    if (!ctm) return null;
+    const corners = [
+      new DOMPoint(bbox.x, bbox.y).matrixTransform(ctm),
+      new DOMPoint(bbox.x + bbox.width, bbox.y).matrixTransform(ctm),
+      new DOMPoint(bbox.x + bbox.width, bbox.y + bbox.height).matrixTransform(ctm),
+      new DOMPoint(bbox.x, bbox.y + bbox.height).matrixTransform(ctm)
+    ];
+    const xs = corners.map(p => p.x);
+    const ys = corners.map(p => p.y);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+  } catch {
+    return null;
+  }
+}
+
+function makeOverlayHandle(cx, cy, key, cursor) {
+  const handle = document.createElementNS(SVG_NS, 'rect');
+  handle.setAttribute('x', cx - 6);
+  handle.setAttribute('y', cy - 6);
+  handle.setAttribute('width', '12');
+  handle.setAttribute('height', '12');
+  handle.setAttribute('rx', '3');
+  handle.setAttribute('fill', '#8b5cf6');
+  handle.setAttribute('stroke', '#ffffff');
+  handle.setAttribute('stroke-width', '1.5');
+  handle.setAttribute('data-overlay-role', 'resize');
+  handle.setAttribute('data-handle', key);
+  handle.style.pointerEvents = 'all';
+  handle.style.cursor = cursor;
+  return handle;
+}
+
+function renderSelectionOverlay() {
+  overlaySvg.innerHTML = '';
+  const vb = state.svgRoot && state.svgRoot.viewBox ? state.svgRoot.viewBox.baseVal : null;
+  if (!vb || !state.selected.size) return;
+
+  const perElementGroup = document.createElementNS(SVG_NS, 'g');
+  perElementGroup.setAttribute('fill', 'none');
+  perElementGroup.setAttribute('stroke', '#8b5cf6');
+  perElementGroup.setAttribute('stroke-width', '1.5');
+  perElementGroup.setAttribute('stroke-dasharray', '8 6');
+  perElementGroup.setAttribute('opacity', '0.5');
+
+  state.selected.forEach(el => {
+    const box = getTransformedBBox(el);
+    if (!box) return;
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('x', box.x);
+    rect.setAttribute('y', box.y);
+    rect.setAttribute('width', box.width);
+    rect.setAttribute('height', box.height);
+    rect.setAttribute('rx', '6');
+    perElementGroup.appendChild(rect);
+  });
+
+  overlaySvg.appendChild(perElementGroup);
+
+  const box = getSelectionBounds();
+  if (!box) return;
+
+  const mainRect = document.createElementNS(SVG_NS, 'rect');
+  mainRect.setAttribute('x', box.x - 4);
+  mainRect.setAttribute('y', box.y - 4);
+  mainRect.setAttribute('width', box.width + 8);
+  mainRect.setAttribute('height', box.height + 8);
+  mainRect.setAttribute('fill', 'rgba(139,92,246,0.08)');
+  mainRect.setAttribute('stroke', '#c4b5fd');
+  mainRect.setAttribute('stroke-width', '2');
+  mainRect.setAttribute('stroke-dasharray', '10 6');
+  mainRect.setAttribute('rx', '8');
+  overlaySvg.appendChild(mainRect);
+
+  const cx = box.x + box.width / 2;
+  const cy = box.y + box.height / 2;
+
+  const handles = [
+    { key: 'nw', x: box.x - 4, y: box.y - 4, cursor: 'nwse-resize' },
+    { key: 'n', x: cx, y: box.y - 4, cursor: 'ns-resize' },
+    { key: 'ne', x: box.x + box.width + 4, y: box.y - 4, cursor: 'nesw-resize' },
+    { key: 'e', x: box.x + box.width + 4, y: cy, cursor: 'ew-resize' },
+    { key: 'se', x: box.x + box.width + 4, y: box.y + box.height + 4, cursor: 'nwse-resize' },
+    { key: 's', x: cx, y: box.y + box.height + 4, cursor: 'ns-resize' },
+    { key: 'sw', x: box.x - 4, y: box.y + box.height + 4, cursor: 'nesw-resize' },
+    { key: 'w', x: box.x - 4, y: cy, cursor: 'ew-resize' }
+  ];
+
+  handles.forEach(item => overlaySvg.appendChild(makeOverlayHandle(item.x, item.y, item.key, item.cursor)));
+
+  const rotY = box.y - 38;
+  const rotLine = document.createElementNS(SVG_NS, 'line');
+  rotLine.setAttribute('x1', cx);
+  rotLine.setAttribute('y1', box.y - 4);
+  rotLine.setAttribute('x2', cx);
+  rotLine.setAttribute('y2', rotY);
+  rotLine.setAttribute('stroke', '#c4b5fd');
+  rotLine.setAttribute('stroke-width', '2');
+  overlaySvg.appendChild(rotLine);
+
+  const rotHandle = document.createElementNS(SVG_NS, 'circle');
+  rotHandle.setAttribute('cx', cx);
+  rotHandle.setAttribute('cy', rotY);
+  rotHandle.setAttribute('r', '8');
+  rotHandle.setAttribute('fill', '#22c55e');
+  rotHandle.setAttribute('stroke', '#ffffff');
+  rotHandle.setAttribute('stroke-width', '1.5');
+  rotHandle.setAttribute('data-overlay-role', 'rotate');
+  rotHandle.setAttribute('data-handle', 'rotate');
+  rotHandle.style.pointerEvents = 'all';
+  rotHandle.style.cursor = 'grab';
+  overlaySvg.appendChild(rotHandle);
+}
+
+function getEditableTarget(target, useParentGroup = false) {
+  if (!target || !state.svgRoot) return null;
+  let el = target instanceof SVGElement ? target : null;
+  if (!el) return null;
+  if (useParentGroup) {
+    const group = el.closest('g[data-editor-key]');
+    if (group) return group;
+  }
+  while (el && el !== state.svgRoot) {
+    if (el.dataset && el.dataset.editorKey && isSelectable(el)) return el;
+    el = el.parentElement;
+  }
+  return null;
+}
+
+function startDrag(event, target) {
+  const origin = getClientToSvgPoint(event.clientX, event.clientY);
+  state.drag = {
+    origin,
+    moved: false,
+    items: Array.from(state.selected).map(el => ({
+      el,
+      baseLocalMatrix: getLocalTransformMatrix(el),
+      parentToRoot: el.parentElement && el.parentElement !== state.svgRoot ? getMatrixToRoot(el.parentElement) : getIdentityMatrix()
+    }))
+  };
+}
+
+function updateDrag(event) {
+  if (!state.drag || !state.svgRoot) return;
+  const point = getClientToSvgPoint(event.clientX, event.clientY);
+  const dx = point.x - state.drag.origin.x;
+  const dy = point.y - state.drag.origin.y;
+  if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001) state.drag.moved = true;
+  const globalMove = getIdentityMatrix().translate(dx, dy);
+  state.drag.items.forEach(item => {
+    const localDelta = multiplyMatrices(multiplyMatrices(item.parentToRoot.inverse(), globalMove), item.parentToRoot);
+    const nextLocal = multiplyMatrices(localDelta, item.baseLocalMatrix);
+    item.el.setAttribute('transform', matrixToTransformAttr(nextLocal));
+  });
+  renderSelectionOverlay();
+  updateInspector();
+}
+
+function endDrag() {
+  if (!state.drag) return;
+  const moved = !!state.drag.moved;
+  state.drag = null;
+  renderSelectionOverlay();
+  updateInspector();
+  updateLayerList();
+  if (moved) pushHistory('Movimento');
+  setStatus('Elementos movidos');
+}
+
+function startMarquee(event) {
+  const rect = stage.getBoundingClientRect();
+  state.marquee = {
+    startClientX: event.clientX,
+    startClientY: event.clientY,
+    startSvg: getClientToSvgPoint(event.clientX, event.clientY),
+    stageLeft: rect.left,
+    stageTop: rect.top
+  };
+  marquee.style.display = 'block';
+  marquee.style.left = `${event.clientX - rect.left + stage.scrollLeft}px`;
+  marquee.style.top = `${event.clientY - rect.top + stage.scrollTop}px`;
+  marquee.style.width = '0px';
+  marquee.style.height = '0px';
+}
+
+function updateMarquee(event) {
+  if (!state.marquee) return;
+  const rect = stage.getBoundingClientRect();
+  const x1 = state.marquee.startClientX - rect.left + stage.scrollLeft;
+  const y1 = state.marquee.startClientY - rect.top + stage.scrollTop;
+  const x2 = event.clientX - rect.left + stage.scrollLeft;
+  const y2 = event.clientY - rect.top + stage.scrollTop;
+  const left = Math.min(x1, x2);
+  const top = Math.min(y1, y2);
+  const width = Math.abs(x2 - x1);
+  const height = Math.abs(y2 - y1);
+  marquee.style.left = `${left}px`;
+  marquee.style.top = `${top}px`;
+  marquee.style.width = `${width}px`;
+  marquee.style.height = `${height}px`;
+}
+
+function endMarquee(event, additive = false) {
+  if (!state.marquee || !state.svgRoot) return;
+  const endSvg = getClientToSvgPoint(event.clientX, event.clientY);
+  const x = Math.min(state.marquee.startSvg.x, endSvg.x);
+  const y = Math.min(state.marquee.startSvg.y, endSvg.y);
+  const width = Math.abs(endSvg.x - state.marquee.startSvg.x);
+  const height = Math.abs(endSvg.y - state.marquee.startSvg.y);
+  const box = { x, y, width, height };
+  marquee.style.display = 'none';
+  const hits = allSelectableElements().filter(el => {
+    const b = getTransformedBBox(el);
+    if (!b) return false;
+    return intersects(box, b);
+  });
+  selectElements(hits, additive);
+  state.marquee = null;
+  if (hits.length) setStatus(`${hits.length} elemento(s) selecionado(s)`);
+}
+
+function intersects(a, b) {
+  return !(a.x + a.width < b.x || b.x + b.width < a.x || a.y + a.height < b.y || b.y + b.height < a.y);
+}
+
+function duplicateSelection() {
+  if (!state.svgRoot || !state.selected.size) return;
+  const created = [];
+  Array.from(state.selected).forEach(el => {
+    const clone = el.cloneNode(true);
+    clone.removeAttribute('data-selected');
+    if (clone.hasAttribute('id')) clone.setAttribute('id', `${clone.getAttribute('id')}-copy`);
+    const base = clone.getAttribute('transform') || '';
+    clone.setAttribute('transform', base ? `${base} translate(12 12)` : 'translate(12 12)');
+    el.parentNode.insertBefore(clone, el.nextSibling);
+    created.push(clone);
+  });
+  assignEditorKeys();
+  selectElements(created);
+  updateLayerList();
+  pushHistory('Duplicação');
+  setStatus('Seleção duplicada');
+}
+
+function copySelection() {
+  state.clipboard = Array.from(state.selected).map(el => serializer.serializeToString(el));
+  updateButtons();
+  setStatus(`${state.clipboard.length} elemento(s) copiado(s)`);
+}
+
+function pasteClipboard() {
+  if (!state.svgRoot || !state.clipboard.length) return;
+  const parent = state.selected.size ? Array.from(state.selected)[0].parentNode : state.svgRoot;
+  const created = [];
+  state.clipboard.forEach(str => {
+    const doc = parser.parseFromString(`<svg xmlns="${SVG_NS}">${str}</svg>`, 'image/svg+xml');
+    const child = doc.documentElement.firstElementChild;
+    if (!child) return;
+    const node = document.importNode(child, true);
+    node.removeAttribute('data-selected');
+    if (node.hasAttribute('id')) node.setAttribute('id', `${node.getAttribute('id')}-paste`);
+    const base = node.getAttribute('transform') || '';
+    node.setAttribute('transform', base ? `${base} translate(16 16)` : 'translate(16 16)');
+    parent.appendChild(node);
+    created.push(node);
+  });
+  assignEditorKeys();
+  selectElements(created);
+  updateLayerList();
+  pushHistory('Colagem');
+  setStatus('Clipboard colado');
+}
+
+function deleteSelection() {
+  if (!state.selected.size) return;
+  Array.from(state.selected).forEach(el => el.remove());
+  clearSelection();
+  assignEditorKeys();
+  updateLayerList();
+  pushHistory('Exclusão');
+  setStatus('Seleção apagada');
+}
+
+function bringToFront() {
+  Array.from(state.selected).forEach(el => el.parentNode.appendChild(el));
+  updateLayerList();
+  pushHistory('Trazer para frente');
+  setStatus('Seleção trazida para frente');
+}
+
+function sendToBack() {
+  Array.from(state.selected).forEach(el => {
+    const parent = el.parentNode;
+    const firstDrawable = Array.from(parent.children).find(child => isSelectable(child) && child !== el);
+    if (firstDrawable) parent.insertBefore(el, firstDrawable);
+  });
+  updateLayerList();
+  pushHistory('Enviar para trás');
+  setStatus('Seleção enviada para trás');
+}
+
+function nudgeSelection(dx, dy) {
+  if (!state.selected.size) return;
+  const globalMove = getIdentityMatrix().translate(dx, dy);
+  state.selected.forEach(el => {
+    const parentToRoot = el.parentElement && el.parentElement !== state.svgRoot ? getMatrixToRoot(el.parentElement) : getIdentityMatrix();
+    const localDelta = multiplyMatrices(multiplyMatrices(parentToRoot.inverse(), globalMove), parentToRoot);
+    const nextLocal = multiplyMatrices(localDelta, getLocalTransformMatrix(el));
+    el.setAttribute('transform', matrixToTransformAttr(nextLocal));
+  });
+  renderSelectionOverlay();
+  updateInspector();
+  updateLayerList();
+  pushHistory('Mover por seta');
+}
+
+function selectAll() {
+  selectElements(getTopLevelLayers());
+  setStatus('Todas as layers foram selecionadas');
+}
+
+function applyTransform() {
+  const value = transformInput.value.trim();
+  if (!state.selected.size) return;
+  state.selected.forEach(el => {
+    if (value) el.setAttribute('transform', value);
+    else el.removeAttribute('transform');
+  });
+  renderSelectionOverlay();
+  updateInspector();
+  updateLayerList();
+  pushHistory('Transform manual');
+  setStatus('Transform aplicado');
+}
+
+function resetTransform() {
+  if (!state.selected.size) return;
+  state.selected.forEach(el => el.removeAttribute('transform'));
+  renderSelectionOverlay();
+  updateInspector();
+  updateLayerList();
+  pushHistory('Limpar transform');
+  setStatus('Transform limpo');
+}
+
+function cleanForExport(svg) {
+  svg.querySelectorAll('[data-editor-key]').forEach(el => el.removeAttribute('data-editor-key'));
+  svg.querySelectorAll('[data-selected]').forEach(el => el.removeAttribute('data-selected'));
+  svg.querySelectorAll('*').forEach(el => {
+    if (el.style && el.style.cursor) el.style.cursor = '';
+    if (el.getAttribute && el.getAttribute('style') === '') el.removeAttribute('style');
+  });
+  if (!svg.getAttribute('xmlns')) svg.setAttribute('xmlns', SVG_NS);
+  return svg;
+}
+
+function downloadSvg() {
+  if (!state.svgRoot) return;
+  const clone = state.svgRoot.cloneNode(true);
+  cleanForExport(clone);
+  const content = serializer.serializeToString(clone);
+  const blob = new Blob([content], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const baseName = (state.loadedName || 'editado.svg').replace(/\.svg$/i, '');
+  a.href = url;
+  a.download = `${baseName}_editado.svg`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  state.savedHistoryIndex = state.historyIndex;
+  setStatus('SVG exportado');
+}
+
+
+function getSelectionSummary() {
+  return state.selected.size ? `${state.selected.size} selecionado(s)` : 'Nenhuma seleção';
+}
+
+openFileInput.addEventListener('change', async event => {
+  await openFiles(Array.from(event.target.files || []));
+  openFileInput.value = '';
+});
+
+addLayerInput.addEventListener('change', async event => {
+  await addFilesAsLayers(Array.from(event.target.files || []));
+  addLayerInput.value = '';
+});
+
+loadExampleBtn.addEventListener('click', () => {
+  loadSvgString(exampleSvg, 'exemplo.svg');
+  adjustToFit();
+});
+
+undoBtn.addEventListener('click', undoHistory);
+redoBtn.addEventListener('click', redoHistory);
+
+pasteSvgBtn.addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text || !text.includes('<svg')) {
+      alert('A área de transferência não tem um SVG válido no momento.');
+      return;
+    }
+    rawSvgInput.value = text;
+    if (!state.svgRoot) loadSvgString(text, 'svg_colado.svg');
+    else { importSvgAsLayer(text, 'svg_colado.svg'); pushHistory('Colar layer'); }
+    adjustToFit();
+  } catch {
+    rawSvgInput.focus();
+    alert('Não consegui ler a área de transferência direto. Cola o código no campo da direita.');
+  }
+});
+
+loadRawBtn.addEventListener('click', () => {
+  const text = rawSvgInput.value.trim();
+  if (!text) {
+    alert('Cole o código SVG primeiro.');
+    return;
+  }
+  try {
+    if (!state.svgRoot) loadSvgString(text, 'svg_colado.svg');
+    else { importSvgAsLayer(text, 'svg_colado.svg'); pushHistory('Colar layer'); }
+    adjustToFit();
+  } catch (err) {
+    alert(err.message || 'Não foi possível carregar o código colado.');
+  }
+});
+
+copyBtn.addEventListener('click', copySelection);
+pasteBtn.addEventListener('click', pasteClipboard);
+duplicateBtn.addEventListener('click', duplicateSelection);
+deleteBtn.addEventListener('click', deleteSelection);
+frontBtn.addEventListener('click', bringToFront);
+backBtn.addEventListener('click', sendToBack);
+downloadBtn.addEventListener('click', downloadSvg);
+clearSelectionBtn.addEventListener('click', clearSelection);
+selectAllBtn.addEventListener('click', selectAll);
+groupBtn.addEventListener('click', createGroupFromSelection);
+ungroupBtn.addEventListener('click', ungroupSelection);
+applyTransformBtn.addEventListener('click', applyTransform);
+resetTransformBtn.addEventListener('click', resetTransform);
+zoomRange.addEventListener('input', () => applyZoom(parseFloat(zoomRange.value) / 100));
+fitBtn.addEventListener('click', adjustToFit);
+aspectPreset.addEventListener('change', () => {
+  if (aspectPreset.value !== 'custom') applyAspectPresetValue(aspectPreset.value);
+});
+applyCanvasSizeBtn.addEventListener('click', () => {
+  applyCanvasSize(canvasWidthInput.value, canvasHeightInput.value);
+  adjustToFit();
+});
+resetCanvasSizeBtn.addEventListener('click', () => {
+  resetCanvasSize();
+  adjustToFit();
+});
+applyLayerNameBtn.addEventListener('click', applyLayerName);
+opacityRange.addEventListener('input', () => { opacityValue.textContent = `${opacityRange.value}%`; });
+opacityRange.addEventListener('change', applyOpacity);
+blendModeSelect.addEventListener('change', applyBlendMode);
+[canvasWidthInput, canvasHeightInput].forEach(input => {
+  input.addEventListener('input', () => {
+    aspectPreset.value = 'custom';
+  });
+  input.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      applyCanvasSize(canvasWidthInput.value, canvasHeightInput.value);
+      adjustToFit();
+    }
+  });
+});
+transformInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter') applyTransform();
+});
+
+overlaySvg.addEventListener('pointerdown', event => {
+  if (!state.svgRoot || event.button !== 0) return;
+  const role = event.target && event.target.dataset ? event.target.dataset.overlayRole : '';
+  if (!role) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const handle = event.target.dataset.handle || '';
+  if (role === 'rotate') {
+    startOverlayTransform(event, 'rotate', handle);
+  } else if (role === 'resize') {
+    startOverlayTransform(event, 'scale', handle);
+  }
+});
+
+stage.addEventListener('dragover', event => {
+  event.preventDefault();
+  stage.classList.add('drop-active');
+});
+
+stage.addEventListener('dragleave', () => stage.classList.remove('drop-active'));
+
+stage.addEventListener('drop', async event => {
+  event.preventDefault();
+  stage.classList.remove('drop-active');
+  const files = Array.from((event.dataTransfer && event.dataTransfer.files) || []);
+  if (files.length) {
+    if (!state.svgRoot) await openFiles(files);
+    else await addFilesAsLayers(files);
+  }
+});
+
+stage.addEventListener('pointerdown', event => {
+  if (!state.svgRoot) return;
+  if (event.button !== 0) return;
+  if (event.target && event.target.dataset && event.target.dataset.overlayRole) return;
+  const target = getEditableTarget(event.target, event.altKey);
+  if (target) {
+    const alreadySelected = state.selected.has(target);
+    if (event.shiftKey) {
+      selectElement(target, true);
+    } else if (!alreadySelected) {
+      selectElement(target, false);
+    }
+    if (state.selected.has(target)) {
+      startDrag(event, target);
+      event.preventDefault();
+    }
+  } else {
+    if (!event.shiftKey) clearSelection();
+    startMarquee(event);
+  }
+});
+
+window.addEventListener('pointermove', event => {
+  if (state.transformOp) {
+    updateOverlayTransform(event);
+    return;
+  }
+  if (state.drag) {
+    updateDrag(event);
+    return;
+  }
+  if (state.marquee) updateMarquee(event);
+});
+
+window.addEventListener('pointerup', event => {
+  if (state.transformOp) {
+    endOverlayTransform();
+    return;
+  }
+  if (state.drag) {
+    endDrag();
+    return;
+  }
+  if (state.marquee) endMarquee(event, event.shiftKey);
+});
+
+window.addEventListener('keydown', event => {
+  if (!state.svgRoot) return;
+  const isTyping = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && !isTyping) {
+    event.preventDefault();
+    undoHistory();
+    return;
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'y' && !isTyping) {
+    event.preventDefault();
+    redoHistory();
+    return;
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c' && !isTyping) {
+    if (state.selected.size) {
+      event.preventDefault();
+      copySelection();
+    }
+    return;
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v' && !isTyping) {
+    if (state.clipboard.length) {
+      event.preventDefault();
+      pasteClipboard();
+    }
+    return;
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'd' && !isTyping) {
+    if (state.selected.size) {
+      event.preventDefault();
+      duplicateSelection();
+    }
+    return;
+  }
+  if (isTyping) return;
+  if (event.key === 'Delete' || event.key === 'Backspace') {
+    if (state.selected.size) {
+      event.preventDefault();
+      deleteSelection();
+    }
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    clearSelection();
+    return;
+  }
+  const step = event.shiftKey ? 10 : 1;
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    nudgeSelection(-step, 0);
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    nudgeSelection(step, 0);
+  } else if (event.key === 'ArrowUp') {
+    event.preventDefault();
+    nudgeSelection(0, -step);
+  } else if (event.key === 'ArrowDown') {
+    event.preventDefault();
+    nudgeSelection(0, step);
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (state.svgRoot) renderSelectionOverlay();
+});
+
+updateButtons();
+syncHistoryButtons();
+syncCanvasSizeInputs();
+selectionCount.textContent = '0 selecionados';
+layerCount.textContent = '0 itens';
+setStatus('Sem SVG carregado');
+</script>
+
+
+</body></html>

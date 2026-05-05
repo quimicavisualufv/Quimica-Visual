@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" preserveAspectRatio="xMidYMid meet" data-editor-original-width="640" data-editor-original-height="420" style="width: 518.4px; height: 340.2px;">
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" preserveAspectRatio="xMidYMid meet" data-editor-original-width="640" data-editor-original-height="420" style="width: 1222.4px; height: 802.2px;">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#bg">
       <stop offset="0%" stop-color="#0b1220" data-layer-name="stop 3"/>
@@ -44,7 +44,7 @@
         <path d="M72 232L144 180L308 180L236 232" data-layer-name="path 38"/>
         <path d="M236 72L308 20L308 180" data-layer-name="path 39"/>
         <path d="M72 72L144 20L308 20" opacity="0.64" data-layer-name="path 40"/>
-      </g>
+      <path xmlns="http://www.w3.org/2000/svg" d="M236 72L308 20L308 180" data-layer-name="path 39" transform="matrix(1 0 0 1 -167.82841492 2.61991119)"/></g>
       <g fill="#b7ffda" data-layer-group="1" data-layer-name="g 41">
         <circle cx="72" cy="232" r="18" data-layer-name="circle 42"/><circle cx="236" cy="232" r="18" data-layer-name="circle 43"/><circle cx="236" cy="72" r="18" data-layer-name="circle 44"/><circle cx="72" cy="72" r="18" data-layer-name="circle 45"/>
         <circle cx="144" cy="180" r="18" data-layer-name="circle 46"/><circle cx="308" cy="180" r="18" data-layer-name="circle 47"/><circle cx="308" cy="20" r="18" data-layer-name="circle 48"/><circle cx="144" cy="20" r="18" data-layer-name="circle 49"/>

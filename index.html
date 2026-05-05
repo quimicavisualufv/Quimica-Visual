@@ -299,17 +299,15 @@ textarea:focus-visible,
 <style>
 #testimonials-5-v5iWwJmiE2 .credits-logo-grid{
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: stretch;
   justify-content: center;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
+  row-gap: 24px;
+  overflow: visible;
 }
 #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
   flex: 0 0 16.6667%;
   max-width: 16.6667%;
-  min-width: 170px;
   padding-left: 12px;
   padding-right: 12px;
 }
@@ -373,6 +371,18 @@ textarea:focus-visible,
   width: 197px;
   max-height: 46px;
 }
+
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame img.credit-logo-funarbe{
+  width: 230px;
+  max-height: 78px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame img.credit-logo-ufv{
+  width: 235px;
+  max-height: 112px;
+}
+#testimonials-5-v5iWwJmiE2 .credits-bottom-first{
+  margin-left: 0 !important;
+}
 #testimonials-5-v5iWwJmiE2 .card-title{
   margin-top: .5rem;
   text-align: center;
@@ -382,12 +392,24 @@ textarea:focus-visible,
   outline-offset: 4px !important;
 }
 @media (max-width: 991.98px){
-  #testimonials-5-v5iWwJmiE2 .credits-logo-grid{
-    justify-content: flex-start;
-  }
   #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
-    flex: 0 0 220px;
-    max-width: 220px;
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+  #testimonials-5-v5iWwJmiE2 .credits-bottom-first{
+    margin-left: 0;
+  }
+}
+@media (max-width: 767.98px){
+  #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+@media (max-width: 575.98px){
+  #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 }
 </style></head>
@@ -905,6 +927,31 @@ textarea:focus-visible,
 <img alt="Logotipo VLibras, ferramenta pública de tradução digital para Libras." class="credit-logo-vlibras" loading="lazy" src="assets/images/logo-vlibras.png">
 </div>
 <h3 class="card-title mbr-fonts-style display-7"><strong>VLibras</strong></h3>
+</a>
+</div>
+</div>
+</div>
+
+<div class="item features-without-image col-12 col-md-6 col-lg-3 credits-bottom-item credits-bottom-first">
+<div class="item-wrapper">
+<div class="card-box align-left">
+<a aria-label="Acessar o site da FUNARBE, Fundação Arthur Bernardes" class="credit-card-link" href="https://funarbe.org.br/" target="_blank" rel="noopener noreferrer" title="Acessar a FUNARBE">
+<div class="credit-logo-frame">
+<img alt="Logotipo da FUNARBE, Fundação Arthur Bernardes, fundação de apoio à Universidade Federal de Viçosa." class="credit-logo-funarbe" loading="lazy" src="assets/images/logo-funarbe.png">
+</div>
+<h3 class="card-title mbr-fonts-style display-7"><strong>FUNARBE</strong></h3>
+</a>
+</div>
+</div>
+</div>
+<div class="item features-without-image col-12 col-md-6 col-lg-3 credits-bottom-item">
+<div class="item-wrapper">
+<div class="card-box align-left">
+<a aria-label="Acessar o site da UFV, Universidade Federal de Viçosa" class="credit-card-link" href="https://www.ufv.br/" target="_blank" rel="noopener noreferrer" title="Acessar a UFV">
+<div class="credit-logo-frame">
+<img alt="Logotipo da UFV, Universidade Federal de Viçosa." class="credit-logo-ufv" loading="lazy" src="assets/images/logo-ufv.png">
+</div>
+<h3 class="card-title mbr-fonts-style display-7"><strong>UFV</strong></h3>
 </a>
 </div>
 </div>

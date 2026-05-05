@@ -2,18 +2,57 @@
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0; background:radial-gradient(1200px 600px at 70% -10%, #16202b 0%, var(--bg) 60%); color:var(--ink); font:500 14px/1.3 ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial}
-  header{position:sticky; top:0; z-index:2; backdrop-filter:saturate(1.2) blur(8px); background:linear-gradient( to bottom, rgba(17,23,31,.92), rgba(17,23,31,.65)); border-bottom:1px solid #1e2935}
-  .wrap{max-width:1120px; margin:0 auto; padding:14px 18px}
-  h1{margin:0 0 6px 0; font-size:18px}
+  header{position:sticky; top:0; z-index:2; backdrop-filter:saturate(1.2) blur(8px); background:linear-gradient( to bottom, rgba(17,23,31,.94), rgba(17,23,31,.72)); border-bottom:1px solid #1e2935}
+  .wrap{max-width:none; width:100%; margin:0; padding:14px 18px 12px}
+  h1{margin:0 0 8px 0; font-size:18px}
   .sub{font-size:12px; color:var(--muted)}
-  .panel{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px 0}
-  .panel label,.panel .control-group{display:flex; gap:8px; align-items:center; background:var(--panel); border:1px solid #1d2633; padding:8px 10px; border-radius:12px}
+  .panel{display:flex; flex-direction:column; gap:8px; width:100%; padding:8px 0 2px}
+  .panel-row{display:flex; flex-wrap:wrap; align-items:center; gap:10px; width:100%}
+  .panel label,.panel .control-group,.panel button{display:flex; gap:10px; align-items:center; min-height:38px; background:var(--panel); border:1px solid #1d2633; padding:7px 11px; border-radius:14px}
+  .panel-row-main>label,.panel-row-main>.control-group{flex:0 0 auto; min-width:0}
+  .panel-row-secondary>label,.panel-row-secondary>button{flex:0 1 auto}
+  .panel label{font-weight:600}
+  .panel label>select{flex:1 1 auto; width:100%}
+  .panel label>input[type="range"],.panel .control-group>input[type="range"]{flex:0 0 80px; width:80px; max-width:80px}
+  .panel input[type="number"]{width:78px; text-align:center}
   .panel select,.panel input[type="range"]{accent-color:var(--accent)}
-  .panel input[type="number"], .panel button{background:#0b121a; color:#e6f0ff; border:1px solid #1e2937; border-radius:8px; padding:8px 10px}
-  #stage{position:relative; height:calc(100vh - 240px); min-height:520px}
+  .panel input[type="number"], .panel button{background:#0b121a; color:#e6f0ff; border:1px solid #1e2937; border-radius:10px; padding:8px 10px}
+  .panel button{cursor:pointer; font-weight:700}
+  .panel-row-filters{align-items:stretch}
+  .filter-strip{display:flex; flex-wrap:wrap; align-items:center; gap:8px; width:100%; padding:10px 12px; background:rgba(12,18,25,.86); border:1px solid #1d2633; border-radius:16px}
+  .filter-strip.hidden{display:none}
+  .filter-strip-title{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-right:4px}
+  .filter-strip label{min-height:34px; padding:6px 10px; border-radius:999px; background:#0c131b; border:1px solid #1d2633; font-weight:600}
+  .filter-strip input[type="checkbox"]{margin:0}
+  .filter-strip #layerSizeWrap{display:flex; align-items:center; gap:8px; min-height:34px; padding:6px 10px; border-radius:999px; background:#0c131b; border:1px solid #1d2633; font-weight:600; flex:0 0 auto}
+  .filter-strip #layerSizeWrap input[type="range"]{flex:0 0 58px; width:58px; max-width:58px}
+  #layerSizeWrap.hidden{display:none !important}
+  .filter-subgroup{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:0; background:transparent; border:none}
+  .filter-subgroup-title{font-size:12px; font-weight:800; color:#d6e3f8; padding:0 2px 0 4px}
+  .solo-toggle{margin-left:auto}
+  #stage{position:relative; height:calc(100vh - 210px); min-height:520px}
   canvas{display:block; width:100%; height:100%; background: radial-gradient(900px 500px at 30% 20%, #0e151d, #0a0f15 60%); border-top:1px solid #101825}
   .legend{position:absolute; left:16px; bottom:16px; color:#cfe1ff; font-size:12px; padding:8px 10px; border-radius:10px; background:rgba(11,15,20,.6); border:1px solid #1b2431; white-space:pre-wrap}
   #testResults{left:auto; right:16px; bottom:16px}
   #legend, #testResults{display:none !important}
   .hidden{display:none}
   .badge{display:inline-block; padding:2px 6px; border:1px solid #203044; border-radius:8px; font-size:11px; background:#111824}
+
+  .mode-control{width:340px}
+  .zoom-control{width:200px}
+  .opacity-control{width:220px}
+  .solid-control{width:auto; white-space:nowrap}
+  #atomSizeWrap{width:300px}
+  #atomSizeWrap span{width:78px; line-height:1.15}
+  .panel-row-secondary{display:none}
+
+  @media (max-width: 900px){
+    .panel-row-main>label,.panel-row-main>.control-group{min-width:100%; width:100%}
+    .solo-toggle{margin-left:0}
+    #stage{height:calc(100vh - 300px)}
+  }
+
+  .panel button:disabled,.panel input:disabled,.panel select:disabled{opacity:.52; cursor:not-allowed}
+  #atomSizeWrap.is-disabled{opacity:.58; border-style:dashed}
+  #stackActionsWrap{justify-content:flex-start}
+  #stackActionsWrap .stack-action-btn{min-width:150px}

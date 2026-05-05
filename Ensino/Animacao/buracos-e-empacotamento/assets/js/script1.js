@@ -9,29 +9,85 @@
   const solidCb = document.getElementById('solid');
   const layerSize = document.getElementById('layerSize');
   const edgesCb = document.getElementById('edges');
+  const edgesComboCb = document.getElementById('edgesCombo');
+  const comboFilterWrap = document.getElementById('comboFilterWrap');
+  const singlePolyFilterWrap = document.getElementById('singlePolyFilterWrap');
+  const showOctAtomsCb = document.getElementById('showOctAtoms');
+  const showTetAtomsCb = document.getElementById('showTetAtoms');
+  const showTetFigureCb = document.getElementById('showTetFigure');
+  const showOctFigureCb = document.getElementById('showOctFigure');
+  const hideInactiveComboCb = document.getElementById('hideInactiveCombo');
+  const showPolyFigureSingleCb = document.getElementById('showPolyFigureSingle');
+  const showPolyAtomsSingleCb = document.getElementById('showPolyAtomsSingle');
+  const hideInactiveSingleCb = document.getElementById('hideInactiveSingle');
   const btnAdd = document.getElementById('btnAdd');
   const btnReset = document.getElementById('btnReset');
   const layerSizeWrap = document.getElementById('layerSizeWrap');
+  const atomSizeWrap = document.getElementById('atomSizeWrap');
+  const stackActionsWrap = document.getElementById('stackActionsWrap');
   function isStackingMode(m){ return m==='aaa_tri'||m==='aba_tri'||m==='abc_tri'||m==='aaa_cub'||m==='aba_cub'||m==='abc_cub'; }
+  function isLayerWidthMode(m){ return isStackingMode(m); }
+  function isFirstFourMode(m){ return m==='oct'||m==='tetra'||m==='tetra_octa'||m==='hex2d'; }
+  function getEdgesChecked(){ return edgesCb ? edgesCb.checked : true; }
+  function syncEdges(source){
+    [edgesCb, edgesComboCb].forEach(cb=>{ if(cb && cb!==source) cb.checked = source.checked; });
+  }
+  function isLockedZoomMode(m){ return isFirstFourMode(m); }
+  function getAtomSizeValue(){ return +gapSlider.value; }
+  function getLockedAtomRadius(){ return 8 + getAtomSizeValue()*0.12; }
+  function getLockedStructureSpacing(){ return 92; }
+  function getCurrentSpacing(mode=modeSel.value){
+    if(isLockedZoomMode(mode)) return getLockedStructureSpacing();
+    const baseR = +rSlider.value;
+    const gap = isStackingMode(mode) ? 0 : 0;
+    return 2*baseR + gap;
+  }
   function updateControlsVisibility(){
     const m = modeSel.value;
     document.body.dataset.mode = m;
     const showStack = isStackingMode(m);
+    const showSingleHole = m==='tetra' || m==='oct';
+    const showComboFilters = m==='tetra_octa';
+    const lockZoom = isLockedZoomMode(m);
 
-    
-    const showN = showStack;
+    const showN = isLayerWidthMode(m);
+    const disableAtomSize = showStack;
 
+    if(rSlider) rSlider.disabled = lockZoom;
+    if(atomSizeWrap){
+      atomSizeWrap.classList.toggle('is-disabled', disableAtomSize);
+      atomSizeWrap.querySelectorAll('input').forEach(inp=>inp.disabled = disableAtomSize);
+    }
     if(layerSizeWrap){
       layerSizeWrap.classList.toggle('hidden', !showN);
       const inp = layerSizeWrap.querySelector('#layerSize');
       if(inp) inp.disabled = !showN;
     }
-    if(btnAdd) btnAdd.classList.toggle('hidden', !showStack);
-    if(btnReset) btnReset.classList.toggle('hidden', !showStack);
+    if(stackActionsWrap){
+      stackActionsWrap.classList.toggle('hidden', !showStack);
+    }
+    if(btnAdd) btnAdd.disabled = !showStack;
+    if(btnReset) btnReset.disabled = !showStack;
+    if(singlePolyFilterWrap){
+      singlePolyFilterWrap.classList.toggle('hidden', !showSingleHole);
+      singlePolyFilterWrap.querySelectorAll('input').forEach(inp=>inp.disabled = !showSingleHole);
+    }
+    if(comboFilterWrap){
+      comboFilterWrap.classList.toggle('hidden', !showComboFilters);
+      comboFilterWrap.querySelectorAll('input').forEach(inp=>inp.disabled = !showComboFilters);
+    }
   }
 
   const legend = document.getElementById('legend');
   const testResults = document.getElementById('testResults');
+
+  let canvasHotspots=[];
+  const comboViewOptions = {
+    showOctaAtoms:true,
+    showTetraAtoms:true,
+    showTetraFigure:true,
+    showOctaFigure:true
+  };
 
   let W=0,H=0, DPR=Math.min(2,(window.devicePixelRatio||1));
   let rotX=-0.6, rotY=0.6; let dragging=false, lx=0, ly=0;
@@ -93,6 +149,60 @@
     const ordered = faces.map(face=>({ face, z:face.reduce((acc,i)=>acc+points[i].z,0)/face.length }))
       .sort((a,b)=>a.z-b.z);
     for(const item of ordered){ fillPoly(item.face.map(i=>points[i]), fill, stroke, line); }
+  }
+  function drawCanvasToggle(x,y,w,h,label,active,key,accent='rgba(122,162,255,0.22)'){
+    const radius = Math.min(12, h/2);
+    ctx.save();
+    roundedRectPath(x,y,w,h,radius);
+    ctx.fillStyle = active ? accent : 'rgba(10,16,24,0.75)';
+    ctx.fill();
+    ctx.strokeStyle = active ? 'rgba(215,232,255,0.55)' : 'rgba(144,170,210,0.22)';
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+
+    const mark = h*0.42;
+    const mx = x + 10;
+    const my = y + (h-mark)/2;
+    roundedRectPath(mx,my,mark,mark,4);
+    ctx.fillStyle = active ? 'rgba(234,245,255,0.96)' : 'rgba(18,28,40,0.95)';
+    ctx.fill();
+    ctx.strokeStyle = active ? 'rgba(255,255,255,0.9)' : 'rgba(175,198,232,0.35)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = active ? 'rgba(238,246,255,0.98)' : 'rgba(210,224,246,0.88)';
+    ctx.font = '600 12px ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial';
+    ctx.textBaseline='middle';
+    ctx.fillText(label, mx + mark + 8, y + h/2 + 0.5);
+    ctx.restore();
+
+    canvasHotspots.push({x,y,w,h,key});
+  }
+  function pointInRect(px,py,rect){
+    return px>=rect.x && px<=rect.x+rect.w && py>=rect.y && py<=rect.y+rect.h;
+  }
+  function getCanvasPoint(evt){
+    const rect=cv.getBoundingClientRect();
+    return {
+      x:(evt.clientX-rect.left)*(W/rect.width),
+      y:(evt.clientY-rect.top)*(H/rect.height)
+    };
+  }
+  function dedupeProjectedItems(items, tol=1.25){
+    const kept=[];
+    for(const item of items){
+      let merged=false;
+      for(let i=0;i<kept.length;i++){
+        const other=kept[i];
+        if(Math.abs(item.p.x-other.p.x)<=tol && Math.abs(item.p.y-other.p.y)<=tol){
+          if(item.z > other.z) kept[i]=item;
+          merged=true;
+          break;
+        }
+      }
+      if(!merged) kept.push(item);
+    }
+    return kept;
   }
   function normToCube([u,v,w], a){ return [(u-0.5)*a, (v-0.5)*a, (w-0.5)*a]; }
 
@@ -386,7 +496,7 @@
     const p6 = panelBox(2,1,'FCC');
     clipRect(p6.x,p6.y,p6.w,p6.h); drawWireCube(p6.x,p6.y,p6.w,p6.h); ctx.restore();
   }
-  function drawHoleMultiView(mode, R, alpha, d){
+  function drawHoleMultiView(mode, R, alpha, d, fitD=d){
     const outerPad = 18;
     const gap = 18;
     const panelW = (W - outerPad*2 - gap)/2;
@@ -417,9 +527,9 @@
       ctx.clip();
     }
 
-    function drawCurrentModel(x,y,w,h){
+    function drawSingleModel(kind, cx, cy, scale){
       let verts=[], edgesLocal=[], tint;
-      if(mode==='tetra'){
+      if(kind==='tetra'){
         const s=d/(2*Math.SQRT2);
         verts=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(v=>v.map(c=>c*s));
         edgesLocal=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
@@ -430,16 +540,38 @@
         edgesLocal=[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]];
         tint=[122,162,255];
       }
-      const scale = Math.min(w,h) / (mode==='tetra' ? d*2.25 : d*2.75);
-      const cx = x + w/2, cy = y + h/2 + 4;
       const P=verts.map(v=>projToView(v,cx,cy,scale));
-      if(edgesCb.checked){
+      if(getEdgesChecked()){
         const pairs=edgesLocal.map(([i,j])=>({a:P[i],b:P[j],z:(P[i].z+P[j].z)/2})).sort((u,v)=>u.z-v.z);
         for(const e of pairs) edge(e.a,e.b,1.4,0.82);
       }
       const items=verts.map((v,i)=>({p:P[i], z:P[i].z})).sort((a,b)=>a.z-b.z);
       const RR=Math.max(7, R*scale);
       for(const it of items){ sphere(it.p.x,it.p.y,RR,alpha,tint,solid); }
+    }
+
+    function drawCurrentModel(x,y,w,h){
+      ctx.fillStyle='rgba(220,234,255,0.78)';
+      ctx.font='600 13px ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial';
+      if(mode==='tetra_octa'){
+        const splitGap = Math.min(34, w*0.08);
+        const subW = (w - splitGap) / 2;
+        const cx1 = x + subW/2;
+        const cx2 = x + subW + splitGap + subW/2;
+        const cy = y + h/2 + 4;
+        const scaleT = Math.min(subW, h) / (fitD*2.45);
+        const scaleO = Math.min(subW, h) / (fitD*3.0);
+        drawSingleModel('tetra', cx1, cy, scaleT);
+        drawSingleModel('oct', cx2, cy, scaleO);
+        ctx.textAlign='center';
+        ctx.fillText('Tetra', cx1, y+h-16);
+        ctx.fillText('Octa', cx2, y+h-16);
+        ctx.textAlign='left';
+      } else {
+        const kind = mode==='tetra' ? 'tetra' : 'oct';
+        const scale = Math.min(w,h) / (kind==='tetra' ? fitD*2.25 : fitD*2.75);
+        drawSingleModel(kind, x + w/2, y + h/2 + 4, scale);
+      }
     }
 
     function drawCubeRepresentation(x,y,w,h){
@@ -464,28 +596,87 @@
       const tetraFaces = [[0,1,2],[0,1,3],[0,2,3],[1,2,3]];
       const octVerts = [...faceCenters];
       const octFaces = [[0,2,4],[0,4,3],[0,3,5],[0,5,2],[1,2,4],[1,4,3],[1,3,5],[1,5,2]];
-      const modelVerts = mode==='tetra' ? tetraVerts : octVerts;
-      const modelFaces = mode==='tetra' ? tetraFaces : octFaces;
-      const polyFillColor = mode==='tetra' ? 'rgba(175,255,225,0.52)' : 'rgba(255,176,214,0.50)';
-      const polyStrokeColor = mode==='tetra' ? 'rgba(216,255,240,0.45)' : 'rgba(255,220,236,0.40)';
-      const scale = Math.min(w,h) / (d*3.25);
+      const scale = Math.min(w,h) / (fitD*2.55);
       const cx = x + w/2, cy = y + h/2 + 6;
       const cubeP = cubeVerts.map(v=>projToView(v,cx,cy,scale));
       const fccP = fcc.map(v=>projToView(v,cx,cy,scale));
-      const modelP = modelVerts.map(v=>projToView(v,cx,cy,scale));
+      const tetraP = tetraVerts.map(v=>projToView(v,cx,cy,scale));
+      const octP = octVerts.map(v=>projToView(v,cx,cy,scale));
+      const tetraAtomIdx = new Set([0,8,10,12]);
+      const octAtomIdx = new Set([8,9,10,11,12,13]);
+      const showSingleFigure = !showPolyFigureSingleCb || showPolyFigureSingleCb.checked;
+      const showSingleAtoms = !showPolyAtomsSingleCb || showPolyAtomsSingleCb.checked;
+      const hideInactiveSingle = !!hideInactiveSingleCb && hideInactiveSingleCb.checked;
+      const showTetAtoms = !showTetAtomsCb || showTetAtomsCb.checked;
+      const showOctAtoms = !showOctAtomsCb || showOctAtomsCb.checked;
+      const showTetFigure = !showTetFigureCb || showTetFigureCb.checked;
+      const showOctFigure = !showOctFigureCb || showOctFigureCb.checked;
+      const hideInactiveCombo = !!hideInactiveComboCb && hideInactiveComboCb.checked;
 
       drawFaces(cubeP, cubeFaces, 'rgba(116,169,255,0.16)', 'rgba(185,220,255,0.12)', 1);
       const cubePairs = cubeEdges.map(([i,j])=>({a:cubeP[i], b:cubeP[j], z:(cubeP[i].z+cubeP[j].z)/2})).sort((u,v)=>u.z-v.z);
       for(const e of cubePairs) edge(e.a,e.b,1.2,0.26);
-      drawFaces(modelP, modelFaces, polyFillColor, polyStrokeColor, 1.15);
+
+      if(mode==='tetra' && showSingleFigure){
+        drawFaces(tetraP, tetraFaces, 'rgba(190,150,255,0.48)', 'rgba(225,208,255,0.46)', 1.15);
+      }
+      if(mode==='oct' && showSingleFigure){
+        drawFaces(octP, octFaces, 'rgba(110,188,255,0.34)', 'rgba(202,232,255,0.40)', 1.15);
+      }
+      if(mode==='tetra_octa' && showTetFigure){
+        drawFaces(tetraP, tetraFaces, 'rgba(190,150,255,0.48)', 'rgba(225,208,255,0.46)', 1.15);
+      }
+      if(mode==='tetra_octa' && showOctFigure){
+        drawFaces(octP, octFaces, 'rgba(110,188,255,0.34)', 'rgba(202,232,255,0.40)', 1.15);
+      }
 
       const RR = Math.max(6, R*scale*0.58);
-      const items = fccP.map((p,i)=>({p,z:p.z,tint:i<8?[90,118,255]:[132,182,255]})).sort((a,b)=>a.z-b.z);
-      for(const it of items){ sphere(it.p.x,it.p.y,RR,Math.min(alpha*0.95,0.82),it.tint,solid); }
+      let atomItems=[];
+      if(mode==='tetra_octa'){
+        atomItems = fccP.map((p,i)=>{
+          const inTet = tetraAtomIdx.has(i);
+          const inOct = octAtomIdx.has(i);
+          const activeTet = showTetAtoms && inTet;
+          const activeOct = showOctAtoms && inOct;
+          if(hideInactiveCombo && !activeTet && !activeOct) return null;
+          let tint = i<8 ? [90,118,255] : [132,182,255];
+          if(activeTet && activeOct) tint = [145,150,255];
+          else if(activeTet) tint = [168,118,255];
+          else if(activeOct) tint = [92,176,255];
+          return {p, z:p.z, tint};
+        }).filter(Boolean);
+      } else if(mode==='tetra' || mode==='oct'){
+        const activeSet = mode==='tetra' ? tetraAtomIdx : octAtomIdx;
+        const activeTint = mode==='tetra' ? [168,118,255] : [92,176,255];
+        atomItems = fccP.map((p,i)=>{
+          const active = showSingleAtoms && activeSet.has(i);
+          if(hideInactiveSingle && !active) return null;
+          let tint = i<8 ? [90,118,255] : [132,182,255];
+          if(active) tint = activeTint;
+          return {p, z:p.z, tint};
+        }).filter(Boolean);
+      } else {
+        atomItems = fccP.map((p,i)=>({p,z:p.z,tint:i<8?[90,118,255]:[132,182,255]}));
+      }
+      atomItems = dedupeProjectedItems(atomItems);
+      atomItems.sort((a,b)=>a.z-b.z);
+      for(const it of atomItems){ sphere(it.p.x,it.p.y,RR,Math.min(alpha*0.95,0.82),it.tint,solid); }
+
+      if(mode==='tetra_octa'){
+        ctx.fillStyle='rgba(220,234,255,0.82)';
+        ctx.font='600 12px ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial';
+        ctx.fillText('Roxo: tetra • Azul: octa', x+2, y+h-4);
+      }
     }
 
-    drawPanelShell(leftX, topY, panelW, panelH, 'Animação atual');
-    drawPanelShell(rightX, topY, panelW, panelH, mode==='tetra' ? 'Representação 3D do buraco tetraédrico' : 'Representação 3D do buraco octaédrico');
+    const leftTitle = mode==='tetra_octa' ? 'Animação atual — tetra e octa' : 'Animação atual';
+    const rightTitle = mode==='tetra'
+      ? 'Representação 3D do buraco tetraédrico'
+      : mode==='oct'
+        ? 'Representação 3D do buraco octaédrico'
+        : 'Representação 3D do buraco tetra + octa';
+    drawPanelShell(leftX, topY, panelW, panelH, leftTitle);
+    drawPanelShell(rightX, topY, panelW, panelH, rightTitle);
 
     const contentY = topY + titleH;
     const contentH = panelH - titleH - 12;
@@ -629,7 +820,7 @@
 
 
   function addLayer(mode){
-    const R=+rSlider.value, GAP=+gapSlider.value; const d=2*R+GAP;
+    const d=getCurrentSpacing(mode);
     if(Math.abs(d - triABC.d)>1e-6){ rebuildStates(d, true); }
 
     if(mode==='aaa_tri' || mode==='abc_tri' || mode==='aba_tri'){
@@ -657,13 +848,20 @@
 
   function draw(){
     ctx.clearRect(0,0,W,H);
+    canvasHotspots=[];
     updateControlsVisibility();
-    const R=+rSlider.value, alpha=(+aSlider.value)/100, GAP=+gapSlider.value; const d=2*R+GAP; const mode=modeSel.value;
+    const mode=modeSel.value;
+    const alpha=(+aSlider.value)/100;
+    const lockedZoom = isLockedZoomMode(mode);
+    const R = lockedZoom ? getLockedAtomRadius() : +rSlider.value;
+    const GAP = isStackingMode(mode) ? 0 : +gapSlider.value;
+    const d = lockedZoom ? getLockedStructureSpacing() : (2*R + GAP);
+    const fitD = lockedZoom ? 112 : d;
 
     let spheres=[], edgesList=[], label='';
 
-    if(mode==='tetra' || mode==='oct'){
-      drawHoleMultiView(mode, R, alpha, d);
+    if(mode==='tetra' || mode==='oct' || mode==='tetra_octa'){
+      drawHoleMultiView(mode, R, alpha, d, fitD);
       return;
     }
     if(mode==='hex2d'){
@@ -703,7 +901,7 @@
     
     if(mode==='hex2d'||mode==='tetra'||mode==='oct'){
       const P=spheres.map(s=>proj([s.x,s.y,s.z]));
-      if(edgesCb.checked && edgesList.length){
+      if(getEdgesChecked() && edgesList.length){
         const pairs=edgesList.map(([i,j])=>({a:P[i],b:P[j],z:(P[i].z+P[j].z)/2})).sort((u,v)=>u.z-v.z);
         for(const e of pairs) edge(e.a,e.b,1.4,0.8);
       }
@@ -713,20 +911,44 @@
 }
 
   
-  cv.addEventListener('pointerdown',e=>{dragging=true; lx=e.clientX; ly=e.clientY; cv.setPointerCapture(e.pointerId)});
+  let pointerState=null;
+  cv.addEventListener('pointerdown',e=>{
+    const pt = getCanvasPoint(e);
+    const hit = canvasHotspots.find(rect=>pointInRect(pt.x, pt.y, rect));
+    if(hit && modeSel.value==='tetra_octa'){
+      pointerState={type:'hotspot', key:hit.key, pointerId:e.pointerId};
+      cv.setPointerCapture(e.pointerId);
+      return;
+    }
+    dragging=true; lx=e.clientX; ly=e.clientY; pointerState={type:'drag', pointerId:e.pointerId}; cv.setPointerCapture(e.pointerId);
+  });
   cv.addEventListener('pointermove',e=>{ if(!dragging) return; const dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY; rotY+=dx*0.006; rotX+=dy*0.006; draw(); });
-  cv.addEventListener('pointerup',()=>{dragging=false});
+  cv.addEventListener('pointerup',e=>{
+    if(pointerState && pointerState.type==='hotspot'){
+      const pt = getCanvasPoint(e);
+      const hit = canvasHotspots.find(rect=>rect.key===pointerState.key && pointInRect(pt.x, pt.y, rect));
+      if(hit && Object.prototype.hasOwnProperty.call(comboViewOptions, hit.key)){
+        comboViewOptions[hit.key] = !comboViewOptions[hit.key];
+        draw();
+      }
+      pointerState=null;
+      return;
+    }
+    dragging=false;
+    pointerState=null;
+  });
   cv.addEventListener('dblclick',()=>{
     rotX=-0.6; rotY=0.6;
-    const d=2*+rSlider.value + +gapSlider.value; rebuildStates(d, true); draw();
+    const d=getCurrentSpacing(modeSel.value); rebuildStates(d, true); draw();
   });
 
-  [modeSel,rSlider,aSlider,gapSlider,gapNum,solidCb,edgesCb].forEach(el=> el.addEventListener('input', draw));
+  [modeSel,rSlider,aSlider,gapSlider,gapNum,solidCb,showOctAtomsCb,showTetAtomsCb,showTetFigureCb,showOctFigureCb,hideInactiveComboCb,showPolyFigureSingleCb,showPolyAtomsSingleCb,hideInactiveSingleCb].forEach(el=>{ if(el) el.addEventListener('input', draw); });
+  [edgesCb, edgesComboCb].forEach(el=>{ if(el) el.addEventListener('input', ()=>{ syncEdges(el); draw(); }); });
   modeSel.addEventListener('input', updateControlsVisibility);
   modeSel.addEventListener('change', updateControlsVisibility);
   modeSel.addEventListener('change', draw);
 
-  layerSize.addEventListener('input', ()=>{ const d=2*+rSlider.value + +gapSlider.value; rebuildStates(d, true); draw(); });
+  layerSize.addEventListener('input', ()=>{ const d=getCurrentSpacing(modeSel.value); rebuildStates(d, true); draw(); });
 
   btnAdd.addEventListener('click',()=>{
     const m=modeSel.value;
@@ -734,7 +956,7 @@
     else { rotX=-0.6; rotY=0.6; draw(); }
   });
   btnReset.addEventListener('click',()=>{
-    const d=2*+rSlider.value + +gapSlider.value; resetStates(d); draw();
+    const d=getCurrentSpacing(modeSel.value); resetStates(d); draw();
   });
 
   
@@ -757,13 +979,13 @@
 
   
   function syncGapNumber(){ gapNum.value=gapSlider.value; }
-  function initStates(){ const d=2*+rSlider.value + +gapSlider.value; resetStates(d); }
+  function initStates(){ const d=getCurrentSpacing(modeSel.value); resetStates(d); }
   function resizeInit(){ const rect=cv.getBoundingClientRect(); W=Math.max(600,rect.width); H=Math.max(520,rect.height); cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); }
   resizeInit(); runSelfTests(); initStates(); syncGapNumber(); updateControlsVisibility(); draw();
   gapSlider.addEventListener('input', syncGapNumber);
   gapNum.addEventListener('input',()=>{
     const min=+gapSlider.min,max=+gapSlider.max;
     let v=parseFloat(gapNum.value); if(Number.isNaN(v)) v=0;
-    v=Math.max(min,Math.min(max,v)); gapSlider.value=v; gapNum.value=v; const d=2*+rSlider.value + +gapSlider.value; draw();
+    v=Math.max(min,Math.min(max,v)); gapSlider.value=v; gapNum.value=v; const d=getCurrentSpacing(modeSel.value); draw();
   });
 })();

@@ -134,7 +134,7 @@ const state = {
       title: "01 — O que você está vendo",
       body:
         "Isso é uma célula unitária: o “tijolinho” que, repetido no espaço, constrói a rede cristalina. " +
-        "As arestas são definidas por três vetores (a⃗, b⃗, c⃗). Os ângulos entre eles são α (entre b e c), β (entre a e c) e γ (entre a e b).",
+        "As arestas são definidas por três vetores (a, b, c). Os ângulos entre eles são α (entre b e c), β (entre a e c) e γ (entre a e b).",
       callout:
         "Arraste pra girar e procure perceber: quando os ângulos deixam de ser 90°, a caixa vira um “paralelepípedo torto” — e isso é exatamente a ideia.",
       action: () => {

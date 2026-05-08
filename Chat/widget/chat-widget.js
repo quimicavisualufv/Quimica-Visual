@@ -3575,7 +3575,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     this.refs.modelBox = null;
     this.refs.modelBadge = null;
 
-    this.refs.toggleBtn?.addEventListener('click', () => this.setOpen(true));
+    this.refs.toggleBtn?.addEventListener('click', () => this.setOpen(!this.isOpen(), true));
     this.refs.closeBtn?.addEventListener('click', () => this.setOpen(false));
     this.refs.menuBtn.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -3756,10 +3756,34 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     return this.generationConfig.systemPrompt;
   }
 
+  isOpen() {
+    return !!(this.refs.panel && this.refs.panel.classList.contains('is-open'));
+  }
+
+  syncFloatingWidgetState(shouldOpen) {
+    if (this.embeddedMode) {
+      document.documentElement.classList.remove('simoens-chat-widget-open');
+      return;
+    }
+    document.documentElement.classList.toggle('simoens-chat-widget-open', !!shouldOpen);
+    if (this.refs.toggleBtn) {
+      this.refs.toggleBtn.setAttribute('aria-label', shouldOpen ? 'Fechar chat' : 'Abrir chat');
+      this.refs.toggleBtn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+      this.refs.toggleBtn.title = shouldOpen ? 'Fechar chat' : 'Abrir chat';
+    }
+    var accessibilityWidget = document.getElementById('simoens-a11y-widget');
+    if (accessibilityWidget) {
+      if (shouldOpen) accessibilityWidget.setAttribute('aria-hidden', 'true');
+      else accessibilityWidget.removeAttribute('aria-hidden');
+    }
+    document.dispatchEvent(new CustomEvent('simoens:chat-widget-state', { detail: { open: !!shouldOpen } }));
+  }
+
   setOpen(isOpen, persist = true) {
     if (!this.refs.panel) return;
     const shouldOpen = this.embeddedMode ? true : Boolean(isOpen);
     this.refs.panel.classList.toggle('is-open', shouldOpen);
+    this.syncFloatingWidgetState(shouldOpen);
     if (persist) setStoredOpen(shouldOpen);
     if (!shouldOpen) {
       this.closeMenu();

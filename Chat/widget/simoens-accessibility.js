@@ -564,6 +564,10 @@ html.simoens-a11y-focus :focus,
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #111827;
       }
+
+      html.simoens-chat-widget-open .simoens-a11y-widget {
+        display: none !important;
+      }
       .simoens-a11y-trigger {
         width: 58px;
         height: 58px;
@@ -1410,6 +1414,17 @@ html.simoens-a11y-focus :focus,
       </section>
     `;
     document.body.appendChild(widget);
+
+    function syncWithChatWidget(open) {
+      if (open) widget.setAttribute('aria-hidden', 'true');
+      else widget.removeAttribute('aria-hidden');
+    }
+
+    syncWithChatWidget(document.documentElement.classList.contains('simoens-chat-widget-open'));
+    document.addEventListener('simoens:chat-widget-state', function (event) {
+      syncWithChatWidget(!!(event.detail && event.detail.open));
+    });
+
     refreshVoiceControls();
     if ('speechSynthesis' in window && typeof window.speechSynthesis.getVoices === 'function') {
       window.speechSynthesis.getVoices();

@@ -662,7 +662,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="classificacao do sistema cristalino (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="classificacao do sistema cristalino (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Classificação do sistema cristalino (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/nome-da-celula/" href="Exercicio%20Guiado/nome-da-celula/" rel="noopener" target="_blank"><img alt="Classificação do sistema cristalino" data-bs-slide-to="20" data-slide-to="20" loading="lazy" src="../assets/images/ensino-card-20.svg"></a>
@@ -673,7 +673,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="intersticios cristalinos (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="intersticios cristalinos (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Interstícios cristalinos (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/buracos-cristalinos/" href="Exercicio%20Guiado/buracos-cristalinos/" rel="noopener" target="_blank"><img alt="Interstícios cristalinos" data-bs-slide-to="21" data-slide-to="21" loading="lazy" src="../assets/images/ensino-card-21.svg"></a>
@@ -684,7 +684,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="caca ao sitio cristalino (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="caca ao sitio cristalino (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Caça ao sítio cristalino (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/caca-ao-sitio-cristalino/" href="Exercicio%20Guiado/caca-ao-sitio-cristalino/" rel="noopener" target="_blank"><img alt="Caça ao sítio cristalino" data-bs-slide-to="22" data-slide-to="22" loading="lazy" src="../assets/images/ensino-card-22.svg"></a>
@@ -695,7 +695,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="formula unitaria na pratica (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="formula unitaria na pratica (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Fórmula Unitária na Prática (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/Contagem-de-atomo/" href="Exercicio%20Guiado/Contagem-de-atomo/" rel="noopener" target="_blank"><img alt="Fórmula Unitária na Prática" data-bs-slide-to="23" data-slide-to="23" loading="lazy" src="../assets/images/ensino-card-23.svg"></a>
@@ -706,7 +706,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="coordenacao e empacotamento (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="coordenacao e empacotamento (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Coordenação e empacotamento (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/coordenacao-empacotamento/" href="Exercicio%20Guiado/coordenacao-empacotamento/" rel="noopener" target="_blank"><img alt="Coordenação e empacotamento" data-bs-slide-to="24" data-slide-to="24" loading="lazy" src="../assets/images/ensino-card-24.svg"></a>
@@ -717,7 +717,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="true" data-title="identificacao de defeitos cristalinos (exercicio)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="exercicio" data-protected="false" data-title="identificacao de defeitos cristalinos (exercicio)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Identificação de defeitos cristalinos (Exercício) em nova aba" data-open-href="Exercicio%20Guiado/defeitos-cristalinos/" href="Exercicio%20Guiado/defeitos-cristalinos/" rel="noopener" target="_blank"><img alt="Identificação de defeitos cristalinos" data-bs-slide-to="25" data-slide-to="25" loading="lazy" src="../assets/images/ensino-card-26.svg"></a>
@@ -1013,7 +1013,7 @@ window.VisitWidgetConfig = {
   }
 
   async function e0(path) {
-    if (c0.has(path)) return true;
+    if (c0.has(path) || path.startsWith('Exercicio%20Guiado/') || path.startsWith('Exercicio Guiado/')) return true;
     if (sessionStorage.getItem(b0) === a0) return true;
     const f1 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
     if (f1 === null) return false;

@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /Quimica-Visual/
-Sitemap: https://quimicavisualufv.github.io/Quimica-Visual/sitemap.xml

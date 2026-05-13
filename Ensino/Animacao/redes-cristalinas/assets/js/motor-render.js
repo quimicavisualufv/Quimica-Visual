@@ -78,6 +78,8 @@ const ui={
   projecaoOrto:document.getElementById('projecaoOrto'),
 
   structure:document.getElementById('structure'),
+  atomSpeciesFilter:document.getElementById('atomSpeciesFilter'),
+  atomSpeciesOptions:document.getElementById('atomSpeciesOptions'),
   cells:document.getElementById('cells'),
   radius:document.getElementById('radius'),
   spacing:document.getElementById('spacing'),
@@ -274,6 +276,93 @@ const COLORS={
   O:"#ef4444"  
 };
 function isIonic(k){return (k==="NaCl"||k==="CsCl"||k==="ZnS");}
+
+const ATOM_SPECIES_FILTER_KEY = 'atom_species_visibility_v1';
+const ATOM_SPECIES_FILTER_DEFS = {
+  NaCl: [
+    { type:'A', label:'Na⁺', color:COLORS.A },
+    { type:'C', label:'Cl⁻', color:COLORS.C }
+  ],
+  CsCl: [
+    { type:'A', label:'Cs⁺', color:COLORS.A },
+    { type:'C', label:'Cl⁻', color:COLORS.C }
+  ],
+  ZnS: [
+    { type:'A', label:'Zn²⁺', color:COLORS.A },
+    { type:'C', label:'S²⁻', color:COLORS.C }
+  ],
+  RUTILIO: [
+    { type:'T', label:'Ti⁴⁺', color:COLORS.T },
+    { type:'O', label:'O²⁻', color:COLORS.O }
+  ]
+};
+let ATOM_SPECIES_VISIBILITY = {};
+try {
+  ATOM_SPECIES_VISIBILITY = JSON.parse(localStorage.getItem(ATOM_SPECIES_FILTER_KEY) || '{}') || {};
+} catch(e) {
+  ATOM_SPECIES_VISIBILITY = {};
+}
+function saveAtomSpeciesVisibility(){
+  try { localStorage.setItem(ATOM_SPECIES_FILTER_KEY, JSON.stringify(ATOM_SPECIES_VISIBILITY)); } catch(e) {}
+}
+function atomSpeciesDefsFor(key){
+  return ATOM_SPECIES_FILTER_DEFS[key] || [];
+}
+function isAtomTypeVisible(type, key){
+  const k = key || (window.state && state.key) || '';
+  const defs = atomSpeciesDefsFor(k);
+  if(!defs.length) return true;
+  if(!defs.some(d => d.type === type)) return true;
+  const saved = ATOM_SPECIES_VISIBILITY[k] || {};
+  return saved[type] !== false;
+}
+function filterVisibleAtomTypes(atoms, key){
+  return atoms.filter(a => isAtomTypeVisible(a.type, key));
+}
+function setAtomTypeVisible(key, type, visible){
+  if(!ATOM_SPECIES_VISIBILITY[key]) ATOM_SPECIES_VISIBILITY[key] = {};
+  ATOM_SPECIES_VISIBILITY[key][type] = !!visible;
+  saveAtomSpeciesVisibility();
+}
+function renderAtomSpeciesFilter(){
+  if(!ui.atomSpeciesFilter || !ui.atomSpeciesOptions) return;
+  const defs = atomSpeciesDefsFor(state.key);
+  if(!defs.length){
+    ui.atomSpeciesFilter.style.display = 'none';
+    ui.atomSpeciesOptions.innerHTML = '';
+    return;
+  }
+  ui.atomSpeciesFilter.style.display = '';
+  ui.atomSpeciesOptions.innerHTML = '';
+  for(const def of defs){
+    const label = document.createElement('label');
+    label.className = 'atom-filter-check';
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = isAtomTypeVisible(def.type, state.key);
+    input.dataset.atomType = def.type;
+
+    const dot = document.createElement('span');
+    dot.className = 'atom-filter-dot';
+    dot.style.background = def.color || '#fff';
+
+    const name = document.createElement('span');
+    name.className = 'atom-filter-name';
+    name.textContent = def.label;
+
+    input.addEventListener('change', () => {
+      setAtomTypeVisible(state.key, def.type, input.checked);
+      state.pickA = null;
+      state.coordCenterRef = null;
+    });
+
+    label.appendChild(input);
+    label.appendChild(dot);
+    label.appendChild(name);
+    ui.atomSpeciesOptions.appendChild(label);
+  }
+}
 
 
 function buildLattice(k,n){
@@ -477,11 +566,14 @@ const state={key:"FCC",n:+ui.cells.value,atoms:[],angleX:0.9,angleY:-0.6,angleZ:
 try{ if(state && false ) state.key='HEX_ABC'; }catch(e){}
 
 window.state = state; 
+try { renderAtomSpeciesFilter(); } catch(e) {}
 if (state.key==='INTRO') { state.key='FCC'; try{ if(ui && ui.structure) ui.structure.value='FCC'; }catch(e){} }
 if(state.key==='INTRO2' || state.key==='INTRO_TETRA') { state.key='FCC'; try{ if(ui && ui.structure) ui.structure.value='FCC'; }catch(e){} }
 
 function rebuild(){
   
+  try { renderAtomSpeciesFilter(); } catch(e) {}
+
   (function(){
     const x = document.getElementById('angleX'); const y = document.getElementById('angleY'); const z = document.getElementById('angleZ');
     const xl = x ? (x.closest('label')||x.parentElement) : null;
@@ -887,9 +979,11 @@ function clearBondsCurrent(){
   clearRemovedEmbedsFor(state.key, +ui.cells.value); 
 }
 function findAtomByRef(ref, atomsArr){ 
+  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue; 
+    if(a.type!==ref.type) continue;
+    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1218,9 +1312,11 @@ function clearBondsCurrent(){
   saveLocal(); 
 }
 function findAtomByRef(ref, atomsArr){ 
+  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue; 
+    if(a.type!==ref.type) continue;
+    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1337,9 +1433,11 @@ function clearBondsCurrent(){
   saveLocal(); 
 }
 function findAtomByRef(ref, atomsArr){ 
+  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue; 
+    if(a.type!==ref.type) continue;
+    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1564,6 +1662,7 @@ function firstShellNeighborsPBC(target, atomsAll, metricM, opts){
   const ux = target.uc[0], uy = target.uc[1], uz = target.uc[2];
   for(const b of atomsAll){
     if(b===target) continue;
+    if(!isAtomTypeVisible(b.type, state.key)) continue;
     let best=null;
     for(let dx=-1; dx<=1; dx++){
       for(let dy=-1; dy<=1; dy++){
@@ -1603,6 +1702,7 @@ function rutileNeighbors(target, atomsAll, metricM, opts){
   const candidates=[];
   for(const b of atomsAll){
     if(b===target) continue;
+    if(!isAtomTypeVisible(b.type, state.key)) continue;
     if(b.type!==wantType) continue;
     let best=null;
     for(let dx=-1; dx<=1; dx++){
@@ -2701,6 +2801,8 @@ if(isIonic(state.key)){
     atoms = atoms.filter(a=>!rm.has(pkey(a.pos))).concat(adds);
   }
 }
+
+  atoms = filterVisibleAtomTypes(atoms, state.key);
 
   drawAxes(spacing);
 

@@ -288,8 +288,8 @@ const ATOM_SPECIES_FILTER_DEFS = {
     { type:'C', label:'Cl⁻', color:COLORS.C }
   ],
   ZnS: [
-    { type:'A', label:'Zn²⁺', color:COLORS.A },
-    { type:'C', label:'S²⁻', color:COLORS.C }
+    { type:'A', label:'S²⁻', color:COLORS.A },
+    { type:'C', label:'Zn²⁺', color:COLORS.C }
   ],
   RUTILIO: [
     { type:'T', label:'Ti⁴⁺', color:COLORS.T },

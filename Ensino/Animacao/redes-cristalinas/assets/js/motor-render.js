@@ -3282,7 +3282,7 @@ function canonicalCrystalKey(key){ return key === 'RUTILIO' ? 'TiO2' : key; }
 function defaultBondConfig(key){
   const k = canonicalCrystalKey(key);
   if(k === 'NaCl') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.505};
-  if(k === 'CsCl') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.875};
+  if(k === 'CsCl') return {mode:'cscl', pairs:[['A','C']]};
   if(k === 'ZnS') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.445};
   if(k === 'CaF2') return {mode:'cutoff', pairs:[['CA','F']], cutoff:0.445};
   if(k === 'AntiCaF2') return {mode:'cutoff', pairs:[['CA','F']], cutoff:0.445};
@@ -3317,7 +3317,26 @@ function defaultBondsForCrystal(key, cells){
     seen.add(id);
     out.push(rec);
   }
-  if(cfg.mode === 'rutile'){
+  if(cfg.mode === 'cscl'){
+    const corners = [-0.5, 0.5];
+    const findAtomAt = (type, uc)=> atoms.find(a =>
+      a.type === type &&
+      Math.abs(a.uc[0]-uc[0]) < 1e-6 &&
+      Math.abs(a.uc[1]-uc[1]) < 1e-6 &&
+      Math.abs(a.uc[2]-uc[2]) < 1e-6
+    );
+    for(const center of atoms){
+      if(center.type !== 'C') continue;
+      for(const dx of corners){
+        for(const dy of corners){
+          for(const dz of corners){
+            const corner = findAtomAt('A', [center.uc[0]+dx, center.uc[1]+dy, center.uc[2]+dz]);
+            if(corner) add(center, corner);
+          }
+        }
+      }
+    }
+  } else if(cfg.mode === 'rutile'){
     for(const a of atoms){
       if(a.type !== 'T') continue;
       const candidates = [];

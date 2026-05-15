@@ -75,7 +75,8 @@ function resize(){const dpr=window.devicePixelRatio||1;canvas.width=canvas.clien
 window.addEventListener('resize',resize); resize();
 
 const ui={
-  projecaoOrto:document.getElementById('projecaoOrto'),
+  projecaoOrto:(()=>{ const el=document.getElementById('projecaoOrto'); return el || {checked:true, addEventListener:function(){}}; })(),
+  showGizmo:document.getElementById('showGizmo'),
 
   structure:document.getElementById('structure'),
   atomSpeciesFilter:document.getElementById('atomSpeciesFilter'),
@@ -118,6 +119,7 @@ const ui={
   delAtom:document.getElementById('delAtom'),
   addAtom:document.getElementById('addAtom'),
   addAtomType:document.getElementById('addAtomType'),
+  editorTools:document.getElementById('editorTools'),
 };
 
 function createDetachedControl(tagName='input', inputType='text'){
@@ -188,20 +190,29 @@ const STRUCTURES={
   NaCl:{species:[{type:"A",pos:[0,0,0]},{type:"A",pos:[0,0.5,0.5]},{type:"A",pos:[0.5,0,0.5]},{type:"A",pos:[0.5,0.5,0]},{type:"C",pos:[0.5,0,0]},{type:"C",pos:[0,0.5,0]},{type:"C",pos:[0,0,0.5]},{type:"C",pos:[0.5,0.5,0.5]}]},
   CsCl:{species:[{type:"A",pos:[0,0,0]},{type:"C",pos:[0.5,0.5,0.5]}]},
   ZnS:{species:[{type:"A",pos:[0,0,0]},{type:"A",pos:[0,0.5,0.5]},{type:"A",pos:[0.5,0,0.5]},{type:"A",pos:[0.5,0.5,0]},{type:"C",pos:[0.25,0.25,0.25]},{type:"C",pos:[0.75,0.75,0.25]},{type:"C",pos:[0.75,0.25,0.75]},{type:"C",pos:[0.25,0.75,0.75]}]},
-  RUTILIO:(()=>{
-    const u=0.305; 
-    const metric=[1,1,0.644]; 
+  TiO2:(()=>{
+    const u=0.305;
+    const metric=[1,1,0.644];
     const species=[
-      {type:"T",pos:[0.0,0.0,0.0]},           
-      {type:"T",pos:[0.5,0.5,0.5]},           
-      {type:"O",pos:[ u,  u,  0.0]},          
-      {type:"O",pos:[-u, -u,  0.0]},
+      {type:"T",pos:[0.0,0.0,0.0]},
+      {type:"T",pos:[0.5,0.5,0.5]},
+      {type:"O",pos:[ u,  u,  0.0]},
+      {type:"O",pos:[1-u, 1-u,  0.0]},
       {type:"O",pos:[0.5+u, 0.5-u, 0.5]},
       {type:"O",pos:[0.5-u, 0.5+u, 0.5]},
     ];
     return {species, metric};
-  })()
-  ,
+  })(),
+  CaF2:{species:[
+    {type:"CA",pos:[0,0,0]},{type:"CA",pos:[0,0.5,0.5]},{type:"CA",pos:[0.5,0,0.5]},{type:"CA",pos:[0.5,0.5,0]},
+    {type:"F",pos:[0.25,0.25,0.25]},{type:"F",pos:[0.25,0.25,0.75]},{type:"F",pos:[0.25,0.75,0.25]},{type:"F",pos:[0.75,0.25,0.25]},
+    {type:"F",pos:[0.75,0.75,0.25]},{type:"F",pos:[0.75,0.25,0.75]},{type:"F",pos:[0.25,0.75,0.75]},{type:"F",pos:[0.75,0.75,0.75]}
+  ]},
+  AntiCaF2:{species:[
+    {type:"F",pos:[0,0,0]},{type:"F",pos:[0,0.5,0.5]},{type:"F",pos:[0.5,0,0.5]},{type:"F",pos:[0.5,0.5,0]},
+    {type:"CA",pos:[0.25,0.25,0.25]},{type:"CA",pos:[0.25,0.25,0.75]},{type:"CA",pos:[0.25,0.75,0.25]},{type:"CA",pos:[0.75,0.25,0.25]},
+    {type:"CA",pos:[0.75,0.75,0.25]},{type:"CA",pos:[0.75,0.25,0.75]},{type:"CA",pos:[0.25,0.75,0.75]},{type:"CA",pos:[0.75,0.75,0.75]}
+  ]},
   
 
   
@@ -248,6 +259,7 @@ const STRUCTURES={
 
 };
 
+STRUCTURES.RUTILIO = STRUCTURES.TiO2;
 
 
 
@@ -272,10 +284,12 @@ function addAtomStyleFor(t){
 
 const COLORS={
   M:"#9aa3b2", C:"#60a5fa", A:"#ff6b6b", B:"#cfd4dc", V:"#fbbf24",
-  T:"#d0d6e1", 
-  O:"#ef4444"  
+  T:"#d0d6e1", O:"#ef4444", CA:"#60a5fa", F:"#ff6b6b"
 };
-function isIonic(k){return (k==="NaCl"||k==="CsCl"||k==="ZnS");}
+const IONIC_DEFECT_PAIR = {
+  NaCl:['A','C'], CsCl:['A','C'], ZnS:['A','C'], CaF2:['CA','F'], AntiCaF2:['CA','F'], TiO2:['T','O'], RUTILIO:['T','O']
+};
+function isIonic(k){return !!IONIC_DEFECT_PAIR[k];}
 
 const ATOM_SPECIES_FILTER_KEY = 'atom_species_visibility_v1';
 const ATOM_SPECIES_FILTER_DEFS = {
@@ -291,9 +305,21 @@ const ATOM_SPECIES_FILTER_DEFS = {
     { type:'A', label:'S²⁻', color:COLORS.A },
     { type:'C', label:'Zn²⁺', color:COLORS.C }
   ],
+  TiO2: [
+    { type:'T', label:'Ti⁴⁺', color:COLORS.T },
+    { type:'O', label:'O²⁻', color:COLORS.O }
+  ],
   RUTILIO: [
     { type:'T', label:'Ti⁴⁺', color:COLORS.T },
     { type:'O', label:'O²⁻', color:COLORS.O }
+  ],
+  CaF2: [
+    { type:'CA', label:'Ca²⁺', color:COLORS.CA },
+    { type:'F', label:'F⁻', color:COLORS.F }
+  ],
+  AntiCaF2: [
+    { type:'CA', label:'Ca²⁺', color:COLORS.CA },
+    { type:'F', label:'F⁻', color:COLORS.F }
   ]
 };
 let ATOM_SPECIES_VISIBILITY = {};
@@ -365,8 +391,14 @@ function renderAtomSpeciesFilter(){
 }
 
 
+const __LATTICE_CACHE = new Map();
+const __ATOM_REF_INDEX_CACHE = new WeakMap();
+
 function buildLattice(k,n){
   if(k==="INTRO" || k==="INTRO2" || k==="INTRO_TETRA"){ return []; }
+  const cacheable = k !== "DIY" && k !== "INTRO_CAMADAS" && k !== "INTRO_TESTE" && k !== "HEX_ABC" && k !== "WS_BCC" && k !== "WS_FCC";
+  const cacheKey = cacheable ? `${k}:${n}` : null;
+  if(cacheKey && __LATTICE_CACHE.has(cacheKey)) return __LATTICE_CACHE.get(cacheKey);
   const def=STRUCTURES[k]||{};
   const basis=def.species||[], metric=def.metric||[1,1,1];
   const M = def.metricM ? def.metricM : diag3(metric[0],metric[1],metric[2]);
@@ -383,6 +415,7 @@ function buildLattice(k,n){
     a.uc = uc;
     a.pos = matMulVec(M, uc);
   }
+  if(cacheKey) __LATTICE_CACHE.set(cacheKey, atoms);
   return atoms;
 }
 
@@ -723,7 +756,7 @@ if (addBtn) addBtn.onclick = ()=>{
 }
 };
 if (clearBtn) clearBtn.onclick = ()=>{ state.water = []; };
- const rowIC = document.getElementById('introCamadasRow'); if(rowIC) rowIC.style.display = (ui.structure.value==='INTRO_CAMADAS') ? '' : 'none'; rebuild();});
+ const rowIC = document.getElementById('introCamadasRow'); if(rowIC) rowIC.style.display = (ui.structure.value==='INTRO_CAMADAS') ? '' : 'none'; syncEditorToolsVisibility(); rebuild();});
 ui.apenasUmaFace.addEventListener('change',()=>{ ui.seletorFace.disabled = !ui.apenasUmaFace.checked || ui.apenasUmaFace.disabled; });
 ui.seletorFace.addEventListener('change',()=>{});
 
@@ -733,6 +766,7 @@ ui.cells.addEventListener('input',rebuild);
 
 ui.schottky.addEventListener('change', ()=>{ draw(); });
 ui.frenkel.addEventListener('change', ()=>{ draw(); });
+if(ui.showGizmo) ui.showGizmo.addEventListener('change', ()=>{ draw(); });
 
 
 ui.editBonds.addEventListener('change', ()=>{ if(ui.editBonds.checked){ ui.delBonds.checked=false; } state.pickA=null; });
@@ -748,6 +782,18 @@ function deactivateOtherEditors(except){
   }
   state.pickA=null; state.coordCenterRef=null;
 }
+
+function syncEditorToolsVisibility(){
+  const isDIY = ui.structure && ui.structure.value === 'DIY';
+  if(ui.editorTools){
+    ui.editorTools.classList.toggle('is-visible', !!isDIY);
+    ui.editorTools.setAttribute('aria-hidden', isDIY ? 'false' : 'true');
+  }
+  if(!isDIY){
+    deactivateOtherEditors(null);
+    if(ui.exportArea){ ui.exportArea.style.display = 'none'; }
+  }
+}
 if(ui.editBonds) ui.editBonds.addEventListener('change', ()=>{ if(ui.editBonds.checked) deactivateOtherEditors('editBonds'); });
 if(ui.delBonds)  ui.delBonds.addEventListener('change',  ()=>{ if(ui.delBonds.checked)  deactivateOtherEditors('delBonds');  });
 if(ui.editCoord) ui.editCoord.addEventListener('change', ()=>{ if(ui.editCoord.checked) deactivateOtherEditors('editCoord'); });
@@ -755,6 +801,7 @@ if(ui.delCoord)  ui.delCoord.addEventListener('change',  ()=>{ if(ui.delCoord.ch
 if(ui.delAtom)   ui.delAtom.addEventListener('change',   ()=>{ if(ui.delAtom.checked)   deactivateOtherEditors('delAtom');   });
 if(ui.addAtom)  ui.addAtom.addEventListener('change', ()=>{ if(ui.addAtom.checked)  deactivateOtherEditors('addAtom');  });
 
+syncEditorToolsVisibility();
 
 
 ui.exportAllTxt.addEventListener('click', ()=>{
@@ -979,11 +1026,27 @@ function clearBondsCurrent(){
   clearRemovedEmbedsFor(state.key, +ui.cells.value); 
 }
 function findAtomByRef(ref, atomsArr){ 
-  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
+  if(!ref || !atomsArr) return null;
+  const type = ref.type;
+  const k = ref.key || state.key;
+  if(!isAtomTypeVisible(type, k)) return null;
+  let idx = __ATOM_REF_INDEX_CACHE.get(atomsArr);
+  if(!idx){
+    idx = new Map();
+    for(const a of atomsArr){
+      if(!a || !a.uc) continue;
+      const id = `${a.type}@${a.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+      if(!idx.has(id)) idx.set(id, a);
+    }
+    __ATOM_REF_INDEX_CACHE.set(atomsArr, idx);
+  }
+  const directId = `${type}@${ref.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+  const direct = idx.get(directId);
+  if(direct && isAtomTypeVisible(direct.type, k)) return direct;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue;
-    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
+    if(a.type!==type) continue;
+    if(!isAtomTypeVisible(a.type, k)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1312,11 +1375,27 @@ function clearBondsCurrent(){
   saveLocal(); 
 }
 function findAtomByRef(ref, atomsArr){ 
-  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
+  if(!ref || !atomsArr) return null;
+  const type = ref.type;
+  const k = ref.key || state.key;
+  if(!isAtomTypeVisible(type, k)) return null;
+  let idx = __ATOM_REF_INDEX_CACHE.get(atomsArr);
+  if(!idx){
+    idx = new Map();
+    for(const a of atomsArr){
+      if(!a || !a.uc) continue;
+      const id = `${a.type}@${a.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+      if(!idx.has(id)) idx.set(id, a);
+    }
+    __ATOM_REF_INDEX_CACHE.set(atomsArr, idx);
+  }
+  const directId = `${type}@${ref.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+  const direct = idx.get(directId);
+  if(direct && isAtomTypeVisible(direct.type, k)) return direct;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue;
-    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
+    if(a.type!==type) continue;
+    if(!isAtomTypeVisible(a.type, k)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1433,11 +1512,27 @@ function clearBondsCurrent(){
   saveLocal(); 
 }
 function findAtomByRef(ref, atomsArr){ 
-  if(!isAtomTypeVisible(ref.type, ref.key || state.key)) return null;
+  if(!ref || !atomsArr) return null;
+  const type = ref.type;
+  const k = ref.key || state.key;
+  if(!isAtomTypeVisible(type, k)) return null;
+  let idx = __ATOM_REF_INDEX_CACHE.get(atomsArr);
+  if(!idx){
+    idx = new Map();
+    for(const a of atomsArr){
+      if(!a || !a.uc) continue;
+      const id = `${a.type}@${a.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+      if(!idx.has(id)) idx.set(id, a);
+    }
+    __ATOM_REF_INDEX_CACHE.set(atomsArr, idx);
+  }
+  const directId = `${type}@${ref.uc.map(v=>(+v).toFixed(5)).join(',')}`;
+  const direct = idx.get(directId);
+  if(direct && isAtomTypeVisible(direct.type, k)) return direct;
   let best=null, bestd=1e9;
   for(const a of atomsArr){ 
-    if(a.type!==ref.type) continue;
-    if(!isAtomTypeVisible(a.type, ref.key || state.key)) continue; 
+    if(a.type!==type) continue;
+    if(!isAtomTypeVisible(a.type, k)) continue; 
     const d=Math.hypot(a.uc[0]-ref.uc[0], a.uc[1]-ref.uc[1], a.uc[2]-ref.uc[2]); 
     if(d<bestd){ best=a; bestd=d; } 
   }
@@ -1535,9 +1630,7 @@ function shellsByDistance(target, atoms, maxShells=3){
 
 
 function project(p3, L){
-  let p = rotY(p3, state.angleY);
-  p = rotX(p, state.angleX);
-  p = rotZ(p, state.angleZ);
+  let p = rotatedForCurrentView(p3);
   const z = p[2] + state.distance;
   if (ui.projecaoOrto && ui.projecaoOrto.checked) {
     
@@ -1729,6 +1822,7 @@ function rutileNeighbors(target, atomsAll, metricM, opts){
 }
 
 function drawAxes(L){
+  if(ui.showGizmo && !ui.showGizmo.checked) return;
   const axes = [
     {to:[1.2,0,0], color:"#ef4444", label:"X"},
     {to:[0,1.2,0], color:"#22c55e", label:"Y"},
@@ -1759,6 +1853,91 @@ function drawAxes(L){
     ctx.font="12px system-ui, -apple-system, Segoe UI, Roboto";
     ctx.fillText(ax.label, p2.x+canvas.clientWidth/2 + 6, p2.y+canvas.clientHeight/2 + 4);
   }
+}
+
+
+function rotatedForCurrentView(v){
+  let p = rotY(v, state.angleY || 0);
+  p = rotX(p, state.angleX || 0);
+  p = rotZ(p, state.angleZ || 0);
+  return p;
+}
+
+function drawFixedCornerGizmo(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  if(!w || !h) return;
+  const size=Math.max(96, Math.min(132, Math.floor(Math.min(w,h)*0.19)));
+  const margin=16;
+  const x=w-size-margin;
+  const y=h-size-margin;
+  const r=18;
+  ctx.save();
+  ctx.globalCompositeOperation='source-over';
+  ctx.lineJoin='round';
+  ctx.lineCap='round';
+  ctx.shadowColor='rgba(0,0,0,0.35)';
+  ctx.shadowBlur=18;
+  ctx.shadowOffsetY=8;
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+size-r,y);
+  ctx.quadraticCurveTo(x+size,y,x+size,y+r);
+  ctx.lineTo(x+size,y+size-r);
+  ctx.quadraticCurveTo(x+size,y+size,x+size-r,y+size);
+  ctx.lineTo(x+r,y+size);
+  ctx.quadraticCurveTo(x,y+size,x,y+size-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+  ctx.fillStyle='rgba(7,12,24,0.82)';
+  ctx.fill();
+  ctx.shadowColor='transparent';
+  ctx.lineWidth=1.2;
+  ctx.strokeStyle='rgba(125,211,252,0.22)';
+  ctx.stroke();
+
+  const cx=x+size*0.48;
+  const cy=y+size*0.58;
+  const axisLen=size*0.30;
+  const axes=[
+    {v:[1,0,0], color:'#fb7185', label:'X'},
+    {v:[0,1,0], color:'#6ee7b7', label:'Y'},
+    {v:[0,0,1], color:'#93c5fd', label:'Z'},
+  ];
+  const sorted=axes.map(a=>({...a, p:rotatedForCurrentView(a.v)})).sort((a,b)=>a.p[2]-b.p[2]);
+  for(const ax of sorted){
+    const ex=cx+ax.p[0]*axisLen;
+    const ey=cy+ax.p[1]*axisLen;
+    ctx.lineWidth=2.2;
+    ctx.strokeStyle=ax.color;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(ex,ey);
+    ctx.stroke();
+    const dx=ex-cx, dy=ey-cy;
+    const len=Math.hypot(dx,dy)||1;
+    const ux=dx/len, uy=dy/len;
+    const head=8;
+    const spread=5;
+    ctx.beginPath();
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-ux*head-uy*spread, ey-uy*head+ux*spread);
+    ctx.lineTo(ex-ux*head+uy*spread, ey-uy*head-ux*spread);
+    ctx.closePath();
+    ctx.fillStyle=ax.color;
+    ctx.fill();
+    ctx.font='700 12px system-ui, -apple-system, Segoe UI, Roboto';
+    ctx.fillStyle='rgba(245,247,255,0.95)';
+    ctx.fillText(ax.label, ex+ux*7-4, ey+uy*7+4);
+  }
+  ctx.beginPath();
+  ctx.arc(cx,cy,4,0,TAU);
+  ctx.fillStyle='rgba(226,232,240,0.98)';
+  ctx.fill();
+  ctx.lineWidth=1.2;
+  ctx.strokeStyle='rgba(15,23,42,0.7)';
+  ctx.stroke();
+  ctx.restore();
 }
 
 
@@ -2470,7 +2649,11 @@ function __drawSolid(verts, tris, L, fillRGBA, strokeRGBA){
   const w=canvas.clientWidth, h=canvas.clientHeight;
   const PV = verts.map(v=>project(v, L));
   const TS = tris.map(t=>({t, z:(PV[t[0]].z+PV[t[1]].z+PV[t[2]].z)/3})).sort((a,b)=>a.z-b.z);
-  ctx.globalAlpha=1.0;
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 1.35;
+  ctx.strokeStyle = strokeRGBA;
+  ctx.globalCompositeOperation = 'source-over';
   for(const {t} of TS){
     const a=PV[t[0]], b=PV[t[1]], c=PV[t[2]];
     ctx.beginPath();
@@ -2478,17 +2661,11 @@ function __drawSolid(verts, tris, L, fillRGBA, strokeRGBA){
     ctx.lineTo(b.x+w/2, b.y+h/2);
     ctx.lineTo(c.x+w/2, c.y+h/2);
     ctx.closePath();
-    ctx.fillStyle = fillRGBA; ctx.fill();
-  }
-  const edges = __edgesFromTris(tris);
-  ctx.lineWidth=2; ctx.strokeStyle=strokeRGBA;
-  for(const [i,j] of edges){
-    const a=PV[i], b=PV[j];
-    ctx.beginPath();
-    ctx.moveTo(a.x+w/2, a.y+h/2);
-    ctx.lineTo(b.x+w/2, b.y+h/2);
+    ctx.fillStyle = fillRGBA;
+    ctx.fill();
     ctx.stroke();
   }
+  ctx.restore();
 }
 function drawWS(kind){
   const w=canvas.clientWidth, h=canvas.clientHeight;
@@ -2496,17 +2673,17 @@ function drawWS(kind){
   const L=+ui.spacing.value;
   drawAxes(L);
   __drawUnitCubeEdgesGeneric(L);
-  let fill='rgb(100,100,100)'; let stroke='rgba(31,41,55,0.95)';
+  let fill='rgb(100,100,100)'; let stroke='rgb(31,41,55)';
   if(kind==='BCC'){
     const s=0.18;
     const V = WS_BCC_VERTS.map(v=>[v[0]*s, v[1]*s, v[2]*s]);
-    __drawSolid(V, WS_BCC_TRIS, L, fill, stroke);
     __drawDotsLattice('BCC', L);
+    __drawSolid(V, WS_BCC_TRIS, L, fill, stroke);
   }else{
     const s=0.23;
     const V = WS_FCC_VERTS.map(v=>[v[0]*s, v[1]*s, v[2]*s]);
-    __drawSolid(V, WS_FCC_TRIS, L, fill, stroke);
     __drawDotsLattice('FCC', L);
+    __drawSolid(V, WS_FCC_TRIS, L, fill, stroke);
   }
 }
 function drawWS_BCC(){ drawWS('BCC'); }
@@ -2703,7 +2880,16 @@ function ensureRemovedAtomsOutsideUC_Current(){  }
     
 
 
-function draw(){
+function draw(ts){
+  const __heavyCrystal = state && ["NaCl","CsCl","ZnS","TiO2","RUTILIO","CaF2","AntiCaF2"].includes(state.key);
+  if(__heavyCrystal && ts){
+    const __minFrame = 1000 / 30;
+    if(draw.__lastHeavyFrame && (ts - draw.__lastHeavyFrame) < __minFrame){
+      requestAnimationFrame(draw);
+      return;
+    }
+    draw.__lastHeavyFrame = ts;
+  }
   
   
 
@@ -2713,14 +2899,14 @@ function draw(){
     state.atoms = introCamadasComposeAtoms(state.ic);
   }
 
-  if(state.key==='INTRO_CAMADAS'){ drawIntroCamadas(); requestAnimationFrame(draw); return; }
-  if(state.key==='WS_BCC'){ drawWS_BCC(); requestAnimationFrame(draw); return; }
-  if(state.key==='WS_FCC'){ drawWS_FCC(); requestAnimationFrame(draw); return; }
-  if(false){ drawIntroStoryboard(); requestAnimationFrame(draw); return; }
-  if(state.key==='INTRO2'){ drawIntroBuracoFCC(); requestAnimationFrame(draw); return; }
-  if(state.key==='INTRO_TETRA'){ drawIntroTetraedro(); requestAnimationFrame(draw); return; }
-  if(state.key==='INTRO_TESTE'){ drawIntroTeste(); requestAnimationFrame(draw); return; }
-  if(state.key==='HEX_ABC'){ drawHexABC(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO_CAMADAS'){ drawIntroCamadas(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='WS_BCC'){ drawWS_BCC(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='WS_FCC'){ drawWS_FCC(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(false){ drawIntroStoryboard(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO2'){ drawIntroBuracoFCC(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO_TETRA'){ drawIntroTetraedro(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='INTRO_TESTE'){ drawIntroTeste(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
+  if(state.key==='HEX_ABC'){ drawHexABC(); drawFixedCornerGizmo(); requestAnimationFrame(draw); return; }
   const w=canvas.clientWidth, h=canvas.clientHeight;
   ctx.clearRect(0,0,w,h);
 
@@ -2771,6 +2957,9 @@ function draw(){
 
 
 if(isIonic(state.key)){
+  const pair = IONIC_DEFECT_PAIR[state.key] || ['A','C'];
+  const cationType = pair[0];
+  const anionType = pair[1];
   const pkey = p=>p.map(v=>v.toFixed(3)).join(',');
   const rm = new Set();
   const adds = [];
@@ -2784,13 +2973,13 @@ if(isIonic(state.key)){
     return best;
   };
   if(ui.schottky.checked){
-    const aA = nearestOfType('A');
-    const aC = nearestOfType('C');
-    if(aA) rm.add(pkey(aA.pos));
-    if(aC) rm.add(pkey(aC.pos));
+    const aCat = nearestOfType(cationType);
+    const aAn = nearestOfType(anionType);
+    if(aCat) rm.add(pkey(aCat.pos));
+    if(aAn) rm.add(pkey(aAn.pos));
   }
   if(ui.frenkel.checked){
-    const cat = nearestOfType('C');
+    const cat = nearestOfType(cationType);
     if(cat){
       rm.add(pkey(cat.pos));
       const ip = [cat.pos[0]+0.25, cat.pos[1]+0.25, cat.pos[2]];
@@ -2954,7 +3143,7 @@ if(isIonic(state.key)){
     }
     if(center){
       const metric = metricOf(state.key);
-      const neigh1 = (state.key==="RUTILIO")
+      const neigh1 = (state.key==="TiO2" || state.key==="RUTILIO")
         ? rutileNeighbors(center, atomsAll, metric, {
             somenteCelula: ui.somenteCelula.checked,
             apenasUmaFace: (ui.apenasUmaFace && ui.apenasUmaFace.checked),
@@ -3034,8 +3223,14 @@ if(isIonic(state.key)){
     if(state.key!=="DIY"){
       if(state.key==="NaCl"){
         r = (a.type === "C") ? radius * 1.35 : (a.type === "A" ? radius * 0.75 : radius);
-      } else if(state.key==="RUTILIO"){
+      } else if(state.key==="CsCl"){
+        r = (a.type === "A") ? radius * 1.25 : (a.type === "C" ? radius * 0.95 : radius);
+      } else if(state.key==="ZnS"){
+        r = (a.type === "A") ? radius * 1.05 : (a.type === "C" ? radius * 0.82 : radius);
+      } else if(state.key==="TiO2" || state.key==="RUTILIO"){
         r = (a.type === "T") ? radius * 0.85 : radius * 1.05;
+      } else if(state.key==="CaF2" || state.key==="AntiCaF2"){
+        r = (a.type === "CA") ? radius * 1.05 : (a.type === "F" ? radius * 0.82 : radius);
       }
     }
     
@@ -3077,7 +3272,106 @@ if(isIonic(state.key)){
     }
   }
 
+  drawFixedCornerGizmo();
   requestAnimationFrame(draw);
+}
+
+
+const DEFAULT_CRYSTAL_BOND_CACHE = {};
+function canonicalCrystalKey(key){ return key === 'RUTILIO' ? 'TiO2' : key; }
+function defaultBondConfig(key){
+  const k = canonicalCrystalKey(key);
+  if(k === 'NaCl') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.505};
+  if(k === 'CsCl') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.875};
+  if(k === 'ZnS') return {mode:'cutoff', pairs:[['A','C']], cutoff:0.445};
+  if(k === 'CaF2') return {mode:'cutoff', pairs:[['CA','F']], cutoff:0.445};
+  if(k === 'AntiCaF2') return {mode:'cutoff', pairs:[['CA','F']], cutoff:0.445};
+  if(k === 'TiO2') return {mode:'rutile', pairs:[['T','O']], count:6};
+  return null;
+}
+function defaultPairAllowed(cfg, ta, tb){
+  return cfg.pairs.some(p => (ta === p[0] && tb === p[1]) || (ta === p[1] && tb === p[0]));
+}
+function crystalAtomRef(a, key, cells){
+  return {type:a.type, uc:[+a.uc[0], +a.uc[1], +a.uc[2]], key, cells};
+}
+function defaultBondRecord(a, b, key, cells){
+  return {key, cells, a:crystalAtomRef(a,key,cells), b:crystalAtomRef(b,key,cells), embedded:true};
+}
+function dist3(a,b){
+  const dx=a.pos[0]-b.pos[0], dy=a.pos[1]-b.pos[1], dz=a.pos[2]-b.pos[2];
+  return Math.hypot(dx,dy,dz);
+}
+function defaultBondsForCrystal(key, cells){
+  const cfg = defaultBondConfig(key);
+  if(!cfg) return [];
+  const cacheKey = `${key}:${cells}`;
+  if(DEFAULT_CRYSTAL_BOND_CACHE[cacheKey]) return DEFAULT_CRYSTAL_BOND_CACHE[cacheKey];
+  const atoms = buildLattice(key, cells);
+  const out = [];
+  const seen = new Set();
+  function add(a,b){
+    const rec = defaultBondRecord(a,b,key,cells);
+    const id = bondId(rec);
+    if(seen.has(id)) return;
+    seen.add(id);
+    out.push(rec);
+  }
+  if(cfg.mode === 'rutile'){
+    for(const a of atoms){
+      if(a.type !== 'T') continue;
+      const candidates = [];
+      for(const b of atoms){
+        if(b.type !== 'O') continue;
+        const d = dist3(a,b);
+        if(d > 1e-6) candidates.push({b,d});
+      }
+      candidates.sort((x,y)=>x.d-y.d);
+      candidates.slice(0, cfg.count).forEach(c=>add(a,c.b));
+    }
+  } else {
+    for(let i=0;i<atoms.length;i++){
+      const a=atoms[i];
+      for(let j=i+1;j<atoms.length;j++){
+        const b=atoms[j];
+        if(!defaultPairAllowed(cfg, a.type, b.type)) continue;
+        if(dist3(a,b) <= cfg.cutoff) add(a,b);
+      }
+    }
+  }
+  DEFAULT_CRYSTAL_BOND_CACHE[cacheKey] = out;
+  return out;
+}
+const __CURRENT_BONDS_CACHE = { key:null, list:null };
+function bondsForCurrent(){
+  const k = state.key;
+  const cells = +ui.cells.value;
+  const localCount = Array.isArray(ALL_BONDS) ? ALL_BONDS.length : 0;
+  const removedCurrent = Array.isArray(REMOVED_EMBED_BONDS) ? REMOVED_EMBED_BONDS.filter(e=>e.key===k && e.cells===cells) : [];
+  const cacheKey = `${k}:${cells}:${localCount}:${removedCurrent.map(e=>e.id).join(';')}`;
+  if(__CURRENT_BONDS_CACHE.key === cacheKey && __CURRENT_BONDS_CACHE.list) return __CURRENT_BONDS_CACHE.list;
+  let defaults = defaultBondsForCrystal(k, cells);
+  if(removedCurrent.length){
+    const removedIds = new Set(removedCurrent.map(e=>e.id));
+    defaults = defaults.filter(x=>!removedIds.has(bondId(x)));
+  }
+  const stored = localCount ? ALL_BONDS.filter(x=>x.key===k && x.cells===cells) : [];
+  if(!stored.length){
+    __CURRENT_BONDS_CACHE.key = cacheKey;
+    __CURRENT_BONDS_CACHE.list = defaults;
+    return defaults;
+  }
+  const out = [];
+  const seen = new Set();
+  for(const rec of defaults.concat(stored)){
+    const id = bondId(rec);
+    if(seen.has(id)) continue;
+    seen.add(id);
+    out.push(rec);
+  }
+  __CURRENT_BONDS_CACHE.key = cacheKey;
+  __CURRENT_BONDS_CACHE.list = out;
+  return out;
 }
 
 draw();

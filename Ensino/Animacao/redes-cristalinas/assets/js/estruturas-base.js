@@ -18,10 +18,7 @@
   function rotZ(p,a){const s=Math.sin(a),c=Math.cos(a);return [ c*p[0]-s*p[1], s*p[0]+c*p[1], p[2] ];}
 
   function introIsOrtho(){
-    try {
-      
-      return !!(ui && ui.projecaoOrto && ui.projecaoOrto.checked);
-    } catch(e){ return false; }
+    return true;
   }
 
   function projectIntro(p){

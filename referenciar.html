@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referências do projeto SiMoEns</title>
+<meta name="description" content="Formas de referenciar o projeto SiMoEns e Química Visual em trabalhos acadêmicos e sites.">
+<link rel="shortcut icon" href="assets/images/simoens-1-214x194.png" type="image/png">
+<style>
+:root {
+  --azul: #034f83;
+  --azul-escuro: #0d1b2a;
+  --verde: #65bc00;
+  --vermelho: #bd1d2c;
+  --fundo: #f4f8fb;
+  --texto: #142334;
+  --borda: rgba(3,79,131,.16);
+  --sombra: 0 24px 70px rgba(3,79,131,.14);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--texto);
+  background: radial-gradient(circle at top left, rgba(101,188,0,.16), transparent 34%), radial-gradient(circle at bottom right, rgba(3,79,131,.18), transparent 34%), var(--fundo);
+  padding: 32px 16px;
+}
+main {
+  width: min(1020px, 100%);
+  margin: 0 auto;
+  background: rgba(255,255,255,.94);
+  border: 1px solid var(--borda);
+  border-radius: 28px;
+  box-shadow: var(--sombra);
+  padding: clamp(24px, 5vw, 48px);
+}
+.header {
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.header img {
+  width: min(220px, 56vw);
+  height: auto;
+  display: block;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+  color: var(--azul);
+}
+h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  color: var(--azul);
+}
+h3 {
+  margin: 0 0 16px;
+  color: var(--azul-escuro);
+}
+p {
+  max-width: 760px;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+.section-card {
+  margin-top: 22px;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--borda);
+  border-radius: 24px;
+  background: rgba(255,255,255,.86);
+}
+.ready-citation,
+.resultado-abnt {
+  margin-top: 18px;
+  padding: 16px;
+  background: #fff;
+  border-left: 5px solid var(--azul);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(3,79,131,.08);
+}
+.ready-citation p,
+.resultado-abnt p {
+  max-width: none;
+  font-size: 1rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+.form-row.three {
+  grid-template-columns: 1fr 1.4fr 1fr;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: .92rem;
+}
+.inline-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.inline-group label {
+  display: inline-block;
+  margin: 0;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid rgba(20,35,52,.18);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--texto);
+  font-size: .95rem;
+}
+input[type="text"]:disabled {
+  background: #eef3f7;
+  color: #687786;
+}
+textarea {
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  padding: 18px;
+  border: 1px solid rgba(20,35,52,.18);
+  border-radius: 18px;
+  background: var(--azul-escuro);
+  color: #eaf4ff;
+  font-family: Consolas, Monaco, monospace;
+  font-size: .95rem;
+  line-height: 1.55;
+}
+.preview {
+  margin: 20px 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 18px 24px;
+  border: 1px dashed rgba(3,79,131,.35);
+  border-radius: 22px;
+  background: #fff;
+}
+.preview img {
+  max-width: 180px;
+  height: auto;
+  display: block;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+button, .site-link {
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 20px;
+  font-weight: 700;
+  font-size: .96rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+button {
+  background: var(--verde);
+  color: #102400;
+}
+.site-link {
+  background: var(--azul);
+  color: #fff;
+}
+.feedback {
+  min-height: 22px;
+  font-size: .95rem;
+  color: var(--vermelho);
+  font-weight: 700;
+}
+small {
+  display: block;
+  margin-top: 10px;
+  color: #5f6f7f;
+  line-height: 1.5;
+}
+@media (max-width: 760px) {
+  .form-row,
+  .form-row.three {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <section class="header" aria-labelledby="titulo-referencia">
+    <a href="https://quimicavisualufv.github.io/Quimica-Visual/" target="_blank" rel="noopener noreferrer" title="Acessar o projeto SiMoEns">
+      <img src="assets/images/simoens-1-214x194.png" alt="Projeto SiMoEns - Simulação, Modelagem e Ensino">
+    </a>
+    <h1 id="titulo-referencia">Referências do SiMoEns</h1>
+    <p>Escolha a melhor forma de referenciar o projeto: citação acadêmica em ABNT, gerador editável ou logotipo com link para uso em sites.</p>
+  </section>
+
+  <section class="section-card" aria-labelledby="titulo-abnt-pronta">
+    <h2 id="titulo-abnt-pronta">Citação acadêmica ABNT NBR 6023</h2>
+    <p>Use esta opção em trabalhos acadêmicos, relatórios, artigos, planos de aula e materiais de pesquisa.</p>
+    <div class="ready-citation">
+      <p id="abnt-ready-text">NARDELLI, Lucas Xavier; COSTA, Deyse Gomes da; NOVAES, Fábio Junior Moreira; FAVARIN, Lis Regiane Vizolli; DESPAIGNE, Angel Amado Recio. <strong>Química Visual</strong>. Viçosa: Universidade Federal de Viçosa, 2025. Disponível em: https://quimicavisualufv.github.io/Quimica-Visual/. Acesso em: 21 maio 2026.</p>
+    </div>
+    <div class="actions">
+      <button type="button" data-copy-target="abnt-ready-text" data-copy-mode="text">Copiar citação ABNT</button>
+      <span class="feedback" id="feedback-abnt-ready-text" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="section-card gerador-abnt-container" aria-labelledby="titulo-gerador-abnt">
+    <h2 id="titulo-gerador-abnt">Gerador de Citação ABNT</h2>
+    <p>Edite os campos abaixo para gerar uma referência personalizada em tempo real.</p>
+
+    <div class="form-group" style="margin-top:18px;">
+      <label for="abnt-autores">Autores:</label>
+      <input type="text" id="abnt-autores" value="NARDELLI, Lucas Xavier; COSTA, Deyse Gomes da; NOVAES, Fábio Junior Moreira; FAVARIN, Lis Regiane Vizolli; DESPAIGNE, Angel Amado Recio">
+    </div>
+
+    <div class="form-group">
+      <label for="abnt-titulo">Título da página/site:</label>
+      <input type="text" id="abnt-titulo" value="Química Visual">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <div class="inline-group">
+          <input type="checkbox" id="abnt-check-local" checked>
+          <label for="abnt-check-local">Saber o local</label>
+        </div>
+        <input type="text" id="abnt-local" value="Viçosa">
+      </div>
+      <div class="form-group">
+        <div class="inline-group">
+          <input type="checkbox" id="abnt-check-editora" checked>
+          <label for="abnt-check-editora">Saber a instituição</label>
+        </div>
+        <input type="text" id="abnt-editora" value="Universidade Federal de Viçosa">
+      </div>
+    </div>
+
+    <div class="form-row three">
+      <div class="form-group">
+        <label for="abnt-ano">Ano:</label>
+        <input type="text" id="abnt-ano" value="2025">
+      </div>
+      <div class="form-group">
+        <label for="abnt-url">URL:</label>
+        <input type="text" id="abnt-url" value="https://quimicavisualufv.github.io/Quimica-Visual/">
+      </div>
+      <div class="form-group">
+        <label for="abnt-data">Data de acesso:</label>
+        <input type="text" id="abnt-data" value="21 maio 2026">
+      </div>
+    </div>
+
+    <div class="resultado-abnt">
+      <h3>Sua citação:</h3>
+      <p id="citacao-gerada"></p>
+      <small id="abnt-legenda"></small>
+    </div>
+    <div class="actions">
+      <button type="button" data-copy-target="citacao-gerada" data-copy-mode="text">Copiar citação gerada</button>
+      <span class="feedback" id="feedback-citacao-gerada" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="section-card" aria-labelledby="titulo-html-logo">
+    <h2 id="titulo-html-logo">Logo com link para sites</h2>
+    <p>Copie o HTML abaixo para inserir o logotipo oficial do SiMoEns em outra página. Ao clicar na imagem, a pessoa será direcionada para o site do projeto.</p>
+    <div class="preview" aria-label="Prévia do selo de referência">
+      <a href="https://quimicavisualufv.github.io/Quimica-Visual/" target="_blank" rel="noopener noreferrer" title="Acessar o projeto SiMoEns">
+        <img src="https://quimicavisualufv.github.io/Quimica-Visual/assets/images/simoens-1-214x194.png" alt="Projeto SiMoEns - Simulação, Modelagem e Ensino">
+      </a>
+    </div>
+    <textarea id="simoens-reference-code" readonly><a href="https://quimicavisualufv.github.io/Quimica-Visual/" target="_blank" rel="noopener noreferrer" title="Acessar o projeto SiMoEns">
+  <img src="https://quimicavisualufv.github.io/Quimica-Visual/assets/images/simoens-1-214x194.png" alt="Projeto SiMoEns - Simulação, Modelagem e Ensino" style="max-width: 180px; height: auto; display: inline-block;">
+</a></textarea>
+    <div class="actions">
+      <button type="button" data-copy-target="simoens-reference-code" data-copy-mode="value">Copiar HTML</button>
+      <a class="site-link" href="https://quimicavisualufv.github.io/Quimica-Visual/" target="_blank" rel="noopener noreferrer">Abrir site do projeto</a>
+      <span class="feedback" id="feedback-simoens-reference-code" aria-live="polite"></span>
+    </div>
+  </section>
+</main>
+<script>
+const copyButtons = document.querySelectorAll('[data-copy-target]');
+const generatorInputs = document.querySelectorAll('.gerador-abnt-container input');
+const outCitacao = document.getElementById('citacao-gerada');
+const outLegenda = document.getElementById('abnt-legenda');
+const checkLocal = document.getElementById('abnt-check-local');
+const inputLocal = document.getElementById('abnt-local');
+const checkEditora = document.getElementById('abnt-check-editora');
+const inputEditora = document.getElementById('abnt-editora');
+
+function escapeHTML(value) {
+  return value.replace(/[&<>"]/g, function(character) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;'
+    }[character];
+  });
+}
+
+function atualizarCitacao() {
+  const autores = document.getElementById('abnt-autores').value.trim();
+  const titulo = document.getElementById('abnt-titulo').value.trim();
+  const ano = document.getElementById('abnt-ano').value.trim();
+  const url = document.getElementById('abnt-url').value.trim();
+  const data = document.getElementById('abnt-data').value.trim();
+  inputLocal.disabled = !checkLocal.checked;
+  inputEditora.disabled = !checkEditora.checked;
+  const localFinal = checkLocal.checked ? inputLocal.value.trim() : '[S. l.]';
+  const editoraFinal = checkEditora.checked ? inputEditora.value.trim() : '[s. n.]';
+  let localEditoraTexto = `${localFinal}: ${editoraFinal}`;
+  if (!checkLocal.checked && !checkEditora.checked) {
+    localEditoraTexto = '[S. l.: s. n.]';
+  }
+  const citacaoFinal = `${escapeHTML(autores)}. <strong>${escapeHTML(titulo)}</strong>. ${escapeHTML(localEditoraTexto)}, ${escapeHTML(ano)}. Disponível em: ${escapeHTML(url)}. Acesso em: ${escapeHTML(data)}.`;
+  outCitacao.innerHTML = citacaoFinal;
+  let legendaTexto = '';
+  if (!checkLocal.checked) legendaTexto += '<strong>[S. l.]</strong> significa <em>Sine loco</em> (sem local). ';
+  if (!checkEditora.checked) legendaTexto += '<strong>[s. n.]</strong> significa <em>Sine nomine</em> (sem editora/instituição).';
+  outLegenda.innerHTML = legendaTexto;
+}
+
+async function copiarTexto(texto, feedback) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    feedback.textContent = 'Copiado.';
+  } catch (error) {
+    const campoTemporario = document.createElement('textarea');
+    campoTemporario.value = texto;
+    document.body.appendChild(campoTemporario);
+    campoTemporario.select();
+    document.execCommand('copy');
+    document.body.removeChild(campoTemporario);
+    feedback.textContent = 'Copiado.';
+  }
+}
+
+copyButtons.forEach(function(button) {
+  button.addEventListener('click', function() {
+    const target = document.getElementById(button.dataset.copyTarget);
+    const feedback = document.getElementById(`feedback-${button.dataset.copyTarget}`);
+    const texto = button.dataset.copyMode === 'value' ? target.value : target.textContent.trim();
+    copiarTexto(texto, feedback);
+  });
+});
+
+generatorInputs.forEach(function(input) {
+  input.addEventListener('input', atualizarCitacao);
+  input.addEventListener('change', atualizarCitacao);
+});
+
+atualizarCitacao();
+</script>
+</body>
+</html>

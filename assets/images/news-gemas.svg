@@ -1,0 +1,181 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#1a0b2e"/>
+      <stop offset="100%" stop-color="#090310"/>
+    </radialGradient>
+    
+    <radialGradient id="gem-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="crown-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E0FFFF"/>
+      <stop offset="100%" stop-color="#84FFFF"/>
+    </linearGradient>
+
+    <linearGradient id="pav-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00B8D4"/>
+      <stop offset="100%" stop-color="#004D40"/>
+    </linearGradient>
+
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F1C40F"/>
+      <stop offset="25%" stop-color="#F9E79F"/>
+      <stop offset="50%" stop-color="#D4AC0D"/>
+      <stop offset="75%" stop-color="#9C640C"/>
+      <stop offset="100%" stop-color="#F1C40F"/>
+    </linearGradient>
+
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3E2723"/>
+      <stop offset="30%" stop-color="#5D4037"/>
+      <stop offset="50%" stop-color="#795548"/>
+      <stop offset="70%" stop-color="#5D4037"/>
+      <stop offset="100%" stop-color="#21120F"/>
+    </linearGradient>
+
+    <radialGradient id="lens-dark" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#002233" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#000b14" stop-opacity="0.95"/>
+    </radialGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <clipPath id="lens-clip">
+      <circle cx="256" cy="230" r="100"/>
+    </clipPath>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <g opacity="0.15" stroke="#00E5FF" stroke-width="1" fill="none">
+    <polygon points="256,30 316,65 316,135 256,170 196,135 196,65"/>
+    <polygon points="420,340 460,360 460,400 420,420 380,400 380,360"/>
+    <polygon points="90,370 120,385 120,415 90,430 60,415 60,385"/>
+    <circle cx="256" cy="256" r="220" stroke-dasharray="4 12" opacity="0.5"/>
+  </g>
+
+  <circle cx="256" cy="280" r="180" fill="url(#gem-glow)" filter="url(#glow-strong)"/>
+
+  <g id="gem">
+    <polygon points="86,245 154,245 256,440" fill="#006064"/>
+    <polygon points="154,245 222,245 256,440" fill="#0097A7"/>
+    <polygon points="222,245 290,245 256,440" fill="url(#pav-c)"/>
+    <polygon points="290,245 358,245 256,440" fill="#00838F"/>
+    <polygon points="358,245 426,245 256,440" fill="#004246"/>
+
+    <polygon points="86,230 154,230 154,245 86,245" fill="#00838F"/>
+    <polygon points="154,230 222,230 222,245 154,245" fill="#00B8D4"/>
+    <polygon points="222,230 290,230 290,245 222,245" fill="#84FFFF"/>
+    <polygon points="290,230 358,230 358,245 290,245" fill="#0097A7"/>
+    <polygon points="358,230 426,230 426,245 358,245" fill="#006064"/>
+
+    <polygon points="86,230 166,150 154,230" fill="#00B8D4"/>
+    <polygon points="154,230 166,150 222,230" fill="#18FFFF"/>
+    <polygon points="222,230 166,150 346,150 290,230" fill="url(#crown-c)"/>
+    <polygon points="290,230 346,150 358,230" fill="#00E5FF"/>
+    <polygon points="358,230 346,150 426,230" fill="#0097A7"/>
+
+    <polygon points="166,150 346,150 290,230 222,230" fill="#FFFFFF" opacity="0.15"/>
+    <polygon points="154,230 166,150 222,230" fill="#FFFFFF" opacity="0.25"/>
+  </g>
+
+  <g id="magnifying-glass-handle" transform="translate(256, 230) rotate(45)">
+    <path d="M 95,-16 L 95,16 L 125,11 L 125,-11 Z" fill="url(#gold)"/>
+    
+    <rect x="120" y="-12" width="130" height="24" rx="12" fill="url(#wood)"/>
+    
+    <rect x="130" y="-14" width="8" height="28" rx="3" fill="url(#gold)"/>
+    <rect x="145" y="-14" width="8" height="28" rx="3" fill="url(#gold)"/>
+    <rect x="220" y="-14" width="8" height="28" rx="3" fill="url(#gold)"/>
+    
+    <path d="M 245,-16 Q 275,0 245,16 Z" fill="url(#gold)"/>
+  </g>
+
+  <g clip-path="url(#lens-clip)">
+    <circle cx="256" cy="230" r="100" fill="url(#lens-dark)"/>
+    
+    <g transform="translate(256, 230)">
+      <path d="M 0,-104 L 0,-52 L 0,0 L 0,52 L 0,104 M -45,-78 L -45,-26 L -45,26 L -45,78 M 45,-78 L 45,-26 L 45,26 L 45,78 M -90,-52 L -90,0 L -90,52 M 90,-52 L 90,0 L 90,52" stroke="#84FFFF" stroke-width="2.5" opacity="0.8" fill="none"/>
+      <path d="M -90,-52 L -45,-26 L 0,0 L 45,26 L 90,52 M -45,-78 L 0,-52 L 45,-26 L 90,0 M -90,0 L -45,26 L 0,52 L 45,78 M 0,-104 L 45,-78 M -45,78 L 0,104" stroke="#84FFFF" stroke-width="2.5" opacity="0.8" fill="none"/>
+      <path d="M 90,-52 L 45,-26 L 0,0 L -45,26 L -90,52 M 45,-78 L 0,-52 L -45,-26 L -90,0 M 90,0 L 45,26 L 0,52 L -45,78 M 0,-104 L -45,-78 M 45,78 L 0,104" stroke="#84FFFF" stroke-width="2.5" opacity="0.8" fill="none"/>
+
+      <g fill="#FFFFFF" filter="url(#glow)">
+        <circle cx="0" cy="-104" r="4"/>
+        <circle cx="0" cy="-52" r="4"/>
+        <circle cx="0" cy="0" r="5"/>
+        <circle cx="0" cy="52" r="4"/>
+        <circle cx="0" cy="104" r="4"/>
+        
+        <circle cx="-45" cy="-78" r="4"/>
+        <circle cx="-45" cy="-26" r="4"/>
+        <circle cx="-45" cy="26" r="4"/>
+        <circle cx="-45" cy="78" r="4"/>
+        
+        <circle cx="45" cy="-78" r="4"/>
+        <circle cx="45" cy="-26" r="4"/>
+        <circle cx="45" cy="26" r="4"/>
+        <circle cx="45" cy="78" r="4"/>
+        
+        <circle cx="-90" cy="-52" r="4"/>
+        <circle cx="-90" cy="0" r="4"/>
+        <circle cx="-90" cy="52" r="4"/>
+        
+        <circle cx="90" cy="-52" r="4"/>
+        <circle cx="90" cy="0" r="4"/>
+        <circle cx="90" cy="52" r="4"/>
+      </g>
+
+      <g fill="#00E5FF">
+        <circle cx="0" cy="-104" r="1.5"/>
+        <circle cx="0" cy="-52" r="1.5"/>
+        <circle cx="0" cy="0" r="2"/>
+        <circle cx="0" cy="52" r="1.5"/>
+        <circle cx="0" cy="104" r="1.5"/>
+        <circle cx="-45" cy="-78" r="1.5"/>
+        <circle cx="-45" cy="-26" r="1.5"/>
+        <circle cx="-45" cy="26" r="1.5"/>
+        <circle cx="-45" cy="78" r="1.5"/>
+        <circle cx="45" cy="-78" r="1.5"/>
+        <circle cx="45" cy="-26" r="1.5"/>
+        <circle cx="45" cy="26" r="1.5"/>
+        <circle cx="45" cy="78" r="1.5"/>
+        <circle cx="-90" cy="-52" r="1.5"/>
+        <circle cx="-90" cy="0" r="1.5"/>
+        <circle cx="-90" cy="52" r="1.5"/>
+        <circle cx="90" cy="-52" r="1.5"/>
+        <circle cx="90" cy="0" r="1.5"/>
+        <circle cx="90" cy="52" r="1.5"/>
+      </g>
+
+      <ellipse cx="-35" cy="-45" rx="65" ry="25" transform="rotate(-40 -35 -45)" fill="#FFFFFF" opacity="0.12"/>
+      <ellipse cx="50" cy="65" rx="35" ry="12" transform="rotate(-40 50 65)" fill="#FFFFFF" opacity="0.08"/>
+      
+      <circle cx="0" cy="0" r="98" fill="none" stroke="#000000" stroke-width="8" opacity="0.6"/>
+      <circle cx="0" cy="0" r="98" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.25"/>
+    </g>
+  </g>
+
+  <circle cx="256" cy="230" r="100" fill="none" stroke="url(#gold)" stroke-width="12"/>
+  <circle cx="256" cy="230" r="106" fill="none" stroke="#9C640C" stroke-width="1.5"/>
+  <circle cx="256" cy="230" r="94" fill="none" stroke="#F9E79F" stroke-width="1.5"/>
+
+  <g fill="#FFFFFF" filter="url(#glow)">
+    <path d="M 120,100 Q 125,110 135,115 Q 125,120 120,130 Q 115,120 105,115 Q 115,110 120,100 Z" opacity="0.9"/>
+    <path d="M 390,120 Q 393,126 400,129 Q 393,132 390,138 Q 387,132 380,129 Q 387,126 390,120 Z" opacity="0.7"/>
+    <path d="M 150,380 Q 152,385 157,387 Q 152,389 150,394 Q 148,389 143,387 Q 148,385 150,380 Z" opacity="0.8"/>
+    <circle cx="80" cy="200" r="2" fill="#00E5FF" opacity="0.6"/>
+    <circle cx="420" cy="280" r="2.5" fill="#84FFFF" opacity="0.5"/>
+    <circle cx="350" cy="420" r="1.5" fill="#00B8D4" opacity="0.8"/>
+  </g>
+</svg>

@@ -837,7 +837,7 @@ button, input, textarea {
             <div class="shortcut-row"><span><span class="kbd">Clique</span></span><span>Selecionar</span></div>
             <div class="shortcut-row"><span><span class="kbd">Shift</span> + clique</span><span>Multisseleção</span></div>
             <div class="shortcut-row"><span>Arrastar no vazio</span><span>Caixa de seleção</span></div>
-            <div class="shortcut-row"><span>Arrastar seleção</span><span>Mover elementos</span></div>
+            <div class="shortcut-row"><span>Arrastar seleção/layer</span><span>Mover tudo junto</span></div>
             <div class="shortcut-row"><span>Alças da caixa</span><span>Redimensionar</span></div>
             <div class="shortcut-row"><span>Bolinha verde</span><span>Rotacionar</span></div>
             <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">C</span></span><span>Copiar</span></div>
@@ -2362,6 +2362,9 @@ function renderSelectionOverlay() {
   mainRect.setAttribute('stroke-width', '2');
   mainRect.setAttribute('stroke-dasharray', '10 6');
   mainRect.setAttribute('rx', '8');
+  mainRect.setAttribute('data-overlay-role', 'move');
+  mainRect.style.pointerEvents = 'all';
+  mainRect.style.cursor = 'move';
   overlaySvg.appendChild(mainRect);
 
   const cx = box.x + box.width / 2;
@@ -2404,10 +2407,22 @@ function renderSelectionOverlay() {
   overlaySvg.appendChild(rotHandle);
 }
 
+function getSelectedAncestorTarget(target) {
+  if (!target || !state.svgRoot || !state.selected.size) return null;
+  let el = target instanceof SVGElement ? target : null;
+  while (el && el !== state.svgRoot) {
+    if (state.selected.has(el) && isSelectable(el)) return el;
+    el = el.parentElement;
+  }
+  return null;
+}
+
 function getEditableTarget(target, useParentGroup = false) {
   if (!target || !state.svgRoot) return null;
   let el = target instanceof SVGElement ? target : null;
   if (!el) return null;
+  const selectedAncestor = getSelectedAncestorTarget(el);
+  if (selectedAncestor && !useParentGroup) return selectedAncestor;
   if (useParentGroup) {
     const group = el.closest('g[data-editor-key]');
     if (group) return group;
@@ -2776,6 +2791,8 @@ overlaySvg.addEventListener('pointerdown', event => {
     startOverlayTransform(event, 'rotate', handle);
   } else if (role === 'resize') {
     startOverlayTransform(event, 'scale', handle);
+  } else if (role === 'move') {
+    startDrag(event);
   }
 });
 

@@ -408,37 +408,360 @@
       "metaball"
     ]
   },
-  "ensino/animacao/catalogo-de-vidrarias-animado/": {
-    "title": "Vidrarias e Equipamentos de Laboratório",
+
+  "ensino/animacao/gemviewer/": {
+    "title": "Gemas e mudança de cor",
     "type": "visualização",
-    "summary": "Catálogo interativo com vidrarias e equipamentos de laboratório, seus usos e animações de comportamento.",
-    "visual3d": "Quando há modelo 3D, ele representa a vidraria selecionada, sua forma, líquido, vapor, aquecimento, agitação ou fluxo de gás conforme o tipo de equipamento.",
-    "visual2d": "A leitura 2D aparece em cards, nomes, descrições, categorias e controles de seleção das vidrarias.",
+    "summary": "Visualizador 3D sobre minerais gemológicos, cores, impurezas cromóforas, centros de cor, defeitos cristalinos e mudanças ópticas em gemas.",
+    "visual3d": "O canvas exibe modelos cristalinos e redes de gemas, com átomos representados por esferas, legenda de elementos e destaque visual para impurezas, defeitos e interstícios conforme a seleção.",
+    "visual2d": "A interface 2D apresenta painel de escolha da estrutura, botões de modo de visualização, lista de impurezas/elementos traço, descrições científicas e uma janela com fórmulas e sistemas cristalinos.",
     "animations": [
-      "Troca de vidraria/equipamento.",
-      "Animações de líquido, gás, aquecimento e agitação quando aplicáveis.",
-      "Exibição de descrições funcionais e usos."
+      "Troca entre estruturas minerais e gemológicas.",
+      "Alternância entre visão de célula unitária e rede cristalina.",
+      "Exibição de interstícios e marcações microscópicas.",
+      "Destaque de impurezas cromóforas e defeitos que afetam a cor.",
+      "Atualização da cor macroscópica e da explicação conforme a impureza selecionada."
     ],
     "stages": [
-      "Selecione uma vidraria no catálogo.",
-      "Observe sua forma geral e a função indicada.",
-      "Quando houver líquido, veja o comportamento do volume ou da agitação.",
-      "Quando houver gás ou aquecimento, diferencie vapor, bolhas e fluxo.",
-      "Use a descrição textual para associar a animação ao uso laboratorial."
+      "Escolha uma estrutura mineral no painel esquerdo.",
+      "Observe a fórmula, o sistema cristalino e a descrição da gema selecionada.",
+      "Alterne entre célula unitária e rede para comparar escala local e repetição cristalina.",
+      "Ative a opção de interstícios quando quiser observar cavidades e posições internas.",
+      "Escolha uma impureza ou defeito para relacionar composição, centro de cor, absorção seletiva e cor observada.",
+      "Abra a lista de fórmulas para comparar as gemas cadastradas no visualizador."
     ],
     "controls": [
-      "Buscar vidraria",
-      "Selecionar categoria",
-      "Abrir modelo",
-      "Alternar animação quando disponível"
+      "Selecionar estrutura",
+      "Ver todas as fórmulas",
+      "Modo célula",
+      "Modo rede",
+      "Mostrar interstícios",
+      "Selecionar elemento traço/impureza",
+      "Fechar janela de fórmulas"
     ],
     "glossary": [
-      "vidraria",
-      "aquecimento",
-      "destilação",
-      "gás",
-      "agitação"
+      "gema",
+      "impureza cromófora",
+      "centro de cor",
+      "defeito cristalino",
+      "interstício",
+      "sistema cristalino",
+      "mudança de cor"
     ]
+  },
+  "ensino/animacao/catalogo-de-vidrarias-animado/": {
+      "title": "Laboratório Interativo — Vidrarias e Equipamentos de Laboratório",
+      "type": "visualização",
+      "summary": "Catálogo interativo com 54 vidrarias, equipamentos, acessórios e cenas de laboratório, incluindo funções, aplicações e animações de comportamento.",
+      "visual3d": "Quando há modelo 3D, ele representa a vidraria ou equipamento selecionado, sua forma, líquido, vapor, aquecimento, agitação, rotação, chama ou fluxo de gás conforme o item.",
+      "visual2d": "A leitura 2D aparece em cards, nomes, descrições, categorias, busca, controles de seleção e textos de função e aplicação.",
+      "animations": [
+          "Troca de vidraria/equipamento no catálogo.",
+          "Animações de líquido, gás, aquecimento, agitação, chama, rotação, abertura/fechamento e trabalho mecânico quando aplicáveis.",
+          "Exibição de descrições funcionais, aplicações e leitura de uso laboratorial."
+      ],
+      "stages": [
+          "Selecione uma vidraria, equipamento ou acessório no catálogo.",
+          "Observe forma, partes principais e função científica indicada.",
+          "Quando houver líquido, gás, aquecimento, chama ou rotação, relacione o movimento ao procedimento laboratorial.",
+          "Compare itens semelhantes, como proveta, pipetas, bureta e balão volumétrico, pela precisão e pela finalidade.",
+          "Use a descrição textual para associar o objeto a técnicas como titulação, filtração, destilação, refluxo, secagem, medição, aquecimento ou segurança."
+      ],
+      "controls": [
+          "Buscar vidraria",
+          "Selecionar categoria",
+          "Abrir modelo",
+          "Alternar animação quando disponível",
+          "Alternar tema claro/escuro",
+          "Usar Animation Maker quando disponível"
+      ],
+      "inventory": [
+          {
+              "name": "Béquer",
+              "function": "preparar, misturar e aquecer líquidos de forma geral"
+          },
+          {
+              "name": "Erlenmeyer",
+              "function": "misturar líquidos com menor risco de respingos e realizar titulações"
+          },
+          {
+              "name": "Kitasato",
+              "function": "realizar filtração a vácuo"
+          },
+          {
+              "name": "Balão de Fundo Redondo",
+              "function": "aquecer líquidos de modo uniforme em refluxo, destilação ou reações prolongadas"
+          },
+          {
+              "name": "Proveta",
+              "function": "medir volumes líquidos com precisão moderada"
+          },
+          {
+              "name": "Tubo de Ensaio",
+              "function": "conter pequenas amostras e realizar reações em pequena escala"
+          },
+          {
+              "name": "Balão Volumétrico",
+              "function": "preparar soluções com volume final exato"
+          },
+          {
+              "name": "Funil de Separação",
+              "function": "separar líquidos imiscíveis por diferença de densidade"
+          },
+          {
+              "name": "Bureta",
+              "function": "liberar titulante gota a gota com controle de volume"
+          },
+          {
+              "name": "Pipeta Graduada",
+              "function": "medir e transferir volumes variáveis"
+          },
+          {
+              "name": "Cristalizador",
+              "function": "evaporar solventes e favorecer formação de cristais"
+          },
+          {
+              "name": "Vial de Amostra",
+              "function": "armazenar pequenas amostras"
+          },
+          {
+              "name": "Balão de Destilação",
+              "function": "aquecer mistura e conduzir vapores em destilação simples"
+          },
+          {
+              "name": "Condensador Liebig",
+              "function": "resfriar vapores com circulação de água"
+          },
+          {
+              "name": "Dessecador",
+              "function": "proteger amostras da umidade"
+          },
+          {
+              "name": "Frasco de Reagente (Âmbar)",
+              "function": "armazenar reagentes sensíveis à luz"
+          },
+          {
+              "name": "Pipeta Pasteur",
+              "function": "transferir líquidos em gotas"
+          },
+          {
+              "name": "Tubo de Nessler",
+              "function": "comparar coloração ou turbidez"
+          },
+          {
+              "name": "Frasco de Drechsel",
+              "function": "borbulhar gases em líquidos"
+          },
+          {
+              "name": "Coluna de Vigreux",
+              "function": "aumentar eficiência da destilação fracionada"
+          },
+          {
+              "name": "Condensador Allihn",
+              "function": "condensar vapores em refluxo"
+          },
+          {
+              "name": "Pipeta Volumétrica",
+              "function": "transferir volume fixo com alta precisão"
+          },
+          {
+              "name": "Cuba Cromatográfica",
+              "function": "desenvolver cromatografia em ambiente fechado"
+          },
+          {
+              "name": "Tubo de Cultura",
+              "function": "conter meios, amostras ou microrganismos"
+          },
+          {
+              "name": "Frasco de Plástico P.A.",
+              "function": "armazenar e manusear reagentes"
+          },
+          {
+              "name": "Bico de Bunsen",
+              "function": "produzir chama controlada"
+          },
+          {
+              "name": "Forno Mufla",
+              "function": "aquecer amostras a temperaturas elevadas"
+          },
+          {
+              "name": "Estufa de Secagem",
+              "function": "secar vidrarias, materiais ou amostras"
+          },
+          {
+              "name": "Evaporador Rotativo (Rotaevaporador)",
+              "function": "remover solventes com rotação, aquecimento e pressão reduzida"
+          },
+          {
+              "name": "Aparelho de Ponto de Fusão",
+              "function": "determinar faixa de fusão"
+          },
+          {
+              "name": "Capela de Exaustão",
+              "function": "conter e remover vapores, gases ou partículas"
+          },
+          {
+              "name": "Balança Analítica",
+              "function": "medir massa com alta precisão"
+          },
+          {
+              "name": "Condutivímetro",
+              "function": "medir condutividade elétrica"
+          },
+          {
+              "name": "pHmetro",
+              "function": "medir pH por eletrodo"
+          },
+          {
+              "name": "Chapa de Aquecimento e Agitação",
+              "function": "aquecer e promover agitação magnética"
+          },
+          {
+              "name": "Manta de Aquecimento",
+              "function": "aquecer balões de fundo redondo"
+          },
+          {
+              "name": "Peixinho Magnético",
+              "function": "agitar líquidos por campo magnético"
+          },
+          {
+              "name": "Tripé com Tela de Amianto",
+              "function": "sustentar recipientes durante aquecimento"
+          },
+          {
+              "name": "Cadinho de Porcelana",
+              "function": "aquecer sólidos em alta temperatura"
+          },
+          {
+              "name": "Funil de Vidro",
+              "function": "transferir líquidos ou apoiar papel de filtro"
+          },
+          {
+              "name": "Funil de Büchner",
+              "function": "realizar filtração a vácuo"
+          },
+          {
+              "name": "Escova de Limpeza",
+              "function": "limpar o interior de vidrarias estreitas"
+          },
+          {
+              "name": "Pisseta Automática",
+              "function": "lavar superfícies ou transferir jatos de solvente"
+          },
+          {
+              "name": "Suporte Universal com Garra",
+              "function": "sustentar aparelhagens e montagens"
+          },
+          {
+              "name": "Pinça Metálica Bico Curvo",
+              "function": "segurar objetos pequenos, quentes ou difíceis"
+          },
+          {
+              "name": "Pinça de Madeira",
+              "function": "segurar tubo de ensaio durante aquecimento"
+          },
+          {
+              "name": "Filtro de Papel",
+              "function": "reter sólidos em filtração"
+          },
+          {
+              "name": "Borracha para Filtração",
+              "function": "vedar conexões em filtração a vácuo"
+          },
+          {
+              "name": "Bomba a Vácuo",
+              "function": "reduzir pressão em sistemas conectados"
+          },
+          {
+              "name": "Vidro de Relógio",
+              "function": "evaporar pequenas quantidades, cobrir recipientes ou apoiar sólidos"
+          },
+          {
+              "name": "Conjunto de Espátulas",
+              "function": "transferir e manipular sólidos"
+          },
+          {
+              "name": "Centrífuga",
+              "function": "separar componentes por rotação e densidade"
+          },
+          {
+              "name": "Criação",
+              "function": "montar cenas personalizadas"
+          },
+          {
+              "name": "Bancada de Laboratório",
+              "function": "representar a superfície de trabalho"
+          }
+      ],
+      "glossary": [
+          "laboratório interativo",
+          "vidraria",
+          "vidraria volumétrica",
+          "equipamento de laboratório",
+          "titulação",
+          "filtração a vácuo",
+          "destilação",
+          "refluxo",
+          "aquecimento",
+          "agitação",
+          "chama",
+          "rotação",
+          "pressão reduzida",
+          "Béquer",
+          "Erlenmeyer",
+          "Kitasato",
+          "Balão de Fundo Redondo",
+          "Proveta",
+          "Tubo de Ensaio",
+          "Balão Volumétrico",
+          "Funil de Separação",
+          "Bureta",
+          "Pipeta Graduada",
+          "Cristalizador",
+          "Vial de Amostra",
+          "Balão de Destilação",
+          "Condensador Liebig",
+          "Dessecador",
+          "Frasco de Reagente (Âmbar)",
+          "Pipeta Pasteur",
+          "Tubo de Nessler",
+          "Frasco de Drechsel",
+          "Coluna de Vigreux",
+          "Condensador Allihn",
+          "Pipeta Volumétrica",
+          "Cuba Cromatográfica",
+          "Tubo de Cultura",
+          "Frasco de Plástico P.A.",
+          "Bico de Bunsen",
+          "Forno Mufla",
+          "Estufa de Secagem",
+          "Evaporador Rotativo (Rotaevaporador)",
+          "Aparelho de Ponto de Fusão",
+          "Capela de Exaustão",
+          "Balança Analítica",
+          "Condutivímetro",
+          "pHmetro",
+          "Chapa de Aquecimento e Agitação",
+          "Manta de Aquecimento",
+          "Peixinho Magnético",
+          "Tripé com Tela de Amianto",
+          "Cadinho de Porcelana",
+          "Funil de Vidro",
+          "Funil de Büchner",
+          "Escova de Limpeza",
+          "Pisseta Automática",
+          "Suporte Universal com Garra",
+          "Pinça Metálica Bico Curvo",
+          "Pinça de Madeira",
+          "Filtro de Papel",
+          "Borracha para Filtração",
+          "Bomba a Vácuo",
+          "Vidro de Relógio",
+          "Conjunto de Espátulas",
+          "Centrífuga",
+          "Criação",
+          "Bancada de Laboratório"
+      ]
   },
   "ensino/guia/celulas/": {
     "title": "Células Unitárias e Parâmetros de Rede",
@@ -1267,6 +1590,7 @@
     "ensino/animacao/visualizador_de_hidrogenoides/": "textos-acessibilidade/animacoes/07_animacao_visualizador_de_hidrogenoides.md",
     "ensino/animacao/visualizador-orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
     "ensino/animacao/visualizador_orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
+    "ensino/animacao/gemviewer/": "textos-acessibilidade/animacoes/09_animacao_gemas_e_mudanca_de_cor.md",
     "ensino/guia/atlas_termodinamico/": "textos-acessibilidade/guias/01_guia_atlas_termodinamico.md",
     "ensino/guia/celulas/": "textos-acessibilidade/guias/02_guia_celulas_unitarias.md",
     "ensino/guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/": "textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md",

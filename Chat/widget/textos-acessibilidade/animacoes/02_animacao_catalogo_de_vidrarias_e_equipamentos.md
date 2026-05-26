@@ -1,4 +1,4 @@
-# Texto acessível — Animação 02 — Catálogo de Vidrarias e Equipamentos de Laboratório
+# Texto acessível — Animação 02 — Laboratório Interativo: Catálogo de Vidrarias e Equipamentos de Laboratório
 
 Categoria: Animação. Pasta analisada: Ensino/Animacao/catalogo-de-vidrarias-animado. Página principal: index.html. Visualização principal: cena 3D renderizada em canvas/WebGL com React Three Fiber.
 
@@ -6,7 +6,7 @@ Objetivo do texto: oferecer descrições separadas por vidraria ou equipamento, 
 
 ## Descrição geral da tela
 
-A página apresenta um catálogo tridimensional de vidrarias, equipamentos e acessórios de laboratório. O item selecionado aparece em uma cena 3D central, podendo ser observado como modelo virtual. A interface permite alternar o tema visual entre claro e escuro, ativar animações específicas e, em alguns casos, usar o Animation Maker para organizar objetos, cenas e quadros de movimento.
+A página apresenta o Laboratório Interativo: um catálogo tridimensional de vidrarias, equipamentos e acessórios de laboratório. O item selecionado aparece em uma cena 3D central, podendo ser observado como modelo virtual. A interface permite alternar o tema visual entre claro e escuro, ativar animações específicas e, em alguns casos, usar o Animation Maker para organizar objetos, cenas e quadros de movimento.
 
 No modo claro, a interface usa fundo e painéis claros, deixando a vidraria transparente, as bordas e sombras suaves mais perceptíveis contra uma base luminosa. No modo escuro, a interface usa fundo preto ou cinza muito escuro; contornos, reflexos, materiais claros e líquidos coloridos ficam mais destacados. A mudança de tema altera contraste, leitura visual e conforto, mas não altera a função científica do objeto.
 
@@ -825,7 +825,22 @@ Animações disponíveis: Líquido.
 - Líquido: insere um volume líquido semitransparente no interior do recipiente ou objeto. O nível do líquido ocupa a parte inferior e ajuda a mostrar capacidade, preenchimento e contenção.
 
 
-### 44. Pinça Metálica Bico Curvo
+### 44. Suporte Universal com Garra
+
+Grupo: Acessórios e materiais de apoio.
+
+Descrição visual do modelo: Base metálica pesada com haste vertical e garra ajustável. A leitura espacial principal é a sustentação modular de peças suspensas em uma montagem laboratorial.
+
+Função representada: sustentar aparelhagens, buretas, condensadores, funis e balões em montagens laboratoriais.
+
+Modo claro: o item deve ser descrito sobre uma interface luminosa, com destaque para base, haste, garra, pontos de fixação e sombra suave. A leitura principal é: base metálica com haste vertical usada para fixar componentes em posições estáveis.
+
+Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste nas partes metálicas, na haste e nas garras. A função científica permanece a mesma; o tema muda apenas a percepção de contraste e destaque visual.
+
+Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
+
+
+### 45. Pinça Metálica Bico Curvo
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -840,7 +855,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 45. Pinça de Madeira
+### 46. Pinça de Madeira
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -855,7 +870,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 46. Filtro de Papel
+### 47. Filtro de Papel
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -870,7 +885,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 47. Borracha para Filtração
+### 48. Borracha para Filtração
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -885,7 +900,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 48. Bomba a Vácuo
+### 49. Bomba a Vácuo
 
 Grupo: Equipamentos de laboratório.
 
@@ -902,7 +917,7 @@ Animações disponíveis: Trabalho.
 - Trabalho: indica funcionamento mecânico do equipamento, com movimento de operação associado à geração de vácuo ou sucção.
 
 
-### 49. Vidro de Relógio
+### 50. Vidro de Relógio
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -917,7 +932,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 50. Conjunto de Espátulas
+### 51. Conjunto de Espátulas
 
 Grupo: Acessórios e materiais de apoio.
 
@@ -932,7 +947,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 51. Centrífuga
+### 52. Centrífuga
 
 Grupo: Equipamentos de laboratório.
 
@@ -949,7 +964,7 @@ Animações disponíveis: Rotação.
 - Rotação: gira a peça ou uma parte funcional do equipamento, como rotor, balão ou barra magnética. A rotação comunica movimento contínuo e operação mecânica.
 
 
-### 52. Criação
+### 53. Criação
 
 Grupo: Cenas e mobiliário de laboratório.
 
@@ -964,7 +979,7 @@ Modo escuro: o item deve ser descrito sobre fundo escuro, com maior contraste em
 Animações disponíveis: nenhuma animação própria programada para este item no catálogo. O modelo deve ser descrito como estático, observável em 3D, com possibilidade de rotação/visualização pela interface quando disponível.
 
 
-### 53. Bancada de Laboratório
+### 54. Bancada de Laboratório
 
 Grupo: Cenas e mobiliário de laboratório.
 

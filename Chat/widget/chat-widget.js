@@ -15,7 +15,7 @@ const Canonical = window.QuimiBotCanonicalEngine;
 const ACTIVE_MODEL_ID = 'Qwen2.5-3B-Instruct-q4f16_1-MLC';
 const SITE_URL = 'https://quimicavisualufv.github.io/Quimica-Visual/';
 const SITE_ROOT_URL = new URL('../../', document.currentScript?.src || new URL('assets/chat-widget/chat-widget.js', document.baseURI).href).href;
-const BASE_SYSTEM_PROMPT = `Você é o Assistente do SiMoEns. Responda sempre em português do Brasil, com tom didático, claro, direto e natural. Toda pergunta deve ser respondida a partir de um ponto de vista químico, mesmo quando o assunto original vier de outra área. Sempre que fizer sentido, conecte a resposta a Química dos Sólidos, estrutura da matéria, ligações, organização cristalina, defeitos, propriedades de materiais, coordenação, empacotamento, simetria, células unitárias, redes cristalinas ou fenômenos relacionados. Sempre que houver relação plausível com o site SiMoEns, tente mencionar ou sugerir animações, páginas ou visualizadores relevantes do próprio site, sem inventar recursos que não existam. Use o contexto da página atual e o histórico recente quando o usuário fizer continuação curta ou usar referências como isso, esse, essa, naquele caso ou no outro. Não recuse perguntas por serem amplas ou interdisciplinares; reinterprete-as pelo olhar químico. Se a pergunta estiver ambígua, escolha a leitura química mais provável e sinalize a ambiguidade em no máximo uma frase curta. Não cite detalhes internos de implementação. Não invente resultados experimentais, links ou animações fora do mapa fornecido.`;
+const BASE_SYSTEM_PROMPT = `Você é o Assistente do SiMoEns. Responda sempre em português do Brasil, com tom didático, claro, direto e natural. Toda pergunta deve ser respondida a partir de um ponto de vista químico, mesmo quando o assunto original vier de outra área. Sempre que fizer sentido, conecte a resposta a Química dos Sólidos, estrutura da matéria, ligações, organização cristalina, defeitos, propriedades ópticas de materiais, coordenação, empacotamento, simetria, células unitárias, redes cristalinas, vidrarias, equipamentos de laboratório, técnicas laboratoriais, segurança experimental, gemas, minerais gemológicos, cor em minerais, impurezas cromóforas, centros de cor ou fenômenos relacionados. Sempre que houver relação plausível com o site SiMoEns, tente mencionar ou sugerir animações, páginas ou visualizadores relevantes do próprio site, sem inventar recursos que não existam. Use o contexto da página atual e o histórico recente quando o usuário fizer continuação curta ou usar referências como isso, esse, essa, naquele caso ou no outro. Não recuse perguntas por serem amplas ou interdisciplinares; reinterprete-as pelo olhar químico. Se a pergunta estiver ambígua, escolha a leitura química mais provável e sinalize a ambiguidade em no máximo uma frase curta. Não cite detalhes internos de implementação. Não invente resultados experimentais, links ou animações fora do mapa fornecido.`;
 const DEFAULT_GENERATION_CONFIG = Object.freeze({
   temperature: 0.2,
   maxTokens: 320,
@@ -37,7 +37,18 @@ const SAMPLE_QUESTIONS = [
   "Qual é o link de Caça-palavras (Jogo)?",
   "Qual é o link de Xadrez Químico (Jogo)?",
   "Sobre o que fala o exercício de defeitos cristalinos?",
-  "Sobre o que fala o exercício de coordenação e empacotamento?"
+  "Sobre o que fala o exercício de coordenação e empacotamento?",
+  "Explique de forma científica por que gemas têm cores diferentes",
+  "Quais defeitos cristalinos podem alterar a cor de uma gema?",
+  "Qual é a diferença entre rubi e safira do ponto de vista químico?",
+  "Me faça uma questão sobre gemas e centros de cor",
+  "Qual é o link da animação Gemas e mudança de cor?",
+  "O que mostra a animação Gemas e mudança de cor?",
+  "Qual é o link do Laboratório Interativo de vidrarias?",
+  "Quais vidrarias existem no laboratório interativo?",
+  "Para que serve um béquer?",
+  "Qual a diferença entre proveta, pipeta, bureta e balão volumétrico?",
+  "Me faça uma questão sobre vidrarias de laboratório"
 ];
 
 const SHARED_REPLY_REFINER_PROMPT = `Você vai atuar como refinador de resposta didática do SiMoEns. Receberá a pergunta do usuário, uma resposta-base e um pequeno contexto da página. Sua tarefa é somente reescrever a resposta-base para que fique mais natural, clara e agradável, preservando integralmente o conteúdo factual, as limitações e o foco original. Não invente informações. Não acrescente conceitos, páginas, links, exemplos ou referências não sustentados pela resposta-base. Não transforme a resposta em recusa. Não diga que está refinando. Mantenha listas úteis. Entregue somente a resposta final ao usuário, em português do Brasil.`;
@@ -47,7 +58,7 @@ const WEBLLM_IMPORT_CANDIDATES = [
   'https://esm.run/@mlc-ai/web-llm'
 ].filter(Boolean);
 const OFF_TOPIC_REPLY = 'Posso te ajudar melhor com Química e com os conteúdos do site SiMoEns. Se quiser, me mande o conceito, a dúvida ou a página/animação que eu sigo por aí.';
-const GENERIC_HELP_REPLY = `Posso responder qualquer pergunta por um olhar químico. Quando fizer sentido, eu conecto a resposta com Química dos Sólidos e com as animações do SiMoEns, como Wigner-Seitz, redes cristalinas, buracos intersticiais, células unitárias, geometria molecular, polaridade, simetria, polimorfismo, modelos atômicos e orbitais hidrogenoides.`;
+const GENERIC_HELP_REPLY = `Posso responder qualquer pergunta por um olhar químico. Quando fizer sentido, eu conecto a resposta com Química dos Sólidos e com as animações do SiMoEns, como Wigner-Seitz, redes cristalinas, buracos intersticiais, células unitárias, geometria molecular, polaridade, simetria, polimorfismo, gemas, centros de cor, impurezas cromóforas, tratamentos gemológicos, vidrarias e equipamentos de laboratório, técnicas experimentais, modelos atômicos e orbitais hidrogenoides.`;
 const ICON_SVG = `
 <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
   <circle cx="32" cy="32" r="30" fill="#000000"></circle>
@@ -405,9 +416,645 @@ const NEW_RESOURCE_QUESTIONS = [
     }
 ];
 quizQuestions.push(...NEW_RESOURCE_QUESTIONS);
+const GEM_QUESTIONS = [
+    {
+        topic: "gemas",
+        q: "**Questão (Múltipla Escolha - Cor em Gemas):**\nQual mecanismo está mais diretamente associado à cor verde da esmeralda no berilo?\na) Substituição de Be²⁺ por Na⁺ nos canais estruturais\nb) Substituição parcial de Al³⁺ por Cr³⁺ e/ou V³⁺\nc) Inclusões fluidas sem interação com a luz visível\nd) Apenas o formato externo da lapidação\n\n**Gabarito:**\n||Alternativa B. A esmeralda é uma variedade verde do berilo. Sua cor está associada principalmente à presença de íons Cr³⁺ e/ou V³⁺ em sítios cristalográficos relacionados ao alumínio. Esses íons de transição apresentam níveis eletrônicos d parcialmente preenchidos, gerando absorções seletivas no visível.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Verdadeiro ou Falso - Defeitos Cristalinos):**\nCentros de cor são defeitos estruturais ou eletrônicos capazes de absorver determinados comprimentos de onda da luz visível.\n\n**Gabarito:**\n||Verdadeiro. Centros de cor podem envolver vacâncias, elétrons aprisionados, lacunas eletrônicas ou defeitos induzidos por radiação natural ou artificial. Eles modificam a absorção óptica do cristal e podem gerar colorações intensas, como ocorre em fluorita, quartzo fumê, topázio azul e alguns diamantes coloridos.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Associação - Coríndon):**\nRubi e safira pertencem ao mesmo mineral, o coríndon (Al₂O₃). O que diferencia, em termos químicos, um rubi de uma safira azul?\n\n**Gabarito:**\n||O rubi apresenta cor vermelha principalmente pela substituição de Al³⁺ por Cr³⁺. A safira azul, por sua vez, está associada a pares Fe²⁺–Ti⁴⁺, nos quais ocorre transferência de carga. Assim, a matriz cristalina é a mesma, mas os centros cromóforos e os mecanismos eletrônicos de absorção são diferentes.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Múltipla Escolha - Tratamentos):**\nQual tratamento é frequentemente usado para modificar ou intensificar a cor de algumas gemas, podendo alterar estados de oxidação e centros de cor?\na) Medição de densidade\nb) Aquecimento controlado\nc) Pesagem hidrostática\nd) Observação de hábito cristalino\n\n**Gabarito:**\n||Alternativa B. O aquecimento controlado pode modificar centros de cor, redistribuir impurezas, alterar estados de oxidação e melhorar transparência ou saturação cromática em determinadas gemas. A interpretação gemológica exige cautela, pois tratamentos devem ser descritos e divulgados de forma apropriada.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Conceitual - Inclusões):**\nPor que inclusões internas podem ser importantes para a análise científica de uma gema?\n\n**Gabarito:**\n||Inclusões podem registrar condições de crescimento, origem geológica, eventos metamórficos, tratamentos e até distinções entre material natural e sintético. Elas não são apenas imperfeições visuais: podem funcionar como evidências microscópicas da história físico-química do cristal.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Comparação - Diamante):**\nCompare, de forma sucinta, o diamante amarelo e o diamante azul quanto ao tipo de impureza substitucional dominante.\n\n**Gabarito:**\n||No diamante amarelo, a cor pode estar associada a átomos de nitrogênio substituindo carbono na rede. No diamante azul, a cor é frequentemente relacionada ao boro substitucional. Em ambos os casos, pequenas concentrações de impurezas em uma rede de carbono podem alterar fortemente a absorção de luz.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Múltipla Escolha - Opala):**\nA iridescência de muitas opalas está mais relacionada a qual fenômeno?\na) Absorção d-d em íons de transição isolados\nb) Difração/interferência da luz em arranjos ordenados de esferas de sílica\nc) Ligação metálica entre átomos de silício\nd) Fusão parcial do retículo cristalino cúbico\n\n**Gabarito:**\n||Alternativa B. A opala é um mineraloide hidratado de sílica. Em opalas preciosas, o jogo de cores surge da interação da luz com arranjos ordenados de esferas de sílica em escala próxima ao comprimento de onda da luz visível, produzindo difração e interferência.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Verdadeiro ou Falso - Lapidação):**\nA lapidação é a causa química primária da cor de uma gema.\n\n**Gabarito:**\n||Falso. A lapidação pode intensificar brilho, retorno de luz, saturação percebida e distribuição visual da cor, mas a causa química ou física primária da cor geralmente está ligada à composição, impurezas, defeitos, centros de cor, transferência de carga, inclusões ou fenômenos ópticos estruturais.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Aplicação - Hackmanita):**\nA hackmanita pode apresentar tenebrescência. O que esse comportamento indica em termos de centros de cor?\n\n**Gabarito:**\n||Indica que defeitos eletrônicos e espécies sulfuradas em cavidades da estrutura podem ser ativados por radiação, mudando temporariamente a absorção óptica. A cor pode se intensificar sob radiação ultravioleta e depois diminuir gradualmente, mostrando que a cor é controlada por estados eletrônicos metastáveis.||"
+    },
+    {
+        topic: "gemas",
+        q: "**Questão (Síntese - Diagnóstico):**\nAo estudar uma gema colorida, por que é inadequado atribuir a cor apenas ao elemento químico presente em maior quantidade?\n\n**Gabarito:**\n||Porque muitos minerais gemológicos têm matriz quase incolor quando pura. A cor pode ser produzida por traços de impurezas, defeitos pontuais, pares de transferência de carga, centros de cor, inclusões, deformação plástica ou fenômenos físicos de difração. Portanto, a interpretação exige relacionar composição, estrutura, defeitos e espectroscopia.||"
+    }
+];
+quizQuestions.push(...GEM_QUESTIONS);
+const LABORATORY_ITEMS = Object.freeze([
+  {
+    "name": "Béquer",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "preparar, misturar e aquecer líquidos de forma geral, sem finalidade de medição volumétrica precisa",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "bequer",
+      "becker"
+    ]
+  },
+  {
+    "name": "Erlenmeyer",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "misturar líquidos com menor risco de respingos, realizar titulações e aquecer soluções de forma controlada",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "frasco erlenmeyer"
+    ]
+  },
+  {
+    "name": "Kitasato",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "realizar filtração a vácuo quando conectado a uma bomba e a um funil apropriado",
+    "animations": "Líquido, agitação e gás",
+    "aliases": [
+      "kitassato",
+      "frasco kitasato"
+    ]
+  },
+  {
+    "name": "Balão de Fundo Redondo",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "aquecer líquidos de modo uniforme em refluxo, destilação ou reações prolongadas",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "balao de fundo redondo",
+      "balão fundo redondo"
+    ]
+  },
+  {
+    "name": "Proveta",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "medir volumes líquidos com precisão moderada, sem aquecimento",
+    "animations": "Líquido e agitação",
+    "aliases": [
+      "cilindro graduado"
+    ]
+  },
+  {
+    "name": "Tubo de Ensaio",
+    "group": "Vidrarias gerais de preparo e reação",
+    "function": "conter pequenas amostras e realizar reações em pequena escala",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "tubos de ensaio"
+    ]
+  },
+  {
+    "name": "Balão Volumétrico",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "preparar soluções com volume final exato até a marca de aferição",
+    "animations": "Líquido e agitação",
+    "aliases": [
+      "balao volumetrico",
+      "frasco volumétrico",
+      "frasco volumetrico"
+    ]
+  },
+  {
+    "name": "Funil de Separação",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "separar líquidos imiscíveis por diferença de densidade, liberando uma fase pela torneira inferior",
+    "animations": "Líquido, gás e despejar/abrir",
+    "aliases": [
+      "funil separador",
+      "funil de decantação",
+      "funil de decantacao"
+    ]
+  },
+  {
+    "name": "Bureta",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "liberar titulante gota a gota com controle de volume em titulações",
+    "animations": "Líquido, gás e despejar/abrir",
+    "aliases": [
+      "buretas"
+    ]
+  },
+  {
+    "name": "Pipeta Graduada",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "medir e transferir volumes variáveis de líquido",
+    "animations": "Líquido, gás e despejar/abrir",
+    "aliases": [
+      "pipeta graduada"
+    ]
+  },
+  {
+    "name": "Cristalizador",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "evaporar solventes e favorecer a formação de cristais",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "placa cristalizadora"
+    ]
+  },
+  {
+    "name": "Vial de Amostra",
+    "group": "Vidrarias volumétricas, separação e amostragem",
+    "function": "armazenar pequenas amostras para análise ou transporte",
+    "animations": "Líquido, agitação e gás",
+    "aliases": [
+      "vial",
+      "frasco vial"
+    ]
+  },
+  {
+    "name": "Balão de Destilação",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "aquecer mistura líquida e conduzir vapores pelo braço lateral em uma destilação simples",
+    "animations": "Líquido, agitação e aquecimento",
+    "aliases": [
+      "balao de destilacao",
+      "balão destilação"
+    ]
+  },
+  {
+    "name": "Condensador Liebig",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "resfriar vapores em um tubo interno usando circulação de água na camisa externa",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "condensador de liebig",
+      "liebig"
+    ]
+  },
+  {
+    "name": "Dessecador",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "manter amostras protegidas da umidade em ambiente fechado",
+    "animations": "Abrir/fechar",
+    "aliases": [
+      "dessecador de vidro"
+    ]
+  },
+  {
+    "name": "Frasco de Reagente (Âmbar)",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "armazenar reagentes sensíveis à luz",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "frasco âmbar",
+      "frasco ambar",
+      "frasco de reagente"
+    ]
+  },
+  {
+    "name": "Pipeta Pasteur",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "transferir líquidos em pequenas gotas ou pequenas porções",
+    "animations": "Líquido, gás e despejar/abrir",
+    "aliases": [
+      "pasteur"
+    ]
+  },
+  {
+    "name": "Tubo de Nessler",
+    "group": "Vidrarias de destilação, armazenamento e análise",
+    "function": "comparar visualmente coloração ou turbidez de soluções",
+    "animations": "Líquido, agitação e gás",
+    "aliases": [
+      "nessler"
+    ]
+  },
+  {
+    "name": "Frasco de Drechsel",
+    "group": "Vidrarias especializadas",
+    "function": "borbulhar gases em líquidos para lavagem, absorção ou umidificação",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "drechsel",
+      "lavador de gases"
+    ]
+  },
+  {
+    "name": "Coluna de Vigreux",
+    "group": "Vidrarias especializadas",
+    "function": "aumentar a eficiência de separação em destilação fracionada",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "vigreux"
+    ]
+  },
+  {
+    "name": "Condensador Allihn",
+    "group": "Vidrarias especializadas",
+    "function": "condensar vapores com maior superfície de resfriamento, comum em refluxo",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "allihn",
+      "condensador de bolas",
+      "condensador de refluxo"
+    ]
+  },
+  {
+    "name": "Pipeta Volumétrica",
+    "group": "Vidrarias especializadas",
+    "function": "transferir um volume fixo e calibrado com alta precisão",
+    "animations": "Líquido, gás e despejar/abrir",
+    "aliases": [
+      "pipeta volumetrica"
+    ]
+  },
+  {
+    "name": "Cuba Cromatográfica",
+    "group": "Vidrarias especializadas",
+    "function": "criar uma atmosfera fechada para desenvolvimento de cromatografia",
+    "animations": "Líquido e gás",
+    "aliases": [
+      "cuba cromatografica",
+      "câmara cromatográfica",
+      "camara cromatografica"
+    ]
+  },
+  {
+    "name": "Tubo de Cultura",
+    "group": "Vidrarias especializadas",
+    "function": "conter meios, amostras ou microrganismos em cultivo",
+    "animations": "Líquido, agitação e gás",
+    "aliases": [
+      "tubos de cultura"
+    ]
+  },
+  {
+    "name": "Frasco de Plástico P.A.",
+    "group": "Frascos plásticos",
+    "function": "armazenar e manusear reagentes em recipiente plástico resistente",
+    "animations": "Líquido, agitação e gás",
+    "aliases": [
+      "frasco plastico pa",
+      "frasco p.a.",
+      "frasco pa"
+    ]
+  },
+  {
+    "name": "Bico de Bunsen",
+    "group": "Equipamentos de laboratório",
+    "function": "produzir chama controlada para aquecimento, combustão ou esterilização",
+    "animations": "Chama",
+    "aliases": [
+      "bunsen",
+      "queimador bunsen"
+    ]
+  },
+  {
+    "name": "Forno Mufla",
+    "group": "Equipamentos de laboratório",
+    "function": "aquecer amostras a temperaturas muito elevadas em câmara fechada",
+    "animations": "Abrir/fechar e aquecimento",
+    "aliases": [
+      "mufla"
+    ]
+  },
+  {
+    "name": "Estufa de Secagem",
+    "group": "Equipamentos de laboratório",
+    "function": "secar vidrarias, materiais ou amostras em temperatura controlada",
+    "animations": "Abrir/fechar e aquecimento",
+    "aliases": [
+      "estufa"
+    ]
+  },
+  {
+    "name": "Evaporador Rotativo (Rotaevaporador)",
+    "group": "Equipamentos de laboratório",
+    "function": "remover solventes por evaporação com rotação, aquecimento e pressão reduzida",
+    "animations": "Líquido e rotação",
+    "aliases": [
+      "rotaevaporador",
+      "evaporador rotativo",
+      "rotavapor"
+    ]
+  },
+  {
+    "name": "Aparelho de Ponto de Fusão",
+    "group": "Equipamentos de laboratório",
+    "function": "determinar a faixa de fusão de uma substância sólida",
+    "animations": "Modelo estático",
+    "aliases": [
+      "ponto de fusao",
+      "aparelho ponto de fusão",
+      "aparelho de fusão"
+    ]
+  },
+  {
+    "name": "Capela de Exaustão",
+    "group": "Equipamentos de laboratório",
+    "function": "conter e remover vapores, gases ou partículas durante procedimentos de risco",
+    "animations": "Modelo estático",
+    "aliases": [
+      "capela",
+      "capela quimica",
+      "capela química"
+    ]
+  },
+  {
+    "name": "Balança Analítica",
+    "group": "Equipamentos de laboratório",
+    "function": "medir massa com alta precisão",
+    "animations": "Modelo estático",
+    "aliases": [
+      "balanca analitica",
+      "balança"
+    ]
+  },
+  {
+    "name": "Condutivímetro",
+    "group": "Equipamentos de laboratório",
+    "function": "medir a condutividade elétrica de soluções",
+    "animations": "Modelo estático",
+    "aliases": [
+      "condutivimetro",
+      "medidor de condutividade"
+    ]
+  },
+  {
+    "name": "pHmetro",
+    "group": "Equipamentos de laboratório",
+    "function": "medir o pH de uma solução por meio de eletrodo",
+    "animations": "Modelo estático",
+    "aliases": [
+      "phmetro",
+      "medidor de ph",
+      "pH meter"
+    ]
+  },
+  {
+    "name": "Chapa de Aquecimento e Agitação",
+    "group": "Equipamentos de laboratório",
+    "function": "aquecer recipientes e promover agitação magnética",
+    "animations": "Modelo estático",
+    "aliases": [
+      "chapa aquecedora",
+      "chapa de aquecimento",
+      "agitador magnético",
+      "agitador magnetico"
+    ]
+  },
+  {
+    "name": "Manta de Aquecimento",
+    "group": "Equipamentos de laboratório",
+    "function": "aquecer balões de fundo redondo com distribuição de calor mais envolvente",
+    "animations": "Modelo estático",
+    "aliases": [
+      "manta aquecedora"
+    ]
+  },
+  {
+    "name": "Peixinho Magnético",
+    "group": "Acessórios e materiais de apoio",
+    "function": "agitar líquidos quando acionado por uma chapa magnética",
+    "animations": "Rotação",
+    "aliases": [
+      "peixinho magnetico",
+      "barra magnética",
+      "barra magnetica"
+    ]
+  },
+  {
+    "name": "Tripé com Tela de Amianto",
+    "group": "Acessórios e materiais de apoio",
+    "function": "sustentar recipientes durante aquecimento",
+    "animations": "Modelo estático",
+    "aliases": [
+      "tripe",
+      "tripé",
+      "tela de amianto",
+      "tripé de laboratório"
+    ]
+  },
+  {
+    "name": "Cadinho de Porcelana",
+    "group": "Acessórios e materiais de apoio",
+    "function": "aquecer sólidos em temperaturas elevadas",
+    "animations": "Modelo estático",
+    "aliases": [
+      "cadinho"
+    ]
+  },
+  {
+    "name": "Funil de Vidro",
+    "group": "Acessórios e materiais de apoio",
+    "function": "transferir líquidos ou apoiar papel de filtro em filtrações simples",
+    "animations": "Modelo estático",
+    "aliases": [
+      "funil comum",
+      "funil simples"
+    ]
+  },
+  {
+    "name": "Funil de Büchner",
+    "group": "Acessórios e materiais de apoio",
+    "function": "realizar filtração a vácuo com papel de filtro",
+    "animations": "Modelo estático",
+    "aliases": [
+      "funil de buchner",
+      "buchner",
+      "büchner"
+    ]
+  },
+  {
+    "name": "Escova de Limpeza",
+    "group": "Acessórios e materiais de apoio",
+    "function": "limpar o interior de vidrarias estreitas",
+    "animations": "Modelo estático",
+    "aliases": [
+      "escova para vidraria",
+      "escova"
+    ]
+  },
+  {
+    "name": "Pisseta Automática",
+    "group": "Acessórios e materiais de apoio",
+    "function": "lavar superfícies ou transferir jatos controlados de solvente",
+    "animations": "Líquido",
+    "aliases": [
+      "pisseta",
+      "frasco lavador",
+      "pisseta automatica"
+    ]
+  },
+  {
+    "name": "Suporte Universal com Garra",
+    "group": "Acessórios e materiais de apoio",
+    "function": "sustentar aparelhagens, buretas, condensadores, funis e balões em montagens laboratoriais",
+    "animations": "Modelo estático",
+    "aliases": [
+      "suporte universal",
+      "garra universal",
+      "suporte com garra"
+    ]
+  },
+  {
+    "name": "Pinça Metálica Bico Curvo",
+    "group": "Acessórios e materiais de apoio",
+    "function": "segurar objetos pequenos, quentes ou de difícil manipulação",
+    "animations": "Modelo estático",
+    "aliases": [
+      "pinca metalica",
+      "pinça metálica",
+      "pinça bico curvo",
+      "pinca bico curvo"
+    ]
+  },
+  {
+    "name": "Pinça de Madeira",
+    "group": "Acessórios e materiais de apoio",
+    "function": "segurar tubo de ensaio durante aquecimento",
+    "animations": "Modelo estático",
+    "aliases": [
+      "pinca de madeira",
+      "pinça para tubo"
+    ]
+  },
+  {
+    "name": "Filtro de Papel",
+    "group": "Acessórios e materiais de apoio",
+    "function": "reter sólidos e permitir passagem do líquido em filtrações",
+    "animations": "Modelo estático",
+    "aliases": [
+      "papel filtro",
+      "papel de filtro"
+    ]
+  },
+  {
+    "name": "Borracha para Filtração",
+    "group": "Acessórios e materiais de apoio",
+    "function": "vedar conexões em sistemas de filtração a vácuo",
+    "animations": "Modelo estático",
+    "aliases": [
+      "borracha de filtração",
+      "borracha para filtracao",
+      "adaptador de borracha"
+    ]
+  },
+  {
+    "name": "Bomba a Vácuo",
+    "group": "Equipamentos de laboratório",
+    "function": "reduzir a pressão em sistemas conectados, auxiliando filtração ou evaporação",
+    "animations": "Trabalho",
+    "aliases": [
+      "bomba de vácuo",
+      "bomba a vacuo",
+      "bomba de vacuo"
+    ]
+  },
+  {
+    "name": "Vidro de Relógio",
+    "group": "Acessórios e materiais de apoio",
+    "function": "evaporar pequenas quantidades, cobrir recipientes ou apoiar sólidos",
+    "animations": "Modelo estático",
+    "aliases": [
+      "vidro de relogio"
+    ]
+  },
+  {
+    "name": "Conjunto de Espátulas",
+    "group": "Acessórios e materiais de apoio",
+    "function": "transferir e manipular pequenas porções de sólidos",
+    "animations": "Modelo estático",
+    "aliases": [
+      "espatula",
+      "espátula",
+      "espátulas",
+      "espatulas"
+    ]
+  },
+  {
+    "name": "Centrífuga",
+    "group": "Equipamentos de laboratório",
+    "function": "separar componentes por rotação rápida e diferença de densidade",
+    "animations": "Rotação",
+    "aliases": [
+      "centrifuga"
+    ]
+  },
+  {
+    "name": "Criação",
+    "group": "Cenas e mobiliário de laboratório",
+    "function": "montar cenas personalizadas no Animation Maker",
+    "animations": "Modelo estático",
+    "aliases": [
+      "animation maker",
+      "criacao",
+      "criação"
+    ]
+  },
+  {
+    "name": "Bancada de Laboratório",
+    "group": "Cenas e mobiliário de laboratório",
+    "function": "representar a superfície de trabalho onde procedimentos e montagens são organizados",
+    "animations": "Modelo estático",
+    "aliases": [
+      "bancada",
+      "bancada de laboratorio"
+    ]
+  }
+]);
+
+const LABORATORY_QUESTIONS = [
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Função de Vidraria):**\nEm uma titulação ácido-base, qual vidraria é mais adequada para liberar o titulante gota a gota com controle de volume?\na) Béquer\nb) Bureta\nc) Dessecador\nd) Vidro de relógio\n\n**Gabarito:**\n||Alternativa B. A bureta possui graduação e torneira inferior, permitindo adicionar o titulante de modo controlado e registrar o volume consumido até o ponto de viragem.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Precisão Volumétrica):**\nPor que um balão volumétrico é mais adequado que um béquer para preparar uma solução de concentração conhecida?\n\n**Gabarito:**\n||Porque o balão volumétrico é calibrado para conter um volume final exato na marca de aferição. O béquer serve para preparo e mistura geral, mas não é instrumento de alta precisão volumétrica.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Filtração a Vácuo):**\nQuais três componentes do laboratório interativo podem ser associados a uma montagem de filtração a vácuo?\n\n**Gabarito:**\n||Kitasato, funil de Büchner e bomba a vácuo. A borracha para filtração também é importante porque veda a conexão entre funil e Kitasato, evitando perda de pressão.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Segurança Laboratorial):**\nQual equipamento é indicado para manipular reagentes voláteis, tóxicos ou que liberam vapores irritantes?\n\n**Gabarito:**\n||A capela de exaustão. Ela é um equipamento de proteção coletiva que ajuda a conter e remover vapores, gases e partículas durante procedimentos de risco.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Separação de Misturas):**\nQual vidraria é adequada para separar líquidos imiscíveis, como óleo e água, por diferença de densidade?\n\n**Gabarito:**\n||O funil de separação. Ele possui corpo em forma de pera e torneira inferior, permitindo liberar uma das fases após a decantação.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Aquecimento):**\nPor que uma manta de aquecimento é preferível à chama direta para aquecer um balão de fundo redondo em muitas reações orgânicas?\n\n**Gabarito:**\n||Porque a manta envolve a curvatura do balão e distribui calor de modo mais uniforme e seguro, reduzindo superaquecimento localizado e risco associado a solventes inflamáveis.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Análise Instrumental):**\nQual equipamento mede a condutividade elétrica de soluções e que tipo de informação essa medida sugere?\n\n**Gabarito:**\n||O condutivímetro. A condutividade indica a presença e mobilidade de íons em solução, sendo útil para avaliar pureza de água, concentração iônica e qualidade de soluções.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Destilação):**\nQual é a função do condensador de Liebig em uma montagem de destilação simples?\n\n**Gabarito:**\n||Resfriar os vapores que saem do balão de destilação, promovendo sua condensação em líquido no tubo interno resfriado pela circulação de água na camisa externa.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Acessório de Agitação):**\nO que é um peixinho magnético e com qual equipamento ele costuma atuar?\n\n**Gabarito:**\n||É uma pequena barra magnética revestida, geralmente de PTFE, colocada dentro da solução. Ela gira quando acoplada ao campo magnético de uma chapa de aquecimento e agitação.||"
+    },
+    {
+        "topic": "laboratorio",
+        "q": "**Questão (Armazenamento):**\nPor que um frasco de reagente âmbar é usado para certas substâncias?\n\n**Gabarito:**\n||Porque o vidro âmbar reduz a incidência de luz sobre o conteúdo, ajudando a proteger reagentes fotossensíveis contra degradação fotoquímica.||"
+    }
+];
+quizQuestions.push(...LABORATORY_QUESTIONS);
 
 // Gerando 40 novas questões avançadas para completar 50+
-const topics = ["cristalografia", "complexos", "reacoes", "vsepr", "ligacoes", "modelos", "nomenclatura", "elementos"];
+const topics = ["cristalografia", "complexos", "reacoes", "vsepr", "ligacoes", "modelos", "nomenclatura", "elementos", "laboratorio"];
 for (let i = 1; i <= 40; i++) {
     const topic = topics[i % topics.length];
     quizQuestions.push({
@@ -418,6 +1065,8 @@ for (let i = 1; i <= 40; i++) {
 
 const suggestionsMap = {
     cristalografia: ["Defeitos Cristalinos", "Índices de Miller", "Células Unitárias", "Lei de Bragg", "Fator de Empacotamento"],
+    gemas: ["Gemas e mudança de cor", "Centros de Cor", "Impurezas Cromóforas", "Rubi e Safira", "Tratamentos Gemológicos"],
+    laboratorio: ["Laboratório Interativo", "Vidrarias e Equipamentos", "Funções das Vidrarias", "Filtração a Vácuo", "Titulação"],
     vsepr: ["Polaridade", "Hibridização", "Geometria Molecular", "Regra do Octeto", "Repulsão de Pares"],
     ligacoes: ["Forças Intermoleculares", "Ligação Iônica", "Ligação Covalente", "Ponte de Hidrogênio", "Sólidos Covalentes"],
     modelos: ["Orbitais", "Números Quânticos", "Modelo de Bohr", "Princípio de Pauli", "Regra de Hund"],
@@ -432,6 +1081,8 @@ const suggestionsMap = {
 
 const TOPIC_ANIMATION_IDS = {
   cristalografia: ['buracos', 'celulas', 'wigner', 'geocrist', 'redes', 'simetriahub', 'complexos'],
+  gemas: ['gemviewer', 'defeitos_cristalinos_exercicio', 'redes'],
+  laboratorio: ['laboratorio_interativo', 'xadrez_quimico_jogo'],
   vsepr: ['geomol', 'geomolpasso', 'polaridade', 'polaridade_geometria_exercicio'],
   ligacoes: ['quebracabeca', 'interacoes_intermoleculares', 'polaridade', 'geomol', 'polaridade_geometria_exercicio'],
   modelos: ['modelos_atomicos', 'eq_ondas_hidrogenoides', 'visualizador_hidrogenoides', 'visualizador_orbitais'],
@@ -444,6 +1095,8 @@ const TOPIC_ANIMATION_IDS = {
 
 function classifyGeneralTopic(text = '') {
   const t = normalize(text);
+  if (/(laboratorio|laboratório|laboratorial|vidraria|vidrarias|equipamento de laboratorio|equipamentos de laboratorio|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao volumetrico|balão volumétrico|condensador|destilacao|destilação|bico de bunsen|phmetro|pisseta|cadinho|funil de buchner|büchner|funil de buechner|capela de exaustao|capela de exaustão|laboratorio interativo|laboratório interativo)/.test(t)) return 'laboratorio';
+  if (/(gema|gemas|gemologia|gemologico|gemológica|gemologico|mineral gemologico|minerais gemologicos|corindo|rubi|safira|berilo|esmeralda|agua-marinha|água-marinha|quartzo|ametista|citrino|diamante|opala|topazio|topázio|turmalina|granada|alexandrita|crisoberilo|diasporo|diásporo|zultanite|sodalita|hackmanita|escapolita|fluorita|centro de cor|centros de cor|cromoforo|cromóforo|impureza cromofora|impureza cromófora|pleocroismo|pleocroísmo|tenebrescencia|tenebrescência)/.test(t)) return 'gemas';
   if (/(cristalografia|cristal|celula|célula|rede|miller|bravais|defeito|simetria|empacotamento|wigner|seitz|formula unitaria|fórmula unitária|interstici)/.test(t)) return 'cristalografia';
   if (/(vsepr|geometria molecular|polaridade|momento dipolar|dipolo|axn|axnem|pares nao ligantes|pares não ligantes)/.test(t)) return 'vsepr';
   if (/(ligacao|ligacoes|ligação|ligações|lewis|ionica|iônica|covalente|forca intermolecular|forças intermoleculares|forcas intermoleculares|intermolecular|ponte de hidrogenio|ponte de hidrogênio)/.test(t)) return 'ligacoes';
@@ -552,7 +1205,7 @@ const rules = [
     },
     {
         patterns: [/(me fale sobre cada animacao|conte sobre.*animacao|do que fala essa animacao|quais animacoes|sobre o ensino|modulos de ensino|lista de animacoes|todas as animacoes|catalogo)/],
-        response: "**Animações e Módulos de Ensino do SiMoEns:**\nNós temos várias animações interativas para te ajudar a visualizar a química:\n- **Geometria Molecular e Polaridade:** Mostra a teoria VSEPR, ângulos e vetores de dipolo em 3D.\n- **Células Unitárias e Redes Cristalinas:** Ensina sobre os 7 sistemas cristalinos, parâmetros de rede e redes de Bravais.\n- **Empacotamento e Buracos:** Visualiza como esferas se empacotam e formam interstícios tetraédricos e octaédricos.\n- **Célula Primitiva e Wigner-Seitz:** Mostra como recortar a menor unidade de repetição de um cristal.\n- **Polimorfismo e Complexos:** Explora como a mesma fórmula pode ter estruturas diferentes (ex: cisplatina, andalusita).\n- **Modelos Atômicos e Orbitais:** Uma jornada de Dalton a Schrödinger, com visualização 3D de orbitais hidrogenoides e hibridização.\n- **Quebra-Cabeça Íon/Covalente:** Um jogo para montar compostos respeitando a eletroneutralidade e valência.\n\nAcesse todas elas no nosso [Catálogo de Ensino](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/)."
+        response: "**Animações e Módulos de Ensino do SiMoEns:**\nNós temos várias animações interativas para te ajudar a visualizar a química:\n- **Geometria Molecular e Polaridade:** Mostra a teoria VSEPR, ângulos e vetores de dipolo em 3D.\n- **Células Unitárias e Redes Cristalinas:** Ensina sobre os 7 sistemas cristalinos, parâmetros de rede e redes de Bravais.\n- **Empacotamento e Buracos:** Visualiza como esferas se empacotam e formam interstícios tetraédricos e octaédricos.\n- **Célula Primitiva e Wigner-Seitz:** Mostra como recortar a menor unidade de repetição de um cristal.\n- **Polimorfismo e Complexos:** Explora como a mesma fórmula pode ter estruturas diferentes (ex: cisplatina, andalusita).\n- **Modelos Atômicos e Orbitais:** Uma jornada de Dalton a Schrödinger, com visualização 3D de orbitais hidrogenoides e hibridização.\n- **Quebra-Cabeça Íon/Covalente:** Um jogo para montar compostos respeitando a eletroneutralidade e valência.\n- **Gemas e mudança de cor:** Visualizador 3D sobre minerais gemológicos, cores, defeitos cristalinos, centros de cor, impurezas cromóforas, inclusões e mudança óptica em gemas.\n\nAcesse todas elas no nosso [Catálogo de Ensino](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/)."
     },
     {
         patterns: [/(simoens|o que e o simoens|simulacoes|site|projeto simoens|plataforma)/],
@@ -569,6 +1222,78 @@ const rules = [
     {
         patterns: [/(defeito|defeitos|frenkel|schottky|vacancia|intersticial|discordancia|imperfeicao|imperfeicoes|defeitos pontuais)/],
         response: "**Defeitos Cristalinos:** Cristais reais não são perfeitos 100%. Existem **Defeitos de Schottky** (pares de ânions/cátions faltando) e **Frenkel** (átomo se desloca pro meio de um buraco). Há também defeitos extensos (discordâncias).\n\n*Exemplo Prático:* A ametista é roxa porque a rede do quartzo tem um 'defeito' atômico onde minúsculas impurezas de Ferro substituem o Sílicio. Na metalurgia, o aço maleável duro só existe porque propositalmente se trava as 'discordâncias' no Ferro."
+    },
+    {
+        patterns: [/(laboratorio interativo|laboratório interativo|vidraria|vidrarias|equipamentos de laboratorio|equipamentos de laboratório|catalogo de vidrarias|catálogo de vidrarias|bureta|pipeta|proveta|bequer|béquer|erlenmeyer|kitasato|bico de bunsen|funil de buchner|büchner|condensador|phmetro|pisseta)/],
+        response: "**Laboratório Interativo — Vidrarias e Equipamentos de Laboratório:** este recurso apresenta modelos 3D de vidrarias, equipamentos e acessórios de bancada, com foco em função, aplicação, forma do objeto e animações de líquido, gás, aquecimento, rotação e operação. Posso explicar qualquer item do catálogo, comparar instrumentos parecidos ou propor questões sobre técnicas laboratoriais. Link: [Laboratório Interativo](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/catalogo-de-vidrarias-animado/)."
+    },
+    {
+        patterns: [/(gema|gemas|gemologia|gemologico|gemologica|mineral gemologico|minerais gemologicos|gemviewer|mudanca de cor em gemas|cor das gemas|cores das gemas|porque.*gema.*cor|por que.*gema.*cor)/],
+        response: `**Gemas, cor e estrutura cristalina:** Gemas são materiais naturais ou sintéticos que apresentam valor científico, estético e tecnológico por causa de propriedades como cor, transparência, brilho, dureza, clivagem, pleocroísmo e estabilidade. Do ponto de vista químico, a cor raramente depende apenas da fórmula ideal do mineral; ela costuma surgir da interação entre **estrutura cristalina**, **impurezas em baixa concentração**, **defeitos pontuais**, **centros de cor**, **transferência de carga**, **inclusões** e fenômenos ópticos como difração.
+
+No SiMoEns, o visualizador **Gemas e mudança de cor** explora essa relação em berilo, coríndon, quartzo, diamante, opala, turmalina, granada, crisoberilo, diásporo, sodalita/hackmanita, escapolita, fluorita e topázio.
+
+Veja o recurso: [Gemas e mudança de cor](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/gemviewer/).`
+    },
+    {
+        patterns: [/(centro de cor|centros de cor|color center|centro f|vacancia.*eletron|eletron preso|lacuna eletronica|radiação.*cor|irradiacao.*gema|irradiação.*gema)/],
+        response: `**Centros de cor em gemas:** Um centro de cor é um defeito estrutural ou eletrônico capaz de absorver seletivamente certas faixas da luz visível. Ele pode envolver **vacâncias**, elétrons aprisionados, lacunas eletrônicas, pares de defeitos ou alterações induzidas por radiação natural/artificial. Como a luz transmitida ou refletida perde comprimentos de onda específicos, o observador percebe a cor complementar.
+
+Exemplos didáticos: na **fluorita**, vacâncias de F⁻ com elétrons presos podem gerar centros do tipo F; no **quartzo fumê**, Al substitucional associado à radiação contribui para centros absorvedores; no **diamante verde**, vacâncias e dano por radiação podem alterar a absorção óptica. Centros de cor são, portanto, uma ponte direta entre defeitos cristalinos e propriedades macroscópicas.`,
+    },
+    {
+        patterns: [/(impureza|impurezas|cromoforo|cromoforos|cromóforo|cromóforos|elemento traco|elementos traco|traço|transicao d-d|transferencia de carga|transferência de carga)/],
+        response: `**Impurezas cromóforas e transferência de carga:** Em gemas, pequenas quantidades de íons de transição podem substituir íons da rede cristalina sem destruir a estrutura. Como esses íons possuem orbitais d parcialmente preenchidos, eles podem absorver certas energias da luz visível por transições eletrônicas. Isso explica, por exemplo, o papel de **Cr³⁺** no rubi e na esmeralda.
+
+Outro mecanismo importante é a **transferência de carga**, quando um elétron é promovido entre íons vizinhos ou entre metal e ligante. A **safira azul** é um exemplo clássico: pares **Fe²⁺–Ti⁴⁺** no coríndon geram absorção intensa associada à transferência de carga. Assim, a cor depende não só do elemento presente, mas também de seu estado de oxidação, sítio cristalográfico e vizinhança química.`,
+    },
+    {
+        patterns: [/(rubi|safira|corindo|corindon|coríndon|al2o3)/],
+        response: `**Coríndon, rubi e safira:** O coríndon é o óxido de alumínio cristalino, **Al₂O₃**, de sistema trigonal. Quando parte dos íons **Al³⁺** é substituída por **Cr³⁺**, surgem absorções seletivas que originam o vermelho característico do **rubi**. Já a **safira azul** geralmente está associada a pares **Fe²⁺–Ti⁴⁺**, nos quais ocorre transferência de carga.
+
+Portanto, rubi e safira não são minerais completamente diferentes: são variedades gemológicas do mesmo mineral, diferenciadas por centros cromóforos, defeitos e mecanismos eletrônicos de absorção. Esse é um excelente exemplo de como traços químicos e estrutura cristalina controlam propriedades ópticas.`,
+    },
+    {
+        patterns: [/(berilo|esmeralda|agua marinha|água marinha|aquamarina|gochenita|be3al2si6o18)/],
+        response: `**Berilo, esmeralda e água-marinha:** O berilo possui fórmula ideal **Be₃Al₂Si₆O₁₈** e sistema hexagonal, com canais estruturais que podem hospedar espécies químicas. A variedade pura e incolor é conhecida como **gochenita**. A **esmeralda** deve sua cor verde principalmente a **Cr³⁺** e/ou **V³⁺** substituindo Al³⁺ em sítios da rede.
+
+A **água-marinha** apresenta tonalidades azuladas geralmente relacionadas a ferro em diferentes estados de oxidação e ambientes estruturais. Em todos os casos, a matriz cristalina do berilo permanece reconhecível, mas pequenas substituições e centros eletrônicos alteram profundamente a absorção óptica.`,
+    },
+    {
+        patterns: [/(quartzo|ametista|citrino|quartzo fume|quartzo fumê|sio2)/],
+        response: `**Quartzo, ametista, citrino e quartzo fumê:** O quartzo é **SiO₂** de sistema trigonal, formado por uma rede de tetraedros SiO₄. Quando puro, tende a ser incolor. A **ametista** está associada a impurezas de ferro, substituições envolvendo Al e modificações eletrônicas induzidas por radiação. O **quartzo fumê** também se relaciona a defeitos ativados por radiação, frequentemente associados a Al substitucional.
+
+O **citrino** pode envolver centros relacionados a Fe³⁺ e efeitos térmicos. Por isso, a família do quartzo é didaticamente forte: a mesma matriz química geral pode apresentar cores distintas por causa de impurezas, defeitos e histórico térmico/radiativo.`,
+    },
+    {
+        patterns: [/(diamante|diamante amarelo|diamante azul|diamante verde|diamante rosa|diamante marrom|diamante preto|fancy diamond)/],
+        response: `**Cores no diamante:** O diamante é uma rede covalente de carbono com estrutura cúbica. Quando a rede é quase perfeita, o material tende a ser incolor. Cores diferentes podem surgir por impurezas ou defeitos: **nitrogênio substitucional** pode contribuir para tons amarelos; **boro substitucional** está associado a diamantes azuis; vacâncias e dano por radiação podem gerar tons verdes; deformação plástica da rede pode participar de tons rosa ou marrons.
+
+Isso mostra que, mesmo em uma estrutura formada essencialmente por carbono, concentrações muito pequenas de defeitos ou impurezas podem alterar fortemente as propriedades ópticas.`,
+    },
+    {
+        patterns: [/(opala|opalescencia|opalescência|jogo de cores|iridescencia|iridescência|sio2.*h2o)/],
+        response: `**Opala e jogo de cores:** A opala é um mineraloide hidratado de sílica, frequentemente representado como **SiO₂·nH₂O**. Diferentemente de muitos cristais gemológicos, sua cor preciosa não depende apenas de íons cromóforos. Em opalas preciosas, o jogo de cores resulta da interação da luz com arranjos de esferas de sílica em escala comparável ao comprimento de onda da luz visível.
+
+Esse ordenamento produz efeitos de **difração** e **interferência**, gerando cores espectrais que mudam conforme o ângulo de observação. É um caso elegante em que a cor é dominada por estrutura física em mesoescala, não apenas por absorção eletrônica.`,
+    },
+    {
+        patterns: [/(alexandrita|crisoberilo|mudanca de cor|mudança de cor|color change|efeito alexandrita|olho de gato|chatoyance|chatoyância)/],
+        response: `**Alexandrita, mudança de cor e chatoyância:** A alexandrita é uma variedade de crisoberilo (**BeAl₂O₄**) na qual **Cr³⁺** atua como centro cromóforo. Sua mudança de cor depende da distribuição espectral da fonte luminosa: sob luz rica em azul/verde e sob luz incandescente rica em vermelho, a absorção seletiva produz percepções cromáticas diferentes.
+
+Já o efeito **olho-de-gato** ou chatoyância ocorre quando inclusões ou estruturas orientadas refletem a luz de modo concentrado, formando uma faixa luminosa móvel. Assim, uma gema pode ter cor por absorção eletrônica e, ao mesmo tempo, fenômenos ópticos por organização interna.`,
+    },
+    {
+        patterns: [/(inclusao|inclusoes|inclusão|inclusões|fratura|clivagem|zonação|zonacao|zoneamento|defeito em gema|defeitos em gemas)/],
+        response: `**Inclusões, fraturas e defeitos em gemas:** Inclusões são feições internas observáveis em uma gema, incluindo cristais aprisionados, fluidos, bolhas, agulhas, fraturas, planos de clivagem, bandas de crescimento e distribuição irregular de cor. Elas podem reduzir transparência, mas também oferecem evidências científicas sobre origem geológica, crescimento cristalino, tratamentos e distinção entre material natural e sintético.
+
+Defeitos pontuais, como vacâncias, substituições e intersticiais, alteram propriedades em escala atômica. Defeitos estendidos, como discordâncias e fraturas, afetam resistência mecânica, clivagem e aparência. Em gemologia científica, defeito não significa apenas “falha estética”; muitas vezes é a chave para explicar cor, autenticidade e história do mineral.`,
+    },
+    {
+        patterns: [/(tratamento|tratamentos|aquecimento|irradiacao|irradiação|difusao|difusão|preenchimento de fratura|fratura preenchida|tingimento|revestimento|coating|gema tratada|gemas tratadas)/],
+        response: `**Tratamentos em gemas:** Tratamentos são procedimentos usados para modificar aparência, cor, transparência ou durabilidade percebida de uma gema. Entre os mais comuns estão **aquecimento**, **irradiação**, **difusão**, **tingimento**, **revestimento** e **preenchimento de fraturas**. O aquecimento pode alterar estados de oxidação e centros de cor; a irradiação pode produzir ou modificar defeitos eletrônicos; a difusão pode introduzir espécies cromóforas próximo à superfície.
+
+Em abordagem científica e ética, é essencial diferenciar cor natural, cor induzida e cor modificada por tratamento. A identificação exige análise gemológica, microscopia, espectroscopia e comparação com padrões conhecidos.`,
     },
     {
         patterns: [/(simetria|grupo pontual|grupos pontuais|grupo espacial|grupos espaciais|eixo de rotacao|plano de reflexao|centro de inversao|operacoes de simetria|elementos de simetria|classes cristalinas)/],
@@ -744,15 +1469,18 @@ Se a sua dúvida for específica, eu posso detalhar **quartzo**, **K-feldspato**
 
 const TOPIC_MEMORY_KEY = "simoens:last-topic";
 function classifyGeneralTopic(text) {
-    if (/(cristalografia|cristal|celula|rede|miller|bravais|defeito|simetria|empacotamento)/.test(text)) return "cristalografia";
-    if (/(vsepr|geometria|polaridade)/.test(text)) return "vsepr";
-    if (/(ligacao|ligacoes|lewis|ionica|covalente|forca intermolecular|forcas intermoleculares|intermolecular|ponte de hidrogenio)/.test(text)) return "ligacoes";
-    if (/(modelo|atomico|dalton|thomson|rutherford|bohr|schrodinger|orbital|quantico)/.test(text)) return "modelos";
-    if (/(reacao|estequiometria|balanceamento|nox|oxidacao)/.test(text)) return "reacoes";
-    if (/(organica|carbono|grupo funcional|isomeria|polimero)/.test(text)) return "organica";
-    if (/(fisico-quimica|fisico quimica|termodinamica|cinetica|entalpia|entropia|energia livre|fases da agua|ponto critico|ponto triplo)/.test(text)) return "fisicoquimica";
-    if (/(complexo|coordenacao|ligante|quelato|espectroquimica)/.test(text)) return "complexos";
-    if (/(quantica|schrodinger|onda|de broglie|orbital molecular|tom|rutherford|millikan|crookes|fenda dupla)/.test(text)) return "quantica";
+    const t = normalize(text || "");
+    if (/(laboratorio|laboratório|laboratorial|vidraria|vidrarias|equipamento de laboratorio|equipamentos de laboratorio|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao volumetrico|balão volumétrico|condensador|destilacao|destilação|bico de bunsen|phmetro|pisseta|cadinho|funil de buchner|büchner|funil de buechner|capela de exaustao|capela de exaustão|laboratorio interativo|laboratório interativo|suporte universal|vidro de relogio|vidro de relógio|centrifuga|centrífuga|pinca|pinça|espátula|espatula)/.test(t)) return "laboratorio";
+    if (/(gema|gemas|gemologia|gemologico|gemologica|mineral gemologico|minerais gemologicos|corindo|rubi|safira|berilo|esmeralda|agua-marinha|agua marinha|quartzo|ametista|citrino|diamante|opala|topazio|turmalina|granada|alexandrita|crisoberilo|diasporo|zultanite|sodalita|hackmanita|escapolita|fluorita|centro de cor|centros de cor|cromoforo|cromoforos|impureza|impurezas|pleocroismo|tenebrescencia|tratamento gemologico|tratamentos gemologicos)/.test(t)) return "gemas";
+    if (/(cristalografia|cristal|celula|rede|miller|bravais|defeito|simetria|empacotamento)/.test(t)) return "cristalografia";
+    if (/(vsepr|geometria|polaridade)/.test(t)) return "vsepr";
+    if (/(ligacao|ligacoes|lewis|ionica|covalente|forca intermolecular|forcas intermoleculares|intermolecular|ponte de hidrogenio)/.test(t)) return "ligacoes";
+    if (/(modelo|atomico|dalton|thomson|rutherford|bohr|schrodinger|orbital|quantico)/.test(t)) return "modelos";
+    if (/(reacao|estequiometria|balanceamento|nox|oxidacao)/.test(t)) return "reacoes";
+    if (/(organica|carbono|grupo funcional|isomeria|polimero)/.test(t)) return "organica";
+    if (/(fisico-quimica|fisico quimica|termodinamica|cinetica|entalpia|entropia|energia livre|fases da agua|ponto critico|ponto triplo)/.test(t)) return "fisicoquimica";
+    if (/(complexo|coordenacao|ligante|quelato|espectroquimica)/.test(t)) return "complexos";
+    if (/(quantica|schrodinger|onda|de broglie|orbital molecular|tom|rutherford|millikan|crookes|fenda dupla)/.test(t)) return "quantica";
     return "";
 }
 function cleanTopicTarget(text) {
@@ -792,6 +1520,8 @@ function extractExplanationTarget(text) {
 function getGeneralTopicExplanation(topic) {
     const explanations = {
         cristalografia: "**Cristalografia e Estado Sólido:** estuda como os átomos, íons ou moléculas se organizam no espaço formando redes periódicas. Os conceitos centrais são **célula unitária**, **parâmetros de rede**, **simetria**, **índices de Miller** e **defeitos cristalinos**. Essas ideias ajudam a explicar propriedades como dureza, densidade, clivagem e condutividade dos sólidos.",
+        gemas: "**Gemas, cores e defeitos cristalinos:** esse tema relaciona mineralogia, química do estado sólido e propriedades ópticas. A cor de uma gema pode surgir por impurezas cromóforas, estados de oxidação, transferência de carga, centros de cor, vacâncias, inclusões, zonação de crescimento, deformação da rede ou fenômenos físicos como difração. O estudo científico de gemas exige conectar composição, estrutura cristalina, defeitos e interação da luz com a matéria.",
+        laboratorio: "**Laboratório interativo, vidrarias e equipamentos:** esse tema organiza instrumentos de bancada por forma, função e técnica experimental. O ponto central é reconhecer quando cada item deve ser usado: vidrarias de preparo, vidrarias volumétricas, sistemas de separação, equipamentos de aquecimento, proteção coletiva, medição instrumental e acessórios de suporte. Também envolve segurança, precisão volumétrica, controle de contaminação e montagem correta de procedimentos.",
         vsepr: "**Geometria Molecular e VSEPR:** a forma das moléculas é prevista pela repulsão entre regiões eletrônicas ao redor do átomo central. Pares ligantes e pares livres se organizam para ficarem o mais afastados possível, o que gera geometrias como **linear**, **trigonal plana**, **tetraédrica**, **bipiramidal trigonal** e **octaédrica**. A geometria influencia diretamente ângulos de ligação e polaridade.",
         ligacoes: "**Ligações Químicas e Forças Intermoleculares:** as **ligações químicas** mantêm os átomos unidos dentro da substância, enquanto as **forças intermoleculares** atuam entre moléculas ou partículas já formadas. Na **ligação iônica** ocorre atração entre íons de cargas opostas; na **ligação covalente** ocorre compartilhamento de elétrons. Já entre moléculas podem atuar **forças de London**, **dipolo-dipolo** e **ligação de hidrogênio**. Em geral, ligações químicas são mais fortes que forças intermoleculares, por isso elas afetam bastante propriedades como ponto de fusão, ebulição, solubilidade e estado físico.",
         modelos: "**Modelos Atômicos e Quântica:** esse tema acompanha a evolução das ideias sobre a estrutura do átomo, de **Dalton** até os modelos quânticos. Thomson introduz os elétrons, Rutherford propõe o núcleo, Bohr quantiza níveis de energia e a mecânica quântica substitui órbitas definidas por **orbitais** e probabilidades. É a base para entender distribuição eletrônica, espectros e ligações.",
@@ -803,12 +1533,43 @@ function getGeneralTopicExplanation(topic) {
     };
     return explanations[topic] || "";
 }
+function gemViewerUrl() {
+    const entry = SIMOENS_SITE_MAP.find((e) => e.id === 'gemviewer');
+    return entry ? entryUrl(entry) : 'https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/gemviewer/';
+}
+function resolveGemologySpecificIntent(text = '') {
+    const t = normalize(text);
+    if (!t) return '';
+    if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|questoes sobre|exercicios sobre|pergunta sobre)/.test(t)) return '';
+    if (/(centro de cor|centros de cor|color center|centro f|vacancia.*eletron|el[eé]tron preso|lacuna eletr[oô]nica|radia[cç][aã]o.*cor|irradiacao.*gema|irradia[cç][aã]o.*gema)/.test(t)) {
+        return `**Centros de cor em gemas:** são defeitos estruturais ou eletrônicos capazes de modificar a absorção da luz visível em um mineral. Em vez de depender apenas da fórmula ideal da gema, a cor passa a depender de imperfeições na rede cristalina, como vacâncias, elétrons aprisionados, lacunas eletrônicas, pares de defeitos ou alterações produzidas por radiação natural ou artificial.
+
+Do ponto de vista químico, um centro de cor cria níveis eletrônicos adicionais dentro do sólido. Quando a luz atravessa a gema, certas energias são absorvidas por transições eletrônicas associadas a esses defeitos. A radiação que não é absorvida chega ao olho, e a cor percebida corresponde ao resultado dessa absorção seletiva.
+
+**Exemplos importantes:** na fluorita, vacâncias de F⁻ associadas a elétrons presos podem formar centros do tipo F; no quartzo fumê, impurezas substitucionais e radiação podem gerar centros absorvedores; no diamante, vacâncias, nitrogênio, boro, deformações e dano por radiação podem produzir cores como amarelo, azul, verde, rosa ou marrom.
+
+Assim, centros de cor conectam diretamente **defeitos cristalinos**, **estrutura eletrônica do sólido** e **propriedades ópticas**. Recurso relacionado: **Gemas e mudança de cor** (${gemViewerUrl()}).`;
+    }
+    if (/(defeito.*gema|defeitos.*gema|defeito.*gemas|defeitos.*gemas|vacancia.*gema|vac[âa]ncia.*gema|intersticial.*gema|discordancia.*gema|discord[âa]ncia.*gema|zona[cç][aã]o.*gema|inclus[aã]o.*gema|inclus[oõ]es.*gema)/.test(t)) {
+        return `**Defeitos em gemas:** são imperfeições estruturais, químicas ou texturais que interrompem a periodicidade ideal do cristal. Eles podem ser pontuais, como vacâncias, substituições e intersticiais; lineares, como discordâncias; planares, como planos de crescimento e maclas; ou inclusões, como fluidos, cristais aprisionados e fraturas.
+
+Em gemologia científica, defeito não significa apenas “falha estética”. Muitos defeitos são responsáveis por cor, pleocroísmo, fluorescência, tenebrescência, mudança de cor, chatoyância e pistas diagnósticas de origem ou tratamento. Por isso, a interpretação de uma gema exige relacionar composição química, estrutura cristalina, histórico geológico e interação da luz com o material.
+
+Recurso relacionado: **Gemas e mudança de cor** (${gemViewerUrl()}).`;
+    }
+    return '';
+}
+
 function resolveExplanationIntent(text) {
     const extracted = extractExplanationTarget(text);
     if (extracted === null) return null;
     const remembered = recallTopicContext();
     const target = cleanTopicTarget(extracted || remembered?.target || "");
+    const gemologyTargetResponse = resolveGemologySpecificIntent(target || text);
+    if (gemologyTargetResponse) return gemologyTargetResponse;
     if (target) {
+        const labTargetResponse = resolveLaboratoryIntent(target);
+        if (labTargetResponse) return labTargetResponse;
         for (const rule of rules) {
             if (rule.patterns.some(pattern => pattern.test(target))) {
                 return rule.response;
@@ -821,17 +1582,101 @@ function resolveExplanationIntent(text) {
     return appendSuggestions(getGeneralTopicExplanation(topic), topic);
 }
 
+
+function labItemUrl() {
+    const entry = SIMOENS_SITE_MAP.find((e) => e.id === 'laboratorio_interativo');
+    return entry ? entryUrl(entry) : 'https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/catalogo-de-vidrarias-animado/';
+}
+function labItemSearchText(item) {
+    return normalize([item.name, item.group, item.function, item.animations, ...(item.aliases || [])].join(' '));
+}
+function findLaboratoryItemInText(text = '') {
+    const t = normalize(text);
+    let best = null;
+    let bestScore = 0;
+    for (const item of LABORATORY_ITEMS) {
+        const names = [item.name, ...(item.aliases || [])].map(normalize).filter(Boolean).sort((a, b) => b.length - a.length);
+        for (const name of names) {
+            if (!name || name.length < 3) continue;
+            const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const boundary = new RegExp(`(^|\\s|[^a-z0-9])${escaped}($|\\s|[^a-z0-9])`);
+            if (boundary.test(t) || t.includes(name)) {
+                const score = name.length + (normalize(item.name) === name ? 30 : 10);
+                if (score > bestScore) {
+                    best = item;
+                    bestScore = score;
+                }
+            }
+        }
+    }
+    return best;
+}
+function formatLaboratoryItemReply(item) {
+    if (!item) return '';
+    return `**${item.name}**\n- **Grupo:** ${item.group}.\n- **Função:** ${item.function}.\n- **Leitura técnico-científica:** no laboratório, deve ser escolhido conforme precisão necessária, resistência térmica/química e tipo de procedimento.\n- **Animações no Laboratório Interativo:** ${item.animations}.\n\nRecurso relacionado: **Laboratório Interativo — Vidrarias e Equipamentos de Laboratório** (${labItemUrl()}).`;
+}
+function listLaboratoryItemsReply() {
+    const groups = new Map();
+    LABORATORY_ITEMS.forEach((item) => {
+        const arr = groups.get(item.group) || [];
+        arr.push(item.name);
+        groups.set(item.group, arr);
+    });
+    const lines = [
+        `O **Laboratório Interativo — Vidrarias e Equipamentos de Laboratório** está no escopo do chat e possui ${LABORATORY_ITEMS.length} itens mapeados. Link: ${labItemUrl()}.`,
+        ''
+    ];
+    groups.forEach((items, group) => {
+        lines.push(`**${group}:** ${items.join('; ')}.`);
+    });
+    return lines.join('\n');
+}
+function compareVolumetricGlasswareReply() {
+    return `**Diferença entre proveta, pipetas, bureta e balão volumétrico:**\n- **Proveta:** mede volumes com precisão moderada; é útil para medições rápidas, mas não para preparo analítico rigoroso.\n- **Pipeta graduada:** mede e transfere volumes variáveis com controle melhor que a proveta.\n- **Pipeta volumétrica:** transfere um volume fixo com alta precisão.\n- **Bureta:** libera titulante gota a gota e permite ler o volume gasto, sendo típica de titulações.\n- **Balão volumétrico:** prepara uma solução em volume final exato na marca de aferição; não é usado para transferir frações sucessivas.\n\nRecurso relacionado: **Laboratório Interativo** (${labItemUrl()}).`;
+}
+function resolveLaboratoryIntent(text = '') {
+    const t = normalize(text);
+    if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|questoes sobre|exercicios sobre|pergunta sobre)/.test(t)) return null;
+    const candidateItem = findLaboratoryItemInText(t);
+    if (!candidateItem && !/(laboratorio|laboratório|vidraria|vidrarias|equipamento|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao|balão|funil|condensador|dessecador|bunsen|mufla|estufa|rotaevaporador|phmetro|pisseta|cadinho|buchner|büchner|capela|balanca|balança|centrifuga|centrífuga|suporte universal|vidro de relogio|vidro de relógio|espátula|espatula|bomba|vacuo|vácuo|pinca|pinça|filtro|frasco|vial|cristalizador|vigreux|allihn|drechsel|nessler|cuba cromatografica|peixinho|tripe|tripé|manta|chapa|mufla)/.test(t)) return null;
+    if (/(diferenca|diferença|comparar|compare|qual a diferenca)/.test(t) && /(proveta|pipeta|bureta|balao volumetrico|balão volumétrico)/.test(t)) {
+        return compareVolumetricGlasswareReply();
+    }
+    if (/(link|abrir|acessar|onde fica|url|pagina|página)/.test(t) && /(laboratorio|laboratório|vidraria|vidrarias|equipamento)/.test(t)) {
+        return `O link do **Laboratório Interativo — Vidrarias e Equipamentos de Laboratório** é: ${labItemUrl()}. Ele reúne modelos 3D, funções, aplicações e animações de líquidos, gases, aquecimento, rotação e operação de bancada.`;
+    }
+    if (/(quais|liste|lista|mostrar|mostre|todas|todos|catalogo|catálogo|tem no|existem)/.test(t) && /(vidraria|vidrarias|equipamento|equipamentos|laboratorio|laboratório)/.test(t)) {
+        return listLaboratoryItemsReply();
+    }
+    const item = candidateItem || findLaboratoryItemInText(t);
+    if (item) return formatLaboratoryItemReply(item);
+    if (/(laboratorio interativo|laboratório interativo|vidrarias e equipamentos|catalogo de vidrarias|catálogo de vidrarias)/.test(t)) {
+        return `O **Laboratório Interativo — Vidrarias e Equipamentos de Laboratório** é uma animação do SiMoEns voltada ao reconhecimento formal de instrumentos de bancada. Ele apresenta modelos 3D, descrições funcionais e animações associadas a líquidos, gases, aquecimento, rotação, abertura e operação de equipamentos. Link: ${labItemUrl()}.`;
+    }
+    return appendSuggestions('Você mencionou **laboratório, vidrarias ou equipamentos**. Posso explicar a função de cada item do Laboratório Interativo, comparar instrumentos parecidos, indicar o link da animação ou gerar questões sobre técnicas de bancada.', 'laboratorio');
+}
+
 function getBotResponse(userInput) {
     const normalizedInput = userInput.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     rememberTopicContext(normalizedInput);
     const explanationResponse = resolveExplanationIntent(normalizedInput);
     if (explanationResponse) return explanationResponse;
+    const laboratoryResponse = resolveLaboratoryIntent(normalizedInput);
+    if (laboratoryResponse) return laboratoryResponse;
+    const gemologySpecificResponse = resolveGemologySpecificIntent(normalizedInput);
+    if (gemologySpecificResponse) return gemologySpecificResponse;
     // Quiz / Questions
     if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|^questoes$|^exercicios$|questoes sobre|exercicios sobre|pergunta sobre)/.test(normalizedInput)) {
         let filteredQuestions = quizQuestions;
         // Check if the user specifically asked for a guided question
         if (/(guiada|dica|passo a passo|guiadas|dicas)/.test(normalizedInput)) {
             filteredQuestions = quizQuestions.filter(q => q.q.includes('Questão Guiada'));
+        }
+        else if (/(laboratorio|laboratório|laboratorial|vidraria|vidrarias|equipamento de laboratorio|equipamentos de laboratorio|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao volumetrico|balão volumétrico|condensador|destilacao|destilação|bico de bunsen|phmetro|pisseta|cadinho|funil de buchner|büchner|funil de buechner|capela de exaustao|capela de exaustão|laboratorio interativo|laboratório interativo|suporte universal|vidro de relogio|centrifuga|centrífuga)/.test(normalizedInput)) {
+            filteredQuestions = quizQuestions.filter(q => q.topic === 'laboratorio');
+        }
+        else if (/(gema|gemas|gemologia|corindo|rubi|safira|berilo|esmeralda|agua marinha|quartzo|ametista|citrino|diamante|opala|topazio|turmalina|granada|alexandrita|crisoberilo|diasporo|zultanite|sodalita|hackmanita|escapolita|fluorita|centro de cor|cromoforo|impureza|tratamento gemologico)/.test(normalizedInput)) {
+            filteredQuestions = quizQuestions.filter(q => q.topic === 'gemas');
         }
         else if (/(cristalografia|cristal|celula|rede|miller|bravais|defeito|simetria|empacotamento)/.test(normalizedInput)) {
             filteredQuestions = quizQuestions.filter(q => q.topic === 'cristalografia');
@@ -885,12 +1730,18 @@ function getBotResponse(userInput) {
 *(Ex: "Tudo sobre o Oxigênio", "Elemento Ouro", "Qual a massa atômica do Fósforo?", "Quem é o elemento Fe?")*.
 
 📝 **Fazer Exercícios e Simulados:** Peça para ser testado com problemas, ou até especifique uma área! 
-*(Ex: "Me faça uma questão de química", "Quero exercícios sobre termodinâmica", "Faça uma pergunta sobre VSEPR", "Questões da tabela periódica")*.
+*(Ex: "Me faça uma questão de química", "Quero exercícios sobre termodinâmica", "Faça uma pergunta sobre VSEPR", "Questões sobre gemas e centros de cor")*.
 
 💡 **Resolução Passo-a-Passo (Questões Guiadas):** Caso esteja inseguro se consegue resolver um problema todo sozinho, eu te entrego a resposta dividida em passos lógicos e ocultos. Você revela as dicas de uma em uma. 
 *(Ex: "Manda uma questão guiada para mim!", "Eu quero ser testado com uma questão guiada sobre cálculo estequiométrico")*.
 
 👀 **Desvendando o Gabarito (Spoilers):** Durante as questões, as alternativas falsas/verdadeiras, o raciocínio final ou dicas guiadas sempre chegam escondidos numa tarja cinza. Basta **passar o mouse (ou tocar pelo celular)** em cima dessa barra cinza para revelá-las sem receber "spoiler" antes da hora.
+
+🔬 **Laboratório Interativo:** Posso explicar vidrarias, equipamentos, acessórios, funções, diferenças de precisão, técnicas de bancada e montagens como titulação, filtração a vácuo, destilação, refluxo e aquecimento.
+*(Ex: "Para que serve uma bureta?", "Liste as vidrarias do laboratório", "Qual a diferença entre pipeta volumétrica e graduada?")*.
+
+💎 **Gemas e Minerais:** Posso explicar cor em gemas, impurezas cromóforas, centros de cor, defeitos, inclusões, pleocroísmo, tratamentos e exemplos como rubi, safira, esmeralda, quartzo, diamante, opala e alexandrita.
+*(Ex: "Por que a esmeralda é verde?", "Explique centros de cor", "Quais defeitos alteram a cor do diamante?")*.
 
 🎯 **Animações Educativas (SiMoEns):** Se tiver curiosidade, explore os materiais gráficos construídos pelo núcleo SiMoEns! 
 *(Ex: "Me mostre todas as animações", "Tens animações sobre geometria molecular?")*.
@@ -900,7 +1751,7 @@ function getBotResponse(userInput) {
     // Greetings
     if (/(^|\s)(oi|ola|bom dia|boa tarde|boa noite|opa|e ai|saudacoes)(\s|$)/.test(normalizedInput)) {
         const greetings = [
-            "Olá! Sou o Assistente do SiMoEns. Prefiro frases diretas e uso reconhecimento de palavras-chave. Posso te ajudar com VSEPR, polaridade, células unitárias, cristalografia, empacotamento, polimorfismo, modelos atômicos e orbitais. O que deseja saber?",
+            "Olá! Sou o Assistente do SiMoEns. Prefiro frases diretas e uso reconhecimento de palavras-chave. Posso te ajudar com VSEPR, polaridade, células unitárias, cristalografia, empacotamento, gemas, centros de cor, defeitos cristalinos, laboratório interativo, vidrarias, polimorfismo, modelos atômicos e orbitais. O que deseja saber?",
             "Oi! Eu sou o Assistente do SiMoEns. Pergunte-me de modo direto sobre química estrutural, estado sólido ou mesmo os elementos químicos!",
             "Saudações! Estou pronto para tirar suas dúvidas sobre geometria molecular, redes cristalinas, modelos atômicos e muito mais. Digite a palavra ou a frase do assunto que quer investigar (ex. 'como é a estrutura do cloreto de sódio?'). Como posso ajudar?",
             "Olá! Aqui é o Assistente do SiMoEns. Respondo a termos e palavras associadas à química geral, inorgânica e cristalografia. Lembre-se que por ser guiado a regras, perguntas longas demais podem me confundir. Qual é a sua pergunta hoje?"
@@ -949,6 +1800,12 @@ function getBotResponse(userInput) {
         }
     }
     // Topic-specific fallbacks for ambiguous queries
+    if (/(laboratorio|laboratório|laboratorial|vidraria|vidrarias|equipamento de laboratorio|equipamentos de laboratorio|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao|balão|funil|condensador|dessecador|bunsen|mufla|estufa|rotaevaporador|phmetro|pisseta|cadinho|buchner|büchner|capela|centrifuga|centrífuga|suporte universal|vidro de relogio|vidro de relógio|espátula|espatula)/.test(normalizedInput)) {
+        return appendSuggestions("Você mencionou **Laboratório Interativo, vidrarias ou equipamentos**. Posso explicar a função de qualquer item do catálogo, listar todas as vidrarias, comparar instrumentos de precisão volumétrica ou propor questões sobre técnicas de bancada.", "laboratorio");
+    }
+    if (/(gema|gemas|gemologia|corindo|rubi|safira|berilo|esmeralda|agua marinha|quartzo|ametista|citrino|diamante|opala|topazio|turmalina|granada|alexandrita|crisoberilo|diasporo|zultanite|sodalita|hackmanita|escapolita|fluorita|centro de cor|cromoforo|impureza|tratamento gemologico|inclusao|inclusoes)/.test(normalizedInput)) {
+        return appendSuggestions("Você mencionou **gemas e propriedades ópticas de minerais**. Posso explicar de forma científica a origem das cores, a função de impurezas cromóforas, centros de cor, defeitos cristalinos, inclusões, pleocroísmo e tratamentos gemológicos. Também posso propor uma **questão** sobre gemas.", "gemas");
+    }
     if (/(cristalografia|cristal|celula|rede|miller|bravais|defeito|simetria|empacotamento)/.test(normalizedInput)) {
         return appendSuggestions("Vejo que você está interessado em **Cristalografia e Estado Sólido**! Você gostaria de uma explicação sobre algum conceito específico (como Células Unitárias, Índices de Miller, Defeitos) ou prefere que eu te faça uma **questão** para testar seus conhecimentos? (Diga: 'Me faça uma questão sobre cristalografia')", "cristalografia");
     }
@@ -981,7 +1838,7 @@ function getBotResponse(userInput) {
 }
 const INITIAL_MESSAGE = `Olá! Sou o Assistente do SiMoEns, seu assistente focado em Química! 🧪
 
-Estou aqui para ajudar com Química Geral, Inorgânica, Estado Sólido, Cristalografia, Físico-Química e Química de Coordenação.
+Estou aqui para ajudar com Química Geral, Inorgânica, Estado Sólido, Cristalografia, Físico-Química, Química de Coordenação, fundamentos científicos de gemas/minerais e reconhecimento de vidrarias/equipamentos do Laboratório Interativo.
 
 Como falar comigo:
 Como sou um robô que trabalha através do reconhecimento de palavras-chave estruturadas e não por inteligência artificial, eu funciono muito melhor se você for direto e objetivo no assunto, sem textos muito longos ou complexos.
@@ -990,6 +1847,8 @@ Experimente digitar:
 - "O que é uma célula unitária?"
 - "Explique a teoria do campo cristalino"
 - "Quais os defeitos cristalinos?"
+- "Por que a esmeralda é verde?"
+- "Explique centros de cor em gemas"
 - "Me passe uma questão sobre cristalografia"
 - "Fale sobre o elemento Ouro"
 
@@ -1077,9 +1936,19 @@ const SIMOENS_SITE_MAP = [
     title: 'Página Ensino',
     path: 'Ensino/index.html',
     category: 'página',
-    summary: 'Catálogo das animações e recursos didáticos de química, cristalografia, geometria molecular, polaridade e polimorfismo.',
+    summary: 'Catálogo das animações e recursos didáticos de química, cristalografia, geometria molecular, polaridade, polimorfismo, gemas e laboratório interativo.',
     related: ['Buracos e empacotamento', 'Células unitárias e parâmetros de rede', 'Redes cristalinas'],
     keywords: ['ensino','pagina ensino','página ensino','catalogo','catálogo','recursos didaticos','recursos didáticos']
+  },
+  {
+    id: 'laboratorio_interativo',
+    title: 'Laboratório Interativo — Vidrarias e Equipamentos de Laboratório',
+    path: 'Ensino/Animacao/catalogo-de-vidrarias-animado/index.html',
+    category: 'animação',
+    catalogEntry: true,
+    summary: 'Catálogo 3D de vidrarias, equipamentos, acessórios de bancada, funções laboratoriais, aplicações e animações de líquido, gás, aquecimento, rotação e operação.',
+    related: ['Página Ensino', 'Xadrez Químico (Jogo)', 'Interações Intermoleculares'],
+    keywords: ['laboratório interativo','laboratorio interativo','vidrarias','vidrarias e equipamentos','catálogo de vidrarias','catalogo de vidrarias','béquer','bequer','erlenmeyer','kitasato','kitassato','balão de fundo redondo','balao de fundo redondo','proveta','tubo de ensaio','balão volumétrico','balao volumetrico','funil de separação','funil de separacao','bureta','pipeta graduada','cristalizador','vial','balão de destilação','balao de destilacao','condensador liebig','dessecador','frasco âmbar','frasco ambar','pipeta pasteur','tubo de nessler','frasco de drechsel','coluna de vigreux','condensador allihn','pipeta volumétrica','pipeta volumetrica','cuba cromatográfica','cuba cromatografica','tubo de cultura','bico de bunsen','forno mufla','estufa de secagem','rotaevaporador','capela de exaustão','capela de exaustao','balança analítica','balanca analitica','condutivímetro','condutivimetro','phmetro','chapa de aquecimento','manta de aquecimento','peixinho magnético','peixinho magnetico','tripé','tripe','cadinho','funil de vidro','funil de büchner','funil de buchner','escova de limpeza','pisseta','suporte universal','pinça metálica','pinca metalica','pinça de madeira','pinca de madeira','filtro de papel','bomba a vácuo','bomba a vacuo','vidro de relógio','vidro de relogio','espátulas','espatulas','centrífuga','centrifuga','bancada de laboratório']
   },
   {
     id: 'modelagem',
@@ -1425,6 +2294,17 @@ const SIMOENS_SITE_MAP = [
   keywords: ['xadrez químico','xadrez quimico','vidrarias','laboratório','laboratorio','estratégia','estrategia','jogo']
 },
   {
+    id: 'gemviewer',
+    title: 'Gemas e mudança de cor',
+    path: 'Ensino/Animacao/gemviewer/index.html',
+    category: 'animação',
+    catalogEntry: true,
+    summary: 'Visualizador 3D para estudar gemas, cores, impurezas cromóforas, defeitos cristalinos, centros de cor, inclusões e mudanças ópticas em minerais.',
+    related: ['Identificação de defeitos cristalinos (Exercício)', 'Redes cristalinas', 'Complexos e polimorfismo'],
+    keywords: ['gemas','gema','gemologia','gemas e mudança de cor','gemas e mudanca de cor','gemviewer','cor em gemas','cores das gemas','impurezas','defeitos cristalinos','centros de cor','cromóforo','cromoforo','rubi','safira','esmeralda','diamante','opala','alexandrita','turmalina','topázio','fluorita','hackmanita']
+  },
+
+  {
     id: 'atlas_termodinamico',
     title: 'Atlas Termodinâmico',
     path: 'Ensino/Guia/atlas_termodinamico/index.html',
@@ -1489,7 +2369,7 @@ function getAnimationEntries() {
 }
 
 function getLatestAnimationEntries() {
-  const latestIds = ['polaridade_geometria_exercicio', 'classificacao_sistema_cristalino', 'intersticios_cristalinos', 'caca_sitio_cristalino', 'formula_unitaria_pratica', 'coordenacao_empacotamento_exercicio', 'defeitos_cristalinos_exercicio', 'comparacao_polaridade_exercicio', 'caca_palavras_jogo', 'xadrez_quimico_jogo'];
+  const latestIds = ['gemviewer', 'polaridade_geometria_exercicio', 'classificacao_sistema_cristalino', 'intersticios_cristalinos', 'caca_sitio_cristalino', 'formula_unitaria_pratica', 'coordenacao_empacotamento_exercicio', 'defeitos_cristalinos_exercicio', 'comparacao_polaridade_exercicio', 'caca_palavras_jogo', 'xadrez_quimico_jogo'];
   return latestIds.map((id) => SIMOENS_SITE_MAP.find((entry) => entry.id === id)).filter(Boolean);
 }
 
@@ -1521,6 +2401,7 @@ const TOPIC_HINTS = [
   ['visualizador_de_hidrogenoides', 'visualização 2D e 3D de orbitais e distribuições eletrônicas em sistemas hidrogenoides'],
   ['eq_de_ondas_hidrogenoides', 'equações de onda, função de onda, densidade de probabilidade e interpretação de orbitais hidrogenoides'],
   ['visualizador_orbitais', 'orbitais atômicos e moleculares, estruturas blobby/metaball, caráter ligante e antiligante e edição de lóbulos em 3D'],
+  ['gemviewer', 'gemas, mudança de cor, impurezas cromóforas, centros de cor, defeitos cristalinos e minerais gemológicos'],
 ['Polaridade-e-Geometria-molecular', 'exercício de polaridade, geometria molecular, vetores e ângulos'],
 ['nome-da-celula', 'classificação dos sistemas cristalinos, eixos, ângulos e parâmetros de rede'],
 ['buracos-cristalinos', 'interstícios tetraédricos e octaédricos em estruturas cristalinas'],
@@ -1555,13 +2436,13 @@ function encodePathPreservingHash(pathname = '') {
 }
 
 function entryUrl(entry) {
-  if (!entry || !entry.path) return SITE_ROOT_URL;
+  if (!entry || !entry.path) return SITE_URL;
   const rawPath = String(entry.path || '');
   const cleanedPath = rawPath
     .replace(/^index\.html(?=#|$)/i, '')
     .replace(/\/index\.html(?=#|$)/gi, '/')
     .replace(/([^/])#/, '$1#');
-  return new URL(encodePathPreservingHash(cleanedPath), SITE_ROOT_URL).href;
+  return new URL(encodePathPreservingHash(cleanedPath), SITE_URL).href;
 }
 
 
@@ -1774,7 +2655,8 @@ function chemistryKeywords(extra = []) {
     'tetraedrico','tetraédrico','octaedrico','octaédrico','trigonal','monoclínica','monoclinica','hexagonal','cúbica','cubica','fração','fracao','fracoes','frações',
     'fórmula','formula','estequiometria','substancia','substância','reacao','reação','valencia','valência','periodica','periódica','coordenação','wigner',
     'seitz','brønsted','lewis','ácido','acido','base','oxidação','oxidacao','redução','reducao','solido','sólido','sólidos','solidos',
-    'camada','camadas','estrutura','estruturas','buracos','intersticios','interstícios'
+    'camada','camadas','estrutura','estruturas','buracos','intersticios','interstícios',
+    'gema','gemas','gemologia','gemologico','gemológica','mineral gemologico','minerais gemologicos','corindo','rubi','safira','berilo','esmeralda','agua marinha','água-marinha','quartzo','ametista','citrino','diamante','opala','topazio','topázio','turmalina','granada','alexandrita','crisoberilo','centro de cor','centros de cor','cromoforo','cromóforo','impureza cromofora','impureza cromófora','pleocroismo','pleocroísmo','tenebrescencia','tenebrescência','gemviewer'
   ].concat(extra.map((item) => normalize(item)));
 }
 
@@ -2007,6 +2889,19 @@ function maybeAnswerInstantSiteQuestions(userText = '') {
     }
   }
 
+  const asksGemViewerByName = /gemas e mudanca de cor|gemas e mudança de cor|gemviewer|visualizador de gemas|animacao de gemas|animação de gemas|mudanca de cor em gemas|mudança de cor em gemas/.test(t);
+  const asksGemViewerBySiteIntent = /(cor em gemas|cores das gemas)/.test(t) && (/link|links|url|urls|acessar|acessa|abrir|abre|onde fica|o que mostra|do que fala|resuma|animacao|animação|visualizador/.test(t));
+  const asksGemViewer = asksGemViewerByName || asksGemViewerBySiteIntent;
+  if (asksGemViewer) {
+    const gemEntry = SIMOENS_SITE_MAP.find((e) => e.id === 'gemviewer');
+    if (gemEntry) {
+      if (/link|links|url|urls|acessar|acessa|abrir|abre|onde fica/.test(t)) {
+        return `O link de ${gemEntry.title} é: ${entryUrl(gemEntry)}`;
+      }
+      return `${gemEntry.title} é uma animação/visualizador 3D do SiMoEns para estudar gemas, mudança de cor, impurezas cromóforas, centros de cor, defeitos cristalinos, interstícios, inclusões e relações entre estrutura mineral e propriedades ópticas. Link: ${entryUrl(gemEntry)}.`;
+    }
+  }
+
   const asksHydrogenLinks = /modelos atomicos|modelos atômicos|visualizador de hidrogenoides|visualizador de hidrogenóides|equacoes de onda|equações de onda/.test(t) && /link|links|url|urls/.test(t);
   if (asksHydrogenLinks) {
     return `Links diretos: Modelos Atômicos — ${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'modelos_atomicos'))}; Visualizador de hidrogenoides — ${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'visualizador_hidrogenoides'))}; Equações de onda de hidrogenoides — ${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'eq_ondas_hidrogenoides'))}.`;
@@ -2098,7 +2993,7 @@ function refersToCurrentContext(text, ctx) {
 
 function hasBroadChemistryHint(text) {
   const t = normalize(text);
-  return /(quimica|química|simoens|site|anima|pagina|página|molecula|molécula|ion|íon|ligacao|ligação|estrutura|cristal|bravais|wigner|seitz|tetra|octa|interst|poliedr|coordena|complexo|vsepr|polaridade|molecular|metal|covalente|ácido|acido|base|sal|óxido|oxido|mol|estequi|concentr|soluç|soluc|ph|orbital|banda|condut|difra|drx|bragg|miller|polimorf|alotrop|átomo|atomo|el[eé]tron|proton|próton|defeit|vacan|frenkel|schottky|dopag|liga|solvat|hidrat|anion|cation|semicond|isolante)/.test(t);
+  return /(quimica|química|simoens|site|anima|pagina|página|molecula|molécula|ion|íon|ligacao|ligação|estrutura|cristal|bravais|wigner|seitz|tetra|octa|interst|poliedr|coordena|complexo|vsepr|polaridade|molecular|metal|covalente|ácido|acido|base|sal|óxido|oxido|mol|estequi|concentr|soluç|soluc|ph|orbital|banda|condut|difra|drx|bragg|miller|polimorf|alotrop|átomo|atomo|el[eé]tron|proton|próton|defeit|vacan|frenkel|schottky|dopag|liga|solvat|hidrat|anion|cation|semicond|isolante|gema|gemas|gemolog|corindo|rubi|safira|berilo|esmeralda|diamante|opala|topazio|topázio|turmalina|granada|alexandrita|crisoberilo|cromofor|centro de cor|centros de cor|pleocro|tenebresc|inclus[aã]o|inclus[oõ]es)/.test(t);
 }
 
 function recentConversationLooksInScope(messages, ctx) {
@@ -2125,7 +3020,7 @@ function isAllowedScopeQuestion(text, ctx, recentMessages) {
   if (hasChemistryFormula(text)) return true;
   if (Canonical && typeof Canonical.isLikelyChemistryText === 'function' && Canonical.isLikelyChemistryText(text)) return true;
   if (hasStudyIntent(text) && refersToCurrentContext(text, ctx)) return true;
-  if (hasStudyIntent(text) && /(quimica|química|site|simoens|anima|pagina|página|molecula|molécula|ion|íon|ligacao|ligação|estrutura|cristal|defeit|vacan|frenkel|schottky|dopag)/.test(t)) return true;
+  if (hasStudyIntent(text) && /(quimica|química|site|simoens|anima|pagina|página|molecula|molécula|ion|íon|ligacao|ligação|estrutura|cristal|defeit|vacan|frenkel|schottky|dopag|gema|gemas|gemolog|rubi|safira|esmeralda|diamante|opala|cromofor|centro de cor|centros de cor|impureza|inclus[aã]o|inclus[oõ]es|pleocro|tratamento gemolog)/.test(t)) return true;
   if (isLikelyFollowupQuestion(text) && recentConversationLooksInScope(recentMessages, ctx)) return true;
   return false;
 }
@@ -2633,6 +3528,7 @@ class SimoensChatWidget {
     this.refs.form = document.getElementById('chatForm') || document.getElementById('form');
     this.refs.input = document.getElementById('userInput') || document.getElementById('input');
     this.refs.sendBtn = this.refs.form?.querySelector('button[type="submit"]') || null;
+    this.refs.counter = document.getElementById('counter');
     this.refs.contextBox = document.getElementById('composerHint');
     this.refs.modelBox = document.getElementById('llmBadge');
     this.refs.modelBadge = this.refs.modelBox;
@@ -2661,6 +3557,22 @@ class SimoensChatWidget {
     this.refs.newChatBtn?.addEventListener('click', () => this.createNewPageConversation());
     this.refs.clearBtn?.addEventListener('click', () => this.clearActiveConversation());
     this.refs.downloadBtn?.addEventListener('click', () => this.downloadTranscript());
+    const syncLegacyComposerState = () => {
+      if (!this.refs.input) return;
+      this.refs.input.style.height = 'auto';
+      this.refs.input.style.height = `${Math.min(this.refs.input.scrollHeight, 220)}px`;
+      const maxLength = Number(this.refs.input.getAttribute('maxlength')) || 500;
+      const length = this.refs.input.value.length;
+      if (this.refs.counter) {
+        this.refs.counter.textContent = `${length}/${maxLength} caracteres`;
+        this.refs.counter.classList.toggle('limit', length >= maxLength);
+      }
+      if (this.refs.sendBtn && !this.sending) {
+        this.refs.sendBtn.disabled = false;
+        this.refs.sendBtn.removeAttribute('disabled');
+      }
+    };
+
     this.refs.sendBtn?.addEventListener('click', (event) => {
       if (!this.sending) return;
       event.preventDefault();
@@ -2668,10 +3580,21 @@ class SimoensChatWidget {
       this.requestStopGeneration();
     });
     this.refs.form?.addEventListener('submit', (event) => this.handleSubmit(event));
-    this.refs.input?.addEventListener('input', () => {
-      this.refs.input.style.height = 'auto';
-      this.refs.input.style.height = `${Math.min(this.refs.input.scrollHeight, 220)}px`;
+    this.refs.input?.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.sending) {
+        this.requestStopGeneration();
+        return;
+      }
+      if ((this.refs.input?.value || '').trim()) {
+        if (typeof this.refs.form?.requestSubmit === 'function') this.refs.form.requestSubmit();
+        else this.handleSubmit(event);
+      }
     });
+    this.refs.input?.addEventListener('input', syncLegacyComposerState);
+    syncLegacyComposerState();
     this.refs.sampleQuestions?.addEventListener('click', (event) => {
       const button = event.target.closest('[data-question]');
       if (!button || !this.refs.input) return;
@@ -3685,6 +4608,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     if (!this.refs.sendBtn) return;
     const isStopping = this.sending === true;
     this.refs.sendBtn.disabled = false;
+    this.refs.sendBtn.removeAttribute('disabled');
     this.refs.sendBtn.classList.toggle('is-stopmode', isStopping);
     if (this.legacyPageShell) {
       this.refs.sendBtn.textContent = isStopping ? 'Interromper' : 'Perguntar';
@@ -4236,6 +5160,7 @@ ${buildDirectSystemPrompt(currentCtx, relevantSiteText, this.getActiveSystemProm
       this.stopRequestedByUser = false;
       if (this.refs.input) this.refs.input.disabled = false;
       if (this.refs.menuBtn) this.refs.menuBtn.disabled = false;
+      if (this.refs.sendBtn) this.refs.sendBtn.removeAttribute('disabled');
       this.updateSendButtonState();
       this.refs.input?.focus();
     }

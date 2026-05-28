@@ -1150,18 +1150,43 @@ function collectElementIds(root) {
   return Array.from(ids).sort((a, b) => b.length - a.length);
 }
 
+function collectElementClasses(root) {
+  if (!(root instanceof Element)) return [];
+  const classes = new Set();
+  const addFrom = el => {
+    const value = el.getAttribute && el.getAttribute('class');
+    if (!value) return;
+    String(value).trim().split(/\s+/).forEach(cls => {
+      if (cls) classes.add(cls);
+    });
+  };
+  addFrom(root);
+  root.querySelectorAll('[class]').forEach(addFrom);
+  return Array.from(classes).sort((a, b) => b.length - a.length);
+}
+
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function rewriteCssText(cssText, prefix, ids = []) {
+function prefixClassList(value, prefix, classes = []) {
+  if (!value) return value;
+  const classSet = new Set(classes);
+  return String(value).trim().split(/\s+/).map(cls => classSet.has(cls) ? prefix + cls : cls).join(' ');
+}
+
+function rewriteCssText(cssText, prefix, ids = [], classes = []) {
   let next = String(cssText || '');
-  next = next.replace(/url\((['"]?)#([^)"']+)\1\)/g, (match, quote, id) => {
+  next = next.replace(/url\((['"]?)#([^\)"']+)\1\)/g, (match, quote, id) => {
     return `url(${quote || ''}#${prefix}${id}${quote || ''})`;
   });
   ids.forEach(id => {
     const escapedId = escapeRegExp(id);
     next = next.replace(new RegExp(`(?<![\\w-])#${escapedId}(?![\\w-])`, 'g'), `#${prefix}${id}`);
+  });
+  classes.forEach(cls => {
+    const escapedClass = escapeRegExp(cls);
+    next = next.replace(new RegExp(`(?<![\\w-])\\.${escapedClass}(?![\\w-])`, 'g'), `.${prefix}${cls}`);
   });
   return next;
 }
@@ -1703,31 +1728,108 @@ function ensureRootDefs() {
   return defs;
 }
 
-function rewriteIdReferences(node, prefix, ids = []) {
+const IMPORTED_ROOT_STYLE_ATTRS = [
+  'class', 'style', 'fill', 'fill-rule', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity',
+  'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset',
+  'opacity', 'color', 'font-family', 'font-size', 'font-weight', 'font-style', 'text-anchor',
+  'dominant-baseline', 'letter-spacing', 'word-spacing', 'paint-order', 'vector-effect',
+  'shape-rendering', 'image-rendering', 'mix-blend-mode', 'filter', 'clip-path', 'mask'
+];
+
+const DEFINITION_TAGS = new Set([
+  'defs', 'style', 'symbol', 'clipPath', 'mask', 'pattern', 'linearGradient', 'radialGradient',
+  'filter', 'marker', 'metadata', 'desc', 'title'
+].map(tag => tag.toLowerCase()));
+
+function rewriteIdReferences(node, prefix, ids = [], classes = []) {
   if (!(node instanceof Element)) return;
   if (node.tagName && node.tagName.toLowerCase() === 'style') {
-    node.textContent = rewriteCssText(node.textContent, prefix, ids);
+    node.textContent = rewriteCssText(node.textContent, prefix, ids, classes);
   }
   const id = node.getAttribute('id');
   if (id) node.setAttribute('id', prefix + id);
-  const attrs = ['fill', 'stroke', 'filter', 'clip-path', 'mask', 'marker-start', 'marker-mid', 'marker-end', 'href', 'xlink:href'];
+  if (node.hasAttribute('class')) {
+    node.setAttribute('class', prefixClassList(node.getAttribute('class'), prefix, classes));
+  }
+  const attrs = [
+    'fill', 'stroke', 'filter', 'clip-path', 'mask', 'marker-start', 'marker-mid', 'marker-end',
+    'href', 'xlink:href', 'begin', 'end', 'aria-labelledby', 'aria-describedby'
+  ];
   attrs.forEach(attr => {
     if (!node.hasAttribute(attr)) return;
     const value = node.getAttribute(attr);
     if (!value) return;
-    if (value.startsWith('#')) node.setAttribute(attr, '#' + prefix + value.slice(1));
-    else node.setAttribute(attr, value.replace(/url\((['"]?)#([^)"']+)\1\)/g, (match, quote, refId) => `url(${quote || ''}#${prefix}${refId}${quote || ''})`));
+    if ((attr === 'href' || attr === 'xlink:href') && value.startsWith('#')) {
+      node.setAttribute(attr, '#' + prefix + value.slice(1));
+      return;
+    }
+    node.setAttribute(attr, String(value)
+      .replace(/url\((['"]?)#([^\)"']+)\1\)/g, (match, quote, refId) => `url(${quote || ''}#${prefix}${refId}${quote || ''})`)
+      .replace(/(^|[\s;])#([A-Za-z_][\w:.-]*)/g, (match, lead, refId) => `${lead}#${prefix}${refId}`)
+    );
   });
   if (node.hasAttribute('style')) {
-    node.setAttribute('style', rewriteCssText(node.getAttribute('style'), prefix, ids));
+    node.setAttribute('style', rewriteCssText(node.getAttribute('style'), prefix, ids, classes));
   }
-  Array.from(node.children).forEach(child => rewriteIdReferences(child, prefix, ids));
+  Array.from(node.children).forEach(child => rewriteIdReferences(child, prefix, ids, classes));
+}
+
+function copyImportedRootStyles(imported, group, prefix, ids = [], classes = []) {
+  IMPORTED_ROOT_STYLE_ATTRS.forEach(attr => {
+    if (!imported.hasAttribute(attr)) return;
+    let value = imported.getAttribute(attr);
+    if (!value) return;
+    if (attr === 'class') value = prefixClassList(value, prefix, classes);
+    else if (attr === 'style') value = rewriteCssText(value, prefix, ids, classes);
+    else value = String(value).replace(/url\((['"]?)#([^\)"']+)\1\)/g, (match, quote, refId) => `url(${quote || ''}#${prefix}${refId}${quote || ''})`);
+    group.setAttribute(attr, value);
+  });
+}
+
+function isDefinitionLikeNode(node) {
+  return node && node.nodeType === 1 && node.tagName && DEFINITION_TAGS.has(node.tagName.toLowerCase());
+}
+
+function appendImportedDefinitions(imported, defs, prefix, ids = [], classes = []) {
+  Array.from(imported.children || []).forEach(child => {
+    if (!isDefinitionLikeNode(child)) return;
+    const tag = child.tagName.toLowerCase();
+    if (tag === 'defs') {
+      Array.from(child.children || []).forEach(defChild => {
+        const copy = document.importNode(defChild, true);
+        rewriteIdReferences(copy, prefix, ids, classes);
+        defs.appendChild(copy);
+      });
+      return;
+    }
+    const copy = document.importNode(child, true);
+    rewriteIdReferences(copy, prefix, ids, classes);
+    defs.appendChild(copy);
+  });
+}
+
+function computeImportFitTransform(importedVb, rootVb) {
+  const iw = Number(importedVb && importedVb.width);
+  const ih = Number(importedVb && importedVb.height);
+  const ix = Number(importedVb && importedVb.x) || 0;
+  const iy = Number(importedVb && importedVb.y) || 0;
+  const rw = Number(rootVb && rootVb.width);
+  const rh = Number(rootVb && rootVb.height);
+  const rx = Number(rootVb && rootVb.x) || 0;
+  const ry = Number(rootVb && rootVb.y) || 0;
+  if (!Number.isFinite(iw) || !Number.isFinite(ih) || iw <= 0 || ih <= 0 || !Number.isFinite(rw) || !Number.isFinite(rh) || rw <= 0 || rh <= 0) return '';
+  const scale = Math.min(rw / iw, rh / ih);
+  if (!Number.isFinite(scale) || scale <= 0) return '';
+  const tx = rx + (rw - iw * scale) / 2 - ix * scale;
+  const ty = ry + (rh - ih * scale) / 2 - iy * scale;
+  const nearIdentity = Math.abs(scale - 1) < 0.0001 && Math.abs(tx) < 0.0001 && Math.abs(ty) < 0.0001;
+  if (nearIdentity) return '';
+  return `translate(${Number(tx.toFixed(4))} ${Number(ty.toFixed(4))}) scale(${Number(scale.toFixed(6))})`;
 }
 
 function importSvgAsLayer(svgString, name = 'camada.svg') {
   const imported = parseSvg(svgString);
   ensureViewBox(imported);
-  normalizeLayerTree(imported);
   const importedVb = getSvgViewBoxData(imported);
   if (!state.svgRoot) {
     state.svgRoot = createBlankSvg(importedVb.width, importedVb.height);
@@ -1740,38 +1842,49 @@ function importSvgAsLayer(svgString, name = 'camada.svg') {
     fileLabel.textContent = state.loadedName;
     stageTitle.textContent = state.loadedName;
   }
+
   const defs = ensureRootDefs();
+  const rootVb = getSvgViewBoxData(state.svgRoot);
   const prefix = `imp${Date.now().toString(36)}_${Math.random().toString(36).slice(2,7)}_`;
   const importedIds = collectElementIds(imported);
-  Array.from(imported.children).forEach(child => {
-    if (!child.tagName) return;
-    const tag = child.tagName.toLowerCase();
-    if (tag === 'defs') {
-      Array.from(child.children).forEach(defChild => {
-        const copy = defChild.cloneNode(true);
-        rewriteIdReferences(copy, prefix, importedIds);
-        defs.appendChild(copy);
-      });
-    }
-  });
+  const importedClasses = collectElementClasses(imported);
+
+  appendImportedDefinitions(imported, defs, prefix, importedIds, importedClasses);
 
   const group = document.createElementNS(SVG_NS, 'g');
   group.setAttribute('data-layer-name', name);
   group.setAttribute('data-layer-group', '1');
   group.setAttribute('data-editor-layer', '1');
+  copyImportedRootStyles(imported, group, prefix, importedIds, importedClasses);
+
+  const fitTransform = computeImportFitTransform(importedVb, rootVb);
+  const importedRootTransform = imported.getAttribute('transform') || '';
+  const combinedTransform = [fitTransform, importedRootTransform].filter(Boolean).join(' ');
+  if (combinedTransform) group.setAttribute('transform', combinedTransform);
 
   const importViewBox = imported.getAttribute('viewBox');
   if (importViewBox && !group.hasAttribute('data-import-viewBox')) group.setAttribute('data-import-viewBox', importViewBox);
 
-  const children = Array.from(imported.childNodes).filter(node => node.nodeType === 1 && node.tagName.toLowerCase() !== 'defs');
+  const children = Array.from(imported.childNodes).filter(node => node.nodeType === 1 && !isDefinitionLikeNode(node));
   children.forEach((node, index) => {
     const copy = document.importNode(node, true);
-    rewriteIdReferences(copy, prefix, importedIds);
+    rewriteIdReferences(copy, prefix, importedIds, importedClasses);
     if (!copy.hasAttribute('data-layer-name')) copy.setAttribute('data-layer-name', defaultLayerNameForNode(copy, index));
     if (copy.tagName && copy.tagName.toLowerCase() === 'g') copy.setAttribute('data-layer-group', '1');
     group.appendChild(copy);
     if (isGroupLayer(copy)) assignNamesRecursively(copy);
   });
+
+  if (!group.childElementCount) {
+    const emptyLabel = document.createElementNS(SVG_NS, 'text');
+    emptyLabel.setAttribute('x', String(rootVb.x + 24));
+    emptyLabel.setAttribute('y', String(rootVb.y + 32));
+    emptyLabel.setAttribute('fill', '#FFFFFF');
+    emptyLabel.setAttribute('opacity', '0.5');
+    emptyLabel.setAttribute('font-size', '14');
+    emptyLabel.textContent = `${name} não tinha elementos visíveis fora de <defs>.`;
+    group.appendChild(emptyLabel);
+  }
 
   normalizeLayerTree(group);
   state.svgRoot.appendChild(group);

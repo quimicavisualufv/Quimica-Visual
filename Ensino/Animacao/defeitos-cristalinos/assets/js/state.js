@@ -3,21 +3,34 @@ import { findNearestInterstitial, findPairedHost, generateLattice } from './latt
 
 const listeners = new Set();
 const STORAGE_KEY = 'defeitos-cristalinos-appearance';
+const APPEARANCE_VERSION = 2;
 const defaultAppearance = {
-  backgroundColor: '#ffedd5',
-  lightColor: '#ffb03a'
+  backgroundColor: '#FFEDD5',
+  lightColor: '#FDFDFC'
 };
 
 function isHexColor(value) {
   return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
 }
 
+function normalizeHexColor(value) {
+  return isHexColor(value) ? value.toUpperCase() : null;
+}
+
 function loadAppearance() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const savedBackgroundColor = normalizeHexColor(saved.backgroundColor);
+    const savedLightColor = normalizeHexColor(saved.lightColor);
+    if (saved.version === APPEARANCE_VERSION) {
+      return {
+        backgroundColor: savedBackgroundColor || defaultAppearance.backgroundColor,
+        lightColor: savedLightColor || defaultAppearance.lightColor
+      };
+    }
     return {
-      backgroundColor: isHexColor(saved.backgroundColor) ? saved.backgroundColor : defaultAppearance.backgroundColor,
-      lightColor: isHexColor(saved.lightColor) ? saved.lightColor : defaultAppearance.lightColor
+      backgroundColor: savedBackgroundColor || defaultAppearance.backgroundColor,
+      lightColor: savedLightColor && savedLightColor !== '#FFB03A' ? savedLightColor : defaultAppearance.lightColor
     };
   } catch (_) {
     return { ...defaultAppearance };
@@ -27,6 +40,7 @@ function loadAppearance() {
 function saveAppearance() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      version: APPEARANCE_VERSION,
       backgroundColor: state.backgroundColor,
       lightColor: state.lightColor
     }));
@@ -92,15 +106,17 @@ export function setAtomScale(atomScale) {
 }
 
 export function setBackgroundColor(backgroundColor) {
-  if (!isHexColor(backgroundColor)) return;
-  state.backgroundColor = backgroundColor;
+  const normalizedBackgroundColor = normalizeHexColor(backgroundColor);
+  if (!normalizedBackgroundColor) return;
+  state.backgroundColor = normalizedBackgroundColor;
   saveAppearance();
   notify();
 }
 
 export function setLightColor(lightColor) {
-  if (!isHexColor(lightColor)) return;
-  state.lightColor = lightColor;
+  const normalizedLightColor = normalizeHexColor(lightColor);
+  if (!normalizedLightColor) return;
+  state.lightColor = normalizedLightColor;
   saveAppearance();
   notify();
 }

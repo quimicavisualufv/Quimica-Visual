@@ -27,8 +27,8 @@ export class SceneController {
     this.snapshot = null;
     this.sceneSignature = '';
     this.appearance = {
-      backgroundColor: '#ffedd5',
-      lightColor: '#ffb03a'
+      backgroundColor: '#FFEDD5',
+      lightColor: '#FDFDFC'
     };
     this.sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
     this.boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -135,6 +135,8 @@ export class SceneController {
     let transparent = false;
     let wireframe = false;
     let isBox = false;
+    let emissive = '#000000';
+    let emissiveIntensity = 0;
     const mode = this.snapshot.mode;
 
     if (atom.type === 'substitutional') {
@@ -149,12 +151,14 @@ export class SceneController {
 
     if (['vacancy', 'frenkel_vacancy', 'schottky_cation', 'schottky_anion'].includes(atom.type)) {
       if (['vacancy', 'frenkel', 'schottky'].includes(mode)) {
-        color = '#94a3b8';
+        color = '#7dd3fc';
         scale = 0.3;
-        opacity = 0.2;
+        opacity = 0.55;
         transparent = true;
-        wireframe = true;
+        wireframe = false;
         isBox = true;
+        emissive = '#7dd3fc';
+        emissiveIntensity = 1.7;
       } else {
         visible = false;
       }
@@ -162,12 +166,14 @@ export class SceneController {
 
     if (atom.type === 'interstitial_site') {
       if (mode === 'interstitial' || mode === 'frenkel') {
-        color = '#fcd34d';
+        color = '#7dd3fc';
         scale = 0.2;
-        opacity = 0.3;
+        opacity = 0.48;
         transparent = true;
-        wireframe = true;
+        wireframe = false;
         isBox = true;
+        emissive = '#7dd3fc';
+        emissiveIntensity = 1.7;
       } else {
         visible = false;
       }
@@ -178,7 +184,7 @@ export class SceneController {
       scale = 0.5;
     }
 
-    return { visible, color, scale, opacity, transparent, wireframe, isBox };
+    return { visible, color, scale, opacity, transparent, wireframe, isBox, emissive, emissiveIntensity };
   }
 
   isClipped(atom) {
@@ -206,6 +212,8 @@ export class SceneController {
         wireframe: visual.wireframe,
         roughness: 0.2,
         metalness: 0.8,
+        emissive: visual.emissive,
+        emissiveIntensity: visual.emissiveIntensity,
         depthWrite: !visual.transparent
       });
       const mesh = new THREE.Mesh(geometry, material);

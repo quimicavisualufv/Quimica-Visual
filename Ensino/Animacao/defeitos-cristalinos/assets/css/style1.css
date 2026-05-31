@@ -1,5 +1,5 @@
 :root {
-  --bg: #ffedd5;
+  --bg: #FFEDD5;
   --bg-2: #fed7aa;
   --panel: rgba(0, 0, 0, 0.9);
   --panel-strong: rgba(0, 0, 0, 0.96);
@@ -14,7 +14,7 @@
   --text: #f5f5f5;
   --muted: #a3a3a3;
   --muted-2: #737373;
-  --scene-light: #ffb03a;
+  --scene-light: #FDFDFC;
   --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }

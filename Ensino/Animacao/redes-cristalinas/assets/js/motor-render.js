@@ -3298,6 +3298,16 @@ function crystalAtomRef(a, key, cells){
 function defaultBondRecord(a, b, key, cells){
   return {key, cells, a:crystalAtomRef(a,key,cells), b:crystalAtomRef(b,key,cells), embedded:true};
 }
+function isPrincipalCsClBond(rec){
+  const eps = 1e-6;
+  if(!rec || !rec.a || !rec.b || !Array.isArray(rec.a.uc) || !Array.isArray(rec.b.uc)) return false;
+  const center = rec.a.type === 'C' ? rec.a : (rec.b.type === 'C' ? rec.b : null);
+  const corner = center === rec.a ? rec.b : rec.a;
+  if(!center || !corner || corner.type !== 'A') return false;
+  const centerOk = center.uc.every(v => Math.abs(v) < eps);
+  const cornerOk = corner.uc.every(v => Math.abs(Math.abs(v) - 0.5) < eps);
+  return centerOk && cornerOk;
+}
 function dist3(a,b){
   const dx=a.pos[0]-b.pos[0], dy=a.pos[1]-b.pos[1], dz=a.pos[2]-b.pos[2];
   return Math.hypot(dx,dy,dz);
@@ -3318,19 +3328,25 @@ function defaultBondsForCrystal(key, cells){
     out.push(rec);
   }
   if(cfg.mode === 'cscl'){
+    const eps = 1e-6;
     const corners = [-0.5, 0.5];
     const findAtomAt = (type, uc)=> atoms.find(a =>
       a.type === type &&
-      Math.abs(a.uc[0]-uc[0]) < 1e-6 &&
-      Math.abs(a.uc[1]-uc[1]) < 1e-6 &&
-      Math.abs(a.uc[2]-uc[2]) < 1e-6
+      Math.abs(a.uc[0]-uc[0]) < eps &&
+      Math.abs(a.uc[1]-uc[1]) < eps &&
+      Math.abs(a.uc[2]-uc[2]) < eps
     );
-    for(const center of atoms){
-      if(center.type !== 'C') continue;
+    const center = atoms.find(a =>
+      a.type === 'C' &&
+      Math.abs(a.uc[0]) < eps &&
+      Math.abs(a.uc[1]) < eps &&
+      Math.abs(a.uc[2]) < eps
+    );
+    if(center){
       for(const dx of corners){
         for(const dy of corners){
           for(const dz of corners){
-            const corner = findAtomAt('A', [center.uc[0]+dx, center.uc[1]+dy, center.uc[2]+dz]);
+            const corner = findAtomAt('A', [dx, dy, dz]);
             if(corner) add(center, corner);
           }
         }
@@ -3374,7 +3390,11 @@ function bondsForCurrent(){
     const removedIds = new Set(removedCurrent.map(e=>e.id));
     defaults = defaults.filter(x=>!removedIds.has(bondId(x)));
   }
-  const stored = localCount ? ALL_BONDS.filter(x=>x.key===k && x.cells===cells) : [];
+  let stored = localCount ? ALL_BONDS.filter(x=>x.key===k && x.cells===cells) : [];
+  if(k === 'CsCl'){
+    defaults = defaults.filter(isPrincipalCsClBond);
+    stored = stored.filter(isPrincipalCsClBond);
+  }
   if(!stored.length){
     __CURRENT_BONDS_CACHE.key = cacheKey;
     __CURRENT_BONDS_CACHE.list = defaults;

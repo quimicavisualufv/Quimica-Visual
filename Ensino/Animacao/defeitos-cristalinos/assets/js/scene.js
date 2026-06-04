@@ -139,6 +139,16 @@ export class SceneController {
     let emissiveIntensity = 0;
     const mode = this.snapshot.mode;
 
+    if (atom.type === 'cation') {
+      color = '#60a5fa';
+      scale = 0.58;
+    }
+
+    if (atom.type === 'anion') {
+      color = '#22c55e';
+      scale = 0.9;
+    }
+
     if (atom.type === 'substitutional') {
       color = '#ef4444';
       scale = 0.95;
@@ -180,8 +190,8 @@ export class SceneController {
     }
 
     if (atom.type === 'frenkel_interstitial') {
-      color = '#10b981';
-      scale = 0.5;
+      color = atom.displacedType === 'anion' ? '#22c55e' : '#60a5fa';
+      scale = atom.displacedType === 'anion' ? 0.5 : 0.36;
     }
 
     return { visible, color, scale, opacity, transparent, wireframe, isBox, emissive, emissiveIntensity };

@@ -163,3 +163,8 @@
 .thermo-popup-bar-track{height:5px}
 .thermo-popup-piston::before,.thermo-stage-piston::before{width:10px;height:26px}
 .thermo-popup-piston::after,.thermo-stage-piston::after{width:24px;height:9px;bottom:calc(100% + 22px)}
+
+
+/* Correção: barras de pressão do Atlas Termodinâmico.
+   A classe bg-green-400 era usada via JS dinâmico, mas não entrou no CSS gerado. */
+.bg-green-400{background-color:var(--color-green-400)}

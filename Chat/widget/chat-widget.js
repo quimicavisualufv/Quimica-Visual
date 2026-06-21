@@ -1510,6 +1510,76 @@ function recallTopicContext() {
         return null;
     }
 }
+
+function rememberExplicitTopic(topic, target = '') {
+    if (!topic) return;
+    try {
+        sessionStorage.setItem(TOPIC_MEMORY_KEY, JSON.stringify({ topic, target: target || topic, at: Date.now() }));
+    } catch (error) {}
+}
+function hasQuestionIntent(text) {
+    const t = normalize(text || '').replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!t) return false;
+    if (/^(questao|questoes|exercicio|exercicios|pergunta|perguntas|quiz|simulado|simulados)$/.test(t)) return true;
+    if (/^\d{1,2}\s+(questao|questoes|exercicio|exercicios|pergunta|perguntas|quiz|simulados?)\b/.test(t)) return true;
+    if (/^(um|uma|dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez)\s+(questao|questoes|exercicio|exercicios|pergunta|perguntas)\b/.test(t)) return true;
+    if (/^(questao|questoes|exercicio|exercicios|pergunta|perguntas)\s+(?:sobre|de)\b/.test(t)) return true;
+    if (/(questao guiada|questoes guiadas|exercicio guiado|exercicios guiados|pergunta guiada|perguntas guiadas|passo a passo)/.test(t)) return true;
+    const action = /\b(faca|faz|manda|mande|mandar|passa|passe|passar|envia|envie|enviar|quero|queria|gostaria|preciso|gera|gere|gerar|cria|crie|criar|monte|monta|elabore|traga|solta|me teste|testar)\b/.test(t);
+    const object = /\b(questao|questoes|exercicio|exercicios|pergunta|perguntas|quiz|simulado|simulados|teste)\b/.test(t);
+    return action && object;
+}
+function isGuidedQuestionIntent(text) {
+    const t = normalize(text || '');
+    return /\b(guiada|guiado|guiadas|guiados|passo a passo|dica|dicas|resolucao guiada|resolução guiada)\b/.test(t);
+}
+function extractRequestedQuestionCount(text) {
+    const t = normalize(text || '').replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+    const words = { um: 1, uma: 1, dois: 2, duas: 2, tres: 3, quatro: 4, cinco: 5, seis: 6, sete: 7, oito: 8, nove: 9, dez: 10 };
+    const direct = t.match(/\b(\d{1,2}|um|uma|dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez)\s+(?:questao|questoes|exercicio|exercicios|pergunta|perguntas|quiz|simulados?)\b/);
+    const indirect = t.match(/\b(?:questao|questoes|exercicio|exercicios|pergunta|perguntas|quiz|simulados?)\s+(?:com|de)?\s*(\d{1,2}|um|uma|dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez)\b/);
+    const raw = (direct && direct[1]) || (indirect && indirect[1]) || '';
+    if (!raw) return 1;
+    const parsed = words[raw] || Number(raw);
+    if (!Number.isFinite(parsed) || parsed < 1) return 1;
+    return Math.max(1, Math.min(10, parsed));
+}
+function getQuestionTopicFromInput(text) {
+    const topic = classifyGeneralTopic(text || '');
+    if (topic) return topic;
+    if (/(estequiometria|calculo estequiometrico|calculo estequiometria)/.test(normalize(text || ''))) return 'reacoes';
+    const remembered = recallTopicContext();
+    return remembered && remembered.topic ? remembered.topic : '';
+}
+function getQuestionsForTopic(topic, source = quizQuestions) {
+    if (!topic) return source;
+    if (topic === 'reacoes') return source.filter(q => q.topic === 'reacoes' || q.topic === 'estequiometria');
+    return source.filter(q => q.topic === topic);
+}
+function isGeneratedPlaceholderQuestion(question) {
+    return /Questão Avançada \(Desafio \d+/.test(question && question.q ? question.q : '');
+}
+function pickQuestions(questionPool, count) {
+    let pool = Array.isArray(questionPool) ? questionPool.filter(Boolean) : [];
+    const curated = pool.filter(q => !isGeneratedPlaceholderQuestion(q));
+    if (curated.length >= Math.min(count, 3)) pool = curated;
+    if (pool.length === 0) pool = quizQuestions.filter(q => !isGeneratedPlaceholderQuestion(q));
+    const shuffled = pool.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, Math.max(1, Math.min(count, shuffled.length)));
+}
+function formatQuestionResponse(selectedQuestions, requestedCount, topic = '') {
+    if (!selectedQuestions || selectedQuestions.length === 0) return '';
+    if (selectedQuestions.length === 1 && requestedCount <= 1) return selectedQuestions[0].q;
+    const topicLabel = topic ? ` sobre **${suggestionsMap[topic] ? suggestionsMap[topic][0] : topic}**` : '';
+    const intro = selectedQuestions.length < requestedCount
+        ? `Tenho ${selectedQuestions.length} exercício(s) pronto(s)${topicLabel} agora:`
+        : `Aqui vão ${selectedQuestions.length} exercício(s)${topicLabel}:`;
+    return `${intro}\n\n${selectedQuestions.map((item, index) => `**${index + 1}.** ${item.q}`).join('\n\n---\n\n')}`;
+}
 function extractExplanationTarget(text) {
     const trimmed = text.trim();
     const onlyExplain = /^(explicacao|explica|explique|me explica|me explique|quero uma explicacao|quero explicacao)$/.test(trimmed);
@@ -1540,7 +1610,7 @@ function gemViewerUrl() {
 function resolveGemologySpecificIntent(text = '') {
     const t = normalize(text);
     if (!t) return '';
-    if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|questoes sobre|exercicios sobre|pergunta sobre)/.test(t)) return '';
+    if (hasQuestionIntent(t)) return '';
     if (/(centro de cor|centros de cor|color center|centro f|vacancia.*eletron|el[eé]tron preso|lacuna eletr[oô]nica|radia[cç][aã]o.*cor|irradiacao.*gema|irradia[cç][aã]o.*gema)/.test(t)) {
         return `**Centros de cor em gemas:** são defeitos estruturais ou eletrônicos capazes de modificar a absorção da luz visível em um mineral. Em vez de depender apenas da fórmula ideal da gema, a cor passa a depender de imperfeições na rede cristalina, como vacâncias, elétrons aprisionados, lacunas eletrônicas, pares de defeitos ou alterações produzidas por radiação natural ou artificial.
 
@@ -1636,7 +1706,7 @@ function compareVolumetricGlasswareReply() {
 }
 function resolveLaboratoryIntent(text = '') {
     const t = normalize(text);
-    if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|questoes sobre|exercicios sobre|pergunta sobre)/.test(t)) return null;
+    if (hasQuestionIntent(t)) return null;
     const candidateItem = findLaboratoryItemInText(t);
     if (!candidateItem && !/(laboratorio|laboratório|vidraria|vidrarias|equipamento|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao|balão|funil|condensador|dessecador|bunsen|mufla|estufa|rotaevaporador|phmetro|pisseta|cadinho|buchner|büchner|capela|balanca|balança|centrifuga|centrífuga|suporte universal|vidro de relogio|vidro de relógio|espátula|espatula|bomba|vacuo|vácuo|pinca|pinça|filtro|frasco|vial|cristalizador|vigreux|allihn|drechsel|nessler|cuba cromatografica|peixinho|tripe|tripé|manta|chapa|mufla)/.test(t)) return null;
     if (/(diferenca|diferença|comparar|compare|qual a diferenca)/.test(t) && /(proveta|pipeta|bureta|balao volumetrico|balão volumétrico)/.test(t)) {
@@ -1666,58 +1736,28 @@ function getBotResponse(userInput) {
     const gemologySpecificResponse = resolveGemologySpecificIntent(normalizedInput);
     if (gemologySpecificResponse) return gemologySpecificResponse;
     // Quiz / Questions
-    if (/(faca uma questao|mande uma questao|quero.*questao|quero.*exercicio|faca.*pergunta|mande.*pergunta|quiz|me teste|^questoes$|^exercicios$|questoes sobre|exercicios sobre|pergunta sobre)/.test(normalizedInput)) {
+    if (hasQuestionIntent(normalizedInput)) {
+        const requestedCount = extractRequestedQuestionCount(normalizedInput);
+        const guidedIntent = isGuidedQuestionIntent(normalizedInput);
+        const topic = getQuestionTopicFromInput(normalizedInput);
         let filteredQuestions = quizQuestions;
-        // Check if the user specifically asked for a guided question
-        if (/(guiada|dica|passo a passo|guiadas|dicas)/.test(normalizedInput)) {
+        if (guidedIntent) {
             filteredQuestions = quizQuestions.filter(q => q.q.includes('Questão Guiada'));
+            const guidedTopicQuestions = getQuestionsForTopic(topic, filteredQuestions);
+            if (topic && guidedTopicQuestions.length > 0) filteredQuestions = guidedTopicQuestions;
+        } else {
+            const topicQuestions = getQuestionsForTopic(topic, quizQuestions);
+            if (topic && topicQuestions.length > 0) filteredQuestions = topicQuestions;
+            if (/(animacao|animacoes|simoens)/.test(normalizedInput)) {
+                const animationQuestions = quizQuestions.filter(q => q.q.includes('Animação SiMoEns'));
+                if (animationQuestions.length > 0) filteredQuestions = animationQuestions;
+            }
         }
-        else if (/(laboratorio|laboratório|laboratorial|vidraria|vidrarias|equipamento de laboratorio|equipamentos de laboratorio|bequer|béquer|erlenmeyer|kitasato|kitassato|bureta|pipeta|proveta|balao volumetrico|balão volumétrico|condensador|destilacao|destilação|bico de bunsen|phmetro|pisseta|cadinho|funil de buchner|büchner|funil de buechner|capela de exaustao|capela de exaustão|laboratorio interativo|laboratório interativo|suporte universal|vidro de relogio|centrifuga|centrífuga)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'laboratorio');
-        }
-        else if (/(gema|gemas|gemologia|corindo|rubi|safira|berilo|esmeralda|agua marinha|quartzo|ametista|citrino|diamante|opala|topazio|turmalina|granada|alexandrita|crisoberilo|diasporo|zultanite|sodalita|hackmanita|escapolita|fluorita|centro de cor|cromoforo|impureza|tratamento gemologico)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'gemas');
-        }
-        else if (/(cristalografia|cristal|celula|rede|miller|bravais|defeito|simetria|empacotamento)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'cristalografia');
-        }
-        else if (/(vsepr|geometria|polaridade)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'vsepr');
-        }
-        else if (/(ligacao|lewis|ionica|covalente|forca intermolecular|intermolecular|ponte de hidrogenio)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'ligacoes');
-        }
-        else if (/(modelo|atomico|dalton|thomson|rutherford|bohr|schrodinger|orbital|quantico)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'modelos');
-        }
-        else if (/(nomenclatura|acido|base|sal|oxido|funcao inorganica)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'nomenclatura');
-        }
-        else if (/(reacao|sintese|decomposicao|troca|nox|oxidacao|estequiometria|balanceamento)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'reacoes' || q.topic === 'estequiometria');
-        }
-        else if (/(elemento|tabela periodica|propriedade periodica|eletronegatividade|raio atomico)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'elementos');
-        }
-        else if (/(complexo|coordenacao|ligante)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'complexos');
-        }
-        else if (/(organica|carbono|grupo funcional|isomeria|polimero)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'organica');
-        }
-        else if (/(fisico-quimica|fisico quimica|termodinamica|cinetica|entalpia|entropia|energia livre|fases da agua|ponto critico|ponto triplo)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'fisicoquimica');
-        }
-        else if (/(quantica|schrodinger|onda|de broglie|orbital molecular|tom|rutherford|millikan|crookes|fenda dupla)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.topic === 'quantica');
-        }
-        else if (/(animacao|animacoes|simoens)/.test(normalizedInput)) {
-            filteredQuestions = quizQuestions.filter(q => q.q.includes('Animação SiMoEns'));
-        }
-        if (filteredQuestions.length === 0)
-            filteredQuestions = quizQuestions;
-        const randomQ = filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)];
-        return randomQ.q;
+        const selectedQuestions = pickQuestions(filteredQuestions, requestedCount);
+        const memoryTopic = topic || (selectedQuestions[0] && selectedQuestions[0].topic) || '';
+        const responseTopic = topic || (requestedCount <= 1 && selectedQuestions[0] && selectedQuestions[0].topic) || '';
+        rememberExplicitTopic(memoryTopic, memoryTopic);
+        return formatQuestionResponse(selectedQuestions, requestedCount, responseTopic);
     }
     // Instructions
     if (/(instrucao|instrucoes|como usar|ajuda|help|o que voce faz|o que voce pode fazer|como falar|o que perguntar)/.test(normalizedInput)) {

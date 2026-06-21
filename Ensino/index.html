@@ -64,30 +64,6 @@
   box-shadow: 0 0 0 3px rgba(0,0,0,.08);
   outline: none;
 }
-.ensino-lock-btn{
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(0,0,0,.14);
-  border-radius: 999px;
-  background: #fff;
-  color: #000;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.ensino-lock-btn:hover,
-.ensino-lock-btn:focus-visible,
-.ensino-lock-btn.is-active{
-  background: #000;
-  color: #fff;
-  border-color: #000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,.08);
-  outline: none;
-}
 .ensino-help-bubble{
   position: absolute;
   top: calc(100% + 10px);
@@ -425,7 +401,6 @@
 <div class="ensino-filtros-box">
 <div class="ensino-help-wrap">
 <button aria-controls="ensino-help-bubble" aria-expanded="false" aria-label="Informações sobre os tipos de animação" class="ensino-help-btn" id="ensino-help-btn" type="button">?</button>
-<button aria-controls="gallery03-j" aria-label="Ocultar apps protegidos por senha" aria-pressed="true" class="ensino-lock-btn is-active" id="ensino-lock-btn" type="button">🔒</button>
 <div aria-hidden="true" class="ensino-help-bubble" id="ensino-help-bubble" role="note">
 <p><strong>Visualização:</strong> Recursos para visualização de conceitos teóricos voltados para professores.</p>
 <p><strong>Guia:</strong> Animações guiadas voltadas para o aluno.</p>
@@ -468,7 +443,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="true" data-title="celulas primitivas, sistemas de bravais e celula de wigner (guia)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="false" data-title="celulas primitivas, sistemas de bravais e celula de wigner (guia)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Células Primitivas, Sistemas de Bravais e Célula de Wigner (GUIA) em nova aba" data-open-href="Guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/" href="Guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/" rel="noopener" target="_blank"><img alt="Células Primitivas, Sistemas de Bravais e Célula de Wigner" data-bs-slide-to="2" data-slide-to="2" loading="lazy" src="../assets/images/ensino-card-2.svg"></a>
@@ -533,7 +508,7 @@
                 Visualizador simples de moléculas, com representação de seus ângulos, elétrons livres, geometria e arranjo espacial.</p>
 </div>
 </div>
-</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="true" data-title="quebra-cabeca ionico covalente (jogo)">
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="false" data-title="quebra-cabeca ionico covalente (jogo)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Quebra-cabeça iônico covalente (Jogo) em nova aba" data-open-href="jogo/quebra-cabeca-ionico-covalente/" href="jogo/quebra-cabeca-ionico-covalente/" rel="noopener" target="_blank"><img alt="Quebra-cabeça iônico covalente" data-bs-slide-to="8" data-slide-to="8" loading="lazy" src="../assets/images/ensino-card-8.svg"></a>
@@ -575,7 +550,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="true" data-title="modelos atomicos (guia)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="false" data-title="modelos atomicos (guia)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Modelos Atômicos (GUIA) em nova aba" data-open-href="Guia/modelos_atomicos/" href="Guia/modelos_atomicos/" rel="noopener" target="_blank"><img alt="Modelos Atômicos" data-bs-slide-to="12" data-slide-to="12" loading="lazy" src="../assets/images/ensino-card-14.svg"></a>
@@ -586,7 +561,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="true" data-title="equacoes de onda hidrogenoides (guia)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="false" data-title="equacoes de onda hidrogenoides (guia)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Equações de Onda Hidrogenoides (GUIA) em nova aba" data-open-href="Guia/eq_de_ondas_hidrogenoides/" href="Guia/eq_de_ondas_hidrogenoides/" rel="noopener" target="_blank"><img alt="Equações de Onda Hidrogenoides" data-bs-slide-to="13" data-slide-to="13" loading="lazy" src="../assets/images/ensino-card-12.svg"></a>
@@ -597,7 +572,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="true" data-title="visualizador de hidrogenoides">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="false" data-title="visualizador de hidrogenoides">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Visualizador de Hidrogenoides em nova aba" data-open-href="Animacao/visualizador_de_hidrogenoides/" href="Animacao/visualizador_de_hidrogenoides/" rel="noopener" target="_blank"><img alt="Visualizador de Hidrogenoides" data-bs-slide-to="14" data-slide-to="14" loading="lazy" src="../assets/images/ensino-card-13.svg"></a>
@@ -608,7 +583,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="true" data-title="visualizador de orbitais">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="false" data-title="visualizador de orbitais">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Visualizador de Orbitais em nova aba" data-open-href="Animacao/visualizador_orbitais/" href="Animacao/visualizador_orbitais/" rel="noopener" target="_blank"><img alt="Visualizador de Orbitais" data-bs-slide-to="15" data-slide-to="15" loading="lazy" src="../assets/images/ensino-card-15.svg"></a>
@@ -618,7 +593,7 @@
 <p class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador interativo de orbitais atômicos e moleculares em estruturas blobby e metaball, com edição de lóbulos, cores e fases.</p>
 </div>
 </div>
-</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="true" data-title="atlas termodinamico (guia)">
+</div><div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="false" data-title="atlas termodinamico (guia)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Atlas Termodinâmico (GUIA) em nova aba" data-open-href="Guia/atlas_termodinamico/" href="Guia/atlas_termodinamico/" rel="noopener" target="_blank"><img alt="Atlas Termodinâmico" data-bs-slide-to="16" data-slide-to="16" loading="lazy" src="../assets/images/ensino-card-16.svg"></a>
@@ -629,7 +604,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="true" data-title="fases da agua (guia)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="guiado" data-protected="false" data-title="fases da agua (guia)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Fases da Água (GUIA) em nova aba" data-open-href="Guia/fases_da_agua/" href="Guia/fases_da_agua/" rel="noopener" target="_blank"><img alt="Fases da Água" data-bs-slide-to="17" data-slide-to="17" loading="lazy" src="../assets/images/ensino-card-17.svg"></a>
@@ -739,7 +714,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="true" data-title="caca-palavras (jogo)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="false" data-title="caca-palavras (jogo)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Caça-palavras (Jogo) em nova aba" data-open-href="jogo/caça-palavras/" href="jogo/caça-palavras/" rel="noopener" target="_blank"><img alt="Caça-palavras" data-bs-slide-to="28" data-slide-to="28" loading="lazy" src="../assets/images/ensino-card-28.svg"></a>
@@ -750,7 +725,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="true" data-title="xadrez quimico (jogo)">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="jogo" data-protected="false" data-title="xadrez quimico (jogo)">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Xadrez Químico (Jogo) em nova aba" data-open-href="jogo/xadrez-quimico/" href="jogo/xadrez-quimico/" rel="noopener" target="_blank"><img alt="Xadrez Químico" data-bs-slide-to="29" data-slide-to="29" loading="lazy" src="../assets/images/ensino-card-29.svg"></a>
@@ -761,7 +736,7 @@
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="true" data-title="vidrarias e equipamentos de laboratorio">
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="false" data-title="vidrarias e equipamentos de laboratorio">
 <div class="item-wrapper">
 <div class="item-img">
 <a aria-label="Abrir Vidrarias e Equipamentos de Laboratório em nova aba" data-open-href="Animacao/catalogo-de-vidrarias-animado/" href="Animacao/catalogo-de-vidrarias-animado/" rel="noopener" target="_blank"><img alt="Vidrarias e Equipamentos de Laboratório" data-bs-slide-to="30" data-slide-to="30" loading="lazy" src="../assets/images/ensino-card-30.svg"></a>
@@ -780,6 +755,19 @@
 <div class="item-content align-left">
 <h2 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>Gemas e mudança de cor</strong></h2>
 <p class="item-subtitle mbr-fonts-style mb-3 display-7">Visualizador 3D de gemas, cores, impurezas, defeitos cristalinos e mudanças ópticas em minerais.</p>
+</div>
+</div>
+</div>
+
+
+<div class="item features-image col-12 col-md-6 col-lg-3" data-category="visualizacao" data-protected="false" data-title="simoens motionlab animation maker editor autoral animacoes">
+<div class="item-wrapper">
+<div class="item-img">
+<a aria-label="Abrir SiMoEns MotionLab Animation Maker em nova aba" data-open-href="Animacao/animation-maker/" href="Animacao/animation-maker/" rel="noopener" target="_blank"><img alt="SiMoEns MotionLab Animation Maker" data-bs-slide-to="33" data-slide-to="33" loading="lazy" src="../assets/images/ensino-card-motionlab.svg"></a>
+</div>
+<div class="item-content align-left">
+<h2 class="item-title mbr-fonts-style mt-3 mb-3 display-7"><strong>SiMoEns MotionLab — Animation Maker</strong></h2>
+<p class="item-subtitle mbr-fonts-style mb-3 display-7">Editor visual para criar animações por etapas, com textos, botões, sliders, visualizadores, objetos 2D/3D, vidrarias, moléculas e redes cristalinas sem escrever código.</p>
 </div>
 </div>
 </div>
@@ -858,7 +846,6 @@ window.VisitWidgetConfig = {
   const filterButtons = Array.from(document.querySelectorAll('.ensino-filter-btn'));
   const noResults = document.getElementById('ensino-no-results');
   const resultsCount = document.getElementById('ensino-results-count');
-  const lockButton = document.getElementById('ensino-lock-btn');
 
   if (!cards.length || !searchInput || !filterButtons.length || !noResults || !resultsCount) return;
 
@@ -884,16 +871,6 @@ window.VisitWidgetConfig = {
     return 'visualizacao';
   };
 
-  const isLockEnabled = () => !lockButton || lockButton.getAttribute('aria-pressed') === 'true';
-
-  const syncLockButton = () => {
-    if (!lockButton) return;
-    const active = isLockEnabled();
-    lockButton.classList.toggle('is-active', active);
-    lockButton.textContent = active ? '🔒' : '🔓';
-    lockButton.setAttribute('aria-label', active ? 'Mostrar apps protegidos por senha' : 'Ocultar apps protegidos por senha');
-  };
-
   cards.forEach((card) => {
     const title = getTitle(card);
     card.dataset.title = normalizeText(title);
@@ -904,15 +881,12 @@ window.VisitWidgetConfig = {
 
   const applyFilters = () => {
     const searchTerm = normalizeText(searchInput.value);
-    const hideProtected = isLockEnabled();
     let visibleCount = 0;
 
     cards.forEach((card) => {
-      const isProtected = card.dataset.protected === 'true';
-      const matchesProtection = !hideProtected || !isProtected;
       const matchesFilter = currentFilter === 'todos' || card.dataset.category === currentFilter;
       const matchesSearch = !searchTerm || card.dataset.title.includes(searchTerm);
-      const shouldShow = matchesProtection && matchesFilter && matchesSearch;
+      const shouldShow = matchesFilter && matchesSearch;
 
       card.style.display = shouldShow ? '' : 'none';
 
@@ -921,7 +895,6 @@ window.VisitWidgetConfig = {
 
     noResults.style.display = visibleCount === 0 ? 'block' : 'none';
     resultsCount.textContent = visibleCount === 1 ? '1 animação encontrada' : `${visibleCount} animações encontradas`;
-    syncLockButton();
   };
 
   filterButtons.forEach((button) => {
@@ -937,132 +910,9 @@ window.VisitWidgetConfig = {
     });
   });
 
-  if (lockButton) {
-    lockButton.addEventListener('click', function () {
-      const nextState = this.getAttribute('aria-pressed') !== 'true';
-      this.setAttribute('aria-pressed', nextState ? 'true' : 'false');
-      applyFilters();
-    });
-    syncLockButton();
-  }
-
   searchInput.addEventListener('input', applyFilters);
 
   applyFilters();
-})();
-</script>
-<script>
-(function () {
-  const a0 = '683a9ba82f41309c07eef8780ec0005b33b3ebf3440b29cfde1df270d0e2a729';
-  const b0 = 'simoens_ensino_gate_v2';
-  const c0 = new Set([
-    'Animacao/buracos-e-empacotamento/',
-    'Guia/celulas/',
-    'Animacao/redes-cristalinas/',
-    'Animacao/simetria-e-formula-unitaria/',
-    'Animacao/geometria-cristalografica/',
-    'Guia/geometria-molecular-passo-a-passo/',
-    'Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/',
-    'Exercicio Guiado/Polaridade-e-Geometria-molecular/',
-    'Exercicio Guiado/batalha-de-polaridade/',
-    'Guia/interacoes_intermoleculares/',
-    'Animacao/geometria-molecular/',
-    'Animacao/gemviewer/',
-    'Animacao/defeitos-cristalinos/',
-    'Guia/Complexos%20e%20polimorfismo/',
-    'Guia/Complexos e polimorfismo/'
-  ]);
-
-  async function d0(value) {
-    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
-      const bytes = new TextEncoder().encode(value);
-      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
-      return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
-    }
-    return f0(value);
-  }
-
-  function f0(value) {
-    function rightRotate(value, amount) {
-      return (value >>> amount) | (value << (32 - amount));
-    }
-    const mathPow = Math.pow;
-    const maxWord = mathPow(2, 32);
-    const lengthProperty = 'length';
-    let i;
-    let j;
-    let result = '';
-    const words = [];
-    value = unescape(encodeURIComponent(value));
-    const asciiBitLength = value[lengthProperty] * 8;
-    let hash = f0.h = f0.h || [];
-    const k = f0.k = f0.k || [];
-    let primeCounter = k[lengthProperty];
-    const isComposite = {};
-    for (let candidate = 2; primeCounter < 64; candidate++) {
-      if (!isComposite[candidate]) {
-        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
-        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
-        k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
-      }
-    }
-    value += '\x80';
-    while (value[lengthProperty] % 64 - 56) value += '\x00';
-    for (i = 0; i < value[lengthProperty]; i++) {
-      j = value.charCodeAt(i);
-      words[i >> 2] |= j << ((3 - i) % 4) * 8;
-    }
-    words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
-    words[words[lengthProperty]] = asciiBitLength;
-    for (j = 0; j < words[lengthProperty];) {
-      const w = words.slice(j, j += 16);
-      const oldHash = hash;
-      hash = hash.slice(0, 8);
-      for (i = 0; i < 64; i++) {
-        const w15 = w[i - 15];
-        const w2 = w[i - 2];
-        const a = hash[0];
-        const e = hash[4];
-        const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ (~e & hash[6])) + k[i] + (w[i] = i < 16 ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
-        const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
-        hash = [(temp1 + temp2) | 0].concat(hash);
-        hash[4] = (hash[4] + temp1) | 0;
-      }
-      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
-    }
-    for (i = 0; i < 8; i++) {
-      for (j = 3; j + 1; j--) {
-        const b = (hash[i] >> (j * 8)) & 255;
-        result += (b < 16 ? '0' : '') + b.toString(16);
-      }
-    }
-    return result;
-  }
-
-  async function e0(path) {
-    if (c0.has(path) || path.startsWith('Exercicio%20Guiado/') || path.startsWith('Exercicio Guiado/')) return true;
-    if (sessionStorage.getItem(b0) === a0) return true;
-    const f1 = window.prompt('Digite a senha para acessar este conteúdo do Ensino:');
-    if (f1 === null) return false;
-    const g1 = await d0(f1);
-    if (g1 === a0) {
-      sessionStorage.setItem(b0, a0);
-      return true;
-    }
-    window.alert('Senha incorreta.');
-    return false;
-  }
-
-  document.querySelectorAll('#gallery03-j .item-img a[data-open-href]').forEach((link) => {
-    link.addEventListener('click', async function (event) {
-      event.preventDefault();
-      const path = this.dataset.openHref || '';
-      if (!path) return;
-      if (!(await e0(path))) return;
-      const resolved = new URL(path, window.location.href);
-      window.open(resolved.href, '_blank', 'noopener');
-    });
-  });
 })();
 </script>
 <script src="../Chat/widget/vlibras-widget.js"></script>

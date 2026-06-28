@@ -18,18 +18,43 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&amp;display=swap&amp;display=swap" rel="stylesheet"></noscript>
 <link as="style" href="assets/mobirise/css/mbr-additional.css?v=hXlkb8" rel="preload"><link href="assets/mobirise/css/mbr-additional.css?v=hXlkb8" rel="stylesheet" type="text/css">
 <style>
-    #team-1-v5iWwJmnJm .row:last-child{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap: 0;
+    #team-1-v5iWwJmnJm .container-fluid{
+      position: relative;
     }
-    #team-1-v5iWwJmnJm .item.features-image{
-      flex: 0 0 20%;
-      max-width: 20%;
+    #team-1-v5iWwJmnJm .team-slider-shell{
+      position: relative;
+      padding: 0 5.25rem;
+    }
+    #team-1-v5iWwJmnJm .team-slider-track{
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      contain: layout paint;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    #team-1-v5iWwJmnJm .team-slider-track.is-sliding{
+      pointer-events: none;
+    }
+    #team-1-v5iWwJmnJm .team-slider-track::-webkit-scrollbar{
+      display: none;
+    }
+    #team-1-v5iWwJmnJm .team-slider-track > .item.features-image{
+      flex: 0 0 33.3333%;
+      max-width: 33.3333%;
       padding-left: 12px;
       padding-right: 12px;
       margin-bottom: 24px;
+      scroll-snap-align: start;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
     #team-1-v5iWwJmnJm .item-wrapper{
       height: 100%;
@@ -60,16 +85,77 @@
       text-align: center;
       min-height: 48px;
     }
+    #team-1-v5iWwJmnJm .team-slider-arrow{
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3.5rem;
+      height: 3.5rem;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(9, 33, 88, 0.94);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 30px rgba(0,0,0,.16);
+      z-index: 3;
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    }
+    #team-1-v5iWwJmnJm .team-slider-arrow:hover{
+      background: rgba(9, 33, 88, 1);
+      transform: translateY(-50%) scale(1.05);
+    }
+    #team-1-v5iWwJmnJm .team-slider-arrow:disabled{
+      opacity: .35;
+      cursor: not-allowed;
+      transform: translateY(-50%);
+    }
+    #team-1-v5iWwJmnJm .team-slider-arrow.prev{
+      left: .25rem;
+    }
+    #team-1-v5iWwJmnJm .team-slider-arrow.next{
+      right: .25rem;
+    }
+    #team-1-v5iWwJmnJm .team-slider-arrow .mbr-iconfont{
+      font-size: 1.45rem;
+      line-height: 1;
+    }
     @media (max-width: 991.98px){
-      #team-1-v5iWwJmnJm .item.features-image{
+      #team-1-v5iWwJmnJm .team-slider-shell{
+        padding: 0 4.5rem;
+      }
+      #team-1-v5iWwJmnJm .team-slider-track > .item.features-image{
         flex: 0 0 50%;
         max-width: 50%;
       }
     }
-    @media (max-width: 575.98px){
-      #team-1-v5iWwJmnJm .item.features-image{
+    @media (max-width: 767.98px){
+      #team-1-v5iWwJmnJm .team-slider-shell{
+        padding: 0 3.75rem;
+      }
+      #team-1-v5iWwJmnJm .team-slider-track > .item.features-image{
         flex: 0 0 100%;
         max-width: 100%;
+      }
+      #team-1-v5iWwJmnJm .team-slider-arrow{
+        width: 3rem;
+        height: 3rem;
+      }
+    }
+    @media (max-width: 575.98px){
+      #team-1-v5iWwJmnJm .team-slider-shell{
+        padding: 0 3.1rem;
+      }
+      #team-1-v5iWwJmnJm .team-slider-track > .item.features-image{
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      #team-1-v5iWwJmnJm .team-slider-arrow.prev{
+        left: 0;
+      }
+      #team-1-v5iWwJmnJm .team-slider-arrow.next{
+        right: 0;
       }
       #team-1-v5iWwJmnJm .item-title,
       #team-1-v5iWwJmnJm .item-subtitle{
@@ -577,7 +663,7 @@ textarea:focus-visible,
 <div role="group" aria-labelledby="faq-toggle-5" class="panel-collapse noScroll collapse" data-bs-parent="#bootstrap-accordion_6" data-parent="#accordion" id="collapse5_6">
 <div class="panel-body">
 <p class="mbr-fonts-style panel-text display-7"><strong>Opção 1 — Citação acadêmica (ABNT NBR 6023):</strong></p>
-<textarea aria-label="Citação acadêmica ABNT NBR 6023 para referenciar o projeto Química Visual" readonly style="width:100%;min-height:125px;border:1px solid rgba(0,0,0,.2);border-radius:14px;padding:14px;font-family:monospace;font-size:14px;line-height:1.45;background:#f7f9fb;color:#1f2933;resize:vertical;box-sizing:border-box;margin-bottom:18px;">NARDELLI, Lucas Xavier; COSTA, Deyse Gomes da; NOVAES, Fábio Junior Moreira; FAVARIN, Lis Regiane Vizolli; DESPAIGNE, Angel Amado Recio. Química Visual. Viçosa: Universidade Federal de Viçosa, 2025. Disponível em: https://quimicavisualufv.github.io/Quimica-Visual/.</textarea>
+<textarea aria-label="Citação acadêmica ABNT NBR 6023 para referenciar o projeto Química Visual" readonly style="width:100%;min-height:125px;border:1px solid rgba(0,0,0,.2);border-radius:14px;padding:14px;font-family:monospace;font-size:14px;line-height:1.45;background:#f7f9fb;color:#1f2933;resize:vertical;box-sizing:border-box;margin-bottom:18px;">NARDELLI, Lucas Xavier; COSTA, Deyse Gomes da; NOVAES, Fábio Junior Moreira; FAVARIN, Lis Regiane Vizolli; BRITO, Luana Ornellas; DESPAIGNE, Angel Amado Recio. Química Visual. Viçosa: Universidade Federal de Viçosa, 2025. Disponível em: https://quimicavisualufv.github.io/Quimica-Visual/.</textarea>
 <p class="mbr-fonts-style panel-text display-7"><strong>Opção 2 — Logo com link para sites:</strong></p>
 <p class="mbr-fonts-style panel-text display-7">Para referenciar o SiMoEns em outro site, copie o HTML abaixo. Ele insere o logotipo oficial com link direto para a página do projeto.</p>
 <p class="mbr-fonts-style panel-text display-7"><a href="referenciar.html" target="_blank" rel="noopener noreferrer">Abrir página de referência com visualização e botão de copiar.</a></p>
@@ -863,7 +949,11 @@ textarea:focus-visible,
 </div>
 </div>
 </div>
-<div class="row">
+<div class="team-slider-shell">
+<button aria-label="Ver integrantes anteriores" class="team-slider-arrow prev" title="Ver integrantes anteriores" type="button">
+<span class="mbr-iconfont mobi-mbri-left mobi-mbri"></span>
+</button>
+<div class="row team-slider-track" id="teamSliderTrack">
 <div class="item features-image col-12 col-md-6 col-lg-4 active">
 <div class="item-wrapper">
 <div class="item-img mb-3">
@@ -875,7 +965,7 @@ textarea:focus-visible,
 </div>
 </div>
 </div>
-<div class="item features-image col-12 col-md-6">
+<div class="item features-image col-12 col-md-6 col-lg-4">
 <div class="item-wrapper">
 <div class="item-img mb-3">
 <img alt="Foto de Deyse Gomes da Costa." loading="lazy" src="assets/images/deyse2-300x300.png">
@@ -885,7 +975,7 @@ textarea:focus-visible,
 <p class="item-subtitle mbr-fonts-style mb-3 display-7 simoens-person-role">Membro da equipe de pesquisa</p>
 </div>
 </div>
-</div><div class="item features-image col-12 col-md-6">
+</div><div class="item features-image col-12 col-md-6 col-lg-4">
 <div class="item-wrapper">
 <div class="item-img mb-3">
 <img alt="Foto de Fábio Junior Moreira Novaes." data-bs-slide-to="2" data-slide-to="2" loading="lazy" src="assets/images/fabio-novaes-2-299x300.jpg">
@@ -895,7 +985,7 @@ textarea:focus-visible,
 <p class="item-subtitle mbr-fonts-style mb-3 display-7 simoens-person-role">Membro da equipe de pesquisa</p>
 </div>
 </div>
-</div><div class="item features-image col-12 col-md-6">
+</div><div class="item features-image col-12 col-md-6 col-lg-4">
 <div class="item-wrapper">
 <div class="item-img mb-3">
 <img alt="Foto de Lis Regiane Vizolli Favarin." data-bs-slide-to="3" data-slide-to="3" loading="lazy" src="assets/images/lis-2-300x300.jpg">
@@ -905,10 +995,20 @@ textarea:focus-visible,
 <p class="item-subtitle mbr-fonts-style mb-3 display-7 simoens-person-role">Membro da equipe de pesquisa</p>
 </div>
 </div>
-</div><div class="item features-image col-12 col-md-6">
+</div><div class="item features-image col-12 col-md-6 col-lg-4">
 <div class="item-wrapper">
 <div class="item-img mb-3">
-<img alt="Foto de Lucas Xavier Nardelli" data-bs-slide-to="4" data-slide-to="4" loading="lazy" src="assets/images/lucas.jpg">
+<img alt="Foto de Luana Ornellas Brito." data-bs-slide-to="4" data-slide-to="4" loading="lazy" src="assets/images/luana-ornellas-brito.png">
+</div>
+<div class="item-content align-left">
+<h3 class="item-title mbr-fonts-style display-5"><strong>Luana Ornellas Brito</strong></h3>
+<p class="item-subtitle mbr-fonts-style mb-3 display-7 simoens-person-role">Membro da equipe de pesquisa</p>
+</div>
+</div>
+</div><div class="item features-image col-12 col-md-6 col-lg-4">
+<div class="item-wrapper">
+<div class="item-img mb-3">
+<img alt="Foto de Lucas Xavier Nardelli" data-bs-slide-to="5" data-slide-to="5" loading="lazy" src="assets/images/lucas.jpg">
 </div>
 <div class="item-content align-left">
 <h3 class="item-title mbr-fonts-style display-5">
@@ -918,6 +1018,10 @@ textarea:focus-visible,
 </div>
 </div>
 </div>
+</div>
+<button aria-label="Ver próximos integrantes" class="team-slider-arrow next" title="Ver próximos integrantes" type="button">
+<span class="mbr-iconfont mobi-mbri-right mobi-mbri"></span>
+</button>
 </div>
 </div>
 </section><section class="people05 cid-v5iWwJmiE2" data-bs-version="5.1" id="testimonials-5-v5iWwJmiE2">
@@ -1118,6 +1222,133 @@ textarea:focus-visible,
 
       var prevBtn = document.querySelector('#news-1-v5iWwJmVVz .news-slider-arrow.prev');
       var nextBtn = document.querySelector('#news-1-v5iWwJmVVz .news-slider-arrow.next');
+      var scrollRaf = 0;
+      var slideRaf = 0;
+      var isSliding = false;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function getMaxScroll(){
+        return Math.max(0, track.scrollWidth - track.clientWidth);
+      }
+
+      function clamp(value, min, max){
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function getStep(){
+        var firstCard = track.querySelector('.item.features-image');
+        if (!firstCard) return track.clientWidth;
+
+        var rect = firstCard.getBoundingClientRect();
+        var styles = window.getComputedStyle(firstCard);
+        var marginLeft = parseFloat(styles.marginLeft) || 0;
+        var marginRight = parseFloat(styles.marginRight) || 0;
+        var step = rect.width + marginLeft + marginRight;
+
+        return step > 0 ? step : track.clientWidth;
+      }
+
+      function setButtonState(){
+        var maxScrollLeft = Math.max(0, getMaxScroll() - 2);
+
+        if (prevBtn) prevBtn.disabled = isSliding || track.scrollLeft <= 2;
+        if (nextBtn) nextBtn.disabled = isSliding || track.scrollLeft >= maxScrollLeft;
+      }
+
+      function requestButtonUpdate(){
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(function(){
+          scrollRaf = 0;
+          setButtonState();
+        });
+      }
+
+      function stopCurrentSlide(){
+        if (slideRaf) {
+          window.cancelAnimationFrame(slideRaf);
+          slideRaf = 0;
+        }
+      }
+
+      function finishSlide(){
+        isSliding = false;
+        track.classList.remove('is-sliding');
+        setButtonState();
+      }
+
+      function animateTo(targetLeft){
+        stopCurrentSlide();
+
+        var startLeft = track.scrollLeft;
+        var distance = targetLeft - startLeft;
+
+        if (Math.abs(distance) < 1 || reduceMotion) {
+          track.scrollLeft = targetLeft;
+          finishSlide();
+          return;
+        }
+
+        var startTime = window.performance.now();
+        var duration = 260;
+        isSliding = true;
+        track.classList.add('is-sliding');
+        setButtonState();
+
+        function tick(now){
+          var progress = clamp((now - startTime) / duration, 0, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          track.scrollLeft = startLeft + distance * eased;
+
+          if (progress < 1) {
+            slideRaf = window.requestAnimationFrame(tick);
+          } else {
+            slideRaf = 0;
+            track.scrollLeft = targetLeft;
+            finishSlide();
+          }
+        }
+
+        slideRaf = window.requestAnimationFrame(tick);
+      }
+
+      function slide(direction){
+        if (isSliding) return;
+
+        var step = getStep();
+        var maxScroll = getMaxScroll();
+        var currentIndex = Math.round(track.scrollLeft / step);
+        var targetIndex = currentIndex + direction;
+        var targetLeft = clamp(targetIndex * step, 0, maxScroll);
+
+        animateTo(targetLeft);
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        slide(-1);
+      });
+      if (nextBtn) nextBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        slide(1);
+      });
+
+      track.addEventListener('scroll', requestButtonUpdate, { passive: true });
+      window.addEventListener('resize', function(){
+        stopCurrentSlide();
+        finishSlide();
+      });
+      window.addEventListener('load', setButtonState);
+      setButtonState();
+    })();
+  </script>
+
+<script>
+    (function(){
+      var track = document.getElementById('teamSliderTrack');
+      if (!track) return;
+
+      var prevBtn = document.querySelector('#team-1-v5iWwJmnJm .team-slider-arrow.prev');
+      var nextBtn = document.querySelector('#team-1-v5iWwJmnJm .team-slider-arrow.next');
       var scrollRaf = 0;
       var slideRaf = 0;
       var isSliding = false;

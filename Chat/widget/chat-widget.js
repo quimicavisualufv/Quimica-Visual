@@ -1193,7 +1193,7 @@ const rules = [
     },
     {
         patterns: [/(quem sao os integrantes|equipe|criadores|quem fez|desenvolvedores|autores|quem criou)/],
-        response: "**Equipe SiMoEns:** O projeto é desenvolvido por um grupo dedicado de pesquisadores e estudantes. Os integrantes incluem:\n- Angel Amado Recio Despaigne\n- Deyse Gomes da Costa\n- Fábio Junior Moreira Novaes\n- Lis Regiane Vizolli Favarin\n- Lucas Xavier Nardelli\n\nSaiba mais na nossa [página principal](https://quimicavisualufv.github.io/Quimica-Visual/)."
+        response: "**Equipe SiMoEns:** O projeto é desenvolvido por um grupo dedicado de pesquisadores e estudantes. Os integrantes incluem:\n- Angel Amado Recio Despaigne\n- Deyse Gomes da Costa\n- Fábio Junior Moreira Novaes\n- Lis Regiane Vizolli Favarin\n- Luana Ornellas Brito\n- Lucas Xavier Nardelli\n\nSaiba mais na nossa [página principal](https://quimicavisualufv.github.io/Quimica-Visual/)."
     },
     {
         patterns: [/(novidades|atualizacoes|noticias|o que tem de novo|ultimas noticias|mudancas)/],
@@ -2881,7 +2881,7 @@ function maybeAnswerInstantSiteQuestions(userText = '') {
 
   const asksTeam = /integrantes|membros do site|membros da equipe|equipe do site|equipe do simoens|quem faz o site|quem participa do site|quem sao os integrantes|quem são os integrantes/.test(t);
   if (asksTeam) {
-    return 'Os integrantes destacados no site são: Angel Amado Recio Despaigne, Deyse Gomes da Costa, Fábio Junior Moreira Novaes, Lis Regiane Vizolli Favarin e Lucas Xavier Nardelli. Todos aparecem na seção de equipe da home do SiMoEns.';
+    return 'Os integrantes destacados no site são: Angel Amado Recio Despaigne, Deyse Gomes da Costa, Fábio Junior Moreira Novaes, Lis Regiane Vizolli Favarin, Luana Ornellas Brito e Lucas Xavier Nardelli. Todos aparecem na seção de equipe da home do SiMoEns.';
   }
 
   const asksContact = /contato|email do site|e-mail do site|como falar com o site|como entrar em contato/.test(t);

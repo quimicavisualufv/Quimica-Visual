@@ -41,6 +41,11 @@
       || /\/chat\/chatbot\.html$/.test(path);
   }
 
+  function isAnimationPage() {
+    var path = decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/').toLowerCase();
+    return /\/ensino\/animacao\//.test(path);
+  }
+
   function isChatPage() {
     var path = decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/').toLowerCase();
     return /\/chat\/chatbot\.html$/.test(path);
@@ -590,6 +595,17 @@ html.simoens-a11y-focus :focus,
         bottom: auto;
         max-height: min(76vh, calc(100dvh - 168px));
       }
+      html.simoens-a11y-animation-page .simoens-a11y-widget {
+        top: auto;
+        right: max(18px, env(safe-area-inset-right));
+        bottom: max(18px, env(safe-area-inset-bottom));
+      }
+      html.simoens-a11y-animation-page .simoens-a11y-panel {
+        top: auto;
+        right: 0;
+        bottom: 72px;
+        max-height: min(72vh, calc(100dvh - 112px));
+      }
       html.simoens-a11y-chat-page .simoens-a11y-widget {
         top: max(24px, env(safe-area-inset-top));
         right: max(146px, env(safe-area-inset-right));
@@ -901,6 +917,16 @@ html.simoens-a11y-focus :focus,
           top: 64px;
           bottom: auto;
           max-height: calc(100dvh - 150px);
+        }
+        html.simoens-a11y-animation-page .simoens-a11y-widget {
+          top: auto;
+          right: max(12px, env(safe-area-inset-right));
+          bottom: max(12px, env(safe-area-inset-bottom));
+        }
+        html.simoens-a11y-animation-page .simoens-a11y-panel {
+          top: auto;
+          bottom: 64px;
+          max-height: calc(100dvh - 96px);
         }
         html.simoens-a11y-chat-page .simoens-a11y-widget {
           top: max(18px, env(safe-area-inset-top));
@@ -1674,6 +1700,7 @@ html.simoens-a11y-focus :focus,
 
   function start() {
     document.documentElement.classList.toggle('simoens-a11y-app-page', isInteractiveContentPage());
+    document.documentElement.classList.toggle('simoens-a11y-animation-page', isAnimationPage());
     document.documentElement.classList.toggle('simoens-a11y-chat-page', isChatPage());
     injectStyle();
     loadState();

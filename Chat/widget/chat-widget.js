@@ -58,7 +58,7 @@ const WEBLLM_IMPORT_CANDIDATES = [
   'https://esm.run/@mlc-ai/web-llm'
 ].filter(Boolean);
 const OFF_TOPIC_REPLY = 'Posso te ajudar melhor com Química e com os conteúdos do site SiMoEns. Se quiser, me mande o conceito, a dúvida ou a página/animação que eu sigo por aí.';
-const GENERIC_HELP_REPLY = `Posso responder qualquer pergunta por um olhar químico. Quando fizer sentido, eu conecto a resposta com Química dos Sólidos e com as animações do SiMoEns, como Wigner-Seitz, redes cristalinas, buracos intersticiais, células unitárias, geometria molecular, polaridade, simetria, polimorfismo, gemas, centros de cor, impurezas cromóforas, tratamentos gemológicos, vidrarias e equipamentos de laboratório, técnicas experimentais, modelos atômicos e orbitais hidrogenoides.`;
+const GENERIC_HELP_REPLY = `Posso responder perguntas nos temas de Química cobertos pelo SiMoEns, resumir materiais, comparar conceitos, explicar em etapas, gerar exercícios e indicar páginas corretas. A base inclui Química Geral, ligações, Físico-Química, Química do Estado Sólido, cristalografia, Wigner–Seitz, redes e células unitárias, interstícios, geometria molecular, polaridade, simetria, polimorfismo, gemas, defeitos e centros de cor, vidrarias e técnicas de laboratório, modelos atômicos e orbitais. Para temas muito específicos fora dessa base, aviso a limitação em vez de inventar.`;
 const ICON_SVG = `
 <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
   <circle cx="32" cy="32" r="30" fill="#000000"></circle>
@@ -92,27 +92,9 @@ const IS_LOCAL_FILE_RUNTIME = window.location.protocol === 'file:' || window.loc
 const DOC_RAG_MAX_CHUNKS = Number.isFinite(Number(window.SIMOENS_DOC_RAG_MAX_CHUNKS)) ? Math.max(1, Math.min(8, Number(window.SIMOENS_DOC_RAG_MAX_CHUNKS))) : 5;
 const DOC_RAG_MIN_SCORE = Number.isFinite(Number(window.SIMOENS_DOC_RAG_MIN_SCORE)) ? Number(window.SIMOENS_DOC_RAG_MIN_SCORE) : 2.2;
 const DOC_RAG_MAX_CHARS = Number.isFinite(Number(window.SIMOENS_DOC_RAG_MAX_CHARS)) ? Math.max(240, Math.min(1600, Number(window.SIMOENS_DOC_RAG_MAX_CHARS))) : 560;
-const SHARED_CORE_SCRIPTS = [
-  '../../assets%20chat/knowledge-base.js',
-  '../../assets%20chat/animations.js',
-  '../../assets%20chat/response-variation.js',
-  '../../assets%20chat/canonical-engine.js',
-  '../../assets%20chat/intent-engine.js',
-  '../../assets%20chat/memory-engine.js',
-  '../../assets%20chat/qa-bank.js',
-  '../../assets%20chat/qa-extensions.js',
-  '../../assets%20chat/qa-engine.js',
-  '../../assets%20chat/question-generator.js',
-  '../../assets%20chat/study-routes-bank.js',
-  '../../assets%20chat/study-routes-extensions.js',
-  '../../assets%20chat/study-routes-engine.js',
-  '../../assets%20chat/study-routes-engine-extensions.js',
-  '../../assets%20chat/comparisons-bank.js',
-  '../../assets%20chat/comparisons-extensions.js',
-  '../../assets%20chat/comparisons-engine.js',
-  '../../assets%20chat/knowledge-extensions.js',
-  '../../assets%20chat/quimibot-core.js',
-];
+// O widget é autocontido. A lista vazia evita requisições para módulos antigos
+// que não fazem parte desta distribuição e mantém o modo offline sem erros 404.
+const SHARED_CORE_SCRIPTS = [];
 const SHARED_SCRIPT_PROMISES = Object.create(null);
 
 const WidgetKeywordBot = (() => {
@@ -1053,16 +1035,6 @@ const LABORATORY_QUESTIONS = [
 ];
 quizQuestions.push(...LABORATORY_QUESTIONS);
 
-// Gerando 40 novas questões avançadas para completar 50+
-const topics = ["cristalografia", "complexos", "reacoes", "vsepr", "ligacoes", "modelos", "nomenclatura", "elementos", "laboratorio"];
-for (let i = 1; i <= 40; i++) {
-    const topic = topics[i % topics.length];
-    quizQuestions.push({
-        topic: topic,
-        q: `**Questão Avançada (Desafio ${i} - ${topic.charAt(0).toUpperCase() + topic.slice(1)}):**\nConsidere um sistema químico complexo envolvendo princípios avançados de ${topic}. Analise as interações e determine o resultado termodinâmico ou estrutural esperado.\n\n**Gabarito:**\n||A análise detalhada deste sistema requer a aplicação de equações fundamentais de ${topic}. Por exemplo, a energia livre de Gibbs (\`ΔG = ΔH - TΔS\`) determina a espontaneidade. A estrutura molecular ou cristalina dita as propriedades macroscópicas observadas. Esta explicação fornece o raciocínio passo-a-passo para chegar à conclusão correta, integrando conceitos de físico-química e química inorgânica.||`
-    });
-}
-
 const suggestionsMap = {
     cristalografia: ["Defeitos Cristalinos", "Índices de Miller", "Células Unitárias", "Lei de Bragg", "Fator de Empacotamento"],
     gemas: ["Gemas e mudança de cor", "Centros de Cor", "Impurezas Cromóforas", "Rubi e Safira", "Tratamentos Gemológicos"],
@@ -1197,11 +1169,11 @@ const rules = [
     },
     {
         patterns: [/(novidades|atualizacoes|noticias|o que tem de novo|ultimas noticias|mudancas)/],
-        response: "**Novidades do SiMoEns:**\n- **27/03/2026:** Lançamos o chatbot próprio do SiMoEns, alimentado por IA e integrado aos conteúdos do site.\n- **03/03/2026:** Novas animações guiadas no ensino, abordando temas como polaridade e geometria molecular.\n- **13/12/2025:** Novas animações guiadas sobre células e sistemas cristalinos.\n- **10/12/2025:** Animações de ensino para Química no estado sólido.\n\nAcompanhe as atualizações na nossa [página principal](https://quimicavisualufv.github.io/Quimica-Visual/)."
+        response: "**Novidades do SiMoEns:**\n- **27/03/2026:** Lançamento do assistente próprio do SiMoEns, integrado aos conteúdos do site.\n- **03/03/2026:** Novas animações guiadas no ensino, abordando temas como polaridade e geometria molecular.\n- **13/12/2025:** Novas animações guiadas sobre células e sistemas cristalinos.\n- **10/12/2025:** Animações de ensino para Química no estado sólido.\n\nAcompanhe as atualizações na nossa [página principal](https://quimicavisualufv.github.io/Quimica-Visual/)."
     },
     {
         patterns: [/(quando que reseta|como reseta|limpar o chat|apagar a conversa|reiniciar|comecar de novo|zerar)/],
-        response: "**Resetar o Chat:** Como eu não guardo o histórico das suas mensagens em um servidor, para resetar a nossa conversa basta **recarregar a página** (apertar F5 ou o botão de atualizar do navegador). Isso limpará toda a tela e começaremos um novo papo!"
+        response: "**Reiniciar o chat:** use **Nova conversa** para começar outro diálogo ou **Limpar conversa** para apagar as mensagens atuais. Recarregar a página não apaga o histórico, porque ele fica salvo localmente neste navegador."
     },
     {
         patterns: [/(me fale sobre cada animacao|conte sobre.*animacao|do que fala essa animacao|quais animacoes|sobre o ensino|modulos de ensino|lista de animacoes|todas as animacoes|catalogo)/],
@@ -1213,15 +1185,15 @@ const rules = [
     },
     {
         patterns: [/(difracao|raios x|drx|xrd|lei de bragg|difratograma|espalhamento de raios x)/],
-        response: "**Difração de Raios X e Lei de Bragg:** A cristalografia moderna nasceu com a difração de raios X (DRX). Como o comprimento de onda dos raios X é similar à distância entre os átomos em um cristal, a rede atua como uma rede de difração. A **Lei de Bragg** (nλ = 2d senθ) relaciona o ângulo de difração, a distância d e o comprimento de onda λ.\n\n*Exemplo Prático:* Foi usando o padrão de difração de raios X (na famosa 'Foto 51') que Rosalind Franklin descobriu o formato exato em dupla hélice do nosso DNA!"
+        response: "**Difração de Raios X e Lei de Bragg:** como o comprimento de onda dos raios X é da ordem das distâncias interatômicas, cristais produzem padrões de difração. A **Lei de Bragg** (nλ = 2d senθ) relaciona comprimento de onda, espaçamento entre planos e ângulo de difração.\n\n*Exemplo histórico:* os dados de difração obtidos por Rosalind Franklin e Raymond Gosling, incluindo a Foto 51, foram evidências decisivas para a estrutura helicoidal do DNA e contribuíram para a construção do modelo de dupla hélice."
     },
     {
         patterns: [/(indices de miller|indice de miller|planos cristalograficos|plano cristalino|notacao hkl|direcoes cristalograficas|hkl)/],
-        response: "**Índices de Miller (hkl):** São um sistema de notação espacial para identificar planos em uma rede puramente cristalina. Eles são determinados calculando recíprocos dos pontos de corte nos eixos (X,Y,Z).\n\n*Exemplo Prático:* Em um cubo perfeito, a tampa/teto do cubo é rotulada como o plano (001). Na indústria, cortar uma pastilha de Silício ao longo do plano (100) ou (111) muda drasticamente a velocidade na qual a corrente elétrica vai fluir no microchip do seu celular."
+        response: "**Índices de Miller (hkl):** identificam famílias de planos cristalográficos. Obtêm-se pelos recíprocos dos interceptos do plano com os eixos da célula, seguidos da redução aos menores inteiros.\n\n*Exemplo:* em uma célula cúbica, uma face perpendicular ao eixo z pertence à família (001). Em silício, orientações como (100) e (111) apresentam diferenças de estrutura superficial, crescimento, ataque químico e propriedades eletrônicas relevantes à fabricação de dispositivos."
     },
     {
         patterns: [/(defeito|defeitos|frenkel|schottky|vacancia|intersticial|discordancia|imperfeicao|imperfeicoes|defeitos pontuais)/],
-        response: "**Defeitos Cristalinos:** Cristais reais não são perfeitos 100%. Existem **Defeitos de Schottky** (pares de ânions/cátions faltando) e **Frenkel** (átomo se desloca pro meio de um buraco). Há também defeitos extensos (discordâncias).\n\n*Exemplo Prático:* A ametista é roxa porque a rede do quartzo tem um 'defeito' atômico onde minúsculas impurezas de Ferro substituem o Sílicio. Na metalurgia, o aço maleável duro só existe porque propositalmente se trava as 'discordâncias' no Ferro."
+        response: "**Defeitos Cristalinos:** cristais reais contêm imperfeições. Vacâncias, intersticiais e substitucionais são defeitos pontuais; o par **Frenkel** combina uma vacância com um íon deslocado para um sítio intersticial; o defeito **Schottky** combina vacâncias de modo a preservar a eletroneutralidade em cristais iônicos. Discordâncias são defeitos lineares.\n\nEsses defeitos podem alterar difusão, resistência mecânica, condutividade e propriedades ópticas. Na ametista, ferro em baixa concentração e processos associados à irradiação participam da formação dos centros responsáveis pela cor; o mecanismo não é uma simples troca isolada de Si por Fe."
     },
     {
         patterns: [/(laboratorio interativo|laboratório interativo|vidraria|vidrarias|equipamentos de laboratorio|equipamentos de laboratório|catalogo de vidrarias|catálogo de vidrarias|bureta|pipeta|proveta|bequer|béquer|erlenmeyer|kitasato|bico de bunsen|funil de buchner|büchner|condensador|phmetro|pisseta)/],
@@ -1297,43 +1269,43 @@ Em abordagem científica e ética, é essencial diferenciar cor natural, cor ind
     },
     {
         patterns: [/(simetria|grupo pontual|grupos pontuais|grupo espacial|grupos espaciais|eixo de rotacao|plano de reflexao|centro de inversao|operacoes de simetria|elementos de simetria|classes cristalinas)/],
-        response: "**Simetria Cristalina:** A cristalografia é baseada estritamente em eixos, planos e centros. Os **32 Grupos Pontuais** definem objetos isolados. Os **230 Grupos Espaciais** juntam isso com translações (redes infinitas).\n\n*Exemplo Prático:* A molécula de Água tem formato angular (simetria C2v), parecendo o desenho de uma borboleta espelhada. Já os flocos de neve sempre desenvolvem visual com 6 pontas devido à extrema simetria hexagonal restrita da água congelada."
+        response: "**Simetria Cristalina:** operações como rotação, reflexão, inversão e rotoinversão organizam os **32 grupos pontuais cristalográficos**. Ao combinar essas operações com translações, eixos helicoidais e planos de deslizamento, obtêm-se os **230 grupos espaciais**.\n\n*Exemplos:* uma molécula de água isolada pertence ao grupo pontual C₂v. A simetria aproximadamente hexagonal de muitos flocos de neve decorre da estrutura do gelo comum e das condições de crescimento, embora os braços reais apresentem irregularidades."
     },
     {
         patterns: [/(isomorfismo|isomorfo|isomorfos|substancias isomorfas)/],
-        response: "**Isomorfismo:** Ocorre quando duas substâncias quimicamente *diferentes* cristalizam com o mesmo arranjo espacial (mesmo grupo espacial).\n\n*Exemplo Prático:* A Calcita (CaCO₃) e a Nitratina (NaNO₃) são compostos que não tem nada a ver um com o outro, mas seus átomos se montam no espaço fazendo tijolos trigonais de mesmo tamanho. Elas são isomorfas."
+        response: "**Isomorfismo estrutural:** ocorre quando substâncias de composições diferentes apresentam estruturas cristalinas iguais ou estreitamente relacionadas. Compartilhar apenas o grupo espacial não é suficiente; conectividade e posições atômicas correspondentes também importam.\n\n*Exemplo:* calcita (CaCO₃) e nitratina (NaNO₃) são frequentemente descritas como isoestruturais, embora tenham parâmetros de rede e espécies químicas diferentes."
     },
     {
         patterns: [/(razao de raios|raio ionico|coordenacao.*raio|radius ratio|tamanho do ion|proporcao de raios)/],
-        response: "**Regra da Razão de Raios (r+/r-):** Estima a geometria predizendo como os íons se encaixam pelo tamanho.\n\n*Exemplo:* Se você tiver um cátion pequeno e um ânion grande, o cátion só caberá sufocado no meio de 4 bolas (buraco tetraédrico, tipo no ZnS). Se o cátion for gordinho, os ânions têm que abrir espaço pra ele, formando um buraco octaédrico (encaixe perfeito no NaCl)."
+        response: "**Regra da razão de raios (r⁺/r⁻):** é um modelo geométrico simples que estima coordenações possíveis comparando raios iônicos. Razões menores favorecem, no modelo de esferas rígidas, coordenações menores; razões maiores permitem coordenações mais altas.\n\nEla ajuda a racionalizar ambientes tetraédricos em ZnS e octaédricos em NaCl, mas não é uma lei universal: polarização, covalência, pressão, temperatura e a própria definição de raio iônico podem alterar a estrutura observada."
     },
     {
         patterns: [/(energia de rede|born-haber|born haber|estabilidade.*cristal|energia reticular|entalpia de rede)/],
-        response: "**Energia de Rede e Ciclo de Born-Haber:** É a energia absurda liberada pela atração quando íons formam uma matriz infinita 3D coesa. Calculada pelo ciclo teórico de Hess (ou Born-Haber).\n\n*Exemplo Prático:* O Óxido de Magnésio (Mg²⁺/O²⁻) tem cargas +2 e -2. A atração gerada por tanta carga aumenta assustadoramente a Energia de Rede dele se for comparado ao NaCl habitual (+1/-1). É por isso que o fogão derrete o plástico e a madeira, mas você usaria quase os 2800°C do sol para conseguir derreter pedras de sal Mg!"
+        response: "**Energia reticular e ciclo de Born–Haber:** a energia reticular expressa a estabilização eletrostática de um sólido iônico; o sinal depende da convenção usada para formação ou separação da rede. O ciclo de Born–Haber combina etapas termoquímicas pela Lei de Hess para estimá-la.\n\n*Exemplo:* MgO, com íons Mg²⁺ e O²⁻, apresenta interação eletrostática mais intensa e ponto de fusão muito alto em comparação com NaCl, embora tamanho iônico e outros fatores também contribuam."
     },
     {
         patterns: [/(vsepr|repulsao dos pares|geometria molecular|geometria eletronica|arranjo eletronico|forma da molecula|geometria da molecula|modelo vsepr|repulsao de pares)/],
-        response: "**VSEPR e Geometria Molecular:** Os pares de elétrons são negativos e querem ficar o mais longe que consigam uns dos outros.\n\n*Exemplo Prático:* O Gás Metano (CH₄) espalha seus 4 ligantes para um ângulo tetraédrico exato de 109.5°. No entanto, a molécula de Amônia (NH₃) também foca em 4 regiões, mas uma delas não é um átomo e sim um par livre de elétrons 'invisível e espaçoso'. Ele amassa/fecha as 3 pernas de baixo pra um ângulo de 107°, ditando a amônia a virar uma 'pirâmide trigonal'!\n\nVeja a animação: [Geometria Molecular 3D](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/geometria-molecular-passo-a-passo/)"
+        response: "**VSEPR e geometria molecular:** o modelo organiza regiões de densidade eletrônica ao redor do átomo central de modo a minimizar repulsões. É uma representação didática útil, não uma descrição completa da função de onda.\n\nNo CH₄, quatro regiões ligantes produzem geometria tetraédrica com ângulos próximos de 109,5°. No NH₃, três ligações e um par livre mantêm arranjo eletrônico tetraédrico, mas a forma molecular é piramidal trigonal e o ângulo H–N–H fica próximo de 107°.\n\nVeja: [Geometria Molecular 3D](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/geometria-molecular-passo-a-passo/)"
     },
     {
         patterns: [/(polaridade|dipolo|apolar|eletronegatividade|mep|mapa de potencial|momento de dipolo|molecula polar|molecula apolar|vetor dipolo)/],
-        response: "**Polaridade Molecular:** Depende do cabo de guerra (eletronegatividade) e principalmente da forma da molécula espacialmente. Mostrada num Mapa MEP (Vermelho=Rico em e⁻ / Azul=Pobre).\n\n*Exemplo Prático:* A Água (H₂O) é uma molécula totalmente polar com polos magnéticos óbvios que a fazem dissolver sujeira em tudo por aí. Contudo, o Gás Carbônico exalado pela boca (CO₂) possui os mesmos laços polares com oxigênios fortes (C=O)... mas a coitada da molécula do CO₂ é linear, um ângulo esticado a exatos 180°. Seus polos se cancelam mutuamente, ditando o CO₂ como APOLAR.\n\nVeja a animação: [Polaridade Molecular](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/)"
+        response: "**Polaridade molecular:** depende das polaridades das ligações e de sua soma vetorial na geometria da molécula. Mapas de potencial eletrostático ajudam a visualizar regiões relativamente mais ricas ou pobres em densidade eletrônica; as cores dependem da escala adotada.\n\nA água é polar porque sua geometria angular impede o cancelamento dos dipolos O–H. O CO₂ possui ligações C=O polares, mas é linear e simétrico; por isso, os dipolos se cancelam e o momento dipolar resultante é zero. Dipolos elétricos não são polos magnéticos.\n\nVeja: [Polaridade Molecular](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/)"
     },
     {
         patterns: [/(celula unitaria|celulas unitarias|parametros de rede|sistema cristalino|sistemas cristalinos|bravais|rede cristalina|redes cristalinas|cristal|cristais|estrutura cristalina|estruturas cristalinas|arranjo atomico|malha cristalina|reticulo cristalino|cristalografia)/],
-        response: "**Células Unitárias e Redes:** A menor \"caixa de tijolos\" repetitiva que estampa todo o cristal. São definidas pelas letras das quinas (a,b,c) e os 3 ângulos entre os eixos. Compõem 7 sistemas gerais ou as 14 Redes de Bravais exclusivas.\n\n*Exemplo Prático:* O ferro morno na fábrica forma uma rede BCC (cúbico com 1 átomo oco no centro). Quando elevado a enormes estufas superaquecidas esse calor empurra o ferro para reorganizar seus blocos a uma rede FCC! O ferro encurta e adquire mais maciez atômica que dita a produção das ligas de metal das pontes!\n\nVeja as animações: [Células Unitárias](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/celulas/) e [Redes Cristalinas](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/redes-cristalinas/)"
+        response: "**Células unitárias e redes:** uma célula unitária é um volume que, repetido por translação, reproduz a estrutura periódica. Ela é descrita por comprimentos a, b e c e ângulos α, β e γ. Os sete sistemas cristalinos organizam as formas métricas; as 14 redes de Bravais incluem os centramentos compatíveis.\n\nNo ferro puro, a fase α é BCC em temperaturas mais baixas e a fase γ é FCC em uma faixa mais alta de temperatura. Essa transformação altera empacotamento e solubilidade de elementos, mas propriedades de um aço dependem também de composição, microestrutura e processamento.\n\nVeja: [Células Unitárias](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Guia/celulas/) e [Redes Cristalinas](https://quimicavisualufv.github.io/Quimica-Visual/Ensino/Animacao/redes-cristalinas/)"
     },
     {
         patterns: [/(wigner.seitz|wigner seitz|voronoi|celula primitiva|celulas primitivas|poliedro de voronoi|menor celula)/],
-        response: "**Célula Primitiva e Wigner-Seitz:** Um mapa geográfico atômico exato. A célula recorta o volume demarcando de quem as distâncias no pedaço estão mais próximas ao nódulo da ponta inicial.\n\n*Exemplo Prático:* É a mesma lógica da operadora colocar uma rádio torre e traçar as fronteiras invisíveis dizendo onde da redondeza o celular do usuário pega a torre sua torre específica sem dar área na antena ali da cidade do lado."
+        response: "**Célula primitiva e Wigner–Seitz:** uma célula primitiva contém exatamente um ponto de rede por célula, considerando as frações compartilhadas. A célula de Wigner–Seitz é construída ligando um ponto de rede aos vizinhos e traçando planos mediadores; o volume mais próximo do ponto central que de qualquer outro forma a célula.\n\nÉ o análogo periódico de uma região de Voronoi. A construção é exata para a rede geométrica, enquanto os átomos desenhados como esferas são uma representação didática."
     },
     {
         patterns: [/(buraco|buracos|intersticio|intersticios|tetraedrico|octaedrico|empacotamento|camada hexagonal|sequencia aaa|aba|abc|sitio intersticial|sitios intersticiais|empacotamento compacto|esferas rigidas)/],
-        response: "**Empacotamento e Interstícios:** Sobram espaços vazios nas matrizes chamados de buracos. Buraco tetraédrico (largo para 4 vizinhos) e octaédrico (cercado por 6).\n\n*Exemplo Prático:* No cloreto de sódio (Sal), o Cloro é grandão e compõe toda a parede maciça do cubo, mas a natureza faz os íons pequenos de Sódio (Na⁺) rastejarem para tapar exclusivamente os vãos vazios nos buracos octaédricos gerados no percurso!"
+        response: "**Empacotamento e interstícios:** em um modelo de esferas, os espaços entre partículas formam sítios intersticiais. Um sítio tetraédrico tem quatro vizinhos próximos e um octaédrico tem seis.\n\nNa estrutura do NaCl, pode-se descrever os Cl⁻ como uma sub-rede cúbica de faces centradas com os sítios octaédricos ocupados por Na⁺; de modo equivalente, ambos os íons formam sub-redes FCC interpenetrantes. O modelo de esferas facilita a visualização, mas íons reais não são bolas rígidas."
     },
     {
         patterns: [/(fracoes|contagem.*celula|vertice.*aresta.*face|sc|bcc|fcc|atomos por celula|numero de atomos|contagem de atomos|cubica de corpo centrado|cubica de face centrada)/],
-        response: "**Contagem por Frações:** Um átomo na extremidade exata (vértice) só tem 1/8 de si pra dentro de um bloco porque ele divide o corpo cravado na parede com o vizinho! Na face temos 1/2.\n\n*Exemplo Prático:* Na organização Cúbica do Ferro (BCC) há nitidamente 1 átomo oco morando preso sozinho no meio. Ao contar as quinas (8 * 1/8) ganhamos apenas mais 1. Logo, a densidade/contagem do Ferro BCC tem exatos 2 átomos totais englobados."
+        response: "**Contagem por frações:** em uma célula cúbica convencional, um ponto no vértice é compartilhado por oito células e contribui com 1/8; um ponto no centro de face contribui com 1/2; um ponto totalmente interno contribui com 1.\n\nNa estrutura BCC, os oito vértices somam 8 × 1/8 = 1 e o ponto no centro do corpo soma 1, totalizando dois pontos de rede por célula convencional. Esse total não deve ser confundido com densidade, que também depende de massa e volume da célula."
     },
 
     {
@@ -1368,27 +1340,27 @@ A estabilidade de cada forma depende principalmente de **temperatura** e/ou **pr
     },
     {
         patterns: [/(modelos atomicos|dalton|thomson|rutherford|bohr|schrodinger|schr[oö]dinger|modelo atomico|evolucao dos modelos|teoria atomica|pudim de passas|modelo planetario)/],
-        response: "**Modelos Atômicos:** Dalton achou que o mundo era \"bolas de gude indivisíveis\". Thomson inseriu passas elétricas (elétrons). Rutherford descobriu o caroço positivo (núcleo) via folhas de ouro. Bohr deu órbitas restritivas quânticas à velocidade.\n\n*Exemplo Prático:* Bohr é a magia dos letreiros NEON e show de fogos. O fogo esquenta o átomo jogando o elétron ativado lá numa órbita muito de fora. Num bilionésimo de instante ele perde as forças caindo e devolve a energia inteira jorrando as exatas luzes coloridas da tabela!"
+        response: "**Modelos atômicos:** Dalton tratou átomos como unidades indivisíveis dentro da química de sua época; Thomson incorporou o elétron; Rutherford propôs um núcleo pequeno e positivo; Bohr introduziu níveis de energia quantizados para o hidrogênio. A mecânica quântica substituiu órbitas clássicas por estados descritos por funções de onda.\n\nEspectros de emissão surgem quando espécies excitadas passam para estados de menor energia e emitem fótons com energias específicas. O modelo de Bohr explica bem o espectro do hidrogênio, mas não descreve adequadamente átomos multieletrônicos."
     },
     {
         patterns: [/(orbital|orbitais|numeros quanticos|funcao de onda|hidrogenoide|blobby|metaball|hibridizacao|orbital ligante|orbitais ligantes|orbital antiligante|orbitais antiligantes|antiligante|nuvem eletronica|densidade eletronica|orbital atomico|orbital molecular)/],
-        response: "**Orbitais e Equações de Onda:** Schrödinger enterrou as órbitas dizendo que elétron age virando luz, fumaça (onda). Orbitais são bolsões de fumaça onde a probabilidade se aglomera.\n\n*Exemplo Prático:* Pense no orbital 's' como bater foto longa de um mosquito voando e o borrão virar uma esfera maciça amarelada perambulante de elétron. O orbital 'p' vira duas bexigas longas de festa de niver estranguladas juntas. É nessas exatas nuvens que toda reação química ou hibridização se esbarra no espaço!"
+        response: "**Orbitais e funções de onda:** um orbital é uma função de onda de um elétron em um modelo quântico. O quadrado de seu módulo está relacionado à densidade de probabilidade; as superfícies desenhadas nos visualizadores são isossuperfícies escolhidas, não paredes nem trajetórias.\n\nOrbitais s têm simetria esférica em torno do núcleo. Orbitais p possuem dois lóbulos de fases opostas separados por um plano nodal. Cores e tamanhos usados na tela são convenções didáticas e dependem do valor de isossuperfície."
     },
     {
         patterns: [/(nacl|cloreto de sodio|cscl|zns|blenda|rutilo|sal de cozinha|estrutura do nacl|sulfeto de zinco)/],
-        response: "**Estruturas Clássicas:** \n- **NaCl** (sal de cozinha) abriga Na⁺ dentro dos buracos octaédricos gerando cordenação 6:6.\n- **ZnS** abriga os convidados em metades de buracos num ambiente tetraédricos estritos (NC=4:4).\n\n*Exemplo Prático:* Essa regra dita o brilho e dureza do NaCl e se contrapõe às antigas placas fosforescentes grossas no fundo de tubos clássicos de TVs CRT, que eram totalmente empoeiradas e baseadas explicitamente em grades dopadas com pó da rede cristalina pura de ZnS!"
+        response: "**Estruturas clássicas:**\n- **NaCl:** duas sub-redes FCC interpenetrantes; cada Na⁺ possui seis Cl⁻ como vizinhos próximos e vice-versa, coordenação 6:6.\n- **Blenda de zinco (ZnS):** uma sub-rede FCC com metade dos sítios tetraédricos ocupados pela outra espécie, coordenação 4:4.\n- **CsCl:** coordenação 8:8 em uma estrutura que não deve ser confundida com BCC monoatômica.\n\nA estrutura influencia propriedades, mas brilho, dureza e emissão luminosa também dependem de composição, defeitos, ligações e microestrutura. ZnS dopado foi usado como fósforo em algumas telas e dispositivos luminescentes."
     },
     {
         patterns: [/(teoria do campo cristalino|tcc|desdobramento do campo|baixo spin|alto spin|serie espectroquimica)/],
-        response: "**Teoria do Campo Cristalino (TCC):** Descreve como os orbitais 'd' do metal dividem energia (saltos de cor T2G e EG) quando sentem a pura repulsão invasiva dos ligantes espaciais ao redor.\n\n*Exemplo Prático:* É a TCC que faz a tinta de joias mudar bruscamente de cor. Ligantes de Campo Forte (Cianeto CN⁻) se chocam tão agressivamente com o átomo no sangue que \"travam\" todo o oxigênio num baixo spin imbatível, nos matando de envenenamento rápido. Já a água nos banhos é campo fraco, abrindo orbitais leves soltando salton-verde e azul aos metais afundados."
+        response: "**Teoria do Campo Cristalino (TCC):** modela ligantes como cargas ou dipolos que removem a degenerescência dos orbitais d do metal. Em um campo octaédrico, os conjuntos t₂g e e_g ficam separados por Δₒ. A relação entre Δₒ e a energia de pareamento ajuda a prever alto ou baixo spin.\n\nTransições d–d e transferência de carga podem contribuir para a cor de complexos. A toxicidade do cianeto, porém, não é explicada apenas por 'campo forte': ela envolve sua ligação a centros metálicos de enzimas, especialmente a citocromo c oxidase, prejudicando a respiração celular."
     },
     {
         patterns: [/(o que (e|sao) (um |o |os )?ligante|definicao de ligante|ligante na quimica|ligante no complexo|ligante monodentado|ligante polidentado|quelato|efeito quelato)/],
-        response: "**Ligantes e Quelatos:** Uma molécula com muita bondade eletrônica (Sobra pares de elétrons) que gruda e \"coordena\" uma ponte temporária sobre o metal central estilhaçado.\n\n*Exemplo Prático:* Na medicina de intoxicações, caso engula chumbo, o médico injeta um agente quelante como o EDTA. Por ter vários átomos doadores, ele pode coordenar o metal em mais de um ponto ao mesmo tempo, formando complexos mais estáveis. Esse é um exemplo clássico do efeito quelato, importante em processos de complexação e em aplicações médicas específicas."
+        response: "**Ligantes e quelatos:** um ligante doa um par de elétrons a um centro metálico, formando uma ligação coordenada. Ligantes monodentados usam um átomo doador; ligantes polidentados usam vários e podem formar anéis quelatos.\n\nO efeito quelato costuma aumentar a estabilidade termodinâmica em comparação com ligantes monodentados semelhantes. Agentes quelantes têm usos analíticos e médicos, mas o tratamento de intoxicação por metais deve ser decidido por profissionais, pois a escolha depende do metal e do quadro clínico."
     },
     {
         patterns: [/(complexo|complexos|coordenacao|azul da prussia|hidratacao|composto de coordenacao|compostos de coordenacao|metal de transicao|ligante|ligantes)/],
-        response: "**Química de Coordenação e Complexos:** Montagens onde o núcleo rei do centro é blindado por dezenas de ligantes exóticos formatando a cor exata visual!\n\n*Exemplo Prático:* Sangue (Ferro na Hemoglobina abraçando e destravando Oxigênio) e Natureza (Magnésio na estrutura central blindada do disco das Clorofilas). Ao alterar 1 ligante o verde esmeralda vira imediatamente azul roxo. Até as moedas trocam cor e ferrujem baseadas nos complexos gerados ao oxidarem!"
+        response: "**Química de coordenação:** complexos possuem um átomo ou íon central, geralmente metálico, ligado a espécies doadoras chamadas ligantes. Número de coordenação, geometria, estado de oxidação e natureza dos ligantes influenciam estabilidade, reatividade, magnetismo e espectro eletrônico.\n\nExemplos incluem o Fe na hemoglobina e o Mg na clorofila. A cor de um complexo não é determinada por um único fator: geometria, campo dos ligantes, transições d–d e transferência de carga podem participar."
     },
     {
         patterns: [/(lewis|ligacao ionica|ligacoes ionicas|ligacao covalente|ligacoes covalentes|valencia|eletroneutralidade|estrutura de lewis|regra do octeto|regra do dueto|dueto|octeto|compartilhamento de eletrons|transferencia de eletrons|compostos inorganicos|solidos inorganicos)/],
@@ -1403,11 +1375,11 @@ Se a sua dúvida for específica, eu posso detalhar **quartzo**, **K-feldspato**
     },
     {
         patterns: [/(formula unitaria|formulas unitarias|formula empirica|proporcao estequiometrica)/],
-        response: "**Fórmula Unitária:** Corta tudo pelo mínimo divisor em blocões empilhados gigantes, já que os Íons não funcionam vivendo como moléculas isoladas no ar igual gás.\n\n*Exemplo Prático:* Se você analisar todo o cristal pedindo porção de Sal para seu almoço, pegaria quase 6 trilhões de Íons de cloro e 6 Trilhões de Sódio. O que a Formula emparelha não é esse número absurdo. Ele é simplificado globalmente à escala de NaCl informando a proporção exata 1:1 local."
+        response: "**Fórmula unitária:** expressa a menor proporção inteira entre espécies em um sólido não molecular, especialmente iônico. Ela informa estequiometria, não o número total de íons do cristal nem uma molécula isolada.\n\nNo NaCl, a proporção entre Na⁺ e Cl⁻ é 1:1, portanto a fórmula unitária é NaCl. Em CaCl₂, a eletroneutralidade exige um Ca²⁺ para dois Cl⁻, resultando em CaCl₂."
     },
     {
         patterns: [/(estado de oxidacao|estados de oxidacao|nox|numero de oxidacao|carga do ion|carga formal)/],
-        response: "**Estados de Oxidação (Nox):** Indica a carga fantasma de um átomo se tudo fosse roubado 100% ionicamente na ligação.\n\n*Exemplo Prático:* A ferrugem avermelhada é resultado da oxidação do ferro metálico (Nox = 0) para estados de oxidação positivos, frequentemente associados ao Fe³⁺ em óxidos e hidróxidos hidratados. Esse processo altera a estrutura e fragiliza o material."
+        response: "**Estado de oxidação (NOX):** é uma grandeza formal obtida atribuindo os elétrons de cada ligação ao átomo mais eletronegativo, segundo regras convencionais. Não é necessariamente igual à carga real do átomo nem à carga formal.\n\nNa corrosão, Fe metálico (NOX 0) é oxidado a espécies de Fe²⁺ e Fe³⁺ que participam da formação de óxidos e oxi-hidróxidos."
     },
     {
         patterns: [/(reacao quimica|reacoes quimicas|sintese|decomposicao|simples troca|dupla troca|neutralizacao|tipos de reacoes|reacao inorganica|reacoes inorganicas)/],
@@ -1419,7 +1391,7 @@ Se a sua dúvida for específica, eu posso detalhar **quartzo**, **K-feldspato**
     },
     {
         patterns: [/(quimica organica|organica|carbono)/],
-        response: "**Química Orgânica (Carbono):** Ramo da Química dedicado aos compostos de carbono.\n\n*Exemplo Prático:* A matéria prima do pneu, do computador, do cérebro da vaca que você come, da camiseta de poliéster e até do plástico bolha transparente vêm todas das incríveis infinitas e variadas correntes de Tetraligantes do poderoso Carbono!"
+        response: "**Química orgânica:** estuda estrutura, propriedades e reações de compostos de carbono, com algumas classes tradicionalmente tratadas na química inorgânica, como carbonatos e CO₂. A capacidade do carbono de formar quatro ligações e cadeias variadas gera grande diversidade estrutural.\n\nCombustíveis, fármacos, polímeros, proteínas e muitos materiais do cotidiano contêm compostos orgânicos, mas suas propriedades dependem dos grupos funcionais, da estrutura e das interações intermoleculares."
     },
     {
         patterns: [/(grupo funcional|grupos funcionais|funcoes organicas|alcool|cetona|aldeido|acido carboxilico|amina|amida)/],
@@ -1427,7 +1399,7 @@ Se a sua dúvida for específica, eu posso detalhar **quartzo**, **K-feldspato**
     },
     {
         patterns: [/(nomenclatura organica|iupac organica)/],
-        response: "**Nomenclatura Orgânica (IUPAC):**\n1. Prefixo: Nº de carbonos (Met=1, Et=2, Prop=3)\n2. Infixo: Feixe de traços (an=simples, in=tripla)\n3. Sufixo: Coroa da Função (-ol, -ona)\n\n*Exemplo Prático:* O famoso ETANOL da gasolina é: Et (Tem 2 carbonos) + An (Tudo elo fraco) + Ol (Coroa de álcool)!"
+        response: "**Nomenclatura orgânica (IUPAC):** o nome considera a cadeia principal, as insaturações, a função prioritária, substituintes e localizadores. Prefixos como met-, et- e prop- indicam o número de carbonos; -an-, -en- e -in- indicam ligações simples, duplas e triplas; sufixos como -ol e -ona indicam funções.\n\n*Exemplo:* etanol combina et- (dois carbonos), -an- (ligações simples na cadeia) e -ol (álcool). Para moléculas mais complexas, posições e prioridades precisam ser explicitadas."
     },
     {
         patterns: [/(reacoes organicas|adicao|substituicao|eliminacao)/],
@@ -1435,35 +1407,35 @@ Se a sua dúvida for específica, eu posso detalhar **quartzo**, **K-feldspato**
     },
     {
         patterns: [/(fisico-quimica|fisico quimica)/],
-        response: "**Físico-Química:** Cruza Matemática, Física e as propriedades do universo batendo na Matéria maciça Química.\n\n*Exemplo Prático:* É a físico química que diz por que diabos a panela de pressão cozinha o feijão muito mais rápido sem deixar e ferver a água pra fora do teto da sua casa."
+        response: "**Físico-Química:** usa princípios físicos e modelos matemáticos para estudar energia, equilíbrio, velocidade de reação, propriedades da matéria e fenômenos de transporte.\n\nNa panela de pressão, o aumento da pressão eleva a temperatura de ebulição da água. O alimento pode cozinhar em temperatura maior que 100 °C, acelerando transformações químicas e físicas; isso não significa que a água deixe de ferver, mas que o equilíbrio líquido–vapor ocorre em outra condição."
     },
     {
         patterns: [/(termodinamica|entalpia|entropia|energia livre|gibbs|leis da termodinamica)/],
-        response: "**Termodinâmica (Entalpia e Gibbs):** Rege o escoamento incontrolável do Universo Químico.\n\n*Exemplo Prático:* O pneu do freio não cria calor do nada (Entalpia positiva)! Ele apenas condensa no asfalto a energia! O gelo derrete no Sol livre porque sua desordem microscópica anseia desesperadamente explodir de liberdade (Elevação Máxima da Entropia da vida natural)!"
+        response: "**Termodinâmica, entalpia, entropia e Gibbs:** a entalpia H é útil para acompanhar calor trocado a pressão constante. A entropia S mede a dispersão de energia e o número de estados microscópicos acessíveis; não é simplesmente 'desordem'. A energia livre de Gibbs combina os dois efeitos: **ΔG = ΔH − TΔS**.\n\nA temperatura e pressão constantes, ΔG < 0 indica espontaneidade termodinâmica, mas não informa a velocidade do processo. O gelo derrete acima de sua temperatura de fusão porque a variação total de energia livre favorece a fase líquida nessas condições."
     },
     {
         patterns: [/(cinetica|velocidade da reacao|energia de ativacao|catalisador)/],
-        response: "**Cinética e Catalisadores:** Quão rápido que o fogo da Química corre a sala de cirurgia!\n\n*Exemplo Prático:* Se não fosse os minúsculos \"Catalisadores\" do nosso pulmão e estômago (apelidados de Enzimas), reações bioquímicas fundamentais demorariam muito mais sem a ação catalítica das enzimas."
+        response: "**Cinética e catalisadores:** a cinética estuda velocidades e mecanismos de reação. Temperatura, concentração, superfície, meio e energia de ativação influenciam a velocidade. Catalisadores oferecem um caminho reacional alternativo com menor barreira de ativação e não alteram a posição do equilíbrio termodinâmico.\n\nEnzimas são catalisadores biológicos altamente seletivos; sem elas, muitas reações essenciais seriam lentas demais nas condições fisiológicas."
     },
     {
         patterns: [/(fases da agua|ponto critico|ponto triplo|superfluido|comportamento anomalo da agua|diagrama de fases)/],
-        response: "**Fases da Água e Diagrama:** Demonstra picos raros que enganam nossos olhos de criança.\n\n*Exemplo Prático:* Sabia que num exato ponto trancado na termodinâmica (Ponto Triplo exato a 0,01 °C) a Água entra nas 3 fases borbulhando e congelando tudo de uma só vez misturada! Além de que o cubo de gelo flutua no refri só porque é o milagre anômalo de ser estupidamente hexagona!l, ao contrário de todos os outros fluidos do multiverso que afundam pedra dura quando solidificados."
+        response: "**Fases da água e diagrama de fases:** o diagrama indica qual fase é termodinamicamente estável em função de temperatura e pressão. No ponto triplo, sólido, líquido e vapor coexistem em equilíbrio; para a água pura, ele ocorre a 0,01 °C e cerca de 611 Pa.\n\nO gelo comum é menos denso que a água líquida porque sua rede de ligações de hidrogênio forma uma estrutura mais aberta. Essa anomalia faz o gelo flutuar, mas não é verdade que todos os demais líquidos se comportem do modo oposto."
     },
     {
         patterns: [/(equacao de onda|schrodinger|hidrogenoide|dualidade onda particula|de broglie)/],
-        response: "**Mecânica Quântica e Schrödinger:** Quebra o que nosso cérebro humano entende por Bolinhas batendo!\n\n*Exemplo Prático:* Se você cuspir elétrons numa placa de fenda fina na Física Clássica eles iam bater no cimento igual balas quicando marcando apenas 2 linhas pálidas. Mas no experimento das duplas fendas, os elétrons burlando a realidade de repente surtam interferindo em 50 marcas pintadas provando sem dúvidas que viram pura fumaça da \"Dualidade Onda-Partícula\"!"
+        response: "**Mecânica quântica e equação de Schrödinger:** a função de onda descreve o estado quântico; seu módulo ao quadrado fornece distribuições de probabilidade. Elétrons não 'viram fumaça' nem seguem órbitas clássicas definidas.\n\nEm experimentos de dupla fenda, eventos individuais de detecção formam, após muitas repetições, um padrão de interferência quando não há informação de caminho. O resultado evidencia comportamento quântico que não é descrito adequadamente por partículas clássicas nem por ondas clássicas isoladamente."
     },
     {
         patterns: [/(teoria do orbital molecular|orbital molecular|tom|orbitais ligantes|orbitais antiligantes)/],
-        response: "**Teoria do Orbital Molecular (TOM):** Funde as conchas dos átomos separadores criando uma Bolha Global Gigante por cima da união das órbitas ligantes da estabilidade!\n\n*Exemplo Prático:* A TOM explica, por exemplo, por que o O₂ apresenta elétrons desemparelhados em orbitais antiligantes e, por isso, comportamento paramagnético."
+        response: "**Teoria do Orbital Molecular (TOM):** combina orbitais atômicos para formar orbitais moleculares deslocalizados. Combinações em fase tendem a gerar orbitais ligantes; combinações fora de fase geram orbitais antiligantes, separados por nós.\n\nA ocupação desses orbitais permite estimar ordem de ligação e magnetismo. No O₂, dois elétrons desemparelhados ocupam orbitais π* antiligantes, explicando seu paramagnetismo. As superfícies coloridas dos visualizadores representam fase e isovalores escolhidos, não fronteiras físicas."
     },
     {
         patterns: [/(experimento da folha de ouro|rutherford|carga do eletron|millikan|gota de oleo|tubo de crookes|raios catodicos|fenda dupla|experimento de thomson)/],
-        response: "**Experimentos Históricos:** A glória dos gênios fundadores na era de Ouro onde não tinha nem microscópio e se descobriu todos os átomos via pura intuição de gênio e canos catódicos vazados a vácuo!\n\n*Exemplo Prático:* Rutherford inferiu a existência de um núcleo pequeno e denso ao observar que uma pequena fração das partículas alfa sofria grandes desvios ao atravessar uma fina lâmina de ouro."
+        response: "**Experimentos históricos da estrutura atômica:** modelos atômicos foram construídos a partir de evidências experimentais, não apenas de intuição. Raios catódicos ajudaram a caracterizar o elétron; Millikan mediu sua carga elementar; o espalhamento de partículas alfa levou ao modelo nuclear.\n\nRutherford e colaboradores inferiram um núcleo pequeno, denso e positivo porque a maioria das partículas alfa atravessava a lâmina de ouro, mas uma pequena fração sofria grandes desvios."
     },
     {
         patterns: [/(buraco tetraedrico|buraco octaedrico|intersticio|lacuna cristalina)/],
-        response: "**Interstícios (Buracos):** Os esconderijos tridimencionais gerados sem querer em redes maciças.\n\n*Exemplo Prático:* No Empacotamento Maciço de uma barra de aço, ficam buracos vazios invisíveis. Num buraco tetraédrico cabem bolas bem pequenas abafadas de Carbonos ali dentro! É assim, na tora invadindo os buracos ocultos, que passamos do Ferro Mole pra materiais com propriedades mecânicas significativamente alteradas, como ocorre em ligas metálicas e aços."
+        response: "**Interstícios:** são posições entre os átomos de uma estrutura nas quais espécies menores podem se alojar. A classificação tetraédrica ou octaédrica descreve a coordenação geométrica dos vizinhos no modelo estrutural.\n\nNo ferro, carbono ocupa sítios intersticiais e influencia fortemente a microestrutura e as propriedades dos aços. A ocupação real depende da fase do ferro, da temperatura, da composição e do processamento; o desenho de esferas é uma representação didática, não uma imagem em escala."
     }
 ];
 
@@ -1761,7 +1733,7 @@ function getBotResponse(userInput) {
     }
     // Instructions
     if (/(instrucao|instrucoes|como usar|ajuda|help|o que voce faz|o que voce pode fazer|como falar|o que perguntar)/.test(normalizedInput)) {
-        return `Aqui estão as instruções detalhadas de como posso te ajudar (lembre-se de sempre ser direto no que está perguntando, pois busco por palavras-chave!):
+        return `Aqui estão as principais formas de usar o assistente. Você pode escrever uma pergunta completa ou um comando curto:
 
 📚 **Tirar Dúvidas:** Me pergunte sobre conceitos diretos de química usando palavras do assunto. 
 *(Ex: "O que é a Teoria do Campo Cristalino?", "O que são índices de Miller?", "Quais são as fases da água?", "Defina o Princípio de Pauli")*.
@@ -1786,15 +1758,18 @@ function getBotResponse(userInput) {
 🎯 **Animações Educativas (SiMoEns):** Se tiver curiosidade, explore os materiais gráficos construídos pelo núcleo SiMoEns! 
 *(Ex: "Me mostre todas as animações", "Tens animações sobre geometria molecular?")*.
 
+📄 **Resumos e navegação:** Peça um resumo de um assunto, de uma página ou do site, ou solicite o link de qualquer recurso cadastrado.
+*(Ex: "Resuma interações intermoleculares", "Qual é o link do visualizador de defeitos?", "O que há no catálogo?")*.
+
 🔄 Sempre tentarei, junto com a resposta, direcionar seus estudos puxando três novos tópicos para guiá-lo à próxima pergunta. Pode ir clicando mentalmente e digitando a palavra, e a gente viaja pelo ramo químico juntos.`;
     }
     // Greetings
     if (/(^|\s)(oi|ola|bom dia|boa tarde|boa noite|opa|e ai|saudacoes)(\s|$)/.test(normalizedInput)) {
         const greetings = [
-            "Olá! Sou o Assistente do SiMoEns. Prefiro frases diretas e uso reconhecimento de palavras-chave. Posso te ajudar com VSEPR, polaridade, células unitárias, cristalografia, empacotamento, gemas, centros de cor, defeitos cristalinos, laboratório interativo, vidrarias, polimorfismo, modelos atômicos e orbitais. O que deseja saber?",
-            "Oi! Eu sou o Assistente do SiMoEns. Pergunte-me de modo direto sobre química estrutural, estado sólido ou mesmo os elementos químicos!",
-            "Saudações! Estou pronto para tirar suas dúvidas sobre geometria molecular, redes cristalinas, modelos atômicos e muito mais. Digite a palavra ou a frase do assunto que quer investigar (ex. 'como é a estrutura do cloreto de sódio?'). Como posso ajudar?",
-            "Olá! Aqui é o Assistente do SiMoEns. Respondo a termos e palavras associadas à química geral, inorgânica e cristalografia. Lembre-se que por ser guiado a regras, perguntas longas demais podem me confundir. Qual é a sua pergunta hoje?"
+            "Olá! Sou o Assistente do SiMoEns. Posso ajudar com VSEPR, polaridade, células unitárias, cristalografia, empacotamento, gemas, centros de cor, defeitos cristalinos, laboratório, vidrarias, polimorfismo, modelos atômicos e orbitais. O que deseja saber?",
+            "Oi! Eu sou o Assistente do SiMoEns. Você pode pedir uma explicação, comparação, resumo, exercício ou link de um recurso de Química.",
+            "Saudações! Estou pronto para conversar sobre geometria molecular, redes cristalinas, modelos atômicos e os demais temas do catálogo. Como posso ajudar?",
+            "Olá! Aqui é o Assistente do SiMoEns. Escreva sua pergunta normalmente ou use um comando como 'resuma', 'compare', 'explique' ou 'faça uma questão'."
         ];
         return greetings[Math.floor(Math.random() * greetings.length)];
     }
@@ -1874,14 +1849,14 @@ function getBotResponse(userInput) {
         return appendSuggestions("Você está explorando a **Química Quântica e Histórica**! Posso explicar sobre a dualidade onda-partícula, Teoria do Orbital Molecular, ou experimentos famosos. O que deseja?", "quantica");
     }
     // Fallback
-    return "Desculpe, não entendi muito bem. 🧐\n\nLembre-se que **sou um bot baseado em palavras-chave** e não possuo Inteligência Artificial avançada. Textos muito longos ou complexos me confundem.\n\n**Tente ser mais objetivo:**\nTente me perguntar o nome do assunto em si. Por exemplo:\n- *\"Fale sobre química orgânica\"*\n- *\"Explique ligações covalentes\"*\n- *\"Células unitárias\"*\n- *\"Índices de Miller\"*\n- *\"Elemento Plumbio (Chumbo)\"*\n- *\"Faça uma questão\"*\n\nSe continuar não encontrando o que quer, digite **\"Instruções\"** ou tente simplificar a pergunta!";
+    return "Ainda não encontrei uma resposta específica na base local. 🧐\n\nPosso trabalhar com perguntas completas, comandos curtos e pedidos de resumo. Tente incluir o assunto principal, por exemplo:\n- *\"Resuma interações intermoleculares\"*\n- *\"Compare ligação iônica e covalente\"*\n- *\"Explique células unitárias passo a passo\"*\n- *\"Qual é o link do visualizador de defeitos?\"*\n- *\"Faça uma questão sobre cristalografia\"*\n\nDigite **\"Instruções\"** para ver os comandos disponíveis.";
 }
 const INITIAL_MESSAGE = `Olá! Sou o Assistente do SiMoEns, seu assistente focado em Química! 🧪
 
 Estou aqui para ajudar com Química Geral, Inorgânica, Estado Sólido, Cristalografia, Físico-Química, Química de Coordenação, fundamentos científicos de gemas/minerais e reconhecimento de vidrarias/equipamentos do Laboratório Interativo.
 
 Como falar comigo:
-Como sou um robô que trabalha através do reconhecimento de palavras-chave estruturadas e não por inteligência artificial, eu funciono muito melhor se você for direto e objetivo no assunto, sem textos muito longos ou complexos.
+Posso entender perguntas, comandos, comparações, pedidos de resumo e pedidos de exercícios. No modo offline, respondo com uma base local revisada e com os materiais do próprio SiMoEns; por isso, não invento recursos que não estejam cadastrados.
 
 Experimente digitar:
 - "O que é uma célula unitária?"
@@ -1914,7 +1889,7 @@ const SIMOENS_SITE_MAP = [
     path: 'index.html',
     category: 'página',
     summary: 'Página inicial do site, com apresentação do grupo, novidades, produtos e acesso aos principais conteúdos.',
-    related: ['Sobre o SiMoEns', 'Página Ensino', 'Página Modelagem', 'Página Simulação', 'Chat inteligente'],
+    related: ['Sobre o SiMoEns', 'Página Ensino', 'Chat inteligente'],
     keywords: ['home','inicio','início','site','simoens','pagina inicial','página inicial','index']
   },
   {
@@ -1950,7 +1925,7 @@ const SIMOENS_SITE_MAP = [
     path: 'index.html#features03-1',
     category: 'seção',
     summary: 'Trecho da home voltado para descobrir as criações e acessar os conteúdos do projeto.',
-    related: ['Home do SiMoEns', 'Página Ensino', 'Página Modelagem', 'Página Simulação'],
+    related: ['Home do SiMoEns', 'Página Ensino', 'Chat inteligente'],
     keywords: ['portfolio','portfólio','ver portfolio','ver portfólio','criacoes','criações']
   },
   {
@@ -1989,24 +1964,6 @@ const SIMOENS_SITE_MAP = [
     summary: 'Catálogo 3D de vidrarias, equipamentos, acessórios de bancada, funções laboratoriais, aplicações e animações de líquido, gás, aquecimento, rotação e operação.',
     related: ['Página Ensino', 'Xadrez Químico (Jogo)', 'Interações Intermoleculares'],
     keywords: ['laboratório interativo','laboratorio interativo','vidrarias','vidrarias e equipamentos','catálogo de vidrarias','catalogo de vidrarias','béquer','bequer','erlenmeyer','kitasato','kitassato','balão de fundo redondo','balao de fundo redondo','proveta','tubo de ensaio','balão volumétrico','balao volumetrico','funil de separação','funil de separacao','bureta','pipeta graduada','cristalizador','vial','balão de destilação','balao de destilacao','condensador liebig','dessecador','frasco âmbar','frasco ambar','pipeta pasteur','tubo de nessler','frasco de drechsel','coluna de vigreux','condensador allihn','pipeta volumétrica','pipeta volumetrica','cuba cromatográfica','cuba cromatografica','tubo de cultura','bico de bunsen','forno mufla','estufa de secagem','rotaevaporador','capela de exaustão','capela de exaustao','balança analítica','balanca analitica','condutivímetro','condutivimetro','phmetro','chapa de aquecimento','manta de aquecimento','peixinho magnético','peixinho magnetico','tripé','tripe','cadinho','funil de vidro','funil de büchner','funil de buchner','escova de limpeza','pisseta','suporte universal','pinça metálica','pinca metalica','pinça de madeira','pinca de madeira','filtro de papel','bomba a vácuo','bomba a vacuo','vidro de relógio','vidro de relogio','espátulas','espatulas','centrífuga','centrifuga','bancada de laboratório']
-  },
-  {
-    id: 'modelagem',
-    title: 'Página Modelagem',
-    path: 'Modelagem/modelagem.html',
-    category: 'página',
-    summary: 'Área do site voltada à modelagem computacional, representação e análise de fenômenos em contexto acadêmico e científico.',
-    related: ['Geometria cristalográfica', 'Geometria molecular', 'Redes cristalinas'],
-    keywords: ['modelagem','pagina modelagem','página modelagem','modelos','representacao','representação']
-  },
-  {
-    id: 'simulacao',
-    title: 'Página Simulação',
-    path: 'Simulação/simulacao.html',
-    category: 'página',
-    summary: 'Área do site voltada à exploração de cenários, teste de parâmetros e estudo do comportamento de modelos em diferentes condições.',
-    related: ['Redes cristalinas', 'Buracos e empacotamento'],
-    keywords: ['simulacao','simulação','pagina simulacao','página simulação','simulacao.html','simulação.html','simulação/simulacao.html','simulação/simulação.html','simula#u00e7#u00e3o.html','parametros','parâmetros']
   },
   {
     id: 'chat',
@@ -2316,7 +2273,7 @@ const SIMOENS_SITE_MAP = [
 {
   id: 'caca_palavras_jogo',
   title: 'Caça-palavras (Jogo)',
-  path: 'Ensino/jogo/ca%23U00e7a-palavras/index.html',
+  path: 'Ensino/jogo/ca%C3%A7a-palavras/index.html',
   category: 'jogo',
   catalogEntry: true,
   summary: 'Jogo com temas de química para reforço de vocabulário, reconhecimento de conceitos e revisão de conteúdos.',
@@ -2342,6 +2299,26 @@ const SIMOENS_SITE_MAP = [
     summary: 'Visualizador 3D para estudar gemas, cores, impurezas cromóforas, defeitos cristalinos, centros de cor, inclusões e mudanças ópticas em minerais.',
     related: ['Identificação de defeitos cristalinos (Exercício)', 'Redes cristalinas', 'Complexos e polimorfismo'],
     keywords: ['gemas','gema','gemologia','gemas e mudança de cor','gemas e mudanca de cor','gemviewer','cor em gemas','cores das gemas','impurezas','defeitos cristalinos','centros de cor','cromóforo','cromoforo','rubi','safira','esmeralda','diamante','opala','alexandrita','turmalina','topázio','fluorita','hackmanita']
+  },
+  {
+    id: 'defeitos_cristalinos_3d',
+    title: 'Visualizador 3D de defeitos cristalinos',
+    path: 'Ensino/Animacao/defeitos-cristalinos/index.html',
+    category: 'animação',
+    catalogEntry: true,
+    summary: 'Visualizador didático 3D de vacâncias, substituições, intersticiais, Frenkel e Schottky em redes SC, BCC, FCC e NaCl, com tendência energética qualitativa claramente sinalizada.',
+    related: ['Identificação de defeitos cristalinos (Exercício)', 'Gemas e mudança de cor', 'Redes cristalinas'],
+    keywords: ['visualizador de defeitos','defeitos cristalinos 3d','vacância 3d','vacancia 3d','frenkel','schottky','substitucional','intersticial']
+  },
+  {
+    id: 'show_milhao_jogo',
+    title: 'Show do Milhão Químico (Jogo)',
+    path: 'Ensino/jogo/show-do-milhao-da-quimica/index.html',
+    category: 'jogo',
+    catalogEntry: true,
+    summary: 'Jogo de perguntas e respostas para revisar conceitos de Química em rodadas progressivas.',
+    related: ['Caça-palavras (Jogo)', 'Página Ensino', 'Xadrez Químico (Jogo)'],
+    keywords: ['show do milhão','show do milhao','milhão químico','milhao quimico','quiz de química','quiz de quimica','jogo de perguntas']
   },
 
   {
@@ -2375,15 +2352,6 @@ const SIMOENS_SITE_MAP = [
     keywords: ['interacoes intermoleculares','interações intermoleculares','forcas intermoleculares','forças intermoleculares','ligação de hidrogênio','dipolo-dipolo','london']
   },
 
-  {
-    id: 'generic',
-    title: 'Conteúdo em breve',
-    path: 'generico.html',
-    category: 'utilitário',
-    summary: 'Página genérica usada como placeholder para conteúdos ainda não publicados.',
-    related: ['Home do SiMoEns'],
-    keywords: ['conteudo em breve','conteúdo em breve','generico','genérico','placeholder']
-  }
 ];
 
 const SITE_GROUP_ORDER = ['página', 'seção', 'animação', 'exercício', 'jogo', 'hub', 'atividade', 'utilitário'];
@@ -2434,8 +2402,6 @@ const TOPIC_HINTS = [
   ['quebra-cabeca-ionico-covalente/views/covalente', 'ligações covalentes e compartilhamento eletrônico'],
   ['quebra-cabeca-ionico-covalente', 'ligação iônica, ligação covalente e diferenciação entre compostos'],
   ['ensino', 'conteúdos de química e objetos educacionais do SiMoEns'],
-  ['modelagem', 'modelagem visual de estruturas e sistemas químicos'],
-  ['simula', 'simulação de estruturas e fenômenos químicos'],
   ['chatbot', 'apoio didático em Química para o conteúdo do site'],
   ['modelos_atomicos', 'modelos atômicos, evolução histórica do átomo e transição até a mecânica quântica'],
   ['visualizador_de_hidrogenoides', 'visualização 2D e 3D de orbitais e distribuições eletrônicas em sistemas hidrogenoides'],
@@ -2450,7 +2416,9 @@ const TOPIC_HINTS = [
 ['coordenacao-empacotamento', 'número de coordenação, empacotamento e organização espacial'],
 ['defeitos-cristalinos', 'defeitos cristalinos, vacâncias, Frenkel, Schottky e sítios defeituosos'],
 ['batalha-de-polaridade', 'comparação de polaridade molecular, vetores, ângulos e simetria'],
-['ca%23u00e7a-palavras', 'jogo de vocabulário químico e revisão de conceitos'],
+['caça-palavras', 'jogo de vocabulário químico e revisão de conceitos'],
+['show-do-milhao-da-quimica', 'jogo de perguntas e respostas sobre Química'],
+['animacao/defeitos-cristalinos', 'defeitos cristalinos em visualização 3D didática'],
 ['xadrez-quimico', 'jogo de estratégia com vidrarias e ambientação de laboratório'],
 ];
 
@@ -2489,7 +2457,6 @@ function entryUrl(entry) {
 const SITE_URL_ALIAS_MAP = new Map([
   [`${SITE_URL}orbitais/index.html`, `${SITE_URL}visualizador_orbitais/index.html`],
   [`${SITE_URL}Ensino/Exercicio%20Guiado/sistema-cristalino/index.html`, `${SITE_URL}Ensino/Exercicio%20Guiado/nome-da-celula/index.html`],
-  [`${SITE_URL}Ensino/jogo/ca%C3%A7a-palavras/index.html`, `${SITE_URL}Ensino/jogo/ca%23U00e7a-palavras/index.html`],
   [`${SITE_URL}simetria/index.html`, `${SITE_URL}simetria-e-formula-unitaria/index.html`],
   [`${SITE_URL}coordenacao/index.html`, `${SITE_URL}Complexos%20e%20polimorfismo/index.html`],
   [`${SITE_URL}coordenação/index.html`, `${SITE_URL}Complexos%20e%20polimorfismo/index.html`],
@@ -2561,11 +2528,7 @@ function normalizePath(pathname = '') {
   return normalize(decoded)
     .replace(/^.*\/quimica-visual\/?/, '')
     .replace(/^.*\/simoens\/?/, '')
-    .replace(/^\//, '')
-    .replace(/simula#u00e7#u00e3o\.html$/, 'simulacao.html')
-    .replace(/simula%c3%a7%c3%a3o\.html$/, 'simulacao.html')
-    .replace(/simulacao\.html$/, 'simulacao.html')
-    .replace(/simulacao$/, 'simulacao.html');
+    .replace(/^\//, '');
 }
 
 function enrichPageContext(ctx) {
@@ -2709,7 +2672,7 @@ function getContextKeywords(ctx) {
 
 
 function siteKeywords() {
-  const keys = ['simoens','site','animacao','animação','animacoes','animações','pagina','página','paginas','páginas','home','ensino','modelagem','simulação','simulacao'];
+  const keys = ['simoens','site','animacao','animação','animacoes','animações','pagina','página','paginas','páginas','home','ensino','chat'];
   for (const entry of SIMOENS_SITE_MAP) {
     keys.push(entry.title, entry.path, ...(entry.keywords || []), ...(entry.related || []));
   }
@@ -2896,7 +2859,7 @@ function maybeAnswerInstantSiteQuestions(userText = '') {
 
   const asksProducts = /quais sao os produtos|quais são os produtos|produtos do site|paginas principais|páginas principais|o que tem no site|quais paginas|quais páginas/.test(t);
   if (asksProducts) {
-    return `As páginas principais do SiMoEns são: Home (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'home'))}), Ensino (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'ensino'))}), Modelagem (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'modelagem'))}), Simulação (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'simulacao'))}) e Chat inteligente (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'chat'))}).`;
+    return `As páginas públicas principais do SiMoEns são: Home (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'home'))}), Ensino (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'ensino'))}) e Chat inteligente (${entryUrl(SIMOENS_SITE_MAP.find((e) => e.id === 'chat'))}). O catálogo de Ensino reúne animações, guias, exercícios e jogos.`;
   }
 
   const asksWhatIs = /o que e o simoens|o que é o simoens|o que e esse site|o que é esse site|sobre o site/.test(t);
@@ -3873,6 +3836,32 @@ class SimoensChatWidget {
     });
 
     return { promptText, matches: ranked };
+  }
+
+  async answerFromLocalDocuments(userText, currentCtx, options = {}) {
+    const { matches } = await this.retrieveDocumentContext(userText, currentCtx);
+    if (!matches.length) return '';
+
+    const asksSummary = /\b(resuma|resumo|resumir|sintetize|síntese|sintese|em poucas palavras|pontos principais|sobre o que fala|o que esse conte[uú]do mostra)\b/i.test(userText);
+    if (!asksSummary && !options.allowFallback) return '';
+
+    const selected = [];
+    const seen = new Set();
+    for (const match of matches) {
+      const key = `${match.file_name}:${match.text}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      selected.push(match);
+      if (selected.length >= (asksSummary ? 3 : 2)) break;
+    }
+    if (!selected.length) return '';
+
+    const intro = asksSummary
+      ? '**Resumo baseado nos materiais locais do SiMoEns:**'
+      : '**Encontrei esta explicação nos materiais locais do SiMoEns:**';
+    const body = selected.map((item) => `- ${compactDocumentText(item.text, 520)}`).join('\n');
+    const sources = Array.from(new Set(selected.map((item) => item.file_name).filter(Boolean)));
+    return `${intro}\n${body}\n\n**Fonte${sources.length > 1 ? 's' : ''}:** ${sources.join('; ')}.`;
   }
 
   async ensureEngine(options = {}) {
@@ -5182,7 +5171,15 @@ ${buildDirectSystemPrompt(currentCtx, relevantSiteText, this.getActiveSystemProm
       }
 
       if (!response) {
-        response = WidgetKeywordBot.getBotResponse(userText);
+        response = await this.answerFromLocalDocuments(userText, currentCtx);
+      }
+
+      if (!response) {
+        const keywordResponse = WidgetKeywordBot.getBotResponse(userText);
+        const isFallback = /ainda não encontrei uma resposta específica na base local/i.test(keywordResponse);
+        response = isFallback
+          ? (await this.answerFromLocalDocuments(userText, currentCtx, { allowFallback: true })) || keywordResponse
+          : keywordResponse;
       }
 
       const enrichedResponse = (WidgetKeywordBot.appendContextualAnimationSuggestions || ((reply) => reply))(String(response || '').trim() || 'Não consegui montar uma resposta agora. Tente reformular a pergunta com o nome do assunto de Química.', userText, currentCtx);

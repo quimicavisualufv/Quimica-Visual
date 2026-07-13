@@ -29,3 +29,7 @@ A tela possui um painel lateral com a seleção de estruturas minerais, uma áre
 ## Leitura científica
 
 A cor de uma gema não depende apenas da fórmula ideal do mineral. Em muitos casos, uma rede cristalina quase pura seria incolor. A cor surge quando pequenas quantidades de íons de transição, defeitos eletrônicos, vacâncias, pares de transferência de carga, deformações ou estruturas internas modificam a interação da luz com a matéria. Por isso, o visualizador conecta química do estado sólido, cristalografia, espectroscopia e gemologia.
+
+## Limites da representação
+
+Este é um modelo didático qualitativo. Tamanhos atômicos, distâncias, cores, concentrações de impurezas e intensidade dos efeitos ópticos foram escolhidos para tornar os fenômenos visíveis e não devem ser interpretados como valores experimentais ou como uma estrutura em escala. As posições mostradas representam exemplos relevantes, mas não esgotam todos os sítios, defeitos e mecanismos possíveis em cada mineral.

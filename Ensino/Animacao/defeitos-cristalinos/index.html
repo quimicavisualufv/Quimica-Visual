@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualizador didático 3D de defeitos pontuais em redes cristalinas SC, BCC, FCC e em um modelo iônico tipo NaCl.">
   <title>Defeitos Cristalinos 3D | SiMoEns</title>
   <link rel="stylesheet" href="assets/css/style1.css">
   <script type="importmap">
@@ -15,10 +16,14 @@
   </script>
 </head>
 <body>
+  <a class="acess-skip-link" href="#app" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:99999;background:#fff;color:#111;border:2px solid currentColor;border-radius:.375rem;padding:.5rem .75rem;text-decoration:none;" onfocus="this.style.left='1rem';this.style.top='1rem';this.style.width='auto';this.style.height='auto';this.style.overflow='visible';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden';">Ir para o conteúdo principal</a>
   <main id="app" class="app-shell">
+    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Defeitos cristalinos 3D</h1>
     <section id="viewer" class="viewer" aria-label="Visualizador 3D de defeitos cristalinos"></section>
     <section id="ui" class="interface" aria-label="Controles do visualizador"></section>
   </main>
   <script type="module" src="assets/js/main.js"></script>
+  <script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260712"></script>
+  <script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-20260712"></script>
 </body>
 </html>

@@ -48,8 +48,17 @@
 
   @media (max-width: 900px){
     .panel-row-main>label,.panel-row-main>.control-group{min-width:100%; width:100%}
+    .mode-control,.zoom-control,.opacity-control,#atomSizeWrap{width:100%}
+    .panel label>input[type="range"],.panel .control-group>input[type="range"]{flex:1 1 120px;width:auto;max-width:none}
     .solo-toggle{margin-left:0}
-    #stage{height:calc(100vh - 300px)}
+    #stage{height:max(52vh,360px);min-height:360px}
+  }
+
+  @media (max-width: 560px){
+    .wrap{padding:10px 12px 8px}
+    .panel-row{gap:7px}
+    .panel label,.panel .control-group,.panel button{min-height:42px}
+    #stackActionsWrap .stack-action-btn{min-width:0;flex:1 1 130px}
   }
 
   .panel button:disabled,.panel input:disabled,.panel select:disabled{opacity:.52; cursor:not-allowed}

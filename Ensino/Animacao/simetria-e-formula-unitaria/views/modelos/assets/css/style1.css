@@ -20,3 +20,11 @@
   .muted{color:var(--muted);font-size:12px;line-height:1.35}
   model-viewer{width:100%;height:calc(100% - 48px);background:radial-gradient(1200px 600px at 50% 10%, rgba(96,165,250,.08), transparent 60%)}
   .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--outline);background:#0b0e14;border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px}
+  @media (max-width: 760px){
+    html,body{height:auto;min-height:100%}
+    .wrap{grid-template-columns:1fr;height:auto;min-height:100%;padding:8px;gap:8px}
+    .panel:first-child{min-height:58vh}
+    model-viewer{height:calc(58vh - 48px);min-height:360px}
+    .controls{max-height:none;overflow:visible}
+    header small{font-size:10px;text-align:right}
+  }

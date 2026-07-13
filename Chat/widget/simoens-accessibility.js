@@ -35,6 +35,17 @@
     return /\/Ensino\/jogo\/xadrez-quimico\/?(?:index\.html)?/i.test(decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/'));
   }
 
+  function isInteractiveContentPage() {
+    var path = decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/').toLowerCase();
+    return /\/ensino\/(?:animacao|exercicio guiado|jogo)\//.test(path)
+      || /\/chat\/chatbot\.html$/.test(path);
+  }
+
+  function isChatPage() {
+    var path = decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/').toLowerCase();
+    return /\/chat\/chatbot\.html$/.test(path);
+  }
+
   function updateXadrezVoiceButton(active) {
     var button = document.querySelector('[data-a11y-action="chess-voice"]');
     if (!button) return;
@@ -568,6 +579,21 @@ html.simoens-a11y-focus :focus,
       html.simoens-chat-widget-open .simoens-a11y-widget {
         display: none !important;
       }
+      html.simoens-a11y-app-page .simoens-a11y-widget {
+        top: max(78px, env(safe-area-inset-top));
+        right: max(12px, env(safe-area-inset-right));
+        bottom: auto;
+      }
+      html.simoens-a11y-app-page .simoens-a11y-panel {
+        top: 72px;
+        right: 0;
+        bottom: auto;
+        max-height: min(76vh, calc(100dvh - 168px));
+      }
+      html.simoens-a11y-chat-page .simoens-a11y-widget {
+        top: max(24px, env(safe-area-inset-top));
+        right: max(146px, env(safe-area-inset-right));
+      }
       .simoens-a11y-trigger {
         width: 58px;
         height: 58px;
@@ -865,6 +891,20 @@ html.simoens-a11y-focus :focus,
         .simoens-a11y-panel {
           bottom: 66px;
           max-height: 72vh;
+        }
+        html.simoens-a11y-app-page .simoens-a11y-widget {
+          top: max(66px, env(safe-area-inset-top));
+          right: max(10px, env(safe-area-inset-right));
+          bottom: auto;
+        }
+        html.simoens-a11y-app-page .simoens-a11y-panel {
+          top: 64px;
+          bottom: auto;
+          max-height: calc(100dvh - 150px);
+        }
+        html.simoens-a11y-chat-page .simoens-a11y-widget {
+          top: max(18px, env(safe-area-inset-top));
+          right: max(82px, env(safe-area-inset-right));
         }
       }
 
@@ -1633,6 +1673,8 @@ html.simoens-a11y-focus :focus,
   }
 
   function start() {
+    document.documentElement.classList.toggle('simoens-a11y-app-page', isInteractiveContentPage());
+    document.documentElement.classList.toggle('simoens-a11y-chat-page', isChatPage());
     injectStyle();
     loadState();
     installSelectionMemory();

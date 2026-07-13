@@ -9368,7 +9368,7 @@ import { HDRJPGLoader, GainMapLoader } from "./e1e3f0a3e8f75d2f3b08.mjs";
 // node_modules/@react-three/drei/helpers/environment-assets.js
 var presetsObj = {
   apartment: "lebombo_1k.hdr",
-  city: "potsdamer_platz_1k.hdr",
+  city: "city.exr",
   dawn: "kiara_1_dawn_1k.hdr",
   forest: "forest_slope_1k.hdr",
   lobby: "st_fagans_interior_1k.hdr",
@@ -9381,7 +9381,7 @@ var presetsObj = {
 
 // node_modules/@react-three/drei/core/useEnvironment.js
 import { useLayoutEffect as useLayoutEffect38 } from "./280832c272e831e2686f.mjs";
-var CUBEMAP_ROOT = "https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/";
+var CUBEMAP_ROOT = "../../../assets/environment/";
 var isArray2 = (arr) => Array.isArray(arr);
 var defaultFiles = ["/px.png", "/nx.png", "/py.png", "/ny.png", "/pz.png", "/nz.png"];
 function useEnvironment({

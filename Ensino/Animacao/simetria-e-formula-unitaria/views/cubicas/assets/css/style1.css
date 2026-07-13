@@ -7,3 +7,11 @@
   .panel{background:var(--panel); border:1px solid #1f2937; border-radius:12px; overflow:hidden}
   .right{padding:12px; display:grid; gap:10px; align-content:start; overflow:auto; max-height:100%}
   select,button{background:#0b0e14; color:var(--ink); border:1px solid #1f2937; border-radius:8px; padding:8px 10px}
+  @media (max-width: 760px){
+    html,body{height:auto;min-height:100%}
+    main{grid-template-columns:1fr;height:auto;min-height:100%;padding:8px}
+    .panel:first-child{min-height:58vh}
+    .right{max-height:none;overflow:visible}
+    header{gap:8px}
+    header small{font-size:10px;text-align:right}
+  }

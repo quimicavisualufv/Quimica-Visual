@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { interactWithAtom, isInteractive, subscribe } from './state.js';
+import { SPACING } from './config.js';
 
 export class SceneController {
   constructor(container) {
@@ -14,6 +15,9 @@ export class SceneController {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setSize(this.width, this.height);
     this.renderer.shadowMap.enabled = true;
+    this.renderer.domElement.tabIndex = 0;
+    this.renderer.domElement.setAttribute('role', 'img');
+    this.renderer.domElement.setAttribute('aria-label', 'Rede cristalina interativa em três dimensões. Arraste para girar e use os controles da página para alterar a estrutura.');
     this.container.appendChild(this.renderer.domElement);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
@@ -176,13 +180,13 @@ export class SceneController {
 
     if (atom.type === 'interstitial_site') {
       if (mode === 'interstitial' || mode === 'frenkel') {
-        color = '#7dd3fc';
+        color = atom.siteKind === 'tetrahedral' ? '#fbbf24' : '#7dd3fc';
         scale = 0.2;
         opacity = 0.48;
         transparent = true;
         wireframe = false;
         isBox = true;
-        emissive = '#7dd3fc';
+        emissive = color;
         emissiveIntensity = 1.7;
       } else {
         visible = false;
@@ -203,6 +207,25 @@ export class SceneController {
     if (plane === 'y' && atom.position[1] > 0.1) return true;
     if (plane === 'z' && atom.position[2] > 0.1) return true;
     return false;
+  }
+
+  getDisplayPosition(atom) {
+    const position = [...atom.position];
+    if (!['host', 'cation', 'anion'].includes(atom.type)) return position;
+    const substitutions = this.snapshot.atoms.filter((item) => item.type === 'substitutional');
+    const influenceRadius = SPACING * 1.15;
+    substitutions.forEach((solute) => {
+      const dx = position[0] - solute.position[0];
+      const dy = position[1] - solute.position[1];
+      const dz = position[2] - solute.position[2];
+      const distance = Math.hypot(dx, dy, dz);
+      if (!distance || distance > influenceRadius) return;
+      const displacement = 0.16 * (1 - distance / influenceRadius);
+      position[0] += (dx / distance) * displacement;
+      position[1] += (dy / distance) * displacement;
+      position[2] += (dz / distance) * displacement;
+    });
+    return position;
   }
 
   rebuild() {
@@ -228,7 +251,8 @@ export class SceneController {
       });
       const mesh = new THREE.Mesh(geometry, material);
       const baseScale = visual.scale * this.snapshot.atomScale;
-      mesh.position.set(atom.position[0], atom.position[1], atom.position[2]);
+      const displayPosition = this.getDisplayPosition(atom);
+      mesh.position.set(displayPosition[0], displayPosition[1], displayPosition[2]);
       mesh.scale.setScalar(baseScale);
       mesh.castShadow = true;
       mesh.userData = { atomId: atom.id, baseScale, interactive: isInteractive(atom, this.snapshot.mode), color: visual.color };

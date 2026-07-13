@@ -1591,6 +1591,7 @@
     "ensino/animacao/visualizador-orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
     "ensino/animacao/visualizador_orbitais/": "textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
     "ensino/animacao/gemviewer/": "textos-acessibilidade/animacoes/09_animacao_gemas_e_mudanca_de_cor.md",
+    "ensino/animacao/defeitos-cristalinos/": "textos-acessibilidade/animacoes/10_animacao_defeitos_cristalinos_3d.md",
     "ensino/guia/atlas_termodinamico/": "textos-acessibilidade/guias/01_guia_atlas_termodinamico.md",
     "ensino/guia/celulas/": "textos-acessibilidade/guias/02_guia_celulas_unitarias.md",
     "ensino/guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/": "textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md",
@@ -1612,7 +1613,7 @@
     "ensino/jogo/xadrez-quimico/": "textos-acessibilidade/jogos/01_jogo_xadrez_quimico_modo_narrador.md",
     "ensino/jogo/quebra-cabeca-ionico-covalente/": "textos-acessibilidade/jogos/02_jogo_quebra_cabeca_ionico_covalente_modo_narrador.md",
     "ensino/jogo/caça-palavras/": "textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md",
-    "ensino/jogo/ca#u00e7a-palavras/": "textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md"
+    "ensino/jogo/show-do-milhao-da-quimica/": "textos-acessibilidade/jogos/04_jogo_show_do_milhao_quimico_modo_narrador.md"
   };
 
   function text(value) {

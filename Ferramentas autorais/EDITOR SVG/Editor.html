@@ -1104,10 +1104,88 @@ function clamp(n, min, max) {
 }
 
 function sanitizeSvgString(svgString) {
-  return String(svgString || '')
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
+  const source = String(svgString || '').replace(/<!DOCTYPE[\s\S]*?>/gi, '').trim();
+  if (!source) throw new Error('O arquivo SVG está vazio.');
+  if (source.length > 8 * 1024 * 1024) throw new Error('O SVG excede o limite seguro de 8 MB.');
+
+  const doc = parser.parseFromString(source, 'image/svg+xml');
+  if (doc.querySelector('parsererror')) throw new Error('O SVG tem erro de sintaxe e não pôde ser carregado.');
+  const root = doc.documentElement;
+  if (!root || root.nodeName.toLowerCase() !== 'svg') throw new Error('Arquivo inválido: o conteúdo não parece ser um SVG.');
+
+  const forbiddenElements = new Set([
+    'script', 'foreignobject', 'iframe', 'frame', 'frameset', 'object', 'embed',
+    'portal', 'link', 'meta', 'base', 'form', 'input', 'button', 'textarea',
+    'select', 'audio', 'video', 'canvas'
+  ]);
+  const safeDataImage = /^data:image\/(?:png|jpe?g|gif|webp);base64,[a-z0-9+/=\s]+$/i;
+  const dangerousProtocol = /^(?:javascript|vbscript|file|filesystem|chrome|resource):/i;
+  const externalProtocol = /^(?:https?:)?\/\//i;
+
+  Array.from(root.querySelectorAll('*')).forEach((element) => {
+    const tag = element.localName.toLowerCase();
+    if (forbiddenElements.has(tag)) {
+      element.remove();
+      return;
+    }
+
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      const value = String(attribute.value || '').trim();
+      if (name.startsWith('on') || ['src', 'data', 'formaction', 'action'].includes(name)) {
+        element.removeAttribute(attribute.name);
+        return;
+      }
+
+      if (name === 'href' || name === 'xlink:href') {
+        const isLocalReference = value.startsWith('#');
+        const isSafeEmbeddedImage = tag === 'image' && safeDataImage.test(value);
+        if (!isLocalReference && !isSafeEmbeddedImage) element.removeAttribute(attribute.name);
+        return;
+      }
+
+      if (dangerousProtocol.test(value) || externalProtocol.test(value)) {
+        element.removeAttribute(attribute.name);
+        return;
+      }
+
+      if (name === 'style') {
+        const safeStyle = sanitizeCssText(value);
+        if (safeStyle) element.setAttribute(attribute.name, safeStyle);
+        else element.removeAttribute(attribute.name);
+      }
+    });
+
+    if (tag === 'style') element.textContent = sanitizeCssText(element.textContent || '');
+  });
+
+  deduplicateSvgIds(root);
+  return serializer.serializeToString(root);
+}
+
+function sanitizeCssText(cssText) {
+  return String(cssText || '')
+    .replace(/@import[\s\S]*?(?:;|$)/gi, '')
+    .replace(/(?:expression|behavior|-moz-binding)\s*:[^;}]*/gi, '')
+    .replace(/url\(\s*(['"]?)(?:javascript|vbscript|file|filesystem):[\s\S]*?\)\s*\)?/gi, 'none')
+    .replace(/url\((['"]?)(?!#)(?!data:image\/(?:png|jpe?g|gif|webp);base64,)[^)]*\1\)/gi, 'none')
+    .replace(/(?:javascript|vbscript|file|filesystem)\s*:/gi, '')
     .trim();
+}
+
+function deduplicateSvgIds(root) {
+  const seen = new Map();
+  root.querySelectorAll('[id]').forEach((element) => {
+    const original = (element.getAttribute('id') || '').trim();
+    if (!original) {
+      element.removeAttribute('id');
+      return;
+    }
+    const count = seen.get(original) || 0;
+    seen.set(original, count + 1);
+    if (!count) return;
+    element.setAttribute('id', `${original}-${count + 1}`);
+  });
 }
 
 function resetTransientUiState() {

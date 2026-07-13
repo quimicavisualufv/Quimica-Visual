@@ -64,7 +64,7 @@ export class UIController {
       </div>
       <aside class="sidebar">
         <h1 class="panel-title">Defeitos em Sólidos</h1>
-        <p class="panel-copy">Manipulação acadêmica de falhas em estruturas cristalinas. Frenkel e Schottky aparecem apenas no exemplo iônico tipo NaCl.</p>
+        <p class="panel-copy">Modelos didáticos de falhas em estruturas cristalinas. Frenkel e Schottky aparecem apenas no exemplo iônico tipo NaCl desta aplicação.</p>
         <div class="control-group">
           <div class="control-title"><span>▦</span><span>Estrutura Cristalina</span></div>
           <div class="option-list">
@@ -125,10 +125,11 @@ export class UIController {
         </section>
         ${active.instructions ? `<section class="info-block action-box"><span class="info-label">Ação Interativa</span><p class="info-text">${active.instructions}</p></section>` : ''}
         <section class="energy-box">
-          <span class="info-label">Energia de Formação Relativa</span>
+          <span class="info-label">Tendência energética qualitativa</span>
           <div class="energy-bar"><div class="energy-fill" style="width:${active.energyLevel}%"></div></div>
-          <div class="energy-scale"><span>0 eV</span><span>Alta Energia</span></div>
+          <div class="energy-scale"><span>Menor</span><span>Maior</span></div>
           <p class="info-text">${active.energyText}</p>
+          <p class="info-text"><strong>Representação didática:</strong> a barra compara tendências conceituais e não corresponde a valores em eV nem a uma escala universal.</p>
         </section>
       </aside>
       <div class="mobile-hint">No celular, arraste o fundo para girar a rede e role a tela para acessar todos os controles.</div>

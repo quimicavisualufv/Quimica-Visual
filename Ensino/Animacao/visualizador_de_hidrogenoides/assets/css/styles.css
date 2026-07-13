@@ -67,3 +67,12 @@ input[type=range]{accent-color:var(--blue)}
   .views-grid{grid-template-columns:1fr}
   .canvas-wrap{min-height:430px}
 }
+@media (max-width: 640px){
+  aside{padding:10px}
+  main{padding:10px;gap:12px;grid-template-rows:minmax(360px,58vh) auto}
+  .canvas-wrap{min-height:360px}
+  .views-grid{gap:10px}
+  .toolbar-three{grid-template-columns:1fr 1fr}
+  .row{grid-template-columns:1fr}
+  .title{font-size:20px}
+}

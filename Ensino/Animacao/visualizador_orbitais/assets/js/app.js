@@ -1359,11 +1359,20 @@ ui.part6Negative.addEventListener('input', syncSelectedFromUi);
   .forEach(el => el.addEventListener('input', syncGeneralFromUi));
 
 document.querySelectorAll('.structCard').forEach(card=>{
-  card.addEventListener('dblclick', (e)=>{
+  card.setAttribute('role', 'button');
+  card.tabIndex = 0;
+  card.setAttribute('aria-label', `Adicionar estrutura ${card.textContent.trim()}`);
+  const addFromCard = (e)=>{
     e.preventDefault();
     const type = card.dataset.type;
     const p = defaultPlacement(type);
     addStructure(type, p.x, p.y, p.z);
+  };
+  card.addEventListener('click', addFromCard);
+  card.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      addFromCard(e);
+    }
   });
 });
 
@@ -1505,6 +1514,19 @@ canvas.addEventListener('dblclick', e=>{
   if(hit){
     selectInstance(hit.id);
   }else{
+    selectedId = null;
+    syncSelectionUi();
+    syncGeneralLabels();
+    refreshOverlayUi();
+    requestRender();
+  }
+});
+
+canvas.tabIndex = 0;
+canvas.setAttribute('role', 'img');
+canvas.setAttribute('aria-label', 'Visualização 3D de orbitais. Use os cartões de estrutura com clique, Enter ou barra de espaço. Dê dois cliques na cena para selecionar uma estrutura.');
+canvas.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){
     selectedId = null;
     syncSelectionUi();
     syncGeneralLabels();

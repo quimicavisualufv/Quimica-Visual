@@ -11,11 +11,8 @@ O projeto reúne materiais e propostas voltadas ao uso de tecnologias digitais p
 ### Ensino
 Recursos visuais e animações em 2D e 3D, guiadas ou exploratórias, pensadas para apoiar a compreensão de conceitos teóricos.
 
-### Modelagem
-Espaço dedicado ao desenvolvimento e apresentação de modelos computacionais aplicados à ciência.
-
-### Simulação
-Área voltada ao uso de simulações computacionais para representação e análise de fenômenos e modelos.
+### Modelagem e Simulação
+Áreas em desenvolvimento, temporariamente fora da navegação pública até receberem conteúdo próprio e revisão completa. Os endereços diretos exibem uma página de status e não são indexados.
 
 ## Destaques do site
 
@@ -43,7 +40,7 @@ O site está disponível em:
 ## Status
 
 Projeto em desenvolvimento e em constante atualização.
-A maioria das estruturas tem respaldo na literatura, algumas são apenas didáditcas.
+As experiências usam referências científicas, mas muitas imagens são representações didáticas. Cores, raios atômicos, distâncias, energias e concentrações podem ser qualitativos e não estar em escala; quando essa simplificação altera a interpretação, ela deve ser indicada na própria interface ou no texto acessível do recurso.
 Os materiais utilizados para o desenvolvimento, tais como livros, artigos, códigos de conversão/vetorização (e afins) ou cálculos feitos em Python/R, modelos 3D feitos, modelos 3D gratuitos modificados (quando permitidos) serão disponibilizados e catalogados. Futuramente esses arquivos estarão em uma pasta do projeto chamada "Referências".
 O projeto atualmente encontra-se em licença MIT, podendo mudar posteriormente. Educação gratuita e de qualidade pra todos! Educação não é mercadoria!
 

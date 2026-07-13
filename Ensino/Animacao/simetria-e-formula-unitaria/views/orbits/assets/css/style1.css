@@ -28,3 +28,11 @@
   .hint{color:var(--muted);font-size:12px}
   .row{display:flex;gap:8px;align-items:center}
   .badge{font-size:11px;padding:2px 6px;border:1px solid var(--outline);border-radius:8px;background:#0b0e14;color:#cbd5e1}
+  @media (max-width: 760px){
+    html,body{height:auto;min-height:100%}
+    .wrap{grid-template-columns:1fr;height:auto;min-height:100%;padding:8px;gap:8px}
+    .panel:first-child{min-height:58vh}
+    #sceneCanvas{height:calc(58vh - 48px);min-height:360px}
+    .ui{max-height:none;overflow:visible}
+    header small{font-size:10px;text-align:right}
+  }

@@ -205,6 +205,8 @@ function buildViewerTools(){
     sw.className = 'colorSwatchBtn' + (state.markColor === color ? ' active' : '');
     sw.style.background = color;
     sw.title = color;
+    sw.setAttribute('aria-label', `Usar a cor de marcação ${color}`);
+    sw.setAttribute('aria-pressed', state.markColor === color ? 'true' : 'false');
     sw.addEventListener('click', () => {
       state.markColor = color;
       buildViewerTools();

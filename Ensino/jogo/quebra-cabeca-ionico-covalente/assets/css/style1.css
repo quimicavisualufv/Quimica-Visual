@@ -19,3 +19,11 @@
   iframe.active{display:block}
   .hint{color:#475569; font-size:12px; padding:8px 12px}
   code{background:#f3f4f6; padding:2px 6px; border-radius:6px; border:1px solid var(--grid)}
+  @media (max-width: 640px){
+    header{padding:9px 10px;flex-wrap:wrap}
+    .tabs{margin-left:0;width:100%;overflow:auto}
+    .tab{flex:1 0 auto}
+    main{padding:8px}
+    .topbar{flex-wrap:wrap;padding:8px}
+    .frameWrap{height:calc(100dvh - 178px);min-height:480px}
+  }

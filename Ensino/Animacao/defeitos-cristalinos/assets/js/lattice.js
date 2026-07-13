@@ -8,6 +8,16 @@ function makeAtom(id, position, type, extra = {}) {
   return { id, position, type, baseType: type, ...extra };
 }
 
+function makeInterstitialAdder(atoms, prefix) {
+  const seen = new Set();
+  return (position, siteKind) => {
+    const key = position.map((value) => value.toFixed(4)).join('|');
+    if (seen.has(key)) return;
+    seen.add(key);
+    atoms.push(makeAtom(`${prefix}-${siteKind}-${seen.size}`, position, 'interstitial_site', { siteKind }));
+  };
+}
+
 export function generateSC() {
   const atoms = [];
   const baseOffset = offset();
@@ -31,6 +41,7 @@ export function generateSC() {
 export function generateBCC() {
   const atoms = [];
   const baseOffset = offset();
+  const addInterstitial = makeInterstitialAdder(atoms, 'bcc-site');
   for (let x = 0; x < SIZE; x += 1) {
     for (let y = 0; y < SIZE; y += 1) {
       for (let z = 0; z < SIZE; z += 1) {
@@ -44,7 +55,13 @@ export function generateBCC() {
   for (let x = 0; x < SIZE - 1; x += 1) {
     for (let y = 0; y < SIZE - 1; y += 1) {
       for (let z = 0; z < SIZE - 1; z += 1) {
-        atoms.push(makeAtom(`interstitial-${x}-${y}-${z}`, [(x + 0.5) * SPACING - baseOffset, (y + 0.5) * SPACING - baseOffset, z * SPACING - baseOffset], 'interstitial_site'));
+        const toPosition = ([fx, fy, fz]) => [(x + fx) * SPACING - baseOffset, (y + fy) * SPACING - baseOffset, (z + fz) * SPACING - baseOffset];
+        [[0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]].forEach((site) => addInterstitial(toPosition(site), 'octahedral'));
+        [
+          [0.5, 0.25, 0], [0.5, 0.75, 0], [0.25, 0.5, 0], [0.75, 0.5, 0],
+          [0, 0.5, 0.25], [0, 0.5, 0.75], [0.5, 0, 0.25], [0.5, 0, 0.75],
+          [0.25, 0, 0.5], [0.75, 0, 0.5], [0, 0.25, 0.5], [0, 0.75, 0.5]
+        ].forEach((site) => addInterstitial(toPosition(site), 'tetrahedral'));
       }
     }
   }
@@ -54,6 +71,7 @@ export function generateBCC() {
 export function generateFCC() {
   const atoms = [];
   const baseOffset = offset();
+  const addInterstitial = makeInterstitialAdder(atoms, 'fcc-site');
   for (let x = 0; x < SIZE; x += 1) {
     for (let y = 0; y < SIZE; y += 1) {
       for (let z = 0; z < SIZE; z += 1) {
@@ -73,7 +91,11 @@ export function generateFCC() {
   for (let x = 0; x < SIZE - 1; x += 1) {
     for (let y = 0; y < SIZE - 1; y += 1) {
       for (let z = 0; z < SIZE - 1; z += 1) {
-        atoms.push(makeAtom(`interstitial-${x}-${y}-${z}`, [(x + 0.5) * SPACING - baseOffset, (y + 0.5) * SPACING - baseOffset, (z + 0.5) * SPACING - baseOffset], 'interstitial_site'));
+        const toPosition = ([fx, fy, fz]) => [(x + fx) * SPACING - baseOffset, (y + fy) * SPACING - baseOffset, (z + fz) * SPACING - baseOffset];
+        [[0.5, 0.5, 0.5], [0.5, 0, 0], [0, 0.5, 0], [0, 0, 0.5]].forEach((site) => addInterstitial(toPosition(site), 'octahedral'));
+        [0.25, 0.75].forEach((fx) => [0.25, 0.75].forEach((fy) => [0.25, 0.75].forEach((fz) => {
+          addInterstitial(toPosition([fx, fy, fz]), 'tetrahedral');
+        })));
       }
     }
   }

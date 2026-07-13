@@ -40,3 +40,11 @@
   details.fold .fold-body .col-span-2{grid-column:span 2}
   details.fold .fold-body .legend{margin:0}
   details.fold .fold-body .readout{max-height:160px; overflow:auto}
+  @media (max-width: 760px){
+    html,body{height:auto;min-height:100%}
+    .wrap{grid-template-columns:1fr;height:auto;min-height:100%;padding:8px;gap:8px}
+    .panel:first-child{min-height:54vh}
+    #sceneCanvas{min-height:380px}
+    .ui{grid-template-columns:1fr 1fr;overflow:visible}
+    header small{font-size:10px;text-align:right}
+  }

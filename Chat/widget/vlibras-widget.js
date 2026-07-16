@@ -1,4 +1,5 @@
 (function () {
+  if (window.self !== window.top) return;
   const defaultConfig = {
     rootPath: 'https://vlibras.gov.br/app',
     scriptSrc: 'https://vlibras.gov.br/app/vlibras-plugin.js',
@@ -18,7 +19,11 @@
   }
 
   function ensureStructure() {
-    let root = document.querySelector('[vw][data-simoens-vlibras="true"], [vw].enabled');
+    const roots = Array.from(document.querySelectorAll('[vw][data-simoens-vlibras="true"], [vw].enabled'));
+    let root = roots.shift() || null;
+    roots.forEach(function (duplicate) {
+      duplicate.remove();
+    });
 
     if (!root) {
       root = document.createElement('div');

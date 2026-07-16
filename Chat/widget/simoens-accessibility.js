@@ -1,4 +1,5 @@
 (function () {
+  if (window.self !== window.top) return;
   var STORAGE_KEY = 'simoens.accessibility.preferences.v2';
   var ROOT_CLASS = 'simoens-a11y-active';
   var panelId = 'simoens-a11y-panel';
@@ -574,43 +575,51 @@ html.simoens-a11y-focus :focus,
 
       .simoens-a11y-widget {
         position: fixed;
-        right: var(--simoens-a11y-right);
+        right: 0;
         bottom: var(--simoens-a11y-bottom);
+        width: calc(var(--simoens-a11y-right) + 2px);
+        height: 58px;
         z-index: 2147483100;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #111827;
+        overflow: visible;
       }
 
       html.simoens-chat-widget-open .simoens-a11y-widget {
         display: none !important;
       }
       html.simoens-a11y-app-page .simoens-a11y-widget {
+        --simoens-a11y-right: max(12px, env(safe-area-inset-right));
         top: max(78px, env(safe-area-inset-top));
-        right: max(12px, env(safe-area-inset-right));
+        right: 0;
         bottom: auto;
       }
       html.simoens-a11y-app-page .simoens-a11y-panel {
         top: 72px;
-        right: 0;
+        right: var(--simoens-a11y-right);
         bottom: auto;
         max-height: min(76vh, calc(100dvh - 168px));
       }
       html.simoens-a11y-animation-page .simoens-a11y-widget {
         top: auto;
-        right: max(18px, env(safe-area-inset-right));
-        bottom: max(18px, env(safe-area-inset-bottom));
+        right: 0;
+        bottom: var(--simoens-a11y-bottom);
       }
       html.simoens-a11y-animation-page .simoens-a11y-panel {
         top: auto;
-        right: 0;
+        right: var(--simoens-a11y-right);
         bottom: 72px;
-        max-height: min(72vh, calc(100dvh - 112px));
+        max-height: min(76vh, 680px);
       }
       html.simoens-a11y-chat-page .simoens-a11y-widget {
+        --simoens-a11y-right: max(146px, env(safe-area-inset-right));
         top: max(24px, env(safe-area-inset-top));
-        right: max(146px, env(safe-area-inset-right));
+        right: 0;
       }
       .simoens-a11y-trigger {
+        position: absolute;
+        right: -44px;
+        bottom: 0;
         width: 58px;
         height: 58px;
         border-radius: 999px;
@@ -627,8 +636,14 @@ html.simoens-a11y-focus :focus,
         font-size: 25px;
         line-height: 1;
         overflow: hidden;
-        position: relative;
         isolation: isolate;
+        transition: right .24s cubic-bezier(.2,.8,.2,1), transform .18s ease;
+      }
+
+      .simoens-a11y-widget:hover .simoens-a11y-trigger,
+      .simoens-a11y-trigger:focus-visible,
+      .simoens-a11y-widget.is-panel-open .simoens-a11y-trigger {
+        right: var(--simoens-a11y-right);
       }
 
       .simoens-a11y-trigger::before {
@@ -657,7 +672,7 @@ html.simoens-a11y-focus :focus,
 
       .simoens-a11y-panel {
         position: absolute;
-        right: 0;
+        right: var(--simoens-a11y-right);
         bottom: 72px;
         width: min(342px, calc(100vw - 32px));
         max-height: min(76vh, 680px);
@@ -899,7 +914,11 @@ html.simoens-a11y-focus :focus,
           --simoens-a11y-bottom: 88px;
         }
 
+        .simoens-a11y-widget {
+          height: 54px;
+        }
         .simoens-a11y-trigger {
+          right: -42px;
           width: 54px;
           height: 54px;
         }
@@ -909,28 +928,32 @@ html.simoens-a11y-focus :focus,
           max-height: 72vh;
         }
         html.simoens-a11y-app-page .simoens-a11y-widget {
+          --simoens-a11y-right: max(10px, env(safe-area-inset-right));
           top: max(66px, env(safe-area-inset-top));
-          right: max(10px, env(safe-area-inset-right));
+          right: 0;
           bottom: auto;
         }
         html.simoens-a11y-app-page .simoens-a11y-panel {
           top: 64px;
+          right: var(--simoens-a11y-right);
           bottom: auto;
           max-height: calc(100dvh - 150px);
         }
         html.simoens-a11y-animation-page .simoens-a11y-widget {
           top: auto;
-          right: max(12px, env(safe-area-inset-right));
-          bottom: max(12px, env(safe-area-inset-bottom));
+          right: 0;
+          bottom: var(--simoens-a11y-bottom);
         }
         html.simoens-a11y-animation-page .simoens-a11y-panel {
           top: auto;
-          bottom: 64px;
-          max-height: calc(100dvh - 96px);
+          right: var(--simoens-a11y-right);
+          bottom: 66px;
+          max-height: 72vh;
         }
         html.simoens-a11y-chat-page .simoens-a11y-widget {
+          --simoens-a11y-right: max(82px, env(safe-area-inset-right));
           top: max(18px, env(safe-area-inset-top));
-          right: max(82px, env(safe-area-inset-right));
+          right: 0;
         }
       }
 
@@ -1540,6 +1563,7 @@ html.simoens-a11y-focus :focus,
 
     function setOpen(open) {
       panel.classList.toggle('is-open', open);
+      widget.classList.toggle('is-panel-open', open);
       trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open) setTimeout(function () {
         var first = panel.querySelector('button');

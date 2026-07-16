@@ -4039,14 +4039,20 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
         :host { all: initial; }
         .sw-root {
           position: fixed;
-          right: 20px;
+          right: 0;
           bottom: 20px;
+          width: 22px;
+          height: 64px;
           z-index: 2147483000;
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           line-height: 1.4;
           color: #101010;
+          overflow: visible;
         }
         .sw-toggle {
+          position: absolute;
+          right: -50px;
+          bottom: 0;
           width: 64px;
           height: 64px;
           border: 0;
@@ -4057,7 +4063,12 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
           place-items: center;
           cursor: pointer;
           box-shadow: 0 14px 30px rgba(0,0,0,.22);
-          transition: transform .18s ease;
+          transition: right .24s cubic-bezier(.2,.8,.2,1), transform .18s ease;
+        }
+        .sw-root:hover .sw-toggle,
+        .sw-toggle:focus-visible,
+        .sw-root.is-chat-open .sw-toggle {
+          right: 20px;
         }
         .sw-toggle:hover { transform: translateY(-2px); }
         .sw-toggle:active { transform: scale(.98); }
@@ -4065,7 +4076,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
 
         .sw-panel {
           position: absolute;
-          right: 0;
+          right: 20px;
           bottom: 78px;
           width: min(400px, calc(100vw - 20px));
           height: min(585px, calc(100vh - 96px));
@@ -4435,9 +4446,14 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
         ` : ''}
 
         @media (max-width: 640px) {
-          .sw-root { right: 10px; bottom: 10px; }
+          .sw-root { right: 0; bottom: 10px; width: 12px; height: 58px; }
+          .sw-toggle { right: -46px; }
+          .sw-root:hover .sw-toggle,
+          .sw-toggle:focus-visible,
+          .sw-root.is-chat-open .sw-toggle { right: 10px; }
           .sw-toggle, .sw-toggle svg { width: 58px; height: 58px; }
           .sw-panel {
+            right: 10px;
             width: min(100vw - 10px, 100vw - 10px);
             height: min(76vh, calc(100vh - 82px));
             bottom: 70px;
@@ -4506,6 +4522,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
       </div>
     `;
     this.root = shadow;
+    this.refs.floatingRoot = shadow.querySelector('.sw-root');
     this.refs.panel = shadow.getElementById('panel');
     this.refs.toggleBtn = shadow.getElementById('toggleBtn');
     this.refs.closeBtn = shadow.getElementById('closeBtn');
@@ -4719,6 +4736,9 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
       return;
     }
     document.documentElement.classList.toggle('simoens-chat-widget-open', !!shouldOpen);
+    if (this.refs.floatingRoot) {
+      this.refs.floatingRoot.classList.toggle('is-chat-open', !!shouldOpen);
+    }
     if (this.refs.toggleBtn) {
       this.refs.toggleBtn.setAttribute('aria-label', shouldOpen ? 'Fechar chat' : 'Abrir chat');
       this.refs.toggleBtn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');

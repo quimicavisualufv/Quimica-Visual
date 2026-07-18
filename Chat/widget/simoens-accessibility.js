@@ -38,8 +38,7 @@
 
   function isInteractiveContentPage() {
     var path = decodeURIComponent(String(location.pathname || '')).replace(/\\/g, '/').toLowerCase();
-    return /\/ensino\/(?:animacao|exercicio guiado|jogo)\//.test(path)
-      || /\/chat\/chatbot\.html$/.test(path);
+    return /\/ensino\/(?:animacao|exercicio guiado|jogo)\//.test(path);
   }
 
   function isAnimationPage() {
@@ -612,9 +611,15 @@ html.simoens-a11y-focus :focus,
         max-height: min(76vh, 680px);
       }
       html.simoens-a11y-chat-page .simoens-a11y-widget {
-        --simoens-a11y-right: max(146px, env(safe-area-inset-right));
-        top: max(24px, env(safe-area-inset-top));
+        top: auto;
         right: 0;
+        bottom: var(--simoens-a11y-bottom);
+      }
+      html.simoens-a11y-chat-page .simoens-a11y-panel {
+        top: auto;
+        right: var(--simoens-a11y-right);
+        bottom: 72px;
+        max-height: min(76vh, 680px);
       }
       .simoens-a11y-trigger {
         position: absolute;
@@ -951,9 +956,15 @@ html.simoens-a11y-focus :focus,
           max-height: 72vh;
         }
         html.simoens-a11y-chat-page .simoens-a11y-widget {
-          --simoens-a11y-right: max(82px, env(safe-area-inset-right));
-          top: max(18px, env(safe-area-inset-top));
+          top: auto;
           right: 0;
+          bottom: var(--simoens-a11y-bottom);
+        }
+        html.simoens-a11y-chat-page .simoens-a11y-panel {
+          top: auto;
+          right: var(--simoens-a11y-right);
+          bottom: 66px;
+          max-height: 72vh;
         }
       }
 

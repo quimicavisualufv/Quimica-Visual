@@ -1,4 +1,8 @@
+(function () {
+'use strict';
 
+if (window.__simoensChatWidgetScriptLoaded) return;
+window.__simoensChatWidgetScriptLoaded = true;
 
 /* Widget atualizado para usar o mesmo motor offline do chatbot completo. */
 const STORAGE_KEYS = {
@@ -4026,6 +4030,15 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     const panelTitle = this.runtimeConfig.title || 'Assistente do SiMoEns';
     const host = document.createElement('div');
     host.id = this.embeddedMode ? 'simoens-chat-widget-embed-host' : 'simoens-chat-widget-host';
+    if (!this.embeddedMode) {
+      host.style.position = 'fixed';
+      host.style.right = '0';
+      host.style.bottom = '0';
+      host.style.width = '0';
+      host.style.height = '0';
+      host.style.overflow = 'visible';
+      host.style.zIndex = '2147483000';
+    }
     if (this.embeddedMode) {
       host.style.display = 'block';
       host.style.width = '100%';
@@ -5234,12 +5247,61 @@ function postContextToParent() {
   }
 }
 
-const pageContext = collectPageContext();
-localStorage.setItem(STORAGE_KEYS.page, JSON.stringify(pageContext));
+function initializeSimoensChatWidget() {
+  const existingHost = document.getElementById('simoens-chat-widget-host') || document.getElementById('simoens-chat-widget-embed-host');
+  if (window.__simoensChatWidgetInitialized && existingHost) return;
 
-if (window.self !== window.top) {
-  postContextToParent();
-} else {
-  const widget = new SimoensChatWidget();
-  widget.build();
+  try {
+    const currentPageContext = collectPageContext();
+    try {
+      localStorage.setItem(STORAGE_KEYS.page, JSON.stringify(currentPageContext));
+    } catch (storageError) {
+      console.warn('SiMoEns: não foi possível salvar o contexto local do chat.', storageError);
+    }
+
+    if (window.self !== window.top) {
+      postContextToParent();
+      window.__simoensChatWidgetInitialized = true;
+      return;
+    }
+
+    if (!document.getElementById('simoens-chat-widget-host') && !document.getElementById('simoens-chat-widget-embed-host')) {
+      const widget = new SimoensChatWidget();
+      widget.build();
+    }
+    window.__simoensChatWidgetInitialized = true;
+  } catch (error) {
+    console.error('SiMoEns: falha ao iniciar o widget do chat.', error);
+  }
 }
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSimoensChatWidget, { once: true });
+} else {
+  initializeSimoensChatWidget();
+}
+
+// Algumas experiências interativas reconstroem partes extensas do DOM. Se isso
+// remover o host flutuante, o widget é montado novamente sem duplicar instâncias.
+if (window.self === window.top && !window.__simoensChatWidgetHostWatchInstalled) {
+  window.__simoensChatWidgetHostWatchInstalled = true;
+  let restoreTimer = 0;
+  const restoreWidgetHost = () => {
+    if (document.getElementById('simoens-chat-widget-host') || document.getElementById('simoens-chat-widget-embed-host')) return;
+    window.clearTimeout(restoreTimer);
+    restoreTimer = window.setTimeout(() => {
+      window.__simoensChatWidgetInitialized = false;
+      initializeSimoensChatWidget();
+    }, 60);
+  };
+  const installHostObserver = () => {
+    if (!document.documentElement) return;
+    const observer = new MutationObserver(restoreWidgetHost);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    window.addEventListener('pageshow', restoreWidgetHost);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installHostObserver, { once: true });
+  else installHostObserver();
+}
+
+})();

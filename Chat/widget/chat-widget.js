@@ -3209,6 +3209,14 @@ class SimoensChatWidget {
     this.currentStream = null;
     this.stopRequested = false;
     this.stopRequestedByUser = false;
+    this.messageAutoScrollEnabled = true;
+    this.messageUserScrollLocked = false;
+    this.messageScrollBindingTarget = null;
+    this.messageScrollProgrammatic = false;
+    this.messageScrollFrame = 0;
+    this.messageScrollRestoreFrame = 0;
+    this.messageTouchStartY = null;
+    this.messageLastScrollTop = 0;
     this.generationConfig = DEFAULT_GENERATION_CONFIG;
     this.loadNonce = 0;
     this.docChunksUrl = DOC_RAG_CHUNKS_URL;
@@ -3454,7 +3462,7 @@ class SimoensChatWidget {
     saveMessages(this.messages);
     this.renderConversationList();
     this.updateConversationHeader();
-    this.renderMessages();
+    this.renderMessages({ forceScroll: true });
     this.setStatus('Conversa carregada.', this.engine ? 100 : 0, false);
   }
 
@@ -3466,9 +3474,9 @@ class SimoensChatWidget {
     this.messages = [];
     this.ensureWelcomeMessage();
     this.syncActiveConversationState({ touch: false });
-    this.renderMessages();
+    this.renderMessages({ forceScroll: true });
     this.setStatus('Nova conversa iniciada.', this.engine ? 100 : 0, false);
-    requestAnimationFrame(() => this.refs.input?.focus());
+    requestAnimationFrame(() => this.focusWithoutScrolling(this.refs.input));
   }
 
   clearActiveConversation() {
@@ -3479,7 +3487,7 @@ class SimoensChatWidget {
     this.messages = [];
     this.ensureWelcomeMessage();
     this.syncActiveConversationState();
-    this.renderMessages();
+    this.renderMessages({ forceScroll: true });
     this.setStatus('Conversa limpa.', this.engine ? 100 : 0, false);
   }
 
@@ -3606,7 +3614,7 @@ class SimoensChatWidget {
       const button = event.target.closest('[data-question]');
       if (!button || !this.refs.input) return;
       this.refs.input.value = button.getAttribute('data-question') || '';
-      this.refs.input.focus();
+      this.focusWithoutScrolling(this.refs.input);
       this.refs.input.dispatchEvent(new Event('input', { bubbles: true }));
     });
     this.refs.conversationList?.addEventListener('click', (event) => {
@@ -3637,7 +3645,7 @@ class SimoensChatWidget {
     this.updateMenuLabels();
     this.updateConversationHeader();
     this.renderConversationList();
-    this.renderMessages();
+    this.renderMessages({ forceScroll: true });
     this.setStatus('Assistente do SiMoEns pronto para responder no modo offline.', 100, false);
   }
 
@@ -4656,7 +4664,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     this.updateHeaderModel();
     this.updateMenuLabels();
     this.updateSendButtonState();
-    this.renderMessages();
+    this.renderMessages({ forceScroll: true });
     this.setStatus('Assistente do SiMoEns pronto para responder no modo offline.', 100, false);
     this.setOpen(this.embeddedMode ? true : getStoredOpen(), false);
   }
@@ -4780,7 +4788,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
         const len = this.refs.input?.value?.length ?? 0;
         this.refs.input?.setSelectionRange?.(len, len);
       });
-      this.scrollMessages();
+      this.scrollMessages(true);
     }
   }
 
@@ -4805,7 +4813,7 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
     else this.createNewSharedConversation();
     this.setOpen(true, true);
     this.setStatus(this.engine ? 'Nova conversa iniciada.' : 'Nova conversa iniciada. O modelo será carregado na primeira pergunta.', this.engine ? 100 : 0, false);
-    requestAnimationFrame(() => this.refs.input?.focus());
+    requestAnimationFrame(() => this.focusWithoutScrolling(this.refs.input));
   }
 
   refreshChatPanel() {
@@ -4912,8 +4920,114 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
   }
 
 
-  renderMessages() {
+  getMessagesScrollTarget() {
+    return this.legacyPageShell ? (this.refs.messagesWrap || this.refs.messages) : this.refs.messages;
+  }
+
+  getMessagesBottomDistance(target = this.getMessagesScrollTarget()) {
+    if (!target) return 0;
+    return Math.max(0, target.scrollHeight - target.clientHeight - target.scrollTop);
+  }
+
+  isMessagesNearBottom(target = this.getMessagesScrollTarget(), tolerance = 12) {
+    return this.getMessagesBottomDistance(target) <= tolerance;
+  }
+
+  lockMessageAutoScroll() {
+    this.messageUserScrollLocked = true;
+    this.messageAutoScrollEnabled = false;
+  }
+
+  unlockMessageAutoScroll() {
+    this.messageUserScrollLocked = false;
+    this.messageAutoScrollEnabled = true;
+  }
+
+  focusWithoutScrolling(element) {
+    if (!element || typeof element.focus !== 'function') return;
+    const target = this.getMessagesScrollTarget();
+    const savedMessageScrollTop = target?.scrollTop ?? 0;
+    const savedWindowX = window.scrollX;
+    const savedWindowY = window.scrollY;
+
+    try {
+      element.focus({ preventScroll: true });
+    } catch {
+      element.focus();
+      if (target) target.scrollTop = savedMessageScrollTop;
+      window.scrollTo(savedWindowX, savedWindowY);
+    }
+  }
+
+  bindMessageScrollTracking() {
+    const target = this.getMessagesScrollTarget();
+    if (!target || this.messageScrollBindingTarget === target) return;
+    this.messageScrollBindingTarget = target;
+    this.messageLastScrollTop = target.scrollTop;
+
+    target.addEventListener('wheel', (event) => {
+      event.stopPropagation();
+      if (event.deltaY < 0) {
+        this.lockMessageAutoScroll();
+      } else if (event.deltaY > 0 && this.getMessagesBottomDistance(target) <= 2) {
+        this.unlockMessageAutoScroll();
+      }
+    }, { passive: true });
+
+    target.addEventListener('touchstart', (event) => {
+      this.messageTouchStartY = event.touches?.[0]?.clientY ?? null;
+      this.messageLastScrollTop = target.scrollTop;
+    }, { passive: true });
+
+    target.addEventListener('touchmove', (event) => {
+      event.stopPropagation();
+      const currentY = event.touches?.[0]?.clientY ?? null;
+      if (currentY !== null && this.messageTouchStartY !== null) {
+        if (currentY > this.messageTouchStartY + 2) {
+          this.lockMessageAutoScroll();
+        } else if (currentY < this.messageTouchStartY - 2 && this.getMessagesBottomDistance(target) <= 2) {
+          this.unlockMessageAutoScroll();
+        }
+      }
+      this.messageTouchStartY = currentY;
+    }, { passive: true });
+
+    target.addEventListener('touchend', () => {
+      this.messageTouchStartY = null;
+    }, { passive: true });
+
+    target.addEventListener('scroll', () => {
+      const currentScrollTop = target.scrollTop;
+      if (this.messageScrollProgrammatic) {
+        this.messageLastScrollTop = currentScrollTop;
+        return;
+      }
+
+      if (currentScrollTop < this.messageLastScrollTop - 0.5) {
+        this.lockMessageAutoScroll();
+      } else if (currentScrollTop > this.messageLastScrollTop + 0.5 && this.getMessagesBottomDistance(target) <= 2) {
+        this.unlockMessageAutoScroll();
+      }
+
+      this.messageLastScrollTop = currentScrollTop;
+    }, { passive: true });
+  }
+
+  renderMessages(options = {}) {
     if (!this.refs.messages) return;
+    this.bindMessageScrollTracking();
+
+    const target = this.getMessagesScrollTarget();
+    const forceScroll = options.forceScroll === true;
+    const previousScrollTop = target?.scrollTop ?? 0;
+    const previousWindowX = window.scrollX;
+    const previousWindowY = window.scrollY;
+    const shouldAutoScroll = forceScroll || (
+      !this.messageUserScrollLocked &&
+      this.messageAutoScrollEnabled &&
+      this.isMessagesNearBottom(target)
+    );
+
     if (this.legacyPageShell) {
       this.refs.messages.innerHTML = this.messages.map((item) => {
         const isUser = item.role === 'user';
@@ -4925,31 +5039,65 @@ ${String(sharedReply?.markdown || '').slice(0, 5000)}`
           </div>
         `;
       }).join('');
-      this.scrollMessages();
+    } else {
+      this.refs.messages.innerHTML = this.messages.map((item, index) => {
+        const isUser = item.role === 'user';
+        const label = isUser ? 'Você' : 'Assistente';
+        const meta = index === 0 && !isUser ? 'Assistente do SiMoEns • agora' : `${label} • agora`;
+        return `
+          <div>
+            <div class="sw-msgrow ${isUser ? 'user' : 'assistant'}">
+              ${isUser ? '' : `<div class="sw-avatar">${ICON_SVG}</div>`}
+              <div class="sw-bubble">${this.formatMessageHtml(item.content, item)}</div>
+            </div>
+            <div class="sw-meta">${meta}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (shouldAutoScroll) {
+      this.scrollMessages(true);
       return;
     }
-    this.refs.messages.innerHTML = this.messages.map((item, index) => {
-      const isUser = item.role === 'user';
-      const label = isUser ? 'Você' : 'Assistente';
-      const meta = index === 0 && !isUser ? 'Assistente do SiMoEns • agora' : `${label} • agora`;
-      return `
-        <div>
-          <div class="sw-msgrow ${isUser ? 'user' : 'assistant'}">
-            ${isUser ? '' : `<div class="sw-avatar">${ICON_SVG}</div>`}
-            <div class="sw-bubble">${this.formatMessageHtml(item.content, item)}</div>
-          </div>
-          <div class="sw-meta">${meta}</div>
-        </div>
-      `;
-    }).join('');
-    this.scrollMessages();
+
+    this.lockMessageAutoScroll();
+    if (target) {
+      target.scrollTop = previousScrollTop;
+      this.messageLastScrollTop = previousScrollTop;
+    }
+    window.scrollTo(previousWindowX, previousWindowY);
+
+    cancelAnimationFrame(this.messageScrollRestoreFrame);
+    this.messageScrollRestoreFrame = requestAnimationFrame(() => {
+      if (target) {
+        target.scrollTop = previousScrollTop;
+        this.messageLastScrollTop = previousScrollTop;
+      }
+      window.scrollTo(previousWindowX, previousWindowY);
+    });
   }
 
-  scrollMessages() {
-    const target = this.legacyPageShell ? (this.refs.messagesWrap || this.refs.messages) : this.refs.messages;
+  scrollMessages(force = false) {
+    const target = this.getMessagesScrollTarget();
     if (!target) return;
-    requestAnimationFrame(() => {
-      target.scrollTop = target.scrollHeight;
+    this.bindMessageScrollTracking();
+    if (!force && (this.messageUserScrollLocked || !this.messageAutoScrollEnabled || !this.isMessagesNearBottom(target))) return;
+
+    cancelAnimationFrame(this.messageScrollFrame);
+    this.messageScrollFrame = requestAnimationFrame(() => {
+      this.messageScrollProgrammatic = true;
+      const previousInlineBehavior = target.style.scrollBehavior;
+      target.style.scrollBehavior = 'auto';
+      target.scrollTop = Math.max(0, target.scrollHeight - target.clientHeight);
+      this.messageLastScrollTop = target.scrollTop;
+      this.unlockMessageAutoScroll();
+
+      requestAnimationFrame(() => {
+        target.style.scrollBehavior = previousInlineBehavior;
+        this.messageScrollProgrammatic = false;
+        this.messageLastScrollTop = target.scrollTop;
+      });
     });
   }
 
@@ -5232,7 +5380,7 @@ ${buildDirectSystemPrompt(currentCtx, relevantSiteText, this.getActiveSystemProm
       if (this.refs.menuBtn) this.refs.menuBtn.disabled = false;
       if (this.refs.sendBtn) this.refs.sendBtn.removeAttribute('disabled');
       this.updateSendButtonState();
-      this.refs.input?.focus();
+      this.focusWithoutScrolling(this.refs.input);
     }
   }
 }
@@ -5247,9 +5395,15 @@ function postContextToParent() {
   }
 }
 
+function hasMountedChatSurface() {
+  const widgetHost = document.getElementById('simoens-chat-widget-host') || document.getElementById('simoens-chat-widget-embed-host');
+  if (widgetHost) return true;
+  if (CHAT_WIDGET_RUNTIME_CONFIG.layout !== 'legacy-page') return false;
+  return Boolean(document.getElementById('chatWrap') && document.getElementById('chat'));
+}
+
 function initializeSimoensChatWidget() {
-  const existingHost = document.getElementById('simoens-chat-widget-host') || document.getElementById('simoens-chat-widget-embed-host');
-  if (window.__simoensChatWidgetInitialized && existingHost) return;
+  if (window.__simoensChatWidgetInitialized && hasMountedChatSurface()) return;
 
   try {
     const currentPageContext = collectPageContext();
@@ -5283,11 +5437,15 @@ if (document.readyState === 'loading') {
 
 // Algumas experiências interativas reconstroem partes extensas do DOM. Se isso
 // remover o host flutuante, o widget é montado novamente sem duplicar instâncias.
-if (window.self === window.top && !window.__simoensChatWidgetHostWatchInstalled) {
+if (
+  window.self === window.top &&
+  CHAT_WIDGET_RUNTIME_CONFIG.layout !== 'legacy-page' &&
+  !window.__simoensChatWidgetHostWatchInstalled
+) {
   window.__simoensChatWidgetHostWatchInstalled = true;
   let restoreTimer = 0;
   const restoreWidgetHost = () => {
-    if (document.getElementById('simoens-chat-widget-host') || document.getElementById('simoens-chat-widget-embed-host')) return;
+    if (hasMountedChatSurface()) return;
     window.clearTimeout(restoreTimer);
     restoreTimer = window.setTimeout(() => {
       window.__simoensChatWidgetInitialized = false;

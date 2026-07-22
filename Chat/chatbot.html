@@ -389,11 +389,17 @@
       max-height: 460px;
       overflow: auto;
       padding: 28px 24px 30px;
-      scroll-behavior: smooth;
+      scroll-behavior: auto;
+      overscroll-behavior: contain;
+      overscroll-behavior-y: contain;
+      overflow-anchor: none;
+      scrollbar-gutter: stable;
+      touch-action: pan-y;
     }
 
     .chat {
       display: flex;
+      overflow-anchor: none;
       flex-direction: column;
       gap: 16px;
     }
@@ -1288,7 +1294,7 @@ window.SimoensChatWidgetConfig = {
 };
 window.SIMOENS_CHAT_WIDGET_CONFIG = window.SimoensChatWidgetConfig;
 </script>
-<script src="widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<script src="widget/chat-widget.js?v=chat-widget-20260722-scroll-fix-v5"></script>
 <script>
 window.VisitWidgetConfig = {
   functionUrl: 'https://uiziwrtliumlgdfrcddw.supabase.co/functions/v1/count-visit',

@@ -1,0 +1,354 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+    <defs>
+        <!-- Filters -->
+        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <filter id="glow-intense" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="10" result="blur1" />
+            <feGaussianBlur stdDeviation="20" result="blur2" />
+            <feMerge>
+                <feMergeNode in="blur2" />
+                <feMergeNode in="blur1" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="12" stdDeviation="8" flood-color="#000000" flood-opacity="0.8"/>
+        </filter>
+
+        <!-- Gradients -->
+        <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stop-color="#2a1b3d"/>
+            <stop offset="60%" stop-color="#140c1f"/>
+            <stop offset="100%" stop-color="#07030a"/>
+        </radialGradient>
+        
+        <radialGradient id="vignette" cx="50%" cy="50%" r="75%">
+            <stop offset="50%" stop-color="#000000" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.85"/>
+        </radialGradient>
+
+        <!-- Box Gradients -->
+        <linearGradient id="box-back" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1a100c"/>
+            <stop offset="100%" stop-color="#0a0604"/>
+        </linearGradient>
+        <linearGradient id="box-left" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#2c1c14"/>
+            <stop offset="100%" stop-color="#1a100c"/>
+        </linearGradient>
+        <linearGradient id="box-right" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1a100c"/>
+            <stop offset="100%" stop-color="#241710"/>
+        </linearGradient>
+        <linearGradient id="box-floor" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1a100c"/>
+            <stop offset="100%" stop-color="#3d271d"/>
+        </linearGradient>
+        <linearGradient id="box-flap-front" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#b07d53"/>
+            <stop offset="100%" stop-color="#7a5233"/>
+        </linearGradient>
+        <linearGradient id="box-flap-side" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#c28e62"/>
+            <stop offset="100%" stop-color="#8c5a3d"/>
+        </linearGradient>
+
+        <!-- Cat Gradients -->
+        <linearGradient id="cat-alive" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffb74d"/>
+            <stop offset="50%" stop-color="#ff9800"/>
+            <stop offset="100%" stop-color="#e65100"/>
+        </linearGradient>
+        <linearGradient id="cat-alive-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f57c00"/>
+            <stop offset="100%" stop-color="#bf360c"/>
+        </linearGradient>
+        
+        <linearGradient id="poison-liquid" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#b2ff59"/>
+            <stop offset="50%" stop-color="#64dd17"/>
+            <stop offset="100%" stop-color="#1b5e20"/>
+        </linearGradient>
+        
+        <!-- Clip Paths -->
+        <clipPath id="left-half">
+            <rect x="0" y="0" width="256" height="512" />
+        </clipPath>
+        <clipPath id="right-half">
+            <rect x="256" y="0" width="256" height="512" />
+        </clipPath>
+    </defs>
+
+    <!-- Background -->
+    <rect width="512" height="512" fill="url(#bg-grad)"/>
+
+    <!-- Giant faint atom in background -->
+    <g stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.06">
+        <ellipse cx="256" cy="256" rx="200" ry="60" transform="rotate(30 256 256)"/>
+        <ellipse cx="256" cy="256" rx="200" ry="60" transform="rotate(90 256 256)"/>
+        <ellipse cx="256" cy="256" rx="200" ry="60" transform="rotate(150 256 256)"/>
+        <circle cx="256" cy="256" r="25" fill="#ffffff"/>
+    </g>
+
+    <!-- Quantum Equations Background -->
+    <g font-family="monospace" font-size="16" fill="#ffffff" opacity="0.12" font-style="italic">
+        <text x="30" y="60">|ψ⟩ = α|Alive⟩ + β|Dead⟩</text>
+        <text x="340" y="460">iℏ(∂Ψ/∂t) = ĤΨ</text>
+        <text x="40" y="280">ΔxΔp ≥ ℏ/2</text>
+        <text x="380" y="100">P = |α|² + |β|²</text>
+        <text x="60" y="420">Ψ(x,t)</text>
+        <text x="420" y="240">E = mc²</text>
+    </g>
+
+    <!-- Box Interior -->
+    <g id="box-interior">
+        <!-- Back Wall -->
+        <polygon points="140,220 372,220 372,340 140,340" fill="url(#box-back)"/>
+        <!-- Left Wall -->
+        <polygon points="100,160 140,220 140,340 100,420" fill="url(#box-left)"/>
+        <!-- Right Wall -->
+        <polygon points="412,160 372,220 372,340 412,420" fill="url(#box-right)"/>
+        <!-- Floor -->
+        <polygon points="100,420 140,340 372,340 412,420" fill="url(#box-floor)"/>
+        
+        <!-- Perspective Grid on Floor -->
+        <path d="M 120,380 L 392,380 M 130,360 L 382,360 M 256,340 L 256,420 M 198,340 L 178,420 M 314,340 L 334,420" stroke="#000000" stroke-width="2" opacity="0.4"/>
+    </g>
+
+    <!-- THE CAT: LEFT HALF (ALIVE) -->
+    <g clip-path="url(#left-half)">
+        <!-- Tail -->
+        <path d="M 200 360 C 100 380, 90 260, 140 230 C 170 210, 190 240, 170 270 C 140 310, 150 340, 200 340" fill="none" stroke="url(#cat-alive-dark)" stroke-width="26" stroke-linecap="round"/>
+        
+        <!-- Body -->
+        <path d="M 256 180 C 140 180, 120 380, 256 380 Z" fill="url(#cat-alive)"/>
+        
+        <!-- Back Leg -->
+        <path d="M 256 380 C 170 380, 150 320, 190 290 C 220 270, 240 290, 256 320 Z" fill="url(#cat-alive-dark)"/>
+        
+        <!-- Front Paw -->
+        <ellipse cx="195" cy="375" rx="20" ry="14" fill="#ffb74d"/>
+        <path d="M 185 385 L 185 375 M 195 387 L 195 375 M 205 385 L 205 375" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round"/>
+        
+        <!-- Head Base -->
+        <ellipse cx="256" cy="200" rx="85" ry="70" fill="url(#cat-alive)"/>
+        
+        <!-- Ear -->
+        <polygon points="230,135 175,80 165,165" fill="url(#cat-alive)"/>
+        <polygon points="225,140 185,100 180,155" fill="#ffccbc"/>
+        
+        <!-- Eye -->
+        <ellipse cx="210" cy="195" rx="20" ry="24" fill="#ffffff"/>
+        <ellipse cx="210" cy="195" rx="16" ry="20" fill="#64dd17"/>
+        <ellipse cx="210" cy="195" rx="5" ry="14" fill="#000000"/>
+        <!-- Eye Highlights -->
+        <circle cx="205" cy="185" r="5" fill="#ffffff"/>
+        <circle cx="215" cy="205" r="2" fill="#ffffff"/>
+        
+        <!-- Nose -->
+        <polygon points="256,240 246,228 256,228" fill="#ff8a80"/>
+        
+        <!-- Mouth -->
+        <path d="M 256 240 Q 235 255 225 240" fill="none" stroke="#3e2723" stroke-width="2.5" stroke-linecap="round"/>
+        
+        <!-- Whiskers -->
+        <path d="M 230 235 L 140 220 M 230 242 L 130 245 M 235 250 L 145 270" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        
+        <!-- Tabby Stripes -->
+        <path d="M 256 130 C 235 130, 225 145, 225 165 M 256 142 C 242 142, 235 150, 235 165" fill="none" stroke="#e65100" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 175 190 L 195 195 M 172 215 L 190 212" fill="none" stroke="#e65100" stroke-width="5" stroke-linecap="round"/>
+    </g>
+
+    <!-- THE CAT: RIGHT HALF (DEAD/QUANTUM SKELETON) -->
+    <g clip-path="url(#right-half)">
+        <!-- Ethereal Aura / Ghost Body -->
+        <path d="M 256 180 C 372 180, 392 380, 256 380 Z" fill="#00e5ff" opacity="0.08" filter="url(#glow)"/>
+        <ellipse cx="256" cy="200" rx="85" ry="70" fill="#00e5ff" opacity="0.08" filter="url(#glow)"/>
+        
+        <!-- Spine -->
+        <path d="M 256 260 L 256 365" fill="none" stroke="#00e5ff" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+        <!-- Spine Vertebrae -->
+        <path d="M 256 270 L 256 270 M 256 290 L 256 290 M 256 310 L 256 310 M 256 330 L 256 330 M 256 350 L 256 350" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+        
+        <!-- Ribcage -->
+        <path d="M 256 270 C 305 260, 330 280, 315 315" fill="none" stroke="#00e5ff" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+        <path d="M 256 295 C 315 285, 340 305, 325 340" fill="none" stroke="#00e5ff" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+        <path d="M 256 320 C 325 310, 350 330, 335 365" fill="none" stroke="#00e5ff" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+        
+        <!-- Front Leg Bones -->
+        <path d="M 295 305 L 315 355 L 315 380" fill="none" stroke="#d500f9" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+        <!-- Skeletal Paw -->
+        <path d="M 315 380 L 295 392 M 315 380 L 315 395 M 315 380 L 335 392" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+        
+        <!-- Tail Bones -->
+        <path d="M 256 365 C 310 375, 370 385, 390 340 C 405 310, 390 280, 365 260" fill="none" stroke="#d500f9" stroke-width="8" stroke-linecap="round" stroke-dasharray="10, 8" filter="url(#glow)"/>
+        
+        <!-- Skull Base -->
+        <path d="M 256 130 C 315 130, 340 160, 340 205 C 340 225, 315 240, 295 245 L 295 260 L 256 260 Z" fill="#090514" stroke="#00e5ff" stroke-width="4" filter="url(#glow)"/>
+        
+        <!-- Skull Cheekbone -->
+        <path d="M 340 205 C 355 205, 355 225, 325 235" fill="none" stroke="#00e5ff" stroke-width="4" filter="url(#glow)"/>
+        
+        <!-- Eye Socket -->
+        <ellipse cx="300" cy="195" rx="22" ry="26" fill="#030108"/>
+        <!-- Glowing Eye Pupil -->
+        <circle cx="300" cy="195" r="7" fill="#d500f9" filter="url(#glow-intense)"/>
+        <circle cx="300" cy="195" r="2.5" fill="#ffffff"/>
+        
+        <!-- Nose Cavity -->
+        <polygon points="256,240 266,228 256,228" fill="#030108"/>
+        
+        <!-- Teeth -->
+        <path d="M 256 250 L 290 250" fill="none" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow)"/>
+        <path d="M 265 245 L 265 255 M 275 245 L 275 255 M 285 245 L 285 255" fill="none" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow)"/>
+        
+        <!-- Skeletal Ear (Wireframe) -->
+        <path d="M 285 140 L 335 85 L 325 165" fill="none" stroke="#d500f9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+        <path d="M 305 135 L 325 105" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#glow)"/>
+        
+        <!-- Glitch / Tech Marks on Skull -->
+        <path d="M 355 150 L 380 150 M 365 140 L 365 160" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#glow)"/>
+        <path d="M 385 225 L 400 225" fill="none" stroke="#d500f9" stroke-width="2.5" filter="url(#glow)"/>
+    </g>
+
+    <!-- THE QUANTUM SPLIT (Center Line & Effects) -->
+    <g id="quantum-split">
+        <!-- Central Beam -->
+        <rect x="254" y="50" width="4" height="400" fill="#ffffff" filter="url(#glow-intense)"/>
+        <rect x="255" y="50" width="2" height="400" fill="#e0f7fa"/>
+        
+        <!-- Sine Wave / Helix crossing the center -->
+        <path d="M 256 90 Q 290 110 256 130 T 256 170 T 256 210 T 256 250 T 256 290 T 256 330 T 256 370 T 256 410" fill="none" stroke="#00e5ff" stroke-width="2.5" opacity="0.9" filter="url(#glow)"/>
+        <path d="M 256 90 Q 222 110 256 130 T 256 170 T 256 210 T 256 250 T 256 290 T 256 330 T 256 370 T 256 410" fill="none" stroke="#ff9800" stroke-width="2.5" opacity="0.9" filter="url(#glow)"/>
+        
+        <!-- Floating Particles Left (Alive/Warm) -->
+        <circle cx="220" cy="90" r="3.5" fill="#ffb74d" filter="url(#glow)"/>
+        <circle cx="190" cy="150" r="5" fill="#ff9800" filter="url(#glow)"/>
+        <circle cx="240" cy="280" r="2.5" fill="#ffb74d" filter="url(#glow)"/>
+        <circle cx="170" cy="310" r="6" fill="#ff9800" filter="url(#glow)"/>
+        <circle cx="210" cy="400" r="4" fill="#ffb74d" filter="url(#glow)"/>
+        
+        <!-- Floating Particles Right (Dead/Cool) -->
+        <circle cx="290" cy="100" r="3.5" fill="#00e5ff" filter="url(#glow)"/>
+        <circle cx="330" cy="160" r="5" fill="#d500f9" filter="url(#glow)"/>
+        <circle cx="270" cy="270" r="2.5" fill="#00e5ff" filter="url(#glow)"/>
+        <circle cx="350" cy="320" r="6" fill="#d500f9" filter="url(#glow)"/>
+        <circle cx="300" cy="390" r="4" fill="#00e5ff" filter="url(#glow)"/>
+        
+        <!-- Glitch rectangles along the split -->
+        <rect x="244" y="140" width="24" height="5" fill="#ffffff" opacity="0.9" filter="url(#glow)"/>
+        <rect x="248" y="250" width="16" height="3" fill="#00e5ff" opacity="0.9" filter="url(#glow)"/>
+        <rect x="240" y="330" width="32" height="6" fill="#d500f9" opacity="0.8" filter="url(#glow)"/>
+    </g>
+
+    <!-- PROPS (Inside the box, foreground) -->
+    
+    <!-- Poison Flask (Left) -->
+    <g id="poison-flask" transform="translate(125, 335)">
+        <!-- Flask shadow -->
+        <ellipse cx="20" cy="75" rx="28" ry="10" fill="#000000" opacity="0.6"/>
+        <!-- Liquid Glow -->
+        <path d="M 5 75 L 35 75 L 25 30 L 15 30 Z" fill="#64dd17" filter="url(#glow)"/>
+        <!-- Flask Glass Background -->
+        <path d="M 15 10 L 25 10 L 25 25 L 38 65 C 42 78, 32 85, 20 85 C 8 85, -2 78, 2 65 L 15 25 Z" fill="#ffffff" opacity="0.15" stroke="#ffffff" stroke-width="2"/>
+        <!-- Liquid -->
+        <path d="M 6 60 L 34 60 L 38 65 C 42 78, 32 85, 20 85 C 8 85, -2 78, 2 65 Z" fill="url(#poison-liquid)" opacity="0.95"/>
+        <!-- Bubbles -->
+        <circle cx="15" cy="70" r="2.5" fill="#ffffff" opacity="0.9"/>
+        <circle cx="26" cy="65" r="1.5" fill="#ffffff" opacity="0.9"/>
+        <circle cx="20" cy="78" r="3" fill="#ffffff" opacity="0.9"/>
+        <!-- Skull symbol -->
+        <g transform="translate(15, 62) scale(0.45)" fill="#ffffff" opacity="0.9">
+            <circle cx="12" cy="10" r="8"/>
+            <rect x="8" y="15" width="8" height="6"/>
+            <circle cx="8" cy="10" r="2" fill="#1b5e20"/>
+            <circle cx="16" cy="10" r="2" fill="#1b5e20"/>
+        </g>
+        <!-- Cork -->
+        <path d="M 16 0 L 24 0 L 23 10 L 17 10 Z" fill="#8d6e63"/>
+        <!-- Fumes -->
+        <path d="M 20 -5 C 5 -20, 35 -35, 20 -50 C 5 -65, 30 -80, 15 -95" fill="none" stroke="#b2ff59" stroke-width="3.5" opacity="0.7" filter="url(#glow)"/>
+    </g>
+
+    <!-- Geiger Counter / Radioactive Source (Right) -->
+    <g id="geiger-counter" transform="translate(320, 350)">
+        <!-- Shadow -->
+        <ellipse cx="30" cy="65" rx="35" ry="12" fill="#000000" opacity="0.6"/>
+        <!-- Box -->
+        <rect x="0" y="30" width="55" height="35" rx="4" fill="#37474f" stroke="#1c2331" stroke-width="2"/>
+        <!-- Dial -->
+        <circle cx="18" cy="47" r="12" fill="#cfd8dc"/>
+        <path d="M 18 47 L 24 38" fill="none" stroke="#d32f2f" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Indicator Light -->
+        <circle cx="45" cy="42" r="3.5" fill="#d500f9" filter="url(#glow)"/>
+        <!-- Wire -->
+        <path d="M 55 55 C 70 55, 75 65, 85 60" fill="none" stroke="#1c2331" stroke-width="2.5"/>
+        <!-- Radioactive Rock -->
+        <polygon points="85,60 95,48 108,60 100,72 88,70" fill="#00e5ff" filter="url(#glow)"/>
+        <!-- Radiation Waves -->
+        <path d="M 95 38 A 18 18 0 0 1 118 60" fill="none" stroke="#d500f9" stroke-width="2.5" opacity="0.9" filter="url(#glow)"/>
+        <path d="M 95 25 A 30 30 0 0 1 130 60" fill="none" stroke="#00e5ff" stroke-width="2.5" opacity="0.6" filter="url(#glow)"/>
+    </g>
+
+    <!-- BOX FLAPS (Foreground, overlapping the cat and interior) -->
+    <g id="box-flaps" filter="url(#shadow)">
+        <!-- Back Flap -->
+        <polygon points="100,160 412,160 372,80 140,80" fill="url(#box-flap-front)"/>
+        <!-- Left Flap -->
+        <polygon points="100,160 100,420 20,360 20,100" fill="url(#box-flap-side)"/>
+        <!-- Right Flap -->
+        <polygon points="412,160 412,420 492,360 492,100" fill="url(#box-flap-side)"/>
+        <!-- Front Flap -->
+        <polygon points="100,420 412,420 442,500 70,500" fill="url(#box-flap-front)"/>
+        
+        <!-- Corrugated Cardboard Edges (Details) -->
+        <!-- Left edge -->
+        <path d="M 20 100 L 100 160" fill="none" stroke="#e6c2a3" stroke-width="2.5" opacity="0.6"/>
+        <!-- Right edge -->
+        <path d="M 492 100 L 412 160" fill="none" stroke="#e6c2a3" stroke-width="2.5" opacity="0.6"/>
+        <!-- Front edge -->
+        <path d="M 70 500 L 442 500" fill="none" stroke="#e6c2a3" stroke-width="5" opacity="0.6"/>
+        <path d="M 70 500 L 442 500" fill="none" stroke="#3e2723" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.8"/>
+        <!-- Radiation Symbol on Front Flap -->
+        <g transform="translate(256, 460) scale(0.65) rotate(12)" opacity="0.82">
+            <circle cx="0" cy="0" r="30" fill="#ffb300"/>
+            <circle cx="0" cy="0" r="7" fill="#212121"/>
+            <path d="M -4.27 -12.08 A 12.8 12.8 0 0 1 4.27 -12.08 L 8.67 -24.53 A 26 26 0 0 0 -8.67 -24.53 Z" fill="#212121"/>
+            <path d="M 12.6 2.34 A 12.8 12.8 0 0 1 8.33 9.75 L 16.92 19.8 A 26 26 0 0 0 25.61 4.75 Z" fill="#212121"/>
+            <path d="M -8.33 9.75 A 12.8 12.8 0 0 1 -12.6 2.34 L -25.61 4.75 A 26 26 0 0 0 -16.92 19.8 Z" fill="#212121"/>
+        </g>
+        
+        <!-- "FRAGILE" Text on Left Flap -->
+        <g transform="translate(60, 260) rotate(-90)" opacity="0.65" font-family="sans-serif" font-weight="900" font-size="26" fill="#3e2723" letter-spacing="5">
+            <text x="-70" y="0">FRAGILE</text>
+        </g>
+        
+        <!-- "DEAD / ALIVE" Checkboxes on Right Flap -->
+        <g transform="translate(450, 260) rotate(90)" opacity="0.7" font-family="sans-serif" font-weight="bold" font-size="18" fill="#3e2723">
+            <rect x="-65" y="-18" width="14" height="14" fill="none" stroke="#3e2723" stroke-width="2.5"/>
+            <text x="-40" y="-5">ALIVE</text>
+            <rect x="-65" y="12" width="14" height="14" fill="none" stroke="#3e2723" stroke-width="2.5"/>
+            <text x="-40" y="25">DEAD</text>
+            <!-- Quantum Checkmark (Both checked simultaneously) -->
+            <path d="M -68 -12 L -60 -4 L -48 -22" fill="none" stroke="#d500f9" stroke-width="3.5" filter="url(#glow)"/>
+            <path d="M -68 18 L -60 26 L -48 8" fill="none" stroke="#00e5ff" stroke-width="3.5" filter="url(#glow)"/>
+        </g>
+    </g>
+
+    <!-- Foreground Vignette -->
+    <rect width="512" height="512" fill="url(#vignette)" pointer-events="none"/>
+
+    <!-- Floating Question Marks (Quantum Uncertainty) -->
+    <g font-family="serif" font-weight="bold" font-size="48" fill="#ffffff" opacity="0.35" filter="url(#glow)">
+        <text x="60" y="140" transform="rotate(-15 60 140)">?</text>
+        <text x="440" y="110" transform="rotate(25 440 110)">?</text>
+        <text x="400" y="290" transform="rotate(10 400 290)">?</text>
+        <text x="100" y="310" transform="rotate(-20 100 310)">?</text>
+    </g>
+</svg>

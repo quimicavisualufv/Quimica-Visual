@@ -1,0 +1,940 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "Socicon";
+  src:  url("../fonts/socicon.eot");
+  src:  url("../fonts/socicon.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/socicon.woff2") format("woff2"),
+    url("../fonts/socicon.ttf") format("truetype"),
+    url("../fonts/socicon.woff") format("woff"),
+    url("../fonts/socicon.svg#socicon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+[data-icon]:before {
+  font-family: "socicon" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="socicon-"], [class*=" socicon-"] {
+  
+  font-family: "Socicon" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.socicon-500px:before {
+  content: "";
+}
+.socicon-8tracks:before {
+  content: "";
+}
+.socicon-airbnb:before {
+  content: "";
+}
+.socicon-alliance:before {
+  content: "";
+}
+.socicon-amazon:before {
+  content: "";
+}
+.socicon-amplement:before {
+  content: "";
+}
+.socicon-android:before {
+  content: "";
+}
+.socicon-angellist:before {
+  content: "";
+}
+.socicon-apple:before {
+  content: "";
+}
+.socicon-appnet:before {
+  content: "";
+}
+.socicon-baidu:before {
+  content: "";
+}
+.socicon-bandcamp:before {
+  content: "";
+}
+.socicon-battlenet:before {
+  content: "";
+}
+.socicon-mixer:before {
+  content: "";
+}
+.socicon-bebee:before {
+  content: "";
+}
+.socicon-bebo:before {
+  content: "";
+}
+.socicon-behance:before {
+  content: "";
+}
+.socicon-blizzard:before {
+  content: "";
+}
+.socicon-blogger:before {
+  content: "";
+}
+.socicon-buffer:before {
+  content: "";
+}
+.socicon-chrome:before {
+  content: "";
+}
+.socicon-coderwall:before {
+  content: "";
+}
+.socicon-curse:before {
+  content: "";
+}
+.socicon-dailymotion:before {
+  content: "";
+}
+.socicon-deezer:before {
+  content: "";
+}
+.socicon-delicious:before {
+  content: "";
+}
+.socicon-deviantart:before {
+  content: "";
+}
+.socicon-diablo:before {
+  content: "";
+}
+.socicon-digg:before {
+  content: "";
+}
+.socicon-discord:before {
+  content: "";
+}
+.socicon-disqus:before {
+  content: "";
+}
+.socicon-douban:before {
+  content: "";
+}
+.socicon-draugiem:before {
+  content: "";
+}
+.socicon-dribbble:before {
+  content: "";
+}
+.socicon-drupal:before {
+  content: "";
+}
+.socicon-ebay:before {
+  content: "";
+}
+.socicon-ello:before {
+  content: "";
+}
+.socicon-endomodo:before {
+  content: "";
+}
+.socicon-envato:before {
+  content: "";
+}
+.socicon-etsy:before {
+  content: "";
+}
+.socicon-facebook:before {
+  content: "";
+}
+.socicon-feedburner:before {
+  content: "";
+}
+.socicon-filmweb:before {
+  content: "";
+}
+.socicon-firefox:before {
+  content: "";
+}
+.socicon-flattr:before {
+  content: "";
+}
+.socicon-flickr:before {
+  content: "";
+}
+.socicon-formulr:before {
+  content: "";
+}
+.socicon-forrst:before {
+  content: "";
+}
+.socicon-foursquare:before {
+  content: "";
+}
+.socicon-friendfeed:before {
+  content: "";
+}
+.socicon-github:before {
+  content: "";
+}
+.socicon-goodreads:before {
+  content: "";
+}
+.socicon-google:before {
+  content: "";
+}
+.socicon-googlescholar:before {
+  content: "";
+}
+.socicon-googlegroups:before {
+  content: "";
+}
+.socicon-googlephotos:before {
+  content: "";
+}
+.socicon-googleplus:before {
+  content: "";
+}
+.socicon-grooveshark:before {
+  content: "";
+}
+.socicon-hackerrank:before {
+  content: "";
+}
+.socicon-hearthstone:before {
+  content: "";
+}
+.socicon-hellocoton:before {
+  content: "";
+}
+.socicon-heroes:before {
+  content: "";
+}
+.socicon-smashcast:before {
+  content: "";
+}
+.socicon-horde:before {
+  content: "";
+}
+.socicon-houzz:before {
+  content: "";
+}
+.socicon-icq:before {
+  content: "";
+}
+.socicon-identica:before {
+  content: "";
+}
+.socicon-imdb:before {
+  content: "";
+}
+.socicon-instagram:before {
+  content: "";
+}
+.socicon-issuu:before {
+  content: "";
+}
+.socicon-istock:before {
+  content: "";
+}
+.socicon-itunes:before {
+  content: "";
+}
+.socicon-keybase:before {
+  content: "";
+}
+.socicon-lanyrd:before {
+  content: "";
+}
+.socicon-lastfm:before {
+  content: "";
+}
+.socicon-line:before {
+  content: "";
+}
+.socicon-linkedin:before {
+  content: "";
+}
+.socicon-livejournal:before {
+  content: "";
+}
+.socicon-lyft:before {
+  content: "";
+}
+.socicon-macos:before {
+  content: "";
+}
+.socicon-mail:before {
+  content: "";
+}
+.socicon-medium:before {
+  content: "";
+}
+.socicon-meetup:before {
+  content: "";
+}
+.socicon-mixcloud:before {
+  content: "";
+}
+.socicon-modelmayhem:before {
+  content: "";
+}
+.socicon-mumble:before {
+  content: "";
+}
+.socicon-myspace:before {
+  content: "";
+}
+.socicon-newsvine:before {
+  content: "";
+}
+.socicon-nintendo:before {
+  content: "";
+}
+.socicon-npm:before {
+  content: "";
+}
+.socicon-odnoklassniki:before {
+  content: "";
+}
+.socicon-openid:before {
+  content: "";
+}
+.socicon-opera:before {
+  content: "";
+}
+.socicon-outlook:before {
+  content: "";
+}
+.socicon-overwatch:before {
+  content: "";
+}
+.socicon-patreon:before {
+  content: "";
+}
+.socicon-paypal:before {
+  content: "";
+}
+.socicon-periscope:before {
+  content: "";
+}
+.socicon-persona:before {
+  content: "";
+}
+.socicon-pinterest:before {
+  content: "";
+}
+.socicon-play:before {
+  content: "";
+}
+.socicon-player:before {
+  content: "";
+}
+.socicon-playstation:before {
+  content: "";
+}
+.socicon-pocket:before {
+  content: "";
+}
+.socicon-qq:before {
+  content: "";
+}
+.socicon-quora:before {
+  content: "";
+}
+.socicon-raidcall:before {
+  content: "";
+}
+.socicon-ravelry:before {
+  content: "";
+}
+.socicon-reddit:before {
+  content: "";
+}
+.socicon-renren:before {
+  content: "";
+}
+.socicon-researchgate:before {
+  content: "";
+}
+.socicon-residentadvisor:before {
+  content: "";
+}
+.socicon-reverbnation:before {
+  content: "";
+}
+.socicon-rss:before {
+  content: "";
+}
+.socicon-sharethis:before {
+  content: "";
+}
+.socicon-skype:before {
+  content: "";
+}
+.socicon-slideshare:before {
+  content: "";
+}
+.socicon-smugmug:before {
+  content: "";
+}
+.socicon-snapchat:before {
+  content: "";
+}
+.socicon-songkick:before {
+  content: "";
+}
+.socicon-soundcloud:before {
+  content: "";
+}
+.socicon-spotify:before {
+  content: "";
+}
+.socicon-stackexchange:before {
+  content: "";
+}
+.socicon-stackoverflow:before {
+  content: "";
+}
+.socicon-starcraft:before {
+  content: "";
+}
+.socicon-stayfriends:before {
+  content: "";
+}
+.socicon-steam:before {
+  content: "";
+}
+.socicon-storehouse:before {
+  content: "";
+}
+.socicon-strava:before {
+  content: "";
+}
+.socicon-streamjar:before {
+  content: "";
+}
+.socicon-stumbleupon:before {
+  content: "";
+}
+.socicon-swarm:before {
+  content: "";
+}
+.socicon-teamspeak:before {
+  content: "";
+}
+.socicon-teamviewer:before {
+  content: "";
+}
+.socicon-technorati:before {
+  content: "";
+}
+.socicon-telegram:before {
+  content: "";
+}
+.socicon-tripadvisor:before {
+  content: "";
+}
+.socicon-tripit:before {
+  content: "";
+}
+.socicon-triplej:before {
+  content: "";
+}
+.socicon-tumblr:before {
+  content: "";
+}
+.socicon-twitch:before {
+  content: "";
+}
+.socicon-twitter:before {
+  content: "";
+}
+.socicon-uber:before {
+  content: "";
+}
+.socicon-ventrilo:before {
+  content: "";
+}
+.socicon-viadeo:before {
+  content: "";
+}
+.socicon-viber:before {
+  content: "";
+}
+.socicon-viewbug:before {
+  content: "";
+}
+.socicon-vimeo:before {
+  content: "";
+}
+.socicon-vine:before {
+  content: "";
+}
+.socicon-vkontakte:before {
+  content: "";
+}
+.socicon-warcraft:before {
+  content: "";
+}
+.socicon-wechat:before {
+  content: "";
+}
+.socicon-weibo:before {
+  content: "";
+}
+.socicon-whatsapp:before {
+  content: "";
+}
+.socicon-wikipedia:before {
+  content: "";
+}
+.socicon-windows:before {
+  content: "";
+}
+.socicon-wordpress:before {
+  content: "";
+}
+.socicon-wykop:before {
+  content: "";
+}
+.socicon-xbox:before {
+  content: "";
+}
+.socicon-xing:before {
+  content: "";
+}
+.socicon-yahoo:before {
+  content: "";
+}
+.socicon-yammer:before {
+  content: "";
+}
+.socicon-yandex:before {
+  content: "";
+}
+.socicon-yelp:before {
+  content: "";
+}
+.socicon-younow:before {
+  content: "";
+}
+.socicon-youtube:before {
+  content: "";
+}
+.socicon-zapier:before {
+  content: "";
+}
+.socicon-zerply:before {
+  content: "";
+}
+.socicon-zomato:before {
+  content: "";
+}
+.socicon-zynga:before {
+  content: "";
+}
+.socicon-bluesky:before {
+  content: "";
+}
+.socicon-threads:before {
+  content: "";
+}
+.socicon-spreadshirt:before {
+  content: "";
+}
+.socicon-gamejolt:before {
+  content: "";
+}
+.socicon-trello:before {
+  content: "";
+}
+.socicon-tunein:before {
+  content: "";
+}
+.socicon-bloglovin:before {
+  content: "";
+}
+.socicon-gamewisp:before {
+  content: "";
+}
+.socicon-messenger:before {
+  content: "";
+}
+.socicon-pandora:before {
+  content: "";
+}
+.socicon-augment:before {
+  content: "";
+}
+.socicon-bitbucket:before {
+  content: "";
+}
+.socicon-fyuse:before {
+  content: "";
+}
+.socicon-yt-gaming:before {
+  content: "";
+}
+.socicon-sketchfab:before {
+  content: "";
+}
+.socicon-mobcrush:before {
+  content: "";
+}
+.socicon-microsoft:before {
+  content: "";
+}
+.socicon-realtor:before {
+  content: "";
+}
+.socicon-tidal:before {
+  content: "";
+}
+.socicon-qobuz:before {
+  content: "";
+}
+.socicon-natgeo:before {
+  content: "";
+}
+.socicon-mastodon:before {
+  content: "";
+}
+.socicon-unsplash:before {
+  content: "";
+}
+.socicon-homeadvisor:before {
+  content: "";
+}
+.socicon-angieslist:before {
+  content: "";
+}
+.socicon-codepen:before {
+  content: "";
+}
+.socicon-slack:before {
+  content: "";
+}
+.socicon-openaigym:before {
+  content: "";
+}
+.socicon-logmein:before {
+  content: "";
+}
+.socicon-fiverr:before {
+  content: "";
+}
+.socicon-gotomeeting:before {
+  content: "";
+}
+.socicon-aliexpress:before {
+  content: "";
+}
+.socicon-guru:before {
+  content: "";
+}
+.socicon-appstore:before {
+  content: "";
+}
+.socicon-homes:before {
+  content: "";
+}
+.socicon-zoom:before {
+  content: "";
+}
+.socicon-alibaba:before {
+  content: "";
+}
+.socicon-craigslist:before {
+  content: "";
+}
+.socicon-wix:before {
+  content: "";
+}
+.socicon-redfin:before {
+  content: "";
+}
+.socicon-googlecalendar:before {
+  content: "";
+}
+.socicon-shopify:before {
+  content: "";
+}
+.socicon-freelancer:before {
+  content: "";
+}
+.socicon-seedrs:before {
+  content: "";
+}
+.socicon-bing:before {
+  content: "";
+}
+.socicon-doodle:before {
+  content: "";
+}
+.socicon-bonanza:before {
+  content: "";
+}
+.socicon-squarespace:before {
+  content: "";
+}
+.socicon-toptal:before {
+  content: "";
+}
+.socicon-gust:before {
+  content: "";
+}
+.socicon-ask:before {
+  content: "";
+}
+.socicon-trulia:before {
+  content: "";
+}
+.socicon-loomly:before {
+  content: "";
+}
+.socicon-ghost:before {
+  content: "";
+}
+.socicon-upwork:before {
+  content: "";
+}
+.socicon-fundable:before {
+  content: "";
+}
+.socicon-booking:before {
+  content: "";
+}
+.socicon-googlemaps:before {
+  content: "";
+}
+.socicon-zillow:before {
+  content: "";
+}
+.socicon-niconico:before {
+  content: "";
+}
+.socicon-toneden:before {
+  content: "";
+}
+.socicon-crunchbase:before {
+  content: "";
+}
+.socicon-homefy:before {
+  content: "";
+}
+.socicon-calendly:before {
+  content: "";
+}
+.socicon-livemaster:before {
+  content: "";
+}
+.socicon-udemy:before {
+  content: "";
+}
+.socicon-codered:before {
+  content: "";
+}
+.socicon-origin:before {
+  content: "";
+}
+.socicon-nextdoor:before {
+  content: "";
+}
+.socicon-portfolio:before {
+  content: "";
+}
+.socicon-instructables:before {
+  content: "";
+}
+.socicon-gitlab:before {
+  content: "";
+}
+.socicon-hackernews:before {
+  content: "";
+}
+.socicon-smashwords:before {
+  content: "";
+}
+.socicon-kobo:before {
+  content: "";
+}
+.socicon-bookbub:before {
+  content: "";
+}
+.socicon-mailru:before {
+  content: "";
+}
+.socicon-moddb:before {
+  content: "";
+}
+.socicon-indiedb:before {
+  content: "";
+}
+.socicon-traxsource:before {
+  content: "";
+}
+.socicon-gamefor:before {
+  content: "";
+}
+.socicon-pixiv:before {
+  content: "";
+}
+.socicon-myanimelist:before {
+  content: "";
+}
+.socicon-blackberry:before {
+  content: "";
+}
+.socicon-wickr:before {
+  content: "";
+}
+.socicon-spip:before {
+  content: "";
+}
+.socicon-napster:before {
+  content: "";
+}
+.socicon-beatport:before {
+  content: "";
+}
+.socicon-hackerone:before {
+  content: "";
+}
+.socicon-internet:before {
+  content: "";
+}
+.socicon-ubuntu:before {
+  content: "";
+}
+.socicon-artstation:before {
+  content: "";
+}
+.socicon-invision:before {
+  content: "";
+}
+.socicon-torial:before {
+  content: "";
+}
+.socicon-collectorz:before {
+  content: "";
+}
+.socicon-seenthis:before {
+  content: "";
+}
+.socicon-googleplaymusic:before {
+  content: "";
+}
+.socicon-debian:before {
+  content: "";
+}
+.socicon-filmfreeway:before {
+  content: "";
+}
+.socicon-gnome:before {
+  content: "";
+}
+.socicon-itchio:before {
+  content: "";
+}
+.socicon-jamendo:before {
+  content: "";
+}
+.socicon-mix:before {
+  content: "";
+}
+.socicon-sharepoint:before {
+  content: "";
+}
+.socicon-tinder:before {
+  content: "";
+}
+.socicon-windguru:before {
+  content: "";
+}
+.socicon-cdbaby:before {
+  content: "";
+}
+.socicon-elementaryos:before {
+  content: "";
+}
+.socicon-stage32:before {
+  content: "";
+}
+.socicon-tiktok:before {
+  content: "";
+}
+.socicon-gitter:before {
+  content: "";
+}
+.socicon-letterboxd:before {
+  content: "";
+}
+.socicon-threema:before {
+  content: "";
+}
+.socicon-splice:before {
+  content: "";
+}
+.socicon-metapop:before {
+  content: "";
+}
+.socicon-naver:before {
+  content: "";
+}
+.socicon-remote:before {
+  content: "";
+}
+.socicon-flipboard:before {
+  content: "";
+}
+.socicon-googlehangouts:before {
+  content: "";
+}
+.socicon-dlive:before {
+  content: "";
+}
+.socicon-vsco:before {
+  content: "";
+}
+.socicon-stitcher:before {
+  content: "";
+}
+.socicon-avvo:before {
+  content: "";
+}
+.socicon-redbubble:before {
+  content: "";
+}
+.socicon-society6:before {
+  content: "";
+}
+.socicon-zazzle:before {
+  content: "";
+}
+.socicon-eitaa:before {
+  content: "";
+}
+.socicon-soroush:before {
+  content: "";
+}
+.socicon-bale:before {
+  content: "";
+}

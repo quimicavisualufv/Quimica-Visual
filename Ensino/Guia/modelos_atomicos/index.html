@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description">
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Modelos Atômicos • de Dalton a Schrödinger</title>
+<link href="assets/css/styles.css" rel="stylesheet">
+<meta content="Modelos Atômicos • de Dalton a Schrödinger" property="og:title"><meta content="Guia educacional do SiMoEns sobre Modelos Atômicos • de Dalton a Schrödinger, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"><link rel="stylesheet" href="index.inline-style-01.css"><script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<div role="main" class="app" id="conteudo-principal">
+<div class="panel stage"><span class="simoens-visually-hidden">Painel interativo</span>
+<div class="view-wrap">
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." id="view" role="img" aria-describedby="view-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="view-descricao-acessivel" class="simoens-inline-style-index-002">Visualização interativa relacionada a Modelos Atômicos • de Dalton a Schrödinger. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div class="guide-float" id="guideFloat">
+<div class="guide-float-step" id="guideFloatStep">Passo 1 de 16</div>
+<div class="guide-float-title" id="guideFloatTitle">Panorama do percurso</div>
+<div class="guide-float-text" id="guideFloatText">Do modelo macroscópico de esfera indivisível até a interpretação quântica probabilística.</div>
+</div>
+<div class="hud-strip" id="hudStrip">
+<div class="hud-pill" id="hudScene">Linha histórica</div>
+<div class="hud-pill" id="hudCount">Orbital 1s</div>
+<div class="hud-pill" id="hudEnergy">Eₙ = -13,61 eV</div>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="equation-banner" id="equationBanner"><span class="eq-main">ψ<sub>n,l,m</sub>(r,θ,φ) = R<sub>n,l</sub>(r)·Y<sub>l</sub><sup>m</sup>(θ,φ)</span></div>
+</div>
+</div>
+<div aria-label="Painel lateral" class="panel sidebar" role="group">
+<div class="head">
+<div>
+<h1>Modelos Atômicos</h1>
+<small>Roteiro guiado da evolução dos modelos atômicos, do átomo como esfera maciça até Schrödinger e a leitura probabilística do átomo moderno.</small>
+</div>
+</div>
+<div class="scroll">
+<section class="section guide-card">
+<div class="guide-kicker" id="guideKicker">Percurso didático</div>
+<h2 class="guide-heading" id="guideHeading">Panorama do percurso</h2>
+<div class="guide-text" id="guideText"></div>
+<div class="guide-callout" id="guideCallout"></div>
+<div class="guide-nav-top">
+<div class="tutorialStepTag" id="tutorialStepTag">Passo 1 / 16</div>
+</div>
+<div class="tutorialActions">
+<button class="tbtn ghost" id="tutorialPrev">← Anterior</button>
+<button class="tbtn primary" id="tutorialNext">Próximo →</button>
+</div>
+</section>
+<section class="section">
+<h3>Visualização</h3>
+<div>
+<label>Zoom<input id="zoom" max="3.4" min="0.8" step="0.01" type="range" value="0.8"></label>
+</div>
+<div class="grid2 simoens-inline-style-index-003">
+<label class="check"><input checked="" id="showAxes" type="checkbox"> Mostrar eixos</label>
+<label class="check"><input checked="" id="showLabels" type="checkbox"> Mostrar rótulos</label>
+</div>
+<div class="grid2 simoens-inline-style-index-004">
+<label>Rotação automática<input id="autorotate" max="1.6" min="0" step="0.01" type="range" value="0"></label>
+<label>Inclinação<input id="pitch" max="1.2" min="-1.2" step="0.01" type="range" value="0.32"></label>
+<label>Brilho da cena<input id="glow" max="1.6" min="0.2" step="0.01" type="range" value="0.9"></label>
+<label class="check"><input checked="" id="showWave" type="checkbox"> Mostrar camada ondulatória</label>
+<label class="check"><input checked="" id="showTrails" type="checkbox"> Mostrar trilhas</label>
+<button class="ghost" id="resetView" type="button">Resetar câmera</button>
+<button class="ghost" id="fitScene" type="button">Reenquadrar</button>
+</div>
+</section>
+<section class="section" id="formulaSection">
+<h3>Equação e leitura da etapa</h3>
+<div class="formula-card" id="formulaCard"></div>
+</section>
+<section class="section simoens-inline-style-index-005" id="hydrogenoidSection">
+<div class="card-top">
+<h3 class="simoens-inline-style-index-006">Explorador hidrogenoide</h3>
+<div class="pill-mini" id="speciesTag">H</div>
+</div>
+<div class="grid2">
+<label>Número atômico Z<input id="zValue" max="8" min="1" step="1" type="range" value="1"></label>
+<label>Densidade da nuvem<input id="sampleCount" max="3200" min="900" step="100" type="range" value="1600"></label>
+</div>
+<div class="grid3 simoens-inline-style-index-007">
+<label>n<select id="nValue"></select></label>
+<label>l<select id="lValue"></select></label>
+<label>m<select id="mValue"></select></label>
+</div>
+<div class="view-switch" id="orbitalViewSwitch">
+<button class="active" data-view="2d" type="button">Corte 2D</button>
+<button data-view="3d" type="button">Orbital 3D</button>
+</div>
+<div class="orbital-presets" id="orbitalPresets"></div>
+<div class="card-top simoens-inline-style-index-008"><h3 class="simoens-inline-style-index-009">Galeria dos orbitais do hidrogênio</h3><div class="pill-mini" id="orbitalAtlasTag">corte analítico</div></div>
+<div class="orbital-atlas-grid" id="orbitalAtlas"></div>
+<div class="stats-grid" id="statsGrid"></div>
+<canvas aria-label="Visualização interativa da página Modelos Atômicos • de Dalton a Schrödinger." height="180" id="radialGraph" role="img" width="360" aria-describedby="radialGraph-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="radialGraph-descricao-acessivel" class="simoens-inline-style-index-010">Visualização interativa relacionada a Modelos Atômicos • de Dalton a Schrödinger. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div class="note" id="orbitalNote"></div>
+</section>
+<section class="section simoens-inline-style-index-011">
+<h3>Mapa do roteiro</h3>
+<div class="steps-grid" id="stepsGrid"></div>
+</section>
+<section class="section simoens-inline-style-index-012">
+<h3>Como navegar</h3>
+<div class="note">Arraste a lousa para rotacionar o modelo. Use as setas do teclado para avançar ou voltar. Este arquivo concentra a sequência histórica dos modelos atômicos e dos experimentos que levaram ao átomo moderno.</div>
+</section>
+</div>
+</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

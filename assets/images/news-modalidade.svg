@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" data-editor-original-width="512" data-editor-original-height="512" style="width: 993.28px; height: 993.28px;">
+    <defs>
+        <!-- Background Gradients -->
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="75%" data-layer-name="radialgradient#bgGrad">
+            <stop offset="0%" stop-color="#1e1b4b" data-layer-name="stop 3"/>
+            <stop offset="60%" stop-color="#0f172a" data-layer-name="stop 4"/>
+            <stop offset="100%" stop-color="#020617" data-layer-name="stop 5"/>
+        </radialGradient>
+        
+        <!-- Liquid Gradients -->
+        <linearGradient id="liquidGreen" x1="0%" y1="0%" x2="100%" y2="100%" data-layer-name="lineargradient#liquidGreen">
+            <stop offset="0%" stop-color="#a3e635" data-layer-name="stop 7"/>
+            <stop offset="100%" stop-color="#059669" data-layer-name="stop 8"/>
+        </linearGradient>
+        <linearGradient id="liquidPink" x1="0%" y1="0%" x2="100%" y2="100%" data-layer-name="lineargradient#liquidPink">
+            <stop offset="0%" stop-color="#f472b6" data-layer-name="stop 10"/>
+            <stop offset="100%" stop-color="#be185d" data-layer-name="stop 11"/>
+        </linearGradient>
+        <linearGradient id="liquidCyan" x1="0%" y1="0%" x2="100%" y2="100%" data-layer-name="lineargradient#liquidCyan">
+            <stop offset="0%" stop-color="#38bdf8" data-layer-name="stop 13"/>
+            <stop offset="100%" stop-color="#0369a1" data-layer-name="stop 14"/>
+        </linearGradient>
+
+        <!-- Glass & Base Gradients -->
+        <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%" data-layer-name="lineargradient#glassGrad">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15" data-layer-name="stop 16"/>
+            <stop offset="20%" stop-color="#ffffff" stop-opacity="0.4" data-layer-name="stop 17"/>
+            <stop offset="50%" stop-color="#ffffff" stop-opacity="0.05" data-layer-name="stop 18"/>
+            <stop offset="80%" stop-color="#ffffff" stop-opacity="0.25" data-layer-name="stop 19"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.5" data-layer-name="stop 20"/>
+        </linearGradient>
+        <linearGradient id="baseGrad" x1="0%" y1="0%" x2="100%" y2="0%" data-layer-name="lineargradient#baseGrad">
+            <stop offset="0%" stop-color="#334155" data-layer-name="stop 22"/>
+            <stop offset="50%" stop-color="#0f172a" data-layer-name="stop 23"/>
+            <stop offset="100%" stop-color="#020617" data-layer-name="stop 24"/>
+        </linearGradient>
+
+        <!-- Glow Filters -->
+        <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#blurGlow">
+            <feGaussianBlur stdDeviation="25" result="blur" data-layer-name="fegaussianblur 26"/>
+        </filter>
+        <filter id="blurBg" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#blurBg">
+            <feGaussianBlur stdDeviation="2" data-layer-name="fegaussianblur 28"/>
+        </filter>
+        <filter id="blurFg" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#blurFg">
+            <feGaussianBlur stdDeviation="8" data-layer-name="fegaussianblur 30"/>
+        </filter>
+
+        <!-- Hexagon Molecule Pattern -->
+        <polygon id="hex" points="0,-25 22,-12.5 22,12.5 0,25 -22,12.5 -22,-12.5" fill="none" stroke="#ffffff" stroke-width="2" data-layer-name="polygon#hex"/>
+        
+        <!-- Subtle Background Grid -->
+        <pattern id="bgGrid" width="40" height="40" patternUnits="userSpaceOnUse" data-layer-name="pattern#bgGrid">
+            <path d="M 40 0 L 0 0 L 0 40" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.04" data-layer-name="path 33"/>
+        </pattern>
+    </defs>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="url(#bgGrad)" data-layer-name="rect 34"/>
+    <rect width="100%" height="100%" fill="url(#bgGrid)" data-layer-name="rect 35"/>
+
+    <!-- Background Molecular Structures -->
+    <g opacity="0.15" filter="url(#blurBg)" data-layer-group="1" data-layer-name="g 36">
+        <!-- Left Cluster -->
+        <use href="#hex" x="70" y="120" data-layer-name="use 37"/>
+        <use href="#hex" x="114" y="145" data-layer-name="use 38"/>
+        <use href="#hex" x="70" y="170" data-layer-name="use 39"/>
+        <line x1="70" y1="145" x2="70" y2="170" stroke="#ffffff" stroke-width="2" data-layer-name="line 40"/>
+        <line x1="92" y1="132.5" x2="114" y2="145" stroke="#ffffff" stroke-width="2" data-layer-name="line 41"/>
+        <circle cx="114" cy="145" r="4" fill="#ffffff" data-layer-name="circle 42"/>
+        
+        <!-- Right Cluster -->
+        <use href="#hex" x="440" y="100" data-layer-name="use 43"/>
+        <use href="#hex" x="484" y="125" data-layer-name="use 44"/>
+        <use href="#hex" x="440" y="150" data-layer-name="use 45"/>
+        <line x1="418" y1="87.5" x2="390" y2="70" stroke="#ffffff" stroke-width="2" data-layer-name="line 46"/>
+        <circle cx="390" cy="70" r="5" fill="#ffffff" data-layer-name="circle 47"/>
+        <line x1="462" y1="112.5" x2="455" y2="105" stroke="#ffffff" stroke-width="2" data-layer-name="line 48"/>
+    </g>
+
+    <!-- Ambient Glows behind pieces -->
+    <circle cx="256" cy="280" r="90" fill="#34d399" opacity="0.25" filter="url(#blurGlow)" data-layer-name="circle 49"/>
+    <circle cx="140" cy="350" r="60" fill="#f472b6" opacity="0.25" filter="url(#blurGlow)" data-layer-name="circle 50"/>
+    
+
+    <!-- Isometric Chessboard 3D Base -->
+    <polygon points="86,420 256,505 256,525 86,440" fill="#020617" data-layer-name="polygon 52"/>
+    <polygon points="256,505 426,420 426,440 256,525" fill="#0f172a" data-layer-name="polygon 53"/>
+    <polyline points="86,440 256,525 426,440" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.5" data-layer-name="polyline 54"/>
+
+    <!-- Isometric Chessboard Surface -->
+    <g transform="translate(256, 420) scale(1, 0.5) rotate(45)" data-layer-group="1" data-layer-name="g 55">
+        <!-- Board Background (Light Squares) -->
+        <rect x="-120" y="-120" width="240" height="240" fill="#1e293b" data-layer-name="rect 56"/>
+        
+        <!-- Dark Squares -->
+        <rect x="-120" y="-120" width="60" height="60" fill="#0f172a" data-layer-name="rect 57"/>
+        <rect x="0" y="-120" width="60" height="60" fill="#0f172a" data-layer-name="rect 58" transform="matrix(1 0 0 1 0.80996676 0.80996676)"/>
+        <rect x="-60" y="-60" width="60" height="60" fill="#0f172a" data-layer-name="rect 59"/>
+        <rect x="60" y="-60" width="60" height="60" fill="#0f172a" data-layer-name="rect 60"/>
+        <rect x="-120" y="0" width="60" height="60" fill="#0f172a" data-layer-name="rect 61"/>
+        <rect x="0" y="0" width="60" height="60" fill="#0f172a" data-layer-name="rect 62"/>
+        <rect x="-60" y="60" width="60" height="60" fill="#0f172a" data-layer-name="rect 63"/>
+        <rect x="60" y="60" width="60" height="60" fill="#0f172a" data-layer-name="rect 64"/>
+
+        <!-- Glowing Neon Border -->
+        <rect x="-120" y="-120" width="240" height="240" fill="none" stroke="#38bdf8" stroke-width="3" filter="url(#blurGlow)" data-layer-name="rect 65"/>
+        <rect x="-120" y="-120" width="240" height="240" fill="none" stroke="#e0f2fe" stroke-width="1.5" data-layer-name="rect 66"/>
+    </g>
+
+    <!-- Drop Shadows for Pieces -->
+    <ellipse cx="256" cy="400" rx="50" ry="15" fill="#000000" opacity="0.8" filter="url(#blurBg)" data-layer-name="ellipse 67"/>
+    <ellipse cx="140" cy="440" rx="32" ry="10" fill="#000000" opacity="0.8" filter="url(#blurBg)" data-layer-name="ellipse 68"/>
+    
+
+    <!-- ========================================== -->
+    <!-- LEFT PIECE: THE CHEMISTRY PAWN (Test Tube) -->
+    <!-- ========================================== -->
+    <g id="pawn" data-layer-group="1" data-layer-name="g#pawn">
+        <!-- Base -->
+        <ellipse cx="140" cy="440" rx="35" ry="10" fill="url(#baseGrad)" stroke="#f472b6" stroke-width="1.5" data-layer-name="ellipse 71"/>
+        <ellipse cx="140" cy="433" rx="28" ry="8" fill="url(#baseGrad)" stroke="#f472b6" stroke-width="1" data-layer-name="ellipse 72"/>
+        <ellipse cx="140" cy="426" rx="22" ry="6" fill="#1e293b" stroke="#f472b6" stroke-width="1" data-layer-name="ellipse 73"/>
+        
+        <!-- Pink Liquid -->
+        <path d="M 115 370 A 25 25 0 0 0 165 370 L 162 355 C 162 358, 152 360, 140 360 C 128 360, 118 358, 118 355 Z" fill="url(#liquidPink)" data-layer-name="path 74"/>
+        <ellipse cx="140" cy="355" rx="22" ry="4" fill="#f9a8d4" data-layer-name="ellipse 75"/>
+        
+        <!-- Liquid Depth & Bubbles -->
+        <path d="M 115 370 A 25 25 0 0 0 165 370 L 140 370 Z" fill="#be185d" opacity="0.4" data-layer-name="path 76"/>
+        <circle cx="135" cy="375" r="3" fill="#ffffff" opacity="0.7" data-layer-name="circle 77"/>
+        <circle cx="148" cy="365" r="4" fill="#ffffff" opacity="0.5" data-layer-name="circle 78"/>
+        <circle cx="128" cy="360" r="2" fill="#ffffff" opacity="0.8" data-layer-name="circle 79"/>
+
+        <!-- Glass Body -->
+        <path d="M 114 370 A 28 28 0 1 0 166 370 C 166 360, 152 355, 152 340 L 152 320 C 152 316, 146 313, 140 313 C 134 313, 128 316, 128 320 L 128 340 C 128 355, 114 360, 114 370 Z" fill="url(#glassGrad)" stroke="#fbcfe8" stroke-width="1.5" opacity="0.9" data-layer-name="path 80"/>
+        
+        <!-- Glass Highlights -->
+        <path d="M 120 360 A 20 20 0 0 0 140 380" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.6" data-layer-name="path 81"/>
+        <line x1="132" y1="320" x2="132" y2="340" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.5" data-layer-name="line 82"/>
+
+        <!-- Rim & Stopper -->
+        <ellipse cx="140" cy="313" rx="14" ry="3" fill="#fbcfe8" stroke="#fdf2f8" stroke-width="1" data-layer-name="ellipse 83"/>
+        <ellipse cx="140" cy="310" rx="8" ry="2" fill="#fbcfe8" data-layer-name="ellipse 84"/>
+        <circle cx="140" cy="295" r="14" fill="url(#glassGrad)" stroke="#fbcfe8" stroke-width="1.5" data-layer-name="circle 85"/>
+        <path d="M 132 290 A 8 8 0 0 1 145 285" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.8" data-layer-name="path 86"/>
+    </g>
+
+    <!-- ========================================== -->
+    <!-- RIGHT PIECE: THE CHEMISTRY KNIGHT (Retort) -->
+    <!-- ========================================== -->
+    <g id="knight" data-layer-group="1" data-layer-name="g#knight">
+        <!-- Base -->
+        
+        
+        
+
+        <!-- Cyan Liquid -->
+        
+        
+        
+        <!-- Liquid Depth & Bubbles -->
+        
+        
+        
+        
+
+        <!-- Glass Body (Knight Profile) -->
+        
+        
+        <!-- Glass Highlights & Details -->
+        
+        
+        
+        <!-- Eye (Bubble) -->
+        
+    </g>
+
+    <!-- ========================================== -->
+    <!-- CENTER PIECE: THE CHEMISTRY KING (Flask)   -->
+    <!-- ========================================== -->
+    
+    <!-- Orbiting Atom Rings (Behind King) -->
+    <g stroke="#34d399" stroke-width="1.5" fill="none" opacity="0.35" data-layer-group="1" data-layer-name="g 101">
+        <ellipse cx="256" cy="260" rx="150" ry="45" transform="rotate(20 256 260)" data-layer-name="ellipse 102"/>
+        <ellipse cx="256" cy="260" rx="150" ry="45" transform="rotate(-40 256 260)" data-layer-name="ellipse 103"/>
+        <ellipse cx="256" cy="260" rx="150" ry="45" transform="rotate(80 256 260)" data-layer-name="ellipse 104"/>
+    </g>
+    <!-- Electrons -->
+    <circle cx="115" cy="210" r="4" fill="#a3e635" filter="url(#blurGlow)" data-layer-name="circle 105"/>
+    <circle cx="115" cy="210" r="2" fill="#ffffff" data-layer-name="circle 106"/>
+    
+    
+    <circle cx="210" cy="120" r="4" fill="#a3e635" filter="url(#blurGlow)" data-layer-name="circle 109"/>
+    <circle cx="210" cy="120" r="2" fill="#ffffff" data-layer-name="circle 110"/>
+
+    <g id="king" data-layer-group="1" data-layer-name="g#king">
+        <!-- Base -->
+        <ellipse cx="256" cy="400" rx="55" ry="16" fill="url(#baseGrad)" stroke="#34d399" stroke-width="2" data-layer-name="ellipse 112"/>
+        <ellipse cx="256" cy="390" rx="45" ry="13" fill="url(#baseGrad)" stroke="#34d399" stroke-width="1.5" data-layer-name="ellipse 113"/>
+        <ellipse cx="256" cy="380" rx="38" ry="11" fill="#1e293b" stroke="#34d399" stroke-width="1" data-layer-name="ellipse 114"/>
+
+        <!-- Green Liquid -->
+        <path d="M 213 368 C 213 380, 233 390, 256 390 C 279 390, 299 380, 299 368 L 283 260 C 283 265, 269 269, 256 269 C 243 269, 229 265, 229 260 Z" fill="url(#liquidGreen)" data-layer-name="path 115"/>
+        <ellipse cx="256" cy="260" rx="27" ry="6" fill="#86efac" data-layer-name="ellipse 116"/>
+        
+        <!-- Liquid Depth & Bubbles -->
+        <path d="M 213 368 C 213 380, 233 390, 256 390 L 256 269 C 243 269, 229 265, 229 260 Z" fill="#059669" opacity="0.5" data-layer-name="path 117"/>
+        <circle cx="240" cy="350" r="5" fill="#ffffff" opacity="0.7" data-layer-name="circle 118"/>
+        <circle cx="265" cy="320" r="7" fill="#ffffff" opacity="0.5" data-layer-name="circle 119"/>
+        <circle cx="250" cy="280" r="3" fill="#ffffff" opacity="0.8" data-layer-name="circle 120"/>
+        <circle cx="275" cy="360" r="6" fill="#ffffff" opacity="0.4" data-layer-name="circle 121"/>
+        <circle cx="235" cy="300" r="4" fill="#ffffff" opacity="0.6" data-layer-name="circle 122"/>
+        <circle cx="260" cy="375" r="3" fill="#ffffff" opacity="0.7" data-layer-name="circle 123"/>
+
+        <!-- Glass Body (Erlenmeyer) -->
+        <path d="M 211 370 C 211 385, 231 395, 256 395 C 281 395, 301 385, 301 370 L 273 200 L 273 140 C 273 135, 265 130, 256 130 C 247 130, 239 135, 239 140 L 239 200 Z" fill="url(#glassGrad)" stroke="#e0f2fe" stroke-width="2" opacity="0.85" data-layer-name="path 124"/>
+        
+        <!-- Glass Highlights -->
+        <path d="M 220 360 C 220 375, 235 385, 256 385" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6" data-layer-name="path 125"/>
+        <path d="M 292 360 C 292 375, 277 385, 256 385" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.3" data-layer-name="path 126"/>
+        <line x1="244" y1="145" x2="244" y2="195" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7" data-layer-name="line 127"/>
+        <line x1="268" y1="145" x2="268" y2="195" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.4" data-layer-name="line 128"/>
+
+        <!-- Measurement Marks -->
+        <line x1="236" y1="280" x2="248" y2="280" stroke="#ffffff" stroke-width="1.5" opacity="0.8" data-layer-name="line 129"/>
+        <line x1="233" y1="310" x2="243" y2="310" stroke="#ffffff" stroke-width="1.5" opacity="0.8" data-layer-name="line 130"/>
+        <line x1="229" y1="340" x2="246" y2="340" stroke="#ffffff" stroke-width="1.5" opacity="0.8" data-layer-name="line 131"/>
+
+        <!-- Flask Rim -->
+        <ellipse cx="256" cy="140" rx="22" ry="6" fill="#bae6fd" stroke="#e0f2fe" stroke-width="2" data-layer-name="ellipse 132"/>
+        <ellipse cx="256" cy="136" rx="22" ry="6" fill="#e0f2fe" data-layer-name="ellipse 133"/>
+
+        <!-- Golden Crown Stopper -->
+        <path d="M 242 136 L 256 136 L 256 70 L 247 100 L 227 80 Z" fill="#f59e0b" data-layer-name="path 134"/>
+        <path d="M 256 136 L 270 136 L 285 80 L 265 100 L 256 70 Z" fill="#fde047" data-layer-name="path 135"/>
+        <path d="M 242 136 L 270 136 L 285 80 L 265 100 L 256 70 L 247 100 L 227 80 Z" fill="none" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" data-layer-name="path 136"/>
+        
+        <!-- Crown Jewels -->
+        <circle cx="256" cy="115" r="4" fill="#ef4444" stroke="#7f1d1d" stroke-width="0.5" data-layer-name="circle 137"/>
+        <circle cx="242" cy="105" r="3" fill="#3b82f6" stroke="#1e3a8a" stroke-width="0.5" data-layer-name="circle 138"/>
+        <circle cx="270" cy="105" r="3" fill="#3b82f6" stroke="#1e3a8a" stroke-width="0.5" data-layer-name="circle 139"/>
+
+        <!-- Atom Finial (Cross replacement) -->
+        <circle cx="256" cy="60" r="5" fill="#fde047" stroke="#b45309" stroke-width="1" data-layer-name="circle 140"/>
+        <circle cx="256" cy="60" r="2" fill="#ffffff" data-layer-name="circle 141"/>
+        <ellipse cx="256" cy="60" rx="16" ry="5" fill="none" stroke="#fde047" stroke-width="1.5" transform="rotate(30 256 60)" data-layer-name="ellipse 142"/>
+        <ellipse cx="256" cy="60" rx="16" ry="5" fill="none" stroke="#fde047" stroke-width="1.5" transform="rotate(90 256 60)" data-layer-name="ellipse 143"/>
+        <ellipse cx="256" cy="60" rx="16" ry="5" fill="none" stroke="#fde047" stroke-width="1.5" transform="rotate(150 256 60)" data-layer-name="ellipse 144"/>
+    </g>
+
+    <!-- Rising Glowing Bubbles (Foreground) -->
+    <!-- King Bubbles -->
+    
+    <circle cx="265" cy="90" r="2" fill="#86efac" opacity="0.9" data-layer-name="circle 146"/>
+    <circle cx="240" cy="70" r="3" fill="#86efac" opacity="0.6" data-layer-name="circle 147"/>
+    <circle cx="270" cy="40" r="5" fill="#86efac" opacity="0.4" data-layer-name="circle 148"/>
+    <!-- Pawn Bubbles -->
+    <circle cx="130" cy="260" r="3" fill="#f9a8d4" opacity="0.7" data-layer-name="circle 149"/>
+    <circle cx="145" cy="230" r="5" fill="#f9a8d4" opacity="0.5" data-layer-name="circle 150"/>
+    <circle cx="135" cy="200" r="2" fill="#f9a8d4" opacity="0.8" data-layer-name="circle 151"/>
+    <!-- Knight Bubbles -->
+    <circle cx="360" cy="280" r="4" fill="#7dd3fc" opacity="0.7" data-layer-name="circle 152"/>
+    <circle cx="375" cy="250" r="3" fill="#7dd3fc" opacity="0.6" data-layer-name="circle 153"/>
+    <circle cx="365" cy="210" r="5" fill="#7dd3fc" opacity="0.4" data-layer-name="circle 154"/>
+
+    <!-- Foreground Out-of-Focus Orbs (Depth of Field) -->
+    <circle cx="40" cy="460" r="18" fill="#34d399" opacity="0.25" filter="url(#blurFg)" data-layer-name="circle 155"/>
+    <circle cx="480" cy="480" r="25" fill="#38bdf8" opacity="0.2" filter="url(#blurFg)" data-layer-name="circle 156"/>
+    <circle cx="60" cy="60" r="30" fill="#f472b6" opacity="0.15" filter="url(#blurFg)" data-layer-name="circle 157"/>
+</svg>

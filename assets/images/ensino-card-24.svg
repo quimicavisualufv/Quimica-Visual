@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#15233d"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1f2f4f"/>
+      <stop offset="100%" stop-color="#16243f"/>
+    </linearGradient>
+    <radialGradient id="glowBlue" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8fd3ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#8fd3ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowPurple" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8f6bff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#8f6bff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.24"/>
+    </filter>
+    <clipPath id="previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24"/>
+    </clipPath>
+  </defs>
+  <rect width="640" height="420" rx="28" fill="url(#bg)"/>
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1">
+    <path d="M0 70H640"/><path d="M0 140H640"/><path d="M0 210H640"/><path d="M0 280H640"/><path d="M0 350H640"/>
+    <path d="M90 0V420"/><path d="M180 0V420"/><path d="M270 0V420"/><path d="M360 0V420"/><path d="M450 0V420"/><path d="M540 0V420"/>
+  </g>
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)"/>
+  <g clip-path="url(#previewClip)">
+    
+  <circle cx="310" cy="154" r="155" fill="url(#glowBlue)"/>
+  <g transform="translate(70,38)">
+    <g stroke="#8fd3ff" stroke-width="3.5" fill="none" opacity="0.85">
+      <line x1="230" y1="120" x2="230" y2="36"/>
+      <line x1="230" y1="120" x2="230" y2="204"/>
+      <line x1="230" y1="120" x2="150" y2="74"/>
+      <line x1="230" y1="120" x2="310" y2="74"/>
+      <line x1="230" y1="120" x2="150" y2="166"/>
+      <line x1="230" y1="120" x2="310" y2="166"/>
+      <line x1="230" y1="120" x2="110" y2="120"/>
+      <line x1="230" y1="120" x2="350" y2="120"/>
+    </g>
+    <g fill="#b7ffda" stroke="#dfffee" stroke-width="1.2">
+      <circle cx="230" cy="36" r="15"/><circle cx="230" cy="204" r="15"/>
+      <circle cx="150" cy="74" r="15"/><circle cx="310" cy="74" r="15"/>
+      <circle cx="150" cy="166" r="15"/><circle cx="310" cy="166" r="15"/>
+      <circle cx="110" cy="120" r="15"/><circle cx="350" cy="120" r="15"/>
+    </g>
+    <circle cx="230" cy="120" r="24" fill="#7c5cff" stroke="#c8bfff" stroke-width="3"/>
+    <g transform="translate(404,14)">
+      <rect x="0" y="0" width="120" height="78" rx="18" fill="#172744" stroke="#27426e"/>
+      <text x="20" y="34" fill="#ffd166" font-family="Manrope, Arial" font-size="18" font-weight="700">NC = 8</text>
+      <text x="20" y="58" fill="#eaf3ff" font-family="Manrope, Arial" font-size="16">coordenação</text>
+    </g>
+    <g transform="translate(346,164)">
+      
+      
+      
+    </g>
+  </g>
+
+  </g>
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b"/>
+  <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700">Coordenação e empacotamento</text>
+</svg>

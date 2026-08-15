@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Empacotamento de Esferas, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Empacotamento, Buracos e Camadas</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Empacotamento, Buracos e Camadas" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Empacotamento de Esferas, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/><script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<header role="presentation">
+<div role="main" class="wrap" id="conteudo-principal">
+<h1>Empacotamento de Esferas</h1>
+<div class="sub"></div>
+<div class="panel" id="panel">
+<div class="panel-row panel-row-main">
+<label class="mode-control">Modo
+        <select id="mode">
+<option value="oct">Buraco Octaédrico</option>
+<option value="tetra">Buraco Tetraédrico</option>
+<option value="tetra_octa">Buraco Tetra + Octa</option>
+<option value="hex2d">Camada Hexagonal</option>
+<option value="aaa_tri">AAA Triangular</option>
+<option value="abc_tri">ABC Triangular</option>
+<option value="aba_tri">ABA Triangular</option>
+<option value="aaa_cub">AAA Cúbica</option>
+<option value="aba_cub">ABA Cúbica</option>
+<option value="abc_cub">ABC Cúbica</option>
+</select>
+</label>
+<label class="zoom-control">Zoom
+        <input id="radius" max="180" min="10" type="range" value="56"/>
+</label>
+<label class="solid-control"><input id="solid" type="checkbox"/> Sólidas</label>
+<div class="control-group" id="atomSizeWrap"><span>Tamanho dos átomos</span>
+        <input aria-label="Tamanho dos átomos" id="gap" max="320" min="0" step="1" type="range" value="320"/>
+<input aria-label="Tamanho dos átomos em valor numérico" id="gapNum" max="400" min="0" step="1" type="number" value="300"/>
+</div>
+<label class="opacity-control">Opacidade
+        <input id="alpha" max="100" min="0" type="range" value="70"/>
+</label>
+</div>
+<div class="panel-row panel-row-filters">
+<div class="filter-strip hidden" id="stackActionsWrap">
+<span class="filter-strip-title">Camadas</span>
+<button class="stack-action-btn" id="btnAdd">Adicionar camada</button>
+<button class="stack-action-btn" id="btnReset">Reset</button>
+<label id="layerSizeWrap">Largura da camada (N)
+        <input id="layerSize" max="9" min="4" step="1" type="range" value="4"/>
+</label>
+</div>
+<div class="filter-strip hidden" id="singlePolyFilterWrap">
+<span class="filter-strip-title">Modo individual</span>
+<label><input checked="" id="edges" type="checkbox"/> Arestas</label>
+<label><input checked="" id="showPolyFigureSingle" type="checkbox"/> Poliedro</label>
+<label><input checked="" id="showPolyAtomsSingle" type="checkbox"/> Átomos do poliedro</label>
+<label><input id="hideInactiveSingle" type="checkbox"/> Só destaque</label>
+</div>
+<div class="filter-strip hidden" id="comboFilterWrap">
+<span class="filter-strip-title">Modo conjunto</span>
+<label><input checked="" id="edgesCombo" type="checkbox"/> Arestas</label>
+<div class="filter-subgroup">
+<span class="filter-subgroup-title">Tetra</span>
+<label><input checked="" id="showTetFigure" type="checkbox"/> Figura</label>
+<label><input checked="" id="showTetAtoms" type="checkbox"/> Átomos</label>
+</div>
+<div class="filter-subgroup">
+<span class="filter-subgroup-title">Octa</span>
+<label><input checked="" id="showOctFigure" type="checkbox"/> Figura</label>
+<label><input checked="" id="showOctAtoms" type="checkbox"/> Átomos</label>
+</div>
+<label class="solo-toggle"><input id="hideInactiveCombo" type="checkbox"/> Só destaque</label>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div id="stage">
+<canvas aria-label="Visualização interativa principal do conteúdo científico." id="cv" role="img" aria-describedby="cv-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="cv-descricao-acessivel" class="simoens-inline-style-index-002">Visualização interativa relacionada a Empacotamento, Buracos e Camadas. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div class="legend" id="legend"></div>
+<div class="legend" id="testResults"></div>
+</div>
+<script src="assets/js/script1.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

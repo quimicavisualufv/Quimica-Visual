@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D — Posições na célula, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Modelos 3D — Posições na célula</title>
+<script src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" type="module"></script>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Modelos 3D — Posições na célula" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D — Posições na célula, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/><script defer src="../../../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<div role="main" class="wrap" id="conteudo-principal">
+<div class="panel">
+<header role="presentation">
+<h1>Modelos 3D — posições</h1>
+<small>drag = girar • scroll = zoom</small>
+</header>
+<model-viewer camera-controls="" exposure="1.05" id="mv" shadow-intensity="0.35" touch-action="pan-y"></model-viewer>
+</div>
+<div class="panel">
+<header role="presentation">
+<h2>Controles</h2>
+<small>visualização didática</small>
+</header>
+<div class="controls">
+<label class="col2">Modelo
+          <select id="pick">
+<option value="Vertices">Vértices</option>
+<option value="Arestas">Arestas</option>
+<option value="Face">Faces</option>
+<option value="Centro">Centro do corpo</option>
+</select>
+</label>
+<div class="card col2">
+<b>Resumo rápido das frações</b>
+<div class="muted">
+            Vértices: 8 pontos × 1/8 = 1 •
+            Arestas: 12 pontos × 1/4 = 3 •
+            Faces: 6 pontos × 1/2 = 3 •
+            Centro: 1 ponto × 1 = 1
+          </div>
+</div>
+<div class="card col2">
+<b>Dica</b>
+<div class="muted" id="desc"></div>
+</div>
+<button class="col2" id="reset">Reset câmera</button>
+</div>
+</div>
+</div>
+<script src="assets/js/script1.js"></script>
+<script src="../../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+<script defer src="../../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

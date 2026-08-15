@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Contagem por Frações — Células Unitárias (App), com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Contagem por Frações — Células Unitárias (App)</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Contagem por Frações — Células Unitárias (App)" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Contagem por Frações — Células Unitárias (App), com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/><script defer src="../../../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<div role="main" class="wrap" id="conteudo-principal">
+<div class="panel">
+<header role="presentation">
+<h1>Contagem por Frações — Células Unitárias</h1>
+<small>drag = girar • scroll = zoom • D = reset</small>
+</header>
+<canvas aria-label="Visualização interativa de célula unitária e contagem por simetria." height="840" id="sceneCanvas" role="img" width="1400" aria-describedby="sceneCanvas-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="sceneCanvas-descricao-acessivel" class="simoens-inline-style-index-002">Visualização interativa relacionada a Contagem por Frações — Células Unitárias (App). Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+</div>
+<div class="panel" id="right">
+<header role="presentation"><h2>Controles</h2><small>Método das frações</small></header>
+<div class="ui">
+<label class="col-span-2">Sistema cristalino
+          <select id="cellType">
+<option value="cubic">Cúbica</option>
+<option value="tetragonal">Tetragonal</option>
+<option value="orthorhombic">Ortorrômbica</option>
+<option value="hexagonal">Hexagonal (γ=120°)</option>
+<option value="rhombohedral">Romboédrica (Trigonal)</option>
+<option value="monoclinic">Monoclínica</option>
+<option value="triclinic">Triclínica</option>
+</select>
+</label>
+<label>Zoom
+          <input id="zoom" max="2" min="0.6" step="0.01" type="range" value="1.0"/>
+</label><label>Preset (exemplo)
+          <select id="preset">
+</select>
+</label><div class="legend col-span-2" title="Cores dos átomos por posição">
+<div class="chip"><span class="dot vtx"></span>Vértice</div>
+<div class="chip"><span class="dot edge"></span>Aresta</div>
+<div class="chip"><span class="dot face"></span>Face</div>
+<div class="chip"><span class="dot center"></span>Centro</div>
+</div>
+<div class="col-span-2 grid2">
+<label>Elemento nos vértices<select id="symV"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+<label>Elemento nas arestas<select id="symE"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+<label>Elemento nas faces<select id="symF"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+<label>Elemento no centro<select id="symC"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+</div>
+<div class="readout col-span-2" id="readout"></div>
+<div class="footer col-span-2">Fração por posição (universal): <b>Centro=1</b>, <b>Face=½</b>, <b>Aresta=¼</b>, <b>Vértice=⅛</b>.</div>
+</div>
+</div>
+</div>
+<script src="assets/js/script1.js"></script>
+<script src="../../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+<script defer src="../../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

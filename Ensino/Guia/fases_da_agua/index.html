@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Guia educacional do SiMoEns sobre Fases da água com pressão e dados NIST, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fases da Água</title>
+<link href="assets/css/styles.css" rel="stylesheet"/>
+<meta content="Fases da Água" property="og:title"/><meta content="Guia educacional do SiMoEns sobre Fases da água com pressão e dados NIST, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"/><script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<div role="main" class="wrap" id="conteudo-principal">
+<div class="panel">
+<div class="topbar"><div class="title">
+<h1>Fases da água com pressão e dados NIST</h1>
+<p>Agora a temperatura trabalha em Kelvin até 647,10 K, A separação e a agitação das moléculas respondem à temperatura e também à pressão, usando os pontos reais da tabela NIST nessa faixa ampliada.</p>
+</div></div>
+<div class="workspace">
+<div aria-label="Painel lateral" class="sidebar" role="group">
+<div class="sidebarScroll">
+<div class="tutorialDock">
+<div class="tutorialCard">
+<div class="tutorialTop">
+<div class="tutorialKicker">Tutorial guiado · diagrama de fases da água</div>
+<div class="tutorialStepTag" id="tutorialStepTag">Etapa 1</div>
+</div>
+<div class="tutorialGrid">
+<div class="tutorialMain">
+<h2 class="tutorialTitle" id="tutorialTitle">Carregando tutorial…</h2>
+<div class="tutorialBody" id="tutorialBody"></div>
+<div class="tutorialMini" id="tutorialMini"></div>
+<div class="tutorialNote" id="tutorialNote"></div>
+</div>
+<div class="tutorialSide">
+<div>
+<div class="tutorialEqLabel">Equação ou ideia-chave</div>
+<div class="tutorialEquation" id="tutorialEquation"></div>
+</div>
+<div>
+<div class="tutorialSideLabel"></div>
+<div class="tutorialFocus" id="tutorialFocus"></div>
+</div>
+</div>
+</div>
+<div class="tutorialProgress"><i id="tutorialProgressBar"></i></div>
+<div class="tutorialActions">
+<button class="secondary" id="tutorialPrev">◀ Anterior</button>
+<button class="primary" id="tutorialNext">Próxima etapa ▶</button>
+<button class="subtle" id="gotoTriple">✦ Ir ao ponto triplo</button>
+<button class="subtle" id="gotoCritical">✦ Ir ao ponto crítico</button>
+</div>
+</div>
+</div>
+<div class="topMenus"><div class="controls">
+<div class="card">
+<h3>Controles</h3>
+<div class="simoens-inline-style-index-002">
+<div>
+<div class="small simoens-inline-style-index-003">Pressão</div>
+<div class="row simoens-inline-style-index-004" id="pressureControlsRow">
+<select aria-label="Selecionar unidade de pressão" id="unitSelect" title="Selecionar unidade de pressão">
+<option value="mmHg">mmHg</option>
+<option selected="" value="atm">atm</option>
+</select>
+<input aria-label="Digitar valor de pressão" id="pressureInput" max="64414" min="4.6" step="0.1" title="Digitar valor de pressão" type="number"/>
+<select aria-label="Selecionar amostra ou ponto de referência" id="sampleSelect" title="Selecionar amostra ou ponto de referência"></select>
+</div>
+<input aria-label="Ajustar pressão" id="pressureSlider" max="1000" min="0" step="1" title="Ajustar pressão" type="range" value="0"/>
+<div class="stat">
+<span id="pressureRead">4,588 mmHg</span>
+<span id="pressureAlt">0,0060 atm</span>
+</div>
+</div>
+<div>
+<div class="small simoens-inline-style-index-005">Temperatura</div>
+<div class="row simoens-inline-style-index-006">
+<input aria-label="Ajustar temperatura" id="tempSlider" max="647.10" min="0" step="0.01" title="Ajustar temperatura" type="range" value="273.15"/>
+</div>
+<div class="stat">
+<span id="tempRead">273,15 K</span>
+<span id="tempMaxRead">0,00 °C</span>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<div class="info">
+<h3>DADOS</h3>
+<div class="kpi">
+<div class="cell">
+<div class="label">Ebulição</div>
+<div class="value" id="boilNistRead">273,15 K</div>
+</div>
+<div class="cell">
+<div class="label">Densidade líquida</div>
+<div class="value" id="densityRead">0,958 g/mL</div>
+</div>
+<div class="cell">
+<div class="label">Viscosidade líquida</div>
+<div class="value" id="viscosityRead">0,000282 Pa·s</div>
+</div>
+<div class="cell">
+<div class="label">Tensão superficial</div>
+<div class="value" id="surfaceRead">0,0589 N/m</div>
+</div>
+</div>
+<p id="conversionSummary"></p>
+<div class="eq simoens-inline-style-index-007" id="sourceRead"></div>
+<p id="phaseSummary" class="simoens-inline-style-index-008"></p>
+</div>
+</div>
+</div>
+<div class="mainColumn">
+<div class="layout">
+<div class="canvasbox">
+<canvas aria-label="Visualização interativa da cena científica." id="scene" role="img" aria-describedby="scene-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="scene-descricao-acessivel" class="simoens-inline-style-index-009">Visualização interativa relacionada a Fases da Água. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div class="note">
+<span class="badge"><span class="dot"></span>Linhas pontilhadas = interações intermoleculares entre δ+H e δ−O</span>
+<span id="interpNote">Ebulição usada na animação: interpolação entre pontos reais da tabela NIST.</span>
+</div>
+</div>
+</div>
+<div class="diagramPanel">
+<div class="diagramCard">
+<div class="diagramHeader">
+<div>
+<h3>Gráfico de diagrama de fases</h3>
+<p>O ponto brilhante acompanha a temperatura e a pressão atuais.</p>
+</div>
+<div class="diagramLegend">
+<span class="legendChip solid">Sólido</span>
+<span class="legendChip liquid">Líquido</span>
+<span class="legendChip vapor">Gasoso</span>
+</div>
+</div>
+<canvas aria-label="Diagrama de fases da água." id="phaseChart" role="img" aria-describedby="phaseChart-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="phaseChart-descricao-acessivel" class="simoens-inline-style-index-010">Visualização interativa relacionada a Fases da Água. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

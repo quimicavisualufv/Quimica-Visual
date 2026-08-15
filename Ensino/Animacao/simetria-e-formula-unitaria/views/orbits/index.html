@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Método da Simetria de Translação — Células e Contagem, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Método da Simetria de Translação — Células e Contagem</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Método da Simetria de Translação — Células e Contagem" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Método da Simetria de Translação — Células e Contagem, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/><script defer src="../../../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<div role="main" class="wrap" id="conteudo-principal">
+<div class="panel">
+<header role="presentation">
+<h1>Método da Simetria de Translação</h1>
+<small>drag = girar • scroll = zoom • D = reset</small>
+</header>
+<canvas aria-label="Visualização interativa de célula unitária e contagem por simetria." height="840" id="sceneCanvas" role="img" width="1400" aria-describedby="sceneCanvas-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="sceneCanvas-descricao-acessivel" class="simoens-inline-style-index-002">Visualização interativa relacionada a Método da Simetria de Translação — Células e Contagem. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+</div>
+<div class="panel">
+<header role="presentation"><h2>Controles</h2><small>conta por conjuntos equivalentes</small></header>
+<div class="ui">
+<label class="col2">Sistema cristalino
+          <select id="cellType">
+<option value="cubic">Cúbica</option>
+<option value="tetragonal">Tetragonal</option>
+<option value="orthorhombic">Ortorrômbica</option>
+<option value="hexagonal">Hexagonal (γ=120°)</option>
+<option value="rhombohedral">Romboédrica (Trigonal)</option>
+<option value="monoclinic">Monoclínica</option>
+<option value="triclinic">Triclínica</option>
+</select>
+</label>
+<label>Zoom
+          <input id="zoom" max="2" min="0.6" step="0.01" type="range" value="1.0"/>
+</label><div class="legend col2" title="Cores por POSIÇÃO (contorno)">
+<div class="chip"><span class="dot vtx"></span>Vértice</div>
+<div class="chip"><span class="dot face"></span>Face</div>
+<div class="chip"><span class="dot edge"></span>Aresta</div>
+<div class="chip"><span class="dot center"></span>Centro</div>
+</div>
+<div class="col2"><b>Conjuntos equivalentes por translação</b> <span class="hint">cada conjunto contribui 1 átomo por célula</span></div>
+<div class="row"><input checked="" id="gV" type="checkbox"/><label for="gV">Vértices</label><select aria-label="Selecionar elemento dos vértices" id="eV" title="Selecionar elemento dos vértices"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div class="row"><input checked="" id="gFx" type="checkbox"/><label for="gFx">Faces ⟂ x</label><select aria-label="Selecionar elemento das faces perpendiculares ao eixo x" id="eFx" title="Selecionar elemento das faces perpendiculares ao eixo x"><option>A</option><option selected="">B</option><option>C</option><option>D</option></select></div>
+<div class="row"><input id="gFy" type="checkbox"/><label for="gFy">Faces ⟂ y</label><select aria-label="Selecionar elemento das faces perpendiculares ao eixo y" id="eFy" title="Selecionar elemento das faces perpendiculares ao eixo y"><option>A</option><option>B</option><option selected="">C</option><option>D</option></select></div>
+<div class="row"><input id="gFz" type="checkbox"/><label for="gFz">Faces ⟂ z</label><select aria-label="Selecionar elemento das faces perpendiculares ao eixo z" id="eFz" title="Selecionar elemento das faces perpendiculares ao eixo z"><option>A</option><option>B</option><option>C</option><option selected="">D</option></select></div>
+<div class="row"><input id="gEx" type="checkbox"/><label for="gEx">Arestas ∥ x</label><select aria-label="Selecionar elemento das arestas paralelas ao eixo x" id="eEx" title="Selecionar elemento das arestas paralelas ao eixo x"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div class="row"><input id="gEy" type="checkbox"/><label for="gEy">Arestas ∥ y</label><select aria-label="Selecionar elemento das arestas paralelas ao eixo y" id="eEy" title="Selecionar elemento das arestas paralelas ao eixo y"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div class="row"><input id="gEz" type="checkbox"/><label for="gEz">Arestas ∥ z</label><select aria-label="Selecionar elemento das arestas paralelas ao eixo z" id="eEz" title="Selecionar elemento das arestas paralelas ao eixo z"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div class="row"><input id="gC" type="checkbox"/><label for="gC">Centro (corpo)</label><select aria-label="Selecionar elemento do centro do corpo" id="eC" title="Selecionar elemento do centro do corpo"><option>A</option><option selected="">B</option><option>C</option><option>D</option></select></div>
+<div class="readout col2" id="readout"></div>
+<div class="hint col2">Inspiração: contar por orbits de translação — vértices (1 conjunto), faces em 3 orientações (até 3 conjuntos), arestas em 3 orientações (até 3 conjuntos), centro (1). Cada conjunto equivale a <b>1 átomo/unit cell</b>.</div>
+</div>
+</div>
+</div>
+<script src="assets/js/script1.js"></script>
+<script src="../../../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+<script defer src="../../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" preserveAspectRatio="xMidYMid meet" data-editor-original-width="640" data-editor-original-height="420" style="width: 320px; height: 210px;">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#g">
+      <stop offset="0%" stop-color="#0b1220" data-layer-name="stop 3"/>
+      <stop offset="100%" stop-color="#15233d" data-layer-name="stop 4"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0" data-layer-name="lineargradient#bar">
+      <stop offset="0%" stop-color="#1f2f4f" data-layer-name="stop 6"/>
+      <stop offset="100%" stop-color="#16243f" data-layer-name="stop 7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" data-layer-name="filter#shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28" data-layer-name="fedropshadow 9"/>
+    </filter>
+    <clipPath id="previewClip" data-layer-name="clippath#previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24" data-layer-name="rect 11"/>
+    </clipPath>
+    <marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" data-layer-name="marker#arrA">
+      <path d="M0,0 L8,4 L0,8" fill="#7c5cff" data-layer-name="path 13"/>
+    </marker>
+    <marker id="arrB" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" data-layer-name="marker#arrB">
+      <path d="M0,0 L8,4 L0,8" fill="#ff7aa2" data-layer-name="path 15"/>
+    </marker>
+  </defs>
+  <rect width="640" height="420" rx="28" fill="url(#g)" data-layer-name="rect 16"/>
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1" data-layer-group="1" data-layer-name="g 17">
+    <path d="M0 70H640" data-layer-name="path 18"/><path d="M0 140H640" data-layer-name="path 19"/><path d="M0 210H640" data-layer-name="path 20"/><path d="M0 280H640" data-layer-name="path 21"/><path d="M0 350H640" data-layer-name="path 22"/>
+    <path d="M90 0V420" data-layer-name="path 23"/><path d="M180 0V420" data-layer-name="path 24"/><path d="M270 0V420" data-layer-name="path 25"/><path d="M360 0V420" data-layer-name="path 26"/><path d="M450 0V420" data-layer-name="path 27"/><path d="M540 0V420" data-layer-name="path 28"/>
+  </g>
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)" data-layer-name="rect 29"/>
+  <g clip-path="url(#previewClip)" data-layer-group="1" data-layer-name="g 30">
+
+    <g transform="translate(54,48)" data-layer-group="1" data-layer-name="g 31">
+      <g fill="#172744" stroke="#284470" data-layer-group="1" data-layer-name="g 32">
+        <rect x="0" y="0" width="226" height="222" rx="20" data-layer-name="rect 33"/>
+        <rect x="306" y="0" width="226" height="222" rx="20" data-layer-name="rect 34"/>
+      </g>
+      <g transform="translate(18,18)" data-layer-group="1" data-layer-name="g 35">
+        <g fill="#b7ffda" data-layer-group="1" data-layer-name="g 36">
+          <circle cx="30" cy="30" r="14" data-layer-name="circle 37"/><circle cx="100" cy="30" r="14" data-layer-name="circle 38"/><circle cx="170" cy="30" r="14" data-layer-name="circle 39"/>
+          <circle cx="30" cy="100" r="14" data-layer-name="circle 40"/><circle cx="100" cy="100" r="14" data-layer-name="circle 41"/><circle cx="170" cy="100" r="14" data-layer-name="circle 42"/>
+          <circle cx="30" cy="170" r="14" data-layer-name="circle 43"/><circle cx="100" cy="170" r="14" data-layer-name="circle 44"/><circle cx="170" cy="170" r="14" data-layer-name="circle 45"/>
+        </g>
+        <g stroke="#8fd3ff" stroke-width="3" opacity="0.28" data-layer-group="1" data-layer-name="g 46">
+          <path d="M30 30H170V170H30Z" data-layer-name="path 47"/>
+          <path d="M30 100H170" data-layer-name="path 48"/><path d="M100 30V170" data-layer-name="path 49"/>
+        </g>
+        
+      </g>
+      <g transform="translate(324,18)" data-layer-group="1" data-layer-name="g 51">
+        <g fill="#b7ffda" data-layer-group="1" data-layer-name="g 52">
+          <circle cx="30" cy="30" r="14" data-layer-name="circle 53"/><circle cx="100" cy="30" r="14" data-layer-name="circle 54"/><circle cx="170" cy="30" r="14" data-layer-name="circle 55"/>
+          <circle cx="30" cy="100" r="14" data-layer-name="circle 56"/><circle cx="170" cy="100" r="14" data-layer-name="circle 57"/>
+          <circle cx="30" cy="170" r="14" data-layer-name="circle 58"/><circle cx="100" cy="170" r="14" data-layer-name="circle 59"/><circle cx="170" cy="170" r="14" data-layer-name="circle 60"/>
+        </g>
+        <circle cx="100" cy="100" r="12" fill="none" stroke="#ff7aa2" stroke-width="4" stroke-dasharray="6 5" data-layer-name="circle 61"/>
+        <circle cx="134" cy="74" r="12" fill="#ffd166" stroke="#fff1ba" stroke-width="3" data-layer-name="circle 62"/>
+        <g stroke="#8fd3ff" stroke-width="3" opacity="0.28" data-layer-group="1" data-layer-name="g 63">
+          <path d="M30 30H170V170H30Z" data-layer-name="path 64"/>
+          <path d="M30 100H170" data-layer-name="path 65"/><path d="M100 30V170" data-layer-name="path 66"/>
+        </g>
+        
+      </g>
+      
+    </g>
+  </g>
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b" data-layer-name="rect 69"/>
+  <text x="44" y="376" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="21" font-weight="700" data-layer-name="text 70">Identificação de defeitos cristalinos</text>
+</svg>

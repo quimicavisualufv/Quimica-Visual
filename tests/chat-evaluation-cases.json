@@ -1,0 +1,109 @@
+{
+  "version": 2,
+  "retrieval": [
+    { "query": "buraco octaédrico e empilhamento ABC de esferas", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/01_animacao_empacotamento_de_esferas.md" },
+    { "query": "para que servem béquer bureta pipeta e erlenmeyer", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/02_animacao_catalogo_de_vidrarias_e_equipamentos.md" },
+    { "query": "sistemas cristalinos e geometria cristalográfica", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/03_animacao_geometria_cristalografica.md" },
+    { "query": "geometria molcular VSEPR AX3E", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/04_animacao_geometria_molecular.md" },
+    { "query": "rede cristalina NaCl CsCl e ZnS", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/05_animacao_redes_cristalinas.md" },
+    { "query": "simetria de translação e fórmula unitária", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md" },
+    { "query": "visualização da densidade de probabilidade de hidrogenoides", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/07_animacao_visualizador_de_hidrogenoides.md" },
+    { "query": "orbitais moleculares ligante e antiligante", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md" },
+    { "query": "gemas com mudança de cor alexandrita e pleocroísmo", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/09_animacao_gemas_e_mudanca_de_cor.md" },
+    { "query": "visualizador 3D de vacância intersticial e defeito cristalino", "expectedSource": "Chat/widget/textos-acessibilidade/animacoes/10_animacao_defeitos_cristalinos_3d.md" },
+    { "query": "quais exercícios guiados existem no SiMoEns", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/00_indice_exercicios_guiados.md" },
+    { "query": "contagem de átomos nos vértices faces e arestas para fórmula unitária", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/01_exercicio_guiado_contagem_de_atomo_formula_unitaria.md" },
+    { "query": "exercício de polaridade e geometria molecular", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/02_exercicio_guiado_polaridade_e_geometria_molecular.md" },
+    { "query": "comparar qual molécula é mais polar em uma batalha", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/03_exercicio_guiado_batalha_de_polaridade.md" },
+    { "query": "exercício para distinguir buraco tetraédrico de octaédrico", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/04_exercicio_guiado_buracos_cristalinos.md" },
+    { "query": "caça ao sítio cristalino identificar posição e ocupação", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/05_exercicio_guiado_caca_ao_sitio_cristalino.md" },
+    { "query": "exercício sobre número de coordenação e empacotamento", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/06_exercicio_guiado_coordenacao_e_empacotamento.md" },
+    { "query": "identificar defeitos cristalinos vacância substitucional intersticial", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/07_exercicio_guiado_defeitos_cristalinos.md" },
+    { "query": "classificar nome da célula pelo sistema cristalino", "expectedSource": "Chat/widget/textos-acessibilidade/exercicios-guiados/08_exercicio_guiado_nome_da_celula.md" },
+    { "query": "quais guias educacionais existem no SiMoEns", "expectedSource": "Chat/widget/textos-acessibilidade/guias/00_indice_guias.md" },
+    { "query": "atlas termodinâmico entalpia entropia energia de Gibbs", "expectedSource": "Chat/widget/textos-acessibilidade/guias/01_guia_atlas_termodinamico.md" },
+    { "query": "celula unitaria parâmetros de rede a b c alfa beta gama", "expectedSource": "Chat/widget/textos-acessibilidade/guias/02_guia_celulas_unitarias.md" },
+    { "query": "célula primitiva redes de Bravais e construção de Wigner Seitz", "expectedSource": "Chat/widget/textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md" },
+    { "query": "complexos de coordenação e polimorfismo", "expectedSource": "Chat/widget/textos-acessibilidade/guias/04_guia_complexos_e_polimorfismo.md" },
+    { "query": "equação de onda de Schrödinger para átomo hidrogenoide", "expectedSource": "Chat/widget/textos-acessibilidade/guias/05_guia_equacoes_de_onda_hidrogenoides.md" },
+    { "query": "diagrama de fases da água ponto triplo e ponto crítico", "expectedSource": "Chat/widget/textos-acessibilidade/guias/06_guia_fases_da_agua.md" },
+    { "query": "guia passo a passo de geometria molecular VSEPR", "expectedSource": "Chat/widget/textos-acessibilidade/guias/07_guia_geometria_molecular_passo_a_passo.md" },
+    { "query": "forças intermoleculares dipolo dipolo London e ligação de hidrogênio", "expectedSource": "Chat/widget/textos-acessibilidade/guias/08_guia_interacoes_intermoleculares.md" },
+    { "query": "evolução dos modelos atômicos Dalton Thomson Rutherford Bohr", "expectedSource": "Chat/widget/textos-acessibilidade/guias/09_guia_modelos_atomicos.md" },
+    { "query": "tutorial guiado sobre momento dipolar e polaridade molecular", "expectedSource": "Chat/widget/textos-acessibilidade/guias/10_guia_polaridade_molecular.md" },
+    { "query": "como jogar xadrez químico e mover as peças", "expectedSource": "Chat/widget/textos-acessibilidade/jogos/01_jogo_xadrez_quimico_modo_narrador.md" },
+    { "query": "quebra cabeça de ligação iônica e covalente modo narrador", "expectedSource": "Chat/widget/textos-acessibilidade/jogos/02_jogo_quebra_cabeca_ionico_covalente_modo_narrador.md" },
+    { "query": "caça palavras de química como selecionar as letras", "expectedSource": "Chat/widget/textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md" },
+    { "query": "Show do Milhão químico perguntas ajuda e pontuação", "expectedSource": "Chat/widget/textos-acessibilidade/jogos/04_jogo_show_do_milhao_quimico_modo_narrador.md" }
+  ],
+  "intents": [
+    { "query": "o que eu estou vendo?", "expected": "identify-current-experience" },
+    { "query": "onde encontro os exercícios de polaridade?", "expected": "recommend-resource", "category": "exercise" },
+    { "query": "o que é uma célula unitária?", "expected": "explain-concept" },
+    { "query": "e qual exercício eu posso fazer sobre isso?", "expected": "recommend-resource", "category": "exercise" },
+    { "query": "tem algum jogo sobre ligação química?", "expected": "recommend-resource", "category": "game" },
+    { "query": "recomende algo sobre polaridade", "expected": "recommend-resource" },
+    { "query": "compare ligação iônica e covalente", "expected": "compare-concepts" },
+    { "query": "resuma os pontos principais", "expected": "summarize" },
+    { "query": "como ativo o contraste?", "expected": "accessibility-help" },
+    { "query": "olá, tudo bem?", "expected": "greeting" },
+    { "query": "obrigado pela explicação", "expected": "acknowledgement" },
+    { "query": "o que você pode fazer?", "expected": "help" },
+    { "query": "como uso esta tela?", "expected": "explain-interface" },
+    { "query": "o que existe no SiMoEns?", "expected": "site-overview" },
+    { "query": "faça uma questão sobre VSEPR", "expected": "generate-practice" },
+    { "query": "qual é o link do visualizador de orbitais?", "expected": "navigation-help" },
+    { "query": "não entendi, explique de outro jeito", "expected": "clarify-previous" }
+  ],
+  "paths": [
+    { "path": "/Quimica-Visual/Ensino/Animacao/visualizador_orbitais/index.html", "expectedId": "visualizador_orbitais" },
+    { "path": "Ensino/Animacao/redes-cristalinas/", "expectedId": "redes" },
+    { "path": "Ensino/Animacao/simetria-e-formula-unitaria/index.html?aba=cubicas", "expectedId": "simetriahub" },
+    { "path": "Ensino/Animacao/simetria-e-formula-unitaria/views/cubicas/index.html", "expectedId": "simetriahub" },
+    { "path": "index.html", "expectedId": null },
+    { "path": "/uma-rota-inexistente/index.html", "expectedId": null }
+  ],
+  "resourceQueries": [
+    { "query": "geometria molcular", "expectedId": "geomol" },
+    { "query": "celula unitaria", "expectedId": "celulas" },
+    { "query": "jogo sobre ligação química", "category": "game", "expectedId": "quebracabeca" },
+    { "query": "simulador de espectroscopia Raman", "category": "animation", "expectedId": null }
+  ],
+  "recommendationPolicy": [
+    { "query": "explique polaridade", "shouldRecommend": false, "maxResults": 1 },
+    { "query": "qual exercício posso fazer sobre polaridade?", "shouldRecommend": true, "category": "exercise", "maxResults": 1 },
+    { "query": "quais exercícios existem sobre polaridade?", "shouldRecommend": true, "category": "exercise", "maxResults": 3 },
+    { "query": "quero estudar polaridade", "shouldRecommend": true, "category": "guide", "maxResults": 1 },
+    { "query": "tem algum jogo sobre ligação química?", "shouldRecommend": true, "category": "game", "maxResults": 1 },
+    { "query": "recomende algo sobre polaridade", "shouldRecommend": true, "maxResults": 1 },
+    { "query": "oi", "shouldRecommend": false, "maxResults": 1 }
+  ],
+  "followups": [
+    { "query": "não entendi, explique de outro jeito", "mode": "simplify" },
+    { "query": "dê um exemplo", "mode": "example" },
+    { "query": "aprofunde um pouco mais", "mode": "deepen" },
+    { "query": "repita de novo", "mode": "repeat" }
+  ],
+  "ordinals": [
+    { "query": "abra a primeira opção", "index": 0 },
+    { "query": "quero a segunda", "index": 1 },
+    { "query": "acesse o terceiro recurso", "index": 2 },
+    { "query": "mande o link", "index": -1 },
+    { "query": "explique o segundo princípio da termodinâmica", "index": -1 }
+  ],
+  "scope": [
+    { "query": "o que é uma célula unitária?", "inScope": true },
+    { "query": "geometria molcular", "inScope": true },
+    { "query": "H2O", "inScope": true },
+    { "query": "Fe?", "inScope": true },
+    { "query": "como ativo o contraste?", "inScope": true },
+    { "query": "qual é a capital do Japão?", "inScope": false },
+    { "query": "faça uma questão de matemática", "inScope": false }
+  ],
+  "elementAliases": [
+    { "query": "fale sobre oxigênio", "explicit": true, "symbol": "o" },
+    { "query": "qual é o elemento Fe", "explicit": true, "symbol": "fe" },
+    { "query": "fale sobre oxigeno", "explicit": true, "symbol": "o" },
+    { "query": "qual é o ponto triplo?", "explicit": true, "symbol": null }
+  ]
+}

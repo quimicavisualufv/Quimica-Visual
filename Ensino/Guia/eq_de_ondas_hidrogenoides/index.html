@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta content="Guia educacional do SiMoEns sobre Equações de Onda e Orbitais Hidrogenoides, com explicações, visualizações e recursos de apoio à aprendizagem científica." name="description">
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Equações de Onda dos hidrogenoides</title>
+<link href="assets/css/styles.css" rel="stylesheet">
+<meta content="Equações de Onda dos hidrogenoides" property="og:title"><meta content="Guia educacional do SiMoEns sobre Equações de Onda e Orbitais Hidrogenoides, com explicações, visualizações e recursos de apoio à aprendizagem científica." property="og:description"><link rel="stylesheet" href="index.inline-style-01.css"><script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body><a class="acess-skip-link simoens-inline-style-index-001" href="#conteudo-principal" id="simoens-skip-main">Pular para o conteúdo principal</a>
+<div class="app">
+<div class="panel stage"><span class="simoens-visually-hidden">Painel interativo</span>
+<div class="view-wrap">
+<canvas aria-label="Visualização interativa da página Equações de Onda dos hidrogenoides." id="view" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+<div id="hydrogenVisualizerHost"><iframe id="hydrogenVisualizerFrame" loading="eager" title="Visualizador importado de hidrogênio"></iframe></div>
+<div class="guide-float" id="guideFloat">
+<div class="guide-float-step" id="guideFloatStep">Passo 1 de 23</div>
+<div class="guide-float-title" id="guideFloatTitle">Equação de Schrödinger para um elétron em torno do núcleo</div>
+<div class="guide-float-text" id="guideFloatText">Entenda o que a equação descreve, como ela é separada em parte radial e angular e como isso vira gráficos e orbitais.</div>
+</div>
+<div class="hud-strip" id="hudStrip">
+<div class="hud-pill" id="hudScene">Linha histórica</div>
+<div class="hud-pill" id="hudCount">Orbital 1s</div>
+<div class="hud-pill" id="hudEnergy">Eₙ = -13,61 eV</div>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="equation-banner" id="equationBanner"><span class="eq-main">ψ<sub>n,l,m</sub>(r,θ,φ) = R<sub>n,l</sub>(r)·Y<sub>l</sub><sup>m</sup>(θ,φ)</span></div>
+</div>
+</div>
+<aside class="panel sidebar">
+<div class="head">
+<div>
+<h1>Equações de Onda e Orbitais Hidrogenoides</h1>
+<small>Leitura guiada da equação de Schrödinger para o hidrogênio e para espécies hidrogenoides: significado dos termos, separação em parte radial e angular, e relação com os orbitais.</small>
+</div>
+</div>
+<div class="scroll">
+<section class="section guide-card">
+<div class="guide-kicker" id="guideKicker">Roteiro</div>
+<h2 class="guide-heading" id="guideHeading">Equação de Schrödinger para um elétron em torno do núcleo</h2>
+<div class="guide-text" id="guideText"></div>
+<div class="guide-callout" id="guideCallout"></div>
+<div class="guide-nav-top">
+<div class="tutorialStepTag" id="tutorialStepTag">Etapa 1 de 23</div>
+</div>
+<div class="tutorialActions">
+<button class="tbtn ghost" id="tutorialPrev">Anterior</button>
+<button class="tbtn primary" id="tutorialNext">Próximo</button>
+</div>
+</section>
+<section class="section">
+<h3>Colorização 3D</h3>
+<label>
+<span>Modo de cor</span>
+<select id="hydrogenColorMode">
+<option value="sign">Sinal da função</option>
+<option value="shell">Camadas</option>
+<option value="density">Densidade</option>
+</select>
+</label>
+<div class="note simoens-inline-style-index-002">A cor só muda a forma de leitura do mesmo estado: sinal da função, camadas radiais ou densidade.</div>
+<div aria-hidden="true" class="simoens-inline-style-index-003">
+<div class="grid2">
+<label>Zoom<input id="zoom" max="3.4" min="0.8" step="0.01" type="range" value="1.7"></label>
+<label>Rotação automática<input id="autorotate" max="1.6" min="0" step="0.01" type="range" value="0"></label>
+</div>
+<div class="grid2 simoens-inline-style-index-004">
+<label>Inclinação<input id="pitch" max="1.2" min="-1.2" step="0.01" type="range" value="0.32"></label>
+<label>Brilho da cena<input id="glow" max="1.6" min="0.2" step="0.01" type="range" value="0.9"></label>
+</div>
+<div class="grid2 simoens-inline-style-index-005">
+<label class="check"><input checked="" id="showAxes" type="checkbox"> Mostrar eixos</label>
+<label class="check"><input checked="" id="showLabels" type="checkbox"> Mostrar rótulos</label>
+</div>
+<div class="grid2 simoens-inline-style-index-006">
+<label class="check"><input checked="" id="showWave" type="checkbox"> Mostrar camada ondulatória</label>
+<label class="check"><input checked="" id="showTrails" type="checkbox"> Mostrar trilhas</label>
+</div>
+<div class="grid2 simoens-inline-style-index-007">
+<button class="ghost" id="resetView">Resetar câmera</button>
+<button class="ghost" id="fitScene">Reenquadrar</button>
+</div>
+</div>
+</section>
+<section class="section" id="formulaSection">
+<h3>Equação da etapa</h3>
+<div class="formula-card" id="formulaCard"></div>
+</section>
+<section class="section" id="hydrogenoidSection">
+<div class="card-top">
+<h3 class="simoens-inline-style-index-008">Parâmetros do orbital</h3>
+<div class="pill-mini" id="speciesTag">H</div>
+</div>
+<div class="grid2">
+<label>Carga nuclear Z<input id="zValue" max="8" min="1" step="1" type="range" value="1"></label>
+<label>Amostragem da nuvem 3D<input id="sampleCount" max="3200" min="900" step="100" type="range" value="1600"></label>
+</div>
+<div class="grid3 simoens-inline-style-index-009">
+<label>n<select id="nValue"></select></label>
+<label>l<select id="lValue"></select></label>
+<label>m<select id="mValue"></select></label>
+</div>
+<div class="view-switch" id="orbitalViewSwitch">
+<button class="active" data-view="2d" type="button">Mapa 2D</button>
+<button data-view="3d" type="button">Nuvem 3D</button>
+</div>
+<div class="orbital-presets" id="orbitalPresets"></div>
+<div class="card-top simoens-inline-style-index-010"><h3 class="simoens-inline-style-index-011">Comparação de orbitais</h3><div class="pill-mini" id="orbitalAtlasTag">mapa de densidade</div></div>
+<div class="orbital-atlas-grid" id="orbitalAtlas"></div>
+<div class="stats-grid" id="statsGrid"></div>
+<canvas aria-label="Visualização interativa da página Equações de Onda dos hidrogenoides." height="210" id="radialGraph" role="img" width="360">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+</section>
+<div id="stepsGrid" class="simoens-inline-style-index-012"></div>
+</div>
+</aside>
+</div>
+<template id="hydrogenVisualizerTemplate"><link rel="stylesheet" href="index.template-01.inline-styles.css">
+
+
+
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Orbitais Hidrogenoides • leitura matemática</title>
+<link rel="stylesheet" href="index.template-01.inline-style-01.css">
+<link rel="stylesheet" href="index.template-01.inline-style-02.css" id="embeddedHydrogenOverrides">
+
+
+<aside>
+<div class="badge simoens-inline-style-index-template-01-001"><span class="dot"></span><span id="entryCountBadge">—</span></div>
+<section class="panel section simoens-inline-style-index-template-01-002"><h2 class="simoens-visually-hidden">Painel interativo</h2>
+<div class="section-title"><strong>Orbital selecionado</strong></div>
+<div class="row">
+<label>
+<span>Nível principal</span>
+<select id="nSelect"></select>
+</label>
+<label>
+<span>Orbital</span>
+<select id="orbitalSelect"></select>
+</label>
+</div>
+<div class="toolbar-three simoens-inline-style-index-template-01-003">
+<button aria-label="Acionar controle da página" class="secondary" id="prevBtn" title="Acionar controle da página">◀</button>
+<button aria-label="Acionar controle da página" class="secondary" id="nextBtn" title="Acionar controle da página">▶</button>
+</div>
+<div class="range-wrap simoens-inline-style-index-template-01-004">
+<div class="range-head"><span>Zoom</span><span id="zoomValue">0.10x</span></div>
+<input aria-label="Controlar aproximação da visualização" id="zoomRange" max="0.50" min="0.10" step="0.01" title="Controlar aproximação da visualização" type="range" value="0.10">
+</div>
+<div class="range-wrap simoens-inline-style-index-template-01-005">
+<div class="range-head"><span>Tamanho do ponto</span><span id="pointValue">2.80x</span></div>
+<input aria-label="Controlar tamanho dos pontos" id="pointRange" max="3.6" min="0.45" step="0.01" title="Controlar tamanho dos pontos" type="range" value="2.80">
+</div>
+<div class="range-wrap simoens-inline-style-index-template-01-006">
+<div class="range-head"><span>Qualidade</span><span id="qualityValue">50%</span></div>
+<input aria-label="Controlar qualidade da visualização" id="qualityRange" max="1" min="0.15" step="0.01" title="Controlar qualidade da visualização" type="range" value="0.50">
+</div>
+<div class="row simoens-inline-style-index-template-01-007">
+<label>
+<span>Colorização 3D</span>
+<select id="colorMode">
+<option value="sign">Sinal da função</option>
+<option value="shell">Camadas</option>
+<option value="density">Densidade</option>
+</select>
+</label>
+<label>
+<span>Eixos</span>
+<select id="axesMode">
+<option value="show">Mostrar</option>
+<option value="hide">Ocultar</option>
+</select>
+</label>
+</div>
+</section>
+<section class="panel section simoens-inline-style-index-template-01-008"><h2 class="simoens-visually-hidden">Painel interativo</h2>
+<div class="section-title"><strong>Leitura física</strong></div>
+<div class="metric-grid">
+<div class="metric"><div class="k">Pontos 3D</div><div class="v" id="metricPoints">—</div></div>
+<div class="metric"><div class="k">Extensão</div><div class="v" id="metricExtent">—</div></div>
+<div class="metric"><div class="k">Nós radiais</div><div class="v" id="metricNodes">—</div></div>
+<div class="metric"><div class="k">Camadas</div><div class="v" id="metricShells">—</div></div>
+</div>
+<div class="footer-note simoens-inline-style-index-template-01-009" id="entryNotes"></div>
+</section>
+<section class="panel section simoens-inline-style-index-template-01-010"><h2 class="simoens-visually-hidden">Painel interativo</h2>
+<div class="section-title"><strong>Como interpretar as cores</strong></div>
+<div class="legend" id="legend"></div>
+</section>
+</aside>
+<main id="conteudo-principal">
+<section class="panel canvas-card"><h2 class="simoens-visually-hidden">Painel interativo</h2>
+<div class="canvas-wrap">
+<canvas aria-label="Visualização tridimensional de orbitais hidrogenoides." id="scene3d" role="img">Seu navegador não conseguiu carregar esta visualização interativa.</canvas>
+</div>
+</section>
+<section class="views-grid">
+<article class="panel view-card">
+<div class="view-head"><h3>Função de onda 2D</h3><div class="view-meta" id="waveMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap"><canvas aria-label="Gráfico da função de onda." height="720" id="waveCanvas" role="img" width="720">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">Corte plano da função de onda ψ. Azul e vermelho indicam sinais opostos da função.</div>
+</div>
+</article>
+<article class="panel view-card">
+<div class="view-head"><h3>Densidade 2D</h3><div class="view-meta" id="densityMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap"><canvas aria-label="Gráfico de densidade eletrônica." height="720" id="densityCanvas" role="img" width="720">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">Corte plano de |ψ|². O mapa mostra onde a probabilidade de localizar o elétron é maior no plano escolhido.</div>
+</div>
+</article>
+<article class="panel view-card radial-card">
+<div class="view-head"><h3>Radial</h3><div class="view-meta" id="radialMeta">—</div></div>
+<div class="view-body">
+<div class="canvas-2d-wrap radial-wide"><canvas aria-label="Gráfico radial do orbital." height="640" id="radialCanvas" role="img" width="1280">Seu navegador não conseguiu carregar esta visualização interativa.</canvas></div>
+<div class="caption">R(r) mostra a parte radial da solução. A curva de probabilidade radial indica em quais distâncias ao núcleo o elétron tende a ser encontrado.</div>
+</div>
+</article>
+</section>
+</main>
+<script type="module" src="assets/js/hydrogen-visualizer.js"></script>
+
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260430b"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260430a"></script>
+
+
+</template>
+<script src="assets/js/guide-content.js"></script><script src="assets/js/app.js"></script></body>
+</html>

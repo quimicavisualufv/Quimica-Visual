@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1E2235"/>
+      <stop offset="100%" stop-color="#0B0D17"/>
+    </radialGradient>
+    <linearGradient id="bench-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3045"/>
+      <stop offset="5%" stop-color="#1A1E2D"/>
+      <stop offset="100%" stop-color="#090A0F"/>
+    </linearGradient>
+
+    <!-- Liquid Gradients -->
+    <linearGradient id="liquid-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#39FF14"/>
+      <stop offset="100%" stop-color="#00F0FF"/>
+    </linearGradient>
+    <linearGradient id="mag-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF00FF"/>
+      <stop offset="100%" stop-color="#4A00E0"/>
+    </linearGradient>
+    <linearGradient id="yel-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFF00"/>
+      <stop offset="100%" stop-color="#FF9900"/>
+    </linearGradient>
+    <linearGradient id="blu-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"/>
+      <stop offset="100%" stop-color="#0000FF"/>
+    </linearGradient>
+    <linearGradient id="org-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF9900"/>
+      <stop offset="100%" stop-color="#FF0055"/>
+    </linearGradient>
+
+    <!-- Glass & Hologram Gradients -->
+    <linearGradient id="glass-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="20%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="80%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="holo-cone" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00F0FF" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="graph-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#39FF14" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#39FF14" stop-opacity="0.0"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glow-strong" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Patterns & Masks -->
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#00F0FF" stroke-width="0.5" opacity="0.07"/>
+    </pattern>
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="4" y2="0" stroke="#00F0FF" stroke-width="1" opacity="0.15"/>
+    </pattern>
+    <radialGradient id="mask-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="grid-mask">
+      <rect width="512" height="512" fill="url(#mask-grad)"/>
+    </mask>
+
+    <!-- Flask Clip Path -->
+    <clipPath id="flask-clip">
+      <path d="M 240 150 L 240 240 Q 240 260 220 290 L 160 380 Q 145 405 175 405 L 337 405 Q 367 405 352 380 L 292 290 Q 272 260 272 240 L 272 150 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bg-grad)"/>
+  <rect width="512" height="512" fill="url(#grid)" mask="url(#grid-mask)"/>
+
+  <!-- Shadows -->
+  <ellipse cx="256" cy="425" rx="90" ry="15" fill="#000" opacity="0.6" filter="url(#glow)"/>
+  <ellipse cx="420" cy="405" rx="55" ry="8" fill="#000" opacity="0.6" filter="url(#glow)"/>
+  <ellipse cx="100" cy="415" rx="40" ry="8" fill="#000" opacity="0.6" filter="url(#glow)"/>
+  <ellipse cx="95" cy="418" rx="25" ry="5" fill="#000" opacity="0.6" filter="url(#glow)"/>
+
+  <!-- Lab Bench -->
+  <path d="M 0 400 L 512 400 L 512 512 L 0 512 Z" fill="url(#bench-grad)"/>
+  <line x1="0" y1="400" x2="512" y2="400" stroke="#00F0FF" stroke-width="2" opacity="0.3" filter="url(#glow)"/>
+  <line x1="0" y1="400" x2="512" y2="400" stroke="#fff" stroke-width="1" opacity="0.5"/>
+
+  <!-- Holographic Projection Cone -->
+  <polygon points="256,140 160,20 352,20" fill="url(#holo-cone)"/>
+  <polygon points="256,140 160,20 352,20" fill="url(#scanlines)"/>
+
+  <!-- Holographic Molecule -->
+  <g transform="translate(0, 10)">
+    <!-- Connections -->
+    <line x1="256" y1="70" x2="210" y2="40" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    <line x1="256" y1="70" x2="302" y2="40" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    <line x1="256" y1="70" x2="210" y2="100" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    <line x1="256" y1="70" x2="302" y2="100" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    <line x1="210" y1="40" x2="256" y2="10" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    <line x1="302" y1="40" x2="256" y2="10" stroke="#00F0FF" stroke-width="2" opacity="0.8"/>
+    
+    <!-- Double Bonds -->
+    <line x1="252" y1="72" x2="206" y2="102" stroke="#00F0FF" stroke-width="1.5" opacity="0.8"/>
+    <line x1="260" y1="68" x2="214" y2="98" stroke="#00F0FF" stroke-width="1.5" opacity="0.8"/>
+
+    <!-- Nodes -->
+    <circle cx="256" cy="70" r="6" fill="#fff" filter="url(#glow)"/>
+    <circle cx="210" cy="40" r="4" fill="#39FF14" filter="url(#glow)"/>
+    <circle cx="302" cy="40" r="4" fill="#FF00FF" filter="url(#glow)"/>
+    <circle cx="210" cy="100" r="4" fill="#00F0FF" filter="url(#glow)"/>
+    <circle cx="302" cy="100" r="4" fill="#FF9900" filter="url(#glow)"/>
+    <circle cx="256" cy="10" r="4" fill="#fff" filter="url(#glow)"/>
+
+    <!-- UI Rings -->
+    <ellipse cx="256" cy="70" rx="65" ry="18" fill="none" stroke="#00F0FF" stroke-width="1" stroke-dasharray="4 6" opacity="0.6"/>
+    <ellipse cx="256" cy="70" rx="85" ry="25" fill="none" stroke="#39FF14" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.4" transform="rotate(15 256 70)"/>
+  </g>
+
+  <!-- Data Streams / Wires -->
+  <path d="M 234 140 Q 180 100, 100 200" fill="none" stroke="#FF00FF" stroke-width="2" opacity="0.6" filter="url(#glow)"/>
+  <path d="M 220 260 Q 180 200, 145 240" fill="none" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <path d="M 200 320 Q 160 350, 145 310" fill="none" stroke="#39FF14" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.4"/>
+
+  <!-- Test Tube Rack (Right) -->
+  <g transform="translate(0, 0)">
+    <!-- Rack Back -->
+    <rect x="375" y="330" width="6" height="60" fill="#1A1D2E"/>
+    <rect x="459" y="330" width="6" height="60" fill="#1A1D2E"/>
+    
+    <!-- Test Tubes -->
+    <!-- Tube 1 -->
+    <rect x="385" y="300" width="14" height="85" rx="7" fill="url(#glass-grad)" stroke="#E0F7FA" stroke-width="1" opacity="0.8"/>
+    <path d="M 386 330 L 398 330 L 398 378 A 6 6 0 0 1 386 378 Z" fill="url(#mag-grad)"/>
+    <circle cx="392" cy="360" r="1.5" fill="#fff" opacity="0.6"/>
+    <circle cx="390" cy="345" r="1" fill="#fff" opacity="0.8"/>
+    <circle cx="394" cy="370" r="2" fill="#fff" opacity="0.5"/>
+    
+    <!-- Tube 2 -->
+    <rect x="413" y="300" width="14" height="85" rx="7" fill="url(#glass-grad)" stroke="#E0F7FA" stroke-width="1" opacity="0.8"/>
+    <path d="M 414 345 L 426 345 L 426 378 A 6 6 0 0 1 414 378 Z" fill="url(#yel-grad)"/>
+    <circle cx="420" cy="365" r="1.5" fill="#fff" opacity="0.6"/>
+    <circle cx="418" cy="355" r="1" fill="#fff" opacity="0.8"/>
+    
+    <!-- Tube 3 -->
+    <rect x="441" y="300" width="14" height="85" rx="7" fill="url(#glass-grad)" stroke="#E0F7FA" stroke-width="1" opacity="0.8"/>
+    <path d="M 442 320 L 454 320 L 454 378 A 6 6 0 0 1 442 378 Z" fill="url(#blu-grad)"/>
+    <circle cx="448" cy="350" r="2" fill="#fff" opacity="0.6"/>
+    <circle cx="445" cy="335" r="1.5" fill="#fff" opacity="0.8"/>
+    <circle cx="450" cy="365" r="1" fill="#fff" opacity="0.5"/>
+
+    <!-- Rack Front -->
+    <rect x="370" y="330" width="100" height="8" rx="3" fill="#2A2D3E" stroke="#445" stroke-width="1"/>
+    <rect x="370" y="385" width="100" height="8" rx="3" fill="#2A2D3E" stroke="#445" stroke-width="1"/>
+  </g>
+
+  <!-- Interactive Tablet / Display (Left) -->
+  <g transform="translate(0, 0)">
+    <!-- Stand -->
+    <path d="M 60 400 L 100 380 L 140 400 L 100 410 Z" fill="#1A1D2E" stroke="#334" stroke-width="1"/>
+    <rect x="96" y="330" width="8" height="60" fill="#2A2D3E"/>
+    
+    <!-- Screen Glow -->
+    <rect x="30" y="180" width="140" height="160" rx="6" fill="none" stroke="#00F0FF" stroke-width="2" filter="url(#glow)" opacity="0.6"/>
+    
+    <!-- Screen Base -->
+    <rect x="30" y="180" width="140" height="160" rx="6" fill="#001A33" opacity="0.85" stroke="#00F0FF" stroke-width="1.5"/>
+    <rect x="30" y="180" width="140" height="160" rx="6" fill="url(#glass-grad)"/>
+    
+    <!-- Screen UI Content -->
+    <rect x="30" y="180" width="140" height="20" rx="6" fill="#00F0FF" opacity="0.2"/>
+    <text x="38" y="193" fill="#00F0FF" font-family="monospace" font-size="10" font-weight="bold">LAB_OS v9.2</text>
+    <circle cx="155" cy="190" r="3" fill="#39FF14" filter="url(#glow)"/>
+    
+    <text x="38" y="215" fill="#fff" font-family="monospace" font-size="8">STATUS: SYNTHESIS</text>
+    <text x="38" y="227" fill="#fff" font-family="monospace" font-size="8">YIELD: 99.8%</text>
+    
+    <!-- Graph -->
+    <polygon points="38,320 38,310 58,280 78,290 98,250 118,260 138,230 138,320" fill="url(#graph-grad)"/>
+    <polyline points="38,310 58,280 78,290 98,250 118,260 138,230" fill="none" stroke="#39FF14" stroke-width="2" filter="url(#glow)"/>
+    
+    <!-- Data Bars -->
+    <rect x="145" y="240" width="6" height="30" fill="#FF00FF" opacity="0.8"/>
+    <rect x="153" y="260" width="6" height="10" fill="#FF00FF" opacity="0.8"/>
+    <rect x="161" y="220" width="6" height="50" fill="#FF00FF" opacity="0.8"/>
+    
+    <!-- Hexagon Graphic -->
+    <polygon points="100,290 115,290 122,305 115,320 100,320 92,305" fill="none" stroke="#FF9900" stroke-width="1.5" opacity="0.8"/>
+    <circle cx="107" cy="305" r="2" fill="#FF9900" filter="url(#glow)"/>
+  </g>
+
+  <!-- Heating Mantle (Center Base) -->
+  <g transform="translate(0, 0)">
+    <ellipse cx="256" cy="405" rx="85" ry="25" fill="#111522" stroke="#334" stroke-width="2"/>
+    <ellipse cx="256" cy="400" rx="75" ry="20" fill="#1A2035"/>
+    <!-- Glowing Heating Ring -->
+    <ellipse cx="256" cy="400" rx="65" ry="15" fill="none" stroke="#FF9900" stroke-width="4" filter="url(#glow-strong)"/>
+    <ellipse cx="256" cy="400" rx="65" ry="15" fill="none" stroke="#fff" stroke-width="1"/>
+    
+    <!-- Control Panel -->
+    <rect x="231" y="418" width="50" height="12" rx="4" fill="#090A0F" stroke="#334" stroke-width="1"/>
+    <circle cx="241" cy="424" r="2.5" fill="#39FF14" filter="url(#glow)"/>
+    <circle cx="256" cy="424" r="2.5" fill="#FF00FF" filter="url(#glow)"/>
+    <circle cx="271" cy="424" r="2.5" fill="#00F0FF" filter="url(#glow)"/>
+  </g>
+
+  <!-- Main Erlenmeyer Flask -->
+  <g transform="translate(0, 0)">
+    <!-- Liquid Back Wave -->
+    <path d="M 140 280 Q 169 295, 198 280 T 256 280 T 314 280 T 372 280 L 372 410 L 140 410 Z" fill="#0088AA" clip-path="url(#flask-clip)"/>
+    
+    <!-- Liquid Front Wave -->
+    <path d="M 140 280 Q 169 265, 198 280 T 256 280 T 314 280 T 372 280 L 372 410 L 140 410 Z" fill="url(#liquid-grad)" clip-path="url(#flask-clip)" opacity="0.95"/>
+    
+    <!-- Bubbles in Flask -->
+    <g clip-path="url(#flask-clip)">
+      <circle cx="200" cy="380" r="8" fill="#fff" opacity="0.6"/>
+      <circle cx="220" cy="340" r="5" fill="#fff" opacity="0.4"/>
+      <circle cx="256" cy="390" r="10" fill="#fff" opacity="0.5"/>
+      <circle cx="280" cy="310" r="6" fill="#fff" opacity="0.7"/>
+      <circle cx="310" cy="360" r="7" fill="#fff" opacity="0.3"/>
+      <circle cx="240" cy="290" r="4" fill="#fff" opacity="0.8"/>
+      <circle cx="265" cy="330" r="6" fill="#fff" opacity="0.6"/>
+      <circle cx="180" cy="360" r="4" fill="#fff" opacity="0.5"/>
+      <circle cx="330" cy="380" r="5" fill="#fff" opacity="0.4"/>
+      <circle cx="256" cy="350" r="12" fill="#fff" opacity="0.2"/>
+    </g>
+
+    <!-- Flask Glass Body -->
+    <path d="M 240 150 L 240 240 Q 240 260 220 290 L 160 380 Q 145 405 175 405 L 337 405 Q 367 405 352 380 L 292 290 Q 272 260 272 240 L 272 150 Z" fill="url(#glass-grad)" stroke="#E0F7FA" stroke-width="2.5"/>
+    
+    <!-- Flask Lip -->
+    <rect x="234" y="145" width="44" height="10" rx="4" fill="#E0F7FA" opacity="0.7"/>
+    <rect x="234" y="145" width="44" height="10" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
+
+    <!-- Glass Highlights -->
+    <path d="M 170 380 L 225 295 Q 235 280, 235 260 L 235 160" fill="none" stroke="#fff" stroke-width="4" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 342 380 L 287 295 Q 277 280, 277 260 L 277 160" fill="none" stroke="#fff" stroke-width="2" opacity="0.2" stroke-linecap="round"/>
+    <path d="M 185 395 Q 256 410, 327 395" fill="none" stroke="#fff" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+
+    <!-- Measurement Marks -->
+    <path d="M 200 320 L 215 320 M 185 350 L 200 350 M 170 380 L 190 380" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+    <text x="220" y="324" fill="#fff" font-family="sans-serif" font-size="10" font-weight="bold" opacity="0.8">750</text>
+    <text x="205" y="354" fill="#fff" font-family="sans-serif" font-size="10" font-weight="bold" opacity="0.8">500</text>
+    <text x="195" y="384" fill="#fff" font-family="sans-serif" font-size="10" font-weight="bold" opacity="0.8">250</text>
+
+    <!-- Smart Stopper & Probe -->
+    <rect x="236" y="135" width="40" height="15" rx="3" fill="#2A2D3E" stroke="#556" stroke-width="1.5"/>
+    <rect x="254" y="150" width="4" height="180" fill="#A0B0C0" opacity="0.9"/>
+    <circle cx="256" cy="330" r="5" fill="#FF00FF" filter="url(#glow)"/>
+    <circle cx="256" cy="330" r="2" fill="#fff"/>
+    
+    <!-- Laser Scanner Line -->
+    <line x1="150" y1="310" x2="362" y2="310" stroke="#FF00FF" stroke-width="2" filter="url(#glow)" opacity="0.8"/>
+    <line x1="150" y1="310" x2="362" y2="310" stroke="#fff" stroke-width="1" opacity="0.9"/>
+    <rect x="140" y="305" width="12" height="10" rx="2" fill="#2A2D3E" stroke="#FF00FF" stroke-width="1"/>
+  </g>
+
+  <!-- Foreground Small Beaker (Left) -->
+  <g transform="translate(0, 0)">
+    <path d="M 70 360 L 70 410 A 5 5 0 0 0 75 415 L 115 415 A 5 5 0 0 0 120 410 L 120 360 Z" fill="url(#glass-grad)" stroke="#E0F7FA" stroke-width="1.5"/>
+    <path d="M 71 380 Q 95 375, 119 380 L 119 410 A 4 4 0 0 1 115 414 L 75 414 A 4 4 0 0 1 71 410 Z" fill="url(#org-grad)"/>
+    <line x1="75" y1="365" x2="75" y2="405" stroke="#fff" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+    <line x1="115" y1="365" x2="115" y2="405" stroke="#fff" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <line x1="75" y1="390" x2="85" y2="390" stroke="#fff" stroke-width="1" opacity="0.8"/>
+    <line x1="75" y1="375" x2="85" y2="375" stroke="#fff" stroke-width="1" opacity="0.8"/>
+    <circle cx="95" cy="400" r="3" fill="#fff" opacity="0.6"/>
+    <circle cx="105" cy="390" r="2" fill="#fff" opacity="0.5"/>
+  </g>
+
+  <!-- Floating UI Elements & Particles -->
+  <g transform="translate(0, 0)">
+    <!-- Progress Ring (Right) -->
+    <g transform="translate(420, 200)">
+      <circle cx="0" cy="0" r="35" fill="#001A33" opacity="0.6" filter="url(#glow)"/>
+      <circle cx="0" cy="0" r="35" fill="none" stroke="#334" stroke-width="4"/>
+      <path d="M 0 -35 A 35 35 0 1 1 -25 25" fill="none" stroke="#00F0FF" stroke-width="4" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M 0 -35 A 35 35 0 1 1 -25 25" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="0" y="5" fill="#fff" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">84%</text>
+    </g>
+
+    <!-- Temp UI (Left) -->
+    <g transform="translate(100, 120)">
+      <rect x="-45" y="-15" width="90" height="30" rx="4" fill="#001A33" opacity="0.8" stroke="#39FF14" stroke-width="1.5"/>
+      <text x="0" y="4" fill="#39FF14" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">TEMP: 342K</text>
+      <line x1="45" y1="0" x2="130" y2="30" stroke="#39FF14" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+    </g>
+
+    <!-- Glowing Particles / Bubbles -->
+    <circle cx="180" cy="200" r="3.5" fill="#39FF14" filter="url(#glow)" opacity="0.8"/>
+    <circle cx="340" cy="150" r="4.5" fill="#00F0FF" filter="url(#glow)" opacity="0.9"/>
+    <circle cx="360" cy="260" r="2.5" fill="#FF00FF" filter="url(#glow)" opacity="0.7"/>
+    <circle cx="140" cy="100" r="5" fill="#FF9900" filter="url(#glow)" opacity="0.6"/>
+    <circle cx="280" cy="80" r="3" fill="#39FF14" filter="url(#glow)" opacity="0.8"/>
+    <circle cx="220" cy="120" r="2" fill="#00F0FF" filter="url(#glow)" opacity="0.9"/>
+    <circle cx="400" cy="180" r="3" fill="#FF9900" filter="url(#glow)" opacity="0.5"/>
+    <circle cx="110" cy="280" r="2" fill="#FF00FF" filter="url(#glow)" opacity="0.8"/>
+  </g>
+</svg>

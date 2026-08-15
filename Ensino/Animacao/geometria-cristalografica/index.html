@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D • Sistemas Cristalinos, com visualizações digitais para apoiar a compreensão de conceitos científicos." name="description"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Geometria Cristalográfica</title>
+<link href="assets/css/style1.css" rel="stylesheet"/>
+<meta content="Geometria Cristalográfica" property="og:title"/><meta content="Animação educacional interativa do SiMoEns sobre Modelos 3D • Sistemas Cristalinos, com visualizações digitais para apoiar a compreensão de conceitos científicos." property="og:description"/><script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="index.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-index-001 simoens-inline-event-index-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<header>
+<h1>Modelos 3D • Sistemas Cristalinos</h1>
+<div class="hint">Arraste para girar • Role para zoom • <span class="kbd">R</span> reset</div>
+</header>
+<aside class="sidebar" id="sidebar"></aside>
+<main class="main" id="conteudo-principal">
+<canvas aria-label="Visualização 3D interativa de geometria cristalográfica." id="viewport" role="img" aria-describedby="viewport-descricao-acessivel">Seu navegador não conseguiu carregar esta visualização interativa.</canvas><p id="viewport-descricao-acessivel" class="simoens-inline-style-index-002">Visualização interativa relacionada a Geometria Cristalográfica. Use os controles da página para alterar a visualização; o conteúdo visual principal é apresentado no canvas.</p>
+<div class="panel">
+<div class="info">
+<div class="title" id="shapeTitle">Selecione uma figura</div>
+<div class="desc" id="shapeDesc">Cada modelo inicia em rotação 0°,0°,0° e com zoom padrão menor.</div>
+</div>
+<div class="controls">
+<div class="row">
+<label for="edgeColor">Arestas</label>
+<input id="edgeColor" type="color" value="#1B2140"/>
+</div>
+<div class="row">
+<label for="fillEnable">Preencher faces</label>
+<input checked="" id="fillEnable" type="checkbox"/>
+</div>
+<div class="row">
+<label for="faceColor">Cor das faces</label>
+<input id="faceColor" type="color" value="#7AA2FF"/>
+</div>
+<div class="col">
+<div class="row"><label>Rot. X</label><input aria-label="Controlar rotação no eixo X" id="rx" max="180" min="-180" title="Controlar rotação no eixo X" type="range" value="0"/><span class="tiny" id="rxv">0°</span></div>
+<div class="row"><label>Rot. Y</label><input aria-label="Controlar rotação no eixo Y" id="ry" max="180" min="-180" title="Controlar rotação no eixo Y" type="range" value="0"/><span class="tiny" id="ryv">0°</span></div>
+<div class="row"><label>Rot. Z</label><input aria-label="Controlar rotação no eixo Z" id="rz" max="180" min="-180" title="Controlar rotação no eixo Z" type="range" value="0"/><span class="tiny" id="rzv">0°</span></div>
+</div>
+<button class="btn" id="resetBtn">Resetar vista</button>
+<button class="btn" id="fitBtn">Enquadrar</button>
+<span class="badge"></span>
+</div>
+</div>
+</main>
+<script src="assets/js/script1.js"></script>
+<script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+<script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
+<script defer src="index.inline-events.js"></script>
+</body>
+</html>

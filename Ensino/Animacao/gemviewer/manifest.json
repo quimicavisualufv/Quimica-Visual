@@ -1,0 +1,12 @@
+{
+  "source_html": "gemvisualizer-3d_visual-premium-texturizado-v42-opalas-inclusoes-dentro.html",
+  "structure": [
+    "index.html",
+    "assets/css/style1.css",
+    "assets/js/script1.js",
+    "copyright.txt",
+    "views/"
+  ],
+  "notes": "HTML modularizado mantendo a aplicação original em bundle externo.",
+  "notices_extracted": 14
+}

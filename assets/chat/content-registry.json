@@ -1,0 +1,326 @@
+{
+  "version": 1,
+  "description": "Registro canônico interno dos recursos públicos do catálogo educacional SiMoEns.",
+  "resources": [
+    {
+      "id": "laboratorio_interativo",
+      "title": "Laboratório Interativo — Vidrarias e Equipamentos de Laboratório",
+      "category": "animation",
+      "url": "Ensino/Animacao/catalogo-de-vidrarias-animado/index.html",
+      "description": "Catálogo 3D de vidrarias, equipamentos e funções laboratoriais.",
+      "topics": ["vidrarias", "equipamentos de laboratório", "técnicas laboratoriais"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/02_animacao_catalogo_de_vidrarias_e_equipamentos.md",
+      "related": ["interacoes_intermoleculares", "xadrez_quimico_jogo"]
+    },
+    {
+      "id": "buracos",
+      "title": "Buracos e empacotamento",
+      "category": "animation",
+      "url": "Ensino/Animacao/buracos-e-empacotamento/index.html",
+      "description": "Empacotamento de esferas, interstícios tetraédricos e octaédricos e camadas AAA, ABA e ABC.",
+      "topics": ["empacotamento", "interstícios cristalinos", "camadas cristalinas"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/01_animacao_empacotamento_de_esferas.md",
+      "related": ["celulas", "redes", "intersticios_cristalinos"]
+    },
+    {
+      "id": "celulas",
+      "title": "Células unitárias e parâmetros de rede",
+      "category": "guide",
+      "url": "Ensino/Guia/celulas/index.html",
+      "description": "Guia sobre vetores, ângulos, sistemas cristalinos e centramento de células unitárias.",
+      "topics": ["célula unitária", "parâmetros de rede", "sistemas cristalinos"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/02_guia_celulas_unitarias.md",
+      "related": ["wigner", "redes", "classificacao_sistema_cristalino"]
+    },
+    {
+      "id": "wigner",
+      "title": "Células primitivas, Bravais e Wigner-Seitz",
+      "category": "guide",
+      "url": "Ensino/Guia/celulas-primitivas-sistemas-bravais-e-celula-de-wigner/index.html",
+      "description": "Guia visual sobre nós de rede, células primitivas, redes de Bravais e construção de Wigner-Seitz.",
+      "topics": ["Wigner-Seitz", "redes de Bravais", "célula primitiva"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md",
+      "related": ["celulas", "redes", "simetriahub"]
+    },
+    {
+      "id": "complexos",
+      "title": "Complexos e polimorfismo",
+      "category": "guide",
+      "url": "Ensino/Guia/Complexos e polimorfismo/index.html",
+      "description": "Guia sobre coordenação, empacotamento, simetria e polimorfismo.",
+      "topics": ["complexos", "polimorfismo", "química de coordenação"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/04_guia_complexos_e_polimorfismo.md",
+      "related": ["redes", "gemviewer"]
+    },
+    {
+      "id": "geocrist",
+      "title": "Geometria cristalográfica",
+      "category": "animation",
+      "url": "Ensino/Animacao/geometria-cristalografica/index.html",
+      "description": "Modelos 3D dos sistemas cristalinos com faces, arestas e rotação.",
+      "topics": ["geometria cristalográfica", "sistemas cristalinos", "células unitárias"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/03_animacao_geometria_cristalografica.md",
+      "related": ["celulas", "redes", "classificacao_sistema_cristalino"]
+    },
+    {
+      "id": "geomol",
+      "title": "Geometria molecular",
+      "category": "animation",
+      "url": "Ensino/Animacao/geometria-molecular/index.html",
+      "description": "Visualizador VSEPR de geometrias moleculares AXn e AXnEm.",
+      "topics": ["geometria molecular", "VSEPR", "pares não ligantes"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/04_animacao_geometria_molecular.md",
+      "related": ["geomolpasso", "polaridade", "polaridade_geometria_exercicio"]
+    },
+    {
+      "id": "geomolpasso",
+      "title": "Geometria molecular passo a passo",
+      "category": "guide",
+      "url": "Ensino/Guia/geometria-molecular-passo-a-passo/index.html",
+      "description": "Guia sequencial para construir e interpretar geometrias moleculares pelo modelo VSEPR.",
+      "topics": ["geometria molecular", "VSEPR", "ângulos de ligação"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/07_guia_geometria_molecular_passo_a_passo.md",
+      "related": ["geomol", "polaridade", "polaridade_geometria_exercicio"]
+    },
+    {
+      "id": "polaridade",
+      "title": "Polaridade molecular — tutorial guiado",
+      "category": "guide",
+      "url": "Ensino/Guia/polaridade-molecular-tutorial-guiado-passo-a-passo/index.html",
+      "description": "Tutorial que relaciona geometria, simetria, dipolos e polaridade molecular.",
+      "topics": ["polaridade molecular", "momento dipolar", "simetria molecular"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/10_guia_polaridade_molecular.md",
+      "related": ["geomol", "geomolpasso", "comparacao_polaridade_exercicio"]
+    },
+    {
+      "id": "quebracabeca",
+      "title": "Quebra-cabeça iônico/covalente",
+      "category": "game",
+      "url": "Ensino/jogo/quebra-cabeca-ionico-covalente/index.html",
+      "description": "Atividades para diferenciar formação de íons e compartilhamento eletrônico.",
+      "topics": ["ligação iônica", "ligação covalente", "íons"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/jogos/02_jogo_quebra_cabeca_ionico_covalente_modo_narrador.md",
+      "related": ["geomol", "caca_palavras_jogo"]
+    },
+    {
+      "id": "redes",
+      "title": "Redes cristalinas",
+      "category": "animation",
+      "url": "Ensino/Animacao/redes-cristalinas/index.html",
+      "description": "Visualizador de redes, estruturas prototípicas e células de Wigner-Seitz.",
+      "topics": ["redes cristalinas", "NaCl", "CsCl", "ZnS", "Wigner-Seitz"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/05_animacao_redes_cristalinas.md",
+      "related": ["celulas", "wigner", "simetriahub", "defeitos_cristalinos_3d"]
+    },
+    {
+      "id": "simetriahub",
+      "title": "Simetria e fórmula unitária",
+      "category": "animation",
+      "url": "Ensino/Animacao/simetria-e-formula-unitaria/index.html",
+      "description": "Hub para estruturas cúbicas, simetria de translação, contagem por frações e fórmula unitária.",
+      "topics": ["simetria", "fórmula unitária", "translação", "estruturas cúbicas"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md",
+      "related": ["redes", "formula_unitaria_pratica", "celulas"]
+    },
+    {
+      "id": "modelos_atomicos",
+      "title": "Modelos Atômicos",
+      "category": "guide",
+      "url": "Ensino/Guia/modelos_atomicos/index.html",
+      "description": "Guia visual da evolução dos modelos atômicos de Dalton ao modelo quântico.",
+      "topics": ["modelos atômicos", "Dalton", "Thomson", "Rutherford", "Bohr", "Schrödinger"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/09_guia_modelos_atomicos.md",
+      "related": ["visualizador_hidrogenoides", "eq_ondas_hidrogenoides", "visualizador_orbitais"]
+    },
+    {
+      "id": "visualizador_hidrogenoides",
+      "title": "Visualizador de hidrogenoides",
+      "category": "animation",
+      "url": "Ensino/Animacao/visualizador_de_hidrogenoides/index.html",
+      "description": "Visualizador 2D e 3D de orbitais e distribuições eletrônicas de espécies hidrogenoides.",
+      "topics": ["hidrogenoides", "orbitais atômicos", "densidade de probabilidade"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/07_animacao_visualizador_de_hidrogenoides.md",
+      "related": ["modelos_atomicos", "eq_ondas_hidrogenoides", "visualizador_orbitais"]
+    },
+    {
+      "id": "eq_ondas_hidrogenoides",
+      "title": "Equações de onda de hidrogenoides",
+      "category": "guide",
+      "url": "Ensino/Guia/eq_de_ondas_hidrogenoides/index.html",
+      "description": "Guia sobre função de onda, densidade de probabilidade e representação espacial em hidrogenoides.",
+      "topics": ["equação de onda", "função de onda", "hidrogenoides", "probabilidade"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/05_guia_equacoes_de_onda_hidrogenoides.md",
+      "related": ["visualizador_hidrogenoides", "modelos_atomicos", "visualizador_orbitais"]
+    },
+    {
+      "id": "visualizador_orbitais",
+      "title": "Visualizador de Orbitais Atômicos e Moleculares",
+      "category": "animation",
+      "url": "Ensino/Animacao/visualizador_orbitais/index.html",
+      "description": "Visualizador 3D de orbitais atômicos e moleculares com lóbulos ligantes e antiligantes.",
+      "topics": ["orbitais atômicos", "orbitais moleculares", "ligante", "antiligante", "hibridização"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md",
+      "related": ["modelos_atomicos", "visualizador_hidrogenoides", "eq_ondas_hidrogenoides"]
+    },
+    {
+      "id": "polaridade_geometria_exercicio",
+      "title": "Polaridade e Geometria Molecular — exercício de fixação",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/Polaridade-e-Geometria-molecular/index.html",
+      "description": "Exercício sobre geometria, ângulos, vetores e polaridade molecular.",
+      "topics": ["geometria molecular", "polaridade", "momento dipolar"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/02_exercicio_guiado_polaridade_e_geometria_molecular.md",
+      "related": ["geomol", "polaridade", "comparacao_polaridade_exercicio"]
+    },
+    {
+      "id": "classificacao_sistema_cristalino",
+      "title": "Classificação do sistema cristalino (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/nome-da-celula/index.html",
+      "description": "Exercício para classificar sistemas cristalinos por eixos, ângulos e parâmetros de rede.",
+      "topics": ["sistemas cristalinos", "parâmetros de rede", "célula unitária"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/08_exercicio_guiado_nome_da_celula.md",
+      "related": ["celulas", "geocrist", "simetriahub"]
+    },
+    {
+      "id": "intersticios_cristalinos",
+      "title": "Interstícios cristalinos (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/buracos-cristalinos/index.html",
+      "description": "Exercício visual para diferenciar sítios tetraédricos e octaédricos.",
+      "topics": ["interstícios cristalinos", "sítio tetraédrico", "sítio octaédrico"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/04_exercicio_guiado_buracos_cristalinos.md",
+      "related": ["buracos", "caca_sitio_cristalino", "coordenacao_empacotamento_exercicio"]
+    },
+    {
+      "id": "caca_sitio_cristalino",
+      "title": "Caça ao sítio cristalino (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/caca-ao-sitio-cristalino/index.html",
+      "description": "Exercício de identificação de sítios, posições, coordenação e ocupação cristalina.",
+      "topics": ["sítios cristalinos", "coordenação", "ocupação"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/05_exercicio_guiado_caca_ao_sitio_cristalino.md",
+      "related": ["intersticios_cristalinos", "buracos", "coordenacao_empacotamento_exercicio"]
+    },
+    {
+      "id": "formula_unitaria_pratica",
+      "title": "Fórmula Unitária na Prática (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/Contagem-de-atomo/index.html",
+      "description": "Exercício sobre contribuições de vértices, arestas, faces e interior na contagem atômica.",
+      "topics": ["fórmula unitária", "contagem de átomos", "célula unitária"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/01_exercicio_guiado_contagem_de_atomo_formula_unitaria.md",
+      "related": ["simetriahub", "celulas", "classificacao_sistema_cristalino"]
+    },
+    {
+      "id": "coordenacao_empacotamento_exercicio",
+      "title": "Coordenação e empacotamento (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/coordenacao-empacotamento/index.html",
+      "description": "Exercício sobre número de coordenação, empacotamento e organização espacial.",
+      "topics": ["número de coordenação", "empacotamento", "estrutura cristalina"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/06_exercicio_guiado_coordenacao_e_empacotamento.md",
+      "related": ["buracos", "redes", "intersticios_cristalinos"]
+    },
+    {
+      "id": "defeitos_cristalinos_exercicio",
+      "title": "Identificação de defeitos cristalinos (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/defeitos-cristalinos/index.html",
+      "description": "Exercício para reconhecer vacâncias, intersticiais, substitucionais, Frenkel e Schottky.",
+      "topics": ["defeitos cristalinos", "vacância", "Frenkel", "Schottky"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/07_exercicio_guiado_defeitos_cristalinos.md",
+      "related": ["defeitos_cristalinos_3d", "redes", "gemviewer"]
+    },
+    {
+      "id": "comparacao_polaridade_exercicio",
+      "title": "Comparação de polaridade molecular (Exercício)",
+      "category": "exercise",
+      "url": "Ensino/Exercicio Guiado/batalha-de-polaridade/index.html",
+      "description": "Exercício para comparar geometrias, vetores e polaridade molecular.",
+      "topics": ["polaridade molecular", "geometria molecular", "vetores de dipolo"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/exercicios-guiados/03_exercicio_guiado_batalha_de_polaridade.md",
+      "related": ["polaridade_geometria_exercicio", "geomol", "polaridade"]
+    },
+    {
+      "id": "caca_palavras_jogo",
+      "title": "Caça-palavras (Jogo)",
+      "category": "game",
+      "url": "Ensino/jogo/caça-palavras/index.html",
+      "description": "Jogo de vocabulário e revisão de conceitos químicos.",
+      "topics": ["vocabulário químico", "revisão", "química geral"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md",
+      "related": ["quebracabeca", "show_milhao_jogo", "xadrez_quimico_jogo"]
+    },
+    {
+      "id": "xadrez_quimico_jogo",
+      "title": "Xadrez Químico (Jogo)",
+      "category": "game",
+      "url": "Ensino/jogo/xadrez-quimico/index.html",
+      "description": "Jogo de estratégia com peças inspiradas em vidrarias e funções laboratoriais.",
+      "topics": ["xadrez", "vidrarias", "estratégia"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/jogos/01_jogo_xadrez_quimico_modo_narrador.md",
+      "related": ["laboratorio_interativo", "caca_palavras_jogo"]
+    },
+    {
+      "id": "gemviewer",
+      "title": "Gemas e mudança de cor",
+      "category": "animation",
+      "url": "Ensino/Animacao/gemviewer/index.html",
+      "description": "Visualizador 3D de gemas, impurezas cromóforas, centros de cor e mudanças ópticas.",
+      "topics": ["gemas", "centros de cor", "impurezas cromóforas", "gemologia"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/09_animacao_gemas_e_mudanca_de_cor.md",
+      "related": ["defeitos_cristalinos_3d", "defeitos_cristalinos_exercicio", "complexos"]
+    },
+    {
+      "id": "defeitos_cristalinos_3d",
+      "title": "Visualizador 3D de defeitos cristalinos",
+      "category": "animation",
+      "url": "Ensino/Animacao/defeitos-cristalinos/index.html",
+      "description": "Visualizador 3D de vacâncias, substituições, intersticiais, Frenkel e Schottky.",
+      "topics": ["defeitos cristalinos", "vacância", "intersticial", "Frenkel", "Schottky"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/animacoes/10_animacao_defeitos_cristalinos_3d.md",
+      "related": ["defeitos_cristalinos_exercicio", "redes", "gemviewer"]
+    },
+    {
+      "id": "show_milhao_jogo",
+      "title": "Show do Milhão Químico (Jogo)",
+      "category": "game",
+      "url": "Ensino/jogo/show-do-milhao-da-quimica/index.html",
+      "description": "Jogo de perguntas e respostas de Química com rodadas progressivas.",
+      "topics": ["quiz de química", "revisão", "química geral"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/jogos/04_jogo_show_do_milhao_quimico_modo_narrador.md",
+      "related": ["caca_palavras_jogo", "xadrez_quimico_jogo"]
+    },
+    {
+      "id": "atlas_termodinamico",
+      "title": "Atlas Termodinâmico",
+      "category": "guide",
+      "url": "Ensino/Guia/atlas_termodinamico/index.html",
+      "description": "Guia visual de conceitos, grandezas, processos e interpretações termodinâmicas.",
+      "topics": ["termodinâmica", "entalpia", "entropia", "energia livre"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/01_guia_atlas_termodinamico.md",
+      "related": ["fases_da_agua", "interacoes_intermoleculares"]
+    },
+    {
+      "id": "fases_da_agua",
+      "title": "Fases da Água",
+      "category": "guide",
+      "url": "Ensino/Guia/fases_da_agua/index.html",
+      "description": "Guia para diagrama de fases, ponto triplo, ponto crítico e comportamento da água.",
+      "topics": ["fases da água", "diagrama de fases", "ponto triplo", "ponto crítico"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/06_guia_fases_da_agua.md",
+      "related": ["atlas_termodinamico", "interacoes_intermoleculares"]
+    },
+    {
+      "id": "interacoes_intermoleculares",
+      "title": "Interações Intermoleculares",
+      "category": "guide",
+      "url": "Ensino/Guia/interacoes_intermoleculares/index.html",
+      "description": "Guia visual de forças de dispersão, dipolo-dipolo e ligações de hidrogênio.",
+      "topics": ["interações intermoleculares", "forças de London", "dipolo-dipolo", "ligação de hidrogênio"],
+      "accessibilityDocument": "Chat/widget/textos-acessibilidade/guias/08_guia_interacoes_intermoleculares.md",
+      "related": ["fases_da_agua", "atlas_termodinamico", "polaridade"]
+    }
+  ]
+}

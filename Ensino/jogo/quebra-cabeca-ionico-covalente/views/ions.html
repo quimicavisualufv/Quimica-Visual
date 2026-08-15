@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." name="description">
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<title>Quebra-cabeça de Íons — offline (v5)</title>
+<link rel="stylesheet" href="ions.inline-style-01.css">
+<link rel="stylesheet" href="ions.inline-style-02.css">
+<meta content="Quebra-cabeça de Íons — offline (v5)" property="og:title"><meta content="Jogo educacional offline do SiMoEns sobre ⚗️ Quebra-cabeça de Íons, com atividades de aprendizagem e revisão de conteúdos científicos." property="og:description"><script defer src="../../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<script defer src="../../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260814-frame-bridge"></script>
+<link rel="stylesheet" href="ions.inline-styles.css">
+</head>
+<body>
+<a class="acess-skip-link simoens-inline-style-ions-001 simoens-inline-event-ions-001" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<header>
+<h1>⚗️ Quebra-cabeça de Íons</h1>
+<span class="spacer"></span>
+<button class="toggleSide" id="toggleSide">Esconder Leitura &amp; Dicas</button>
+</header>
+<main id="conteudo-principal">
+<section class="col" id="leftCol">
+<h2><span>Biblioteca</span><input aria-label="Pesquisar" id="searchBox" placeholder="Pesquisar..." type="search"></h2>
+<div id="library"></div>
+<div class="toolbar">
+<button id="clearBoard" title="Limpar mesa">Limpar</button>
+</div>
+</section>
+<section class="col">
+<h2>Mesa de montagem</h2>
+<div class="boardWrap" id="boardWrap"><div aria-label="Área de montagem" id="board" role="group"></div></div>
+<div class="toolbar">
+<button class="ok" id="check">Conferir eletroneutralidade</button>
+<button class="bad" id="deleteSel">Remover seleção</button>
+<span class="simoens-inline-style-ions-002"></span>
+<button id="addPlus" title="Adicionar sinal de +">+ (adicionar)</button>
+<button id="addArrow" title="Adicionar seta de reação">→ (reação)</button>
+<button id="addEq" title="Adicionar seta de equilíbrio">⇌ (equilíbrio)</button>
+</div>
+</section>
+<section class="col" id="side">
+<h2>Leitura &amp; Dicas</h2>
+<div id="calc">
+<div class="row"><span>Carga total (íons)</span><span class="badge" id="charge">0</span></div>
+<div class="row"><span>Peças na mesa</span><span class="badge" id="count">0</span></div>
+<div class="hr"></div>
+<div class="row"><span class="big" id="formulaOut">—</span></div>
+<div class="note">
+<div><b>Regras de encaixe:</b> cada <i>porta</i> liga com no máx. 1 oposto; nº de portas = |carga|.</div>
+<div class="simoens-inline-style-ions-003">Dica: arraste até as bolinhas ficarem <b>sobrepostas</b> — elas se alinham exatamente.</div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="list" id="legend"></div>
+</section>
+</main>
+<script src="ions.inline-script-01.js"></script>
+<script src="ions.inline-script-02.js"></script>
+<script defer src="ions.inline-events.js"></script>
+</body>
+</html>

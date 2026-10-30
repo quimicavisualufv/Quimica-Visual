@@ -1,0 +1,267 @@
+{
+  "Chat/widget/textos-acessibilidade/animacoes/01_animacao_empacotamento_de_esferas.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "packing"
+    ],
+    "note": "A sequência ABAB corresponde ao empacotamento hexagonal compacto; ABCABC, ao cúbico compacto. Para esferas iguais em contato, ambos têm coordenação 12 e fração de empacotamento π/(3√2), aproximadamente 0,7405; cores de camadas identificam posições, não elementos distintos."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/02_animacao_catalogo_de_vidrarias_e_equipamentos.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "lab",
+      "lab-safety"
+    ],
+    "note": "Volumes indicados são nominais e têm tolerância e temperatura de calibração. O nome histórico “tela de amianto” no catálogo não recomenda seu uso: descreva uma tela cerâmica sem amianto e siga as normas institucionais. O símbolo PA de um modelo plástico não identifica necessariamente o polímero."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/03_animacao_geometria_cristalografica.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "miller",
+      "bragg",
+      "symmetry"
+    ],
+    "note": "Índices (hkl) designam orientações de planos, [uvw] direções e {hkl} famílias de planos relacionadas por simetria. Um difratograma costuma apresentar 2θ, enquanto nλ = 2d sen θ utiliza θ."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/04_animacao_geometria_molecular.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "vsepr",
+      "lewis"
+    ],
+    "note": "No VSEPR, uma ligação múltipla conta como um domínio eletrônico. A geometria molecular descreve as posições dos núcleos; o arranjo eletrônico também considera pares não ligantes. As nuvens desenhadas são representações qualitativas."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/05_animacao_redes_cristalinas.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "crystal",
+      "symmetry",
+      "packing"
+    ],
+    "note": "A rede de Bravais contém pontos equivalentes; a estrutura resulta da rede associada a um motivo. O CsCl tem rede cúbica primitiva e motivo de duas espécies, enquanto o NaCl tem rede cúbica de faces centradas e motivo iônico. A classificação dos sistemas depende da simetria, não apenas dos comprimentos e ângulos desenhados."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/06_animacao_simetria_e_formula_unitaria.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "crystal",
+      "symmetry",
+      "stoichiometry"
+    ],
+    "note": "A célula primitiva contém um ponto de rede, que pode corresponder a um motivo com vários átomos. Não confunda número de átomos, pontos de rede e unidades de fórmula. A contribuição 1/8 dos vértices refere-se à célula paralelepipédica usual compartilhada por oito células."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/07_animacao_visualizador_de_hidrogenoides.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "quantum"
+    ],
+    "note": "Para um orbital espacial normalizado de um elétron, |ψ|² é densidade de probabilidade; a probabilidade em um volume é a integral de |ψ|² nesse volume. A distribuição radial, para a normalização angular usual, é r²|R(r)|² e seus máximos não são os máximos de |ψ|²."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/08_animacao_visualizador_de_orbitais.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "quantum",
+      "mo"
+    ],
+    "note": "Metaballs e lobos editáveis são modelos de forma, não soluções calculadas da equação de Schrödinger. Cores opostas podem indicar sinal ou fase, não cargas elétricas opostas. Um orbital é uma função; a superfície desenhada representa uma convenção de visualização."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/09_animacao_gemas_e_mudanca_de_cor.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "gem-color",
+      "gem-treatment",
+      "alexandrite"
+    ],
+    "note": "Absorção eletrônica, transferência de carga, centros de cor e efeitos de interferência são mecanismos distintos. Mudança de cor com a iluminação não equivale a pleocroísmo. O tamanho das esferas e a cor dos modelos não constituem medidas experimentais ou procedimentos reais de tratamento."
+  },
+  "Chat/widget/textos-acessibilidade/animacoes/10_animacao_defeitos_cristalinos_3d.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "solids",
+      "packing"
+    ],
+    "note": "Um par de Frenkel contém uma vacância e a mesma espécie em um interstício. Defeitos de Schottky preservam a estequiometria e a eletroneutralidade; o caso de uma vacância de cada espécie pressupõe um sal 1:1 com cargas opostas de mesmo módulo. A comparação de energia na cena é qualitativa."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/00_indice_exercicios_guiados.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [],
+    "note": "Este índice descreve as oito experiências de exercícios guiados. As esferas e cores são convenções de representação; contagens e classificações devem considerar o modelo e as condições do enunciado."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/01_exercicio_guiado_contagem_de_atomo_formula_unitaria.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "packing",
+      "stoichiometry"
+    ],
+    "note": "Conte as contribuições efetivas por espécie e reduza a razão estequiométrica, sem confundir esferas visíveis com átomos efetivos. Uma fórmula empírica não é necessariamente uma molécula; CsCl, por exemplo, descreve a proporção de íons em um sólido."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/02_exercicio_guiado_polaridade_e_geometria_molecular.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "vsepr"
+    ],
+    "note": "A polaridade molecular depende da distribuição eletrônica completa e da geometria; a soma de dipolos de ligação é um modelo interpretativo. Potencial eletrostático e densidade eletrônica são grandezas diferentes; a legenda de cores precisa indicar qual delas está sendo representada."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/03_exercicio_guiado_batalha_de_polaridade.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "vsepr"
+    ],
+    "note": "Ligações polares podem produzir uma molécula apolar quando a simetria exige cancelamento do momento de dipolo permanente. CO₂ é linear e apolar; H₂O é angular e polar nas geometrias moleculares usuais."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/04_exercicio_guiado_buracos_cristalinos.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "packing"
+    ],
+    "note": "Os termos tetraédrico e octaédrico descrevem quatro e seis vizinhos, respectivamente, no modelo geométrico. Para N esferas em empacotamento compacto ideal existem 2N sítios tetraédricos e N octaédricos; não generalize essa contagem a qualquer estrutura."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/05_exercicio_guiado_caca_ao_sitio_cristalino.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "packing",
+      "crystal"
+    ],
+    "note": "Coordenadas fracionárias são expressas na base da célula e diferem de distâncias cartesianas. Posições equivalentes por translação devem ser reconhecidas com as condições periódicas do modelo."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/06_exercicio_guiado_coordenacao_e_empacotamento.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "packing"
+    ],
+    "note": "Coordenação conta os vizinhos mais próximos no modelo considerado. Para estruturas monoatômicas ideais, SC, BCC e FCC têm coordenações 6, 8 e 12 e frações de empacotamento aproximadas 0,524, 0,680 e 0,740."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/07_exercicio_guiado_defeitos_cristalinos.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "solids"
+    ],
+    "note": "A identificação depende da comparação entre sítios ocupados, vazios e intersticiais. No exemplo 1:1, uma vacância catiônica e uma aniônica formam o conjunto de Schottky; em outras estequiometrias, a proporção de vacâncias pode ser diferente."
+  },
+  "Chat/widget/textos-acessibilidade/exercicios-guiados/08_exercicio_guiado_nome_da_celula.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "crystal",
+      "symmetry"
+    ],
+    "note": "Separe sistema cristalino de centramento. No sistema triclínico não há igualdades métricas ou ângulos impostos; isso não proíbe igualdades acidentais. As classes pontuais triclínicas são 1 e −1, e a segunda contém inversão."
+  },
+  "Chat/widget/textos-acessibilidade/guias/00_indice_guias.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [],
+    "note": "Este índice descreve recursos de estudo disponíveis. Solicitar um tema específico permite distinguir explicações conceituais, instruções de interface e modelos idealizados."
+  },
+  "Chat/widget/textos-acessibilidade/guias/01_guia_atlas_termodinamico.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "enthalpy",
+      "entropy",
+      "gibbs",
+      "equilibrium"
+    ],
+    "note": "ΔH = qₚ exige pressão constante e somente trabalho de expansão nas condições usuais de sistema fechado. A T e p constantes, ΔG < 0 favorece a transformação no sentido considerado; ΔG° < 0 não determina sozinho o sentido em qualquer composição, pois ΔG = ΔG° + RT ln Q. Entropia não é uma medida cotidiana de “bagunça”."
+  },
+  "Chat/widget/textos-acessibilidade/guias/02_guia_celulas_unitarias.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "symmetry",
+      "crystal"
+    ],
+    "note": "Os sete sistemas são definidos por simetria cristalina. As relações métricas usuais descrevem células convencionais; métricas especiais acidentais não bastam para classificar a simetria da estrutura. Trigonal é um sistema cristalino; romboédrico também designa uma escolha de eixos e um tipo de rede."
+  },
+  "Chat/widget/textos-acessibilidade/guias/03_guia_celulas_primitivas_bravais_wigner.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "crystal",
+      "symmetry"
+    ],
+    "note": "Há 14 tipos de redes de Bravais em três dimensões. Uma célula de Wigner–Seitz é a região dos pontos ao menos tão próximos do ponto de rede de referência quanto de qualquer outro, incluindo fronteiras compartilhadas; ela é primitiva, mas não precisa ser um paralelepípedo."
+  },
+  "Chat/widget/textos-acessibilidade/guias/04_guia_complexos_e_polimorfismo.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "coordination",
+      "cft",
+      "jahn-teller"
+    ],
+    "note": "Isomeria cis/trans envolve arranjos de ligantes em uma espécie de coordenação; polimorfismo envolve diferentes estruturas cristalinas de uma mesma composição. Na elongação tetragonal comum de Cu(II) d⁹, o orbital de maior energia, associado ao elétron desemparelhado, é predominantemente dₓ²₋ᵧ²; o modelo octaédrico simples é qualitativo."
+  },
+  "Chat/widget/textos-acessibilidade/guias/05_guia_equacoes_de_onda_hidrogenoides.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "quantum"
+    ],
+    "note": "Para espécies hidrogenoides há um elétron e Z é o número atômico, que determina a carga nuclear; não há blindagem por outros elétrons. Um nó tem ψ = 0. Para soluções coulombianas usuais, os números de nós radiais e angulares são n − l − 1 e l."
+  },
+  "Chat/widget/textos-acessibilidade/guias/06_guia_fases_da_agua.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "water",
+      "gibbs"
+    ],
+    "note": "O ponto triplo da água ocorre aproximadamente a 273,16 K e 611,657 Pa; o crítico, a 647,096 K e 22,064 MPa. Acima das condições críticas não existe fronteira líquido–vapor. Fluido supercrítico e superfluidez são fenômenos distintos."
+  },
+  "Chat/widget/textos-acessibilidade/guias/07_guia_geometria_molecular_passo_a_passo.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "vsepr",
+      "lewis"
+    ],
+    "note": "Use XeF₄ como exemplo estabelecido de AX₄E₂ com geometria quadrada plana. BeCl₂ linear e PCl₅ bipiramidal trigonal referem-se a espécies moleculares isoladas, como na fase gasosa; as estruturas dos sólidos podem ser diferentes. VSEPR é um modelo qualitativo e tem limites para metais de transição."
+  },
+  "Chat/widget/textos-acessibilidade/guias/08_guia_interacoes_intermoleculares.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "interactions"
+    ],
+    "note": "Forças de dispersão de London estão presentes em todas as espécies polarizáveis, inclusive moléculas polares. Ligações de hidrogênio podem ser intermoleculares ou intramoleculares. Compare propriedades considerando massa, forma e todas as interações relevantes, sem uma ordem de intensidades universal."
+  },
+  "Chat/widget/textos-acessibilidade/guias/09_guia_modelos_atomicos.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "quantum",
+      "mo"
+    ],
+    "note": "Órbita de Bohr e orbital quântico são conceitos diferentes. Um orbital espacial é uma função de onda; |ψ|² fornece uma densidade de probabilidade no modelo de um elétron. Um desenho de nuvem não é uma fotografia nem uma trajetória do elétron."
+  },
+  "Chat/widget/textos-acessibilidade/guias/10_guia_polaridade_molecular.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "vsepr"
+    ],
+    "note": "A seta química de polarização, com a cruz na extremidade positiva, aponta de δ+ para δ−. O vetor momento de dipolo elétrico da convenção física aponta do negativo para o positivo; declare a convenção da interface. Mapas de potencial eletrostático e densidade eletrônica não são equivalentes."
+  },
+  "Chat/widget/textos-acessibilidade/jogos/01_jogo_xadrez_quimico_modo_narrador.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "lab",
+      "lab-safety"
+    ],
+    "note": "As associações entre peças e instrumentos são regras do jogo. O balão volumétrico contém um volume nominal na temperatura de calibração, com tolerância; não produz um volume absolutamente exato."
+  },
+  "Chat/widget/textos-acessibilidade/jogos/02_jogo_quebra_cabeca_ionico_covalente_modo_narrador.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "lewis",
+      "solids"
+    ],
+    "note": "Peças e encaixes representam relações didáticas e não reproduzem a dinâmica dos elétrons. Ligações iônicas e covalentes descrevem modelos de interação; substâncias reais podem ter caráter misto. Íons em sólidos não formam necessariamente moléculas discretas."
+  },
+  "Chat/widget/textos-acessibilidade/jogos/03_jogo_caca_palavras_cruzadinha_modo_narrador.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "quantum",
+      "packing",
+      "vsepr"
+    ],
+    "note": "Encontrar um termo no jogo não demonstra sua compreensão conceitual. Ao explicar uma resposta, relacione o termo à definição e ao contexto: por exemplo, orbital é uma função de onda e célula primitiva contém um ponto de rede."
+  },
+  "Chat/widget/textos-acessibilidade/jogos/04_jogo_show_do_milhao_quimico_modo_narrador.md": {
+    "reviewed": "2026-10-25",
+    "sourceIds": [
+      "lewis",
+      "quantum",
+      "packing"
+    ],
+    "note": "O gabarito pertence ao enunciado e às condições apresentados; não generalize uma alternativa correta para todas as substâncias. Quando uma questão depender do modelo, da fase ou das condições experimentais, explicite essa hipótese na explicação."
+  }
+}

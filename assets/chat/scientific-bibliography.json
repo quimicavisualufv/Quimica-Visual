@@ -1,0 +1,509 @@
+{
+  "packing": {
+    "id": "packing",
+    "title": "Chemistry 2e — 10.6. Lattice Structures in Crystalline Solids",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/10-6-lattice-structures-in-crystalline-solids",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "solids": {
+    "id": "solids",
+    "title": "Chemistry 2e — 10.5. The Solid State of Matter",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/10-5-the-solid-state-of-matter",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "vsepr": {
+    "id": "vsepr",
+    "title": "Chemistry 2e — 7.6. Molecular Structure and Polarity",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "lewis": {
+    "id": "lewis",
+    "title": "Chemistry 2e — 7.4. Formal Charges and Resonance",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-4-formal-charges-and-resonance",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "interactions": {
+    "id": "interactions",
+    "title": "Chemistry 2e — 10.1. Intermolecular Forces",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/10-1-intermolecular-forces",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "enthalpy": {
+    "id": "enthalpy",
+    "title": "Chemistry 2e — 5.3. Enthalpy",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/5-3-enthalpy",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "entropy": {
+    "id": "entropy",
+    "title": "Chemistry 2e — 16.2. Entropy",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/16-2-entropy",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "gibbs": {
+    "id": "gibbs",
+    "title": "Chemistry 2e — 16.4. Free Energy",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/16-4-free-energy",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "catalysis": {
+    "id": "catalysis",
+    "title": "Chemistry 2e — 12.7. Catalysis",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/12-7-catalysis",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "equilibrium": {
+    "id": "equilibrium",
+    "title": "Chemistry 2e — 13.2. Equilibrium Constants",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/13-2-equilibrium-constants",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "ph": {
+    "id": "ph",
+    "title": "Chemistry 2e — 14.2. pH and pOH",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-2-ph-and-poh",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "stoichiometry": {
+    "id": "stoichiometry",
+    "title": "Chemistry 2e — 4.3. Reaction Stoichiometry",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/4-3-reaction-stoichiometry",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "quantum": {
+    "id": "quantum",
+    "title": "Chemistry 2e — 6.3. Development of Quantum Theory",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/6-3-development-of-quantum-theory",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "mo": {
+    "id": "mo",
+    "title": "Chemistry 2e — 8.4. Molecular Orbital Theory",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/8-4-molecular-orbital-theory",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "coordination": {
+    "id": "coordination",
+    "title": "Chemistry 2e — 19.2. Coordination Chemistry of Transition Metals",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/19-2-coordination-chemistry-of-transition-metals",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "cft": {
+    "id": "cft",
+    "title": "Chemistry 2e — 19.3. Spectroscopic and Magnetic Properties of Coordination Compounds",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/19-3-spectroscopic-and-magnetic-properties-of-coordination-compounds",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "functional": {
+    "id": "functional",
+    "title": "Organic Chemistry — 3.1. Functional Groups",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/organic-chemistry/pages/3-1-functional-groups",
+    "accessed": "2026-10-25",
+    "year": 2023
+  },
+  "organic-names": {
+    "id": "organic-names",
+    "title": "Organic Chemistry — 17.1. Naming Alcohols and Phenols",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/organic-chemistry/pages/17-1-naming-alcohols-and-phenols",
+    "accessed": "2026-10-25",
+    "year": 2023
+  },
+  "markovnikov": {
+    "id": "markovnikov",
+    "title": "Organic Chemistry — 7.8. Orientation of Electrophilic Additions: Markovnikov’s Rule",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/organic-chemistry/pages/7-8-orientation-of-electrophilic-additions-markovnikovs-rule",
+    "accessed": "2026-10-25",
+    "year": 2023
+  },
+  "crystal": {
+    "id": "crystal",
+    "title": "Direct lattice",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Direct_lattice",
+    "accessed": "2026-10-25"
+  },
+  "symmetry": {
+    "id": "symmetry",
+    "title": "How to read (and understand) Volume A of International Tables for Crystallography",
+    "publisher": "Journal of Applied Crystallography / IUCr",
+    "url": "https://journals.iucr.org/j/issues/2010/05/02/kk5061/index.html",
+    "accessed": "2026-10-25",
+    "year": 2010
+  },
+  "miller": {
+    "id": "miller",
+    "title": "Miller indices",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Miller_indices",
+    "accessed": "2026-10-25"
+  },
+  "bragg": {
+    "id": "bragg",
+    "title": "Bragg’s law",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Bragg's_law",
+    "accessed": "2026-10-25"
+  },
+  "oxidation": {
+    "id": "oxidation",
+    "title": "Comprehensive definition of oxidation state",
+    "publisher": "IUPAC Recommendations",
+    "url": "https://iupac.org/recommendation/comprehensive-definition-of-oxidation-state/",
+    "accessed": "2026-10-25",
+    "year": 2016
+  },
+  "jahn-teller": {
+    "id": "jahn-teller",
+    "title": "Jahn–Teller effect",
+    "publisher": "IUPAC Gold Book",
+    "url": "https://goldbook.iupac.org/terms/view/J03361",
+    "accessed": "2026-10-25"
+  },
+  "atomic-weights": {
+    "id": "atomic-weights",
+    "title": "Abridged Standard Atomic Weights 2024",
+    "publisher": "CIAAW / IUPAC",
+    "url": "https://www.ciaaw.org/abridged-atomic-weights.htm",
+    "accessed": "2026-10-25",
+    "year": 2024
+  },
+  "radioisotopes": {
+    "id": "radioisotopes",
+    "title": "Radioactive Elements",
+    "publisher": "CIAAW / IUPAC",
+    "url": "https://www.ciaaw.org/radioactive-elements.htm",
+    "accessed": "2026-10-25"
+  },
+  "gem-color": {
+    "id": "gem-color",
+    "title": "The origins of color in minerals — Kurt Nassau",
+    "publisher": "American Mineralogist, v. 63, p. 219–229 / Mineralogical Society of America",
+    "url": "https://msaweb.org/msa/Collectors_Corner/arc/color.htm",
+    "accessed": "2026-10-25",
+    "year": 1978
+  },
+  "alexandrite": {
+    "id": "alexandrite",
+    "title": "Explanation of the Colour Change in Alexandrites",
+    "publisher": "Scientific Reports",
+    "url": "https://www.nature.com/articles/s41598-020-62707-3",
+    "accessed": "2026-10-25",
+    "year": 2020
+  },
+  "gem-treatment": {
+    "id": "gem-treatment",
+    "title": "An Introduction to Gem Treatments",
+    "publisher": "Gemological Institute of America",
+    "url": "https://my.gia.edu/articles/gem-treatment",
+    "accessed": "2026-10-25"
+  },
+  "smoky-quartz": {
+    "id": "smoky-quartz",
+    "title": "Irradiated Quartz Crystal (Smoky Quartz)",
+    "publisher": "Oak Ridge Associated Universities — Museum of Radiation and Radioactivity",
+    "url": "https://www.orau.org/health-physics-museum/collection/lichtenberg/gemstones/quartz.html",
+    "accessed": "2026-10-25"
+  },
+  "amethyst": {
+    "id": "amethyst",
+    "title": "Amethyst",
+    "publisher": "Oak Ridge Associated Universities — Museum of Radiation and Radioactivity",
+    "url": "https://www.orau.org/health-physics-museum/collection/lichtenberg/gemstones/amethyst.html",
+    "accessed": "2026-10-25"
+  },
+  "water": {
+    "id": "water",
+    "title": "NIST Standard Reference Database 10 — Steam",
+    "publisher": "National Institute of Standards and Technology",
+    "url": "https://www.nist.gov/document/steam-manual-222pdf",
+    "accessed": "2026-10-25"
+  },
+  "lab": {
+    "id": "lab",
+    "title": "Using Standard Laboratory Equipment",
+    "publisher": "Indiana University East — Experimental Chemistry Laboratory Manual",
+    "url": "https://iu.pressbooks.pub/iuegenchemlabs/front-matter/using-standard-laboratory-equipment/",
+    "accessed": "2026-10-25"
+  },
+  "lab-safety": {
+    "id": "lab-safety",
+    "title": "Prudent Practices in the Laboratory: Handling and Management of Chemical Hazards",
+    "publisher": "National Research Council / National Academies Press",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK55878/",
+    "accessed": "2026-10-25",
+    "year": 2011
+  },
+  "opal": {
+    "id": "opal",
+    "title": "Opal — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/opal-description",
+    "accessed": "2026-10-25"
+  },
+  "ruby": {
+    "id": "ruby",
+    "title": "Ruby — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/ruby-description",
+    "accessed": "2026-10-25"
+  },
+  "emerald": {
+    "id": "emerald",
+    "title": "Emerald — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/emerald-description",
+    "accessed": "2026-10-25"
+  },
+  "sapphire": {
+    "id": "sapphire",
+    "title": "Sapphire — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/sapphire-description",
+    "accessed": "2026-10-25"
+  },
+  "diamond": {
+    "id": "diamond",
+    "title": "Diamond — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/diamond-description",
+    "accessed": "2026-10-25"
+  },
+  "alexandrite-gia": {
+    "id": "alexandrite-gia",
+    "title": "Alexandrite — Gem Encyclopedia",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/alexandrite-description",
+    "accessed": "2026-10-25"
+  },
+  "balance": {
+    "id": "balance",
+    "title": "Chemistry 2e — 4.1. Writing and Balancing Chemical Equations",
+    "publisher": "OpenStax",
+    "year": 2019,
+    "url": "https://openstax.org/books/chemistry-2e/pages/4-1-writing-and-balancing-chemical-equations",
+    "accessed": "2026-10-25"
+  },
+  "periodic": {
+    "id": "periodic",
+    "title": "Periodic Table — element information, properties and uses",
+    "publisher": "Royal Society of Chemistry",
+    "url": "https://periodic-table.rsc.org/",
+    "accessed": "2026-10-25"
+  },
+  "rate-laws": {
+    "id": "rate-laws",
+    "title": "Chemistry 2e — 12.3. Rate Laws",
+    "publisher": "OpenStax",
+    "year": 2019,
+    "url": "https://openstax.org/books/chemistry-2e/pages/12-3-rate-laws",
+    "accessed": "2026-10-25"
+  },
+  "unit-cell": {
+    "id": "unit-cell",
+    "title": "Unit cell",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Unit_cell",
+    "accessed": "2026-10-25"
+  },
+  "primitive-cell": {
+    "id": "primitive-cell",
+    "title": "Primitive cell",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Primitive_cell",
+    "accessed": "2026-10-25"
+  },
+  "atomic-structure": {
+    "id": "atomic-structure",
+    "title": "Chemistry 2e — 2.3. Atomic Structure and Symbolism",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/2-3-atomic-structure-and-symbolism",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "titration": {
+    "id": "titration",
+    "title": "Chemistry 2e — 4.5. Quantitative Chemical Analysis",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/4-5-quantitative-chemical-analysis",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "electrostatic-potential": {
+    "id": "electrostatic-potential",
+    "title": "Organic Chemistry — 2.1. Polar Covalent Bonds and Electronegativity",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/organic-chemistry/pages/2-1-polar-covalent-bonds-and-electronegativity",
+    "accessed": "2026-10-25",
+    "year": 2023
+  },
+  "electric-potential": {
+    "id": "electric-potential",
+    "title": "University Physics Volume 2 — 7.2. Electric Potential and Potential Difference",
+    "publisher": "OpenStax",
+    "year": 2016,
+    "url": "https://openstax.org/books/university-physics-volume-2/pages/7-2-electric-potential-and-potential-difference",
+    "accessed": "2026-10-25"
+  },
+  "radial-probability": {
+    "id": "radial-probability",
+    "title": "Physical Chemistry — Lectures 21–22: The Hydrogen Atom",
+    "publisher": "MIT OpenCourseWare — 5.61",
+    "year": 2007,
+    "url": "https://ocw.mit.edu/courses/5-61-physical-chemistry-fall-2007/c2078ff25c61c136e67ceb6fd8eb9b34_lecture21to22.pdf",
+    "accessed": "2026-10-25"
+  },
+  "electron-configuration": {
+    "id": "electron-configuration",
+    "title": "Chemistry 2e — 6.4. Electronic Structure of Atoms (Electron Configurations)",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/6-4-electronic-structure-of-atoms-electron-configurations",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "atomic-history": {
+    "id": "atomic-history",
+    "title": "Chemistry 2e — 2.2. Evolution of Atomic Theory",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/2-2-evolution-of-atomic-theory",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "hybrid-orbitals": {
+    "id": "hybrid-orbitals",
+    "title": "Chemistry 2e — 8.2. Hybrid Atomic Orbitals",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/8-2-hybrid-atomic-orbitals",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "valence-bond": {
+    "id": "valence-bond",
+    "title": "Chemistry 2e — 8.1. Valence Bond Theory",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/8-1-valence-bond-theory",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "resonance": {
+    "id": "resonance",
+    "title": "Chemistry 2e — 7.4. Formal Charges and Resonance",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/7-4-formal-charges-and-resonance",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "phase-transitions": {
+    "id": "phase-transitions",
+    "title": "Chemistry 2e — 10.3. Phase Transitions",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/10-3-phase-transitions",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "phase-diagrams": {
+    "id": "phase-diagrams",
+    "title": "Chemistry 2e — 10.4. Phase Diagrams",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/10-4-phase-diagrams",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "acid-strength": {
+    "id": "acid-strength",
+    "title": "Chemistry 2e — 14.3. Relative Strengths of Acids and Bases",
+    "publisher": "OpenStax",
+    "url": "https://openstax.org/books/chemistry-2e/pages/14-3-relative-strengths-of-acids-and-bases",
+    "accessed": "2026-10-25",
+    "year": 2019
+  },
+  "gem-identification": {
+    "id": "gem-identification",
+    "title": "How GIA Analyzes Colored Stones from Start to Finish",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/gia-news-research/guide-how-gia-analyzes-colored-stones",
+    "accessed": "2026-10-25",
+    "year": 2025
+  },
+  "gem-synthesis": {
+    "id": "gem-synthesis",
+    "title": "Man-made Diamonds: Questions and Answers",
+    "publisher": "Gemological Institute of America",
+    "url": "https://www.gia.edu/gia-news-research/manmade-diamonds-questions-answers",
+    "accessed": "2026-10-25",
+    "year": 2017
+  },
+  "lab-practices": {
+    "id": "lab-practices",
+    "title": "Prudent Practices in the Laboratory — Working with Chemicals",
+    "publisher": "National Research Council / National Academies Press",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK55872/",
+    "accessed": "2026-10-25",
+    "year": 2011
+  },
+  "bleach-compatibility": {
+    "id": "bleach-compatibility",
+    "title": "Sodium Hypochlorite (Bleach) Incompatibility",
+    "publisher": "University of Utah — Environmental Health and Safety",
+    "url": "https://www.ehs.utah.edu/guidelines/sodium-hypochlorite-bleach-incompatibility/",
+    "accessed": "2026-10-25"
+  },
+  "ion-dipole-origin": {
+    "id": "ion-dipole-origin",
+    "title": "Origin-Dependence of Dipole Moments of Charged Proteins: Theoretical Foundations and Implications, Revisited",
+    "publisher": "Journal of Computational Chemistry — Wiley",
+    "url": "https://doi.org/10.1002/jcc.70207",
+    "accessed": "2026-10-25",
+    "year": 2025
+  },
+  "permanganate-spectrum": {
+    "id": "permanganate-spectrum",
+    "title": "Absorption and luminescence spectroscopy of the MnO4 centers in alkali halide crystals",
+    "publisher": "Journal of Alloys and Compounds — Elsevier",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0925838802001007",
+    "accessed": "2026-10-25",
+    "year": 2002
+  },
+  "crystal-definition": {
+    "id": "crystal-definition",
+    "title": "Crystal",
+    "publisher": "International Union of Crystallography — Online Dictionary",
+    "url": "https://dictionary.iucr.org/Crystal",
+    "accessed": "2026-10-25"
+  }
+}

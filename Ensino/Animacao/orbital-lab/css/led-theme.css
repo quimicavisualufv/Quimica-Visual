@@ -1,0 +1,124 @@
+/* ORBITAL LAB — IDENTIDADE PRETO / VERMELHO / OURO | v3.4
+   Camada de acabamento não invasiva: mantém layout, textos e comportamento.
+   As duas fases dos orbitais (+/-) são respectivamente ouro e vermelho.
+*/
+:root{
+  color-scheme: dark;
+  --bg:#080708;
+  --panel:#110d0e;
+  --panel2:#191112;
+  --edge:#49312b;
+  --edge-soft:#30201e;
+  --ink:#f0e9df;
+  --muted:#ac9b91;
+  --lightmuted:#d3c3b3;
+  --cyan:#f3bd65;
+  --violet:#f34743;
+  --gold:#f5c773;
+  --led-red:#ff3834;
+  --led-red-soft:#c71e24;
+  --led-gold:#f5bc5c;
+  --led-gold-soft:#ae752e;
+  --led-border:linear-gradient(125deg,rgba(255,69,57,.91),rgba(255,69,57,.06) 32%,rgba(245,195,106,.11) 59%,rgba(248,187,82,.85));
+  --shadow:0 20px 52px rgba(0,0,0,.55);
+  accent-color:var(--led-gold);
+}
+html{background:#070607}
+body{background:#080708;color:var(--ink)}
+::selection{background:rgba(238,65,50,.42);color:#fff8ea}
+button,input,select,textarea{accent-color:var(--led-gold)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid #f8c36b;outline-offset:3px}
+input[type=range]{accent-color:#f7bc64}
+.app-shell{background:radial-gradient(ellipse at 78% -20%,rgba(126,22,22,.12),transparent 50%),#080708}
+.sidebar{background:linear-gradient(160deg,#100c0d 0%,#0c0a0a 68%,#0b0909 100%);border-right-color:#39201d;box-shadow:6px 0 30px rgba(0,0,0,.38),1px 0 14px rgba(249,56,52,.09)}
+.sidebar::before{content:"";position:absolute;right:-1px;top:65px;bottom:28px;width:1px;pointer-events:none;background:linear-gradient(180deg,transparent,#ff413a 12%,rgba(255,53,46,.06) 47%,#edb967 88%,transparent);box-shadow:0 0 8px rgba(255,50,40,.48),0 0 14px rgba(234,166,67,.3)}
+.brand-symbol{background:linear-gradient(140deg,#28130f,#131010);border-color:#98603a;box-shadow:inset 0 0 12px rgba(234,167,65,.1),0 0 12px rgba(235,58,42,.14)}
+.brand-symbol span{background:#ffd480;box-shadow:0 0 12px rgba(253,186,84,.62)}
+.brand-light,.brand strong{color:#f5c772}
+.side-link{transition:background .22s,border-color .22s,box-shadow .22s,color .22s}
+.side-link:hover{background:linear-gradient(90deg,#291514,#1b1413);color:#ffebd7}
+.side-link.active,.side-link.science-link.active{color:#ffeada;background:linear-gradient(100deg,rgba(115,19,20,.75),rgba(40,19,16,.92));border:1px solid rgba(242,76,58,.68);box-shadow:inset 3px 0 0 #ff4842,inset 0 0 22px rgba(220,43,40,.15),0 0 13px rgba(255,45,40,.18)}
+.side-link.active .nav-icon{color:#ffcb72;text-shadow:0 0 12px rgba(247,176,60,.45)}
+.side-link:not(.active) .nav-icon{color:#d7b27e}
+.topbar{background:rgba(13,10,10,.94);border-bottom:1px solid rgba(193,96,52,.28);box-shadow:0 1px 14px rgba(0,0,0,.25)}
+.top-chip{color:#f1c77b;border-color:#69462a;background:rgba(47,30,18,.42)}
+.online-dot,.green-dot{background:#f4c26b;box-shadow:0 0 8px rgba(246,189,79,.7)}
+.content{background:transparent}
+.hero{position:relative}
+.hero::after{content:"";display:block;width:clamp(120px,24%,260px);height:1px;margin-top:20px;background:linear-gradient(90deg,#ff4b41 0%,#f4b858 65%,transparent 100%);box-shadow:0 0 8px rgba(248,62,45,.5),0 0 12px rgba(246,171,65,.32);pointer-events:none}
+.hero h1 em{color:#f5c570;text-shadow:0 0 24px rgba(239,154,43,.13)}
+.eyebrow,.section-eyebrow,.science-heading{color:#dbad62}
+.accent-line{background:linear-gradient(90deg,#fc3e3b,#ffcd76);box-shadow:0 0 12px rgba(255,66,52,.65)}
+.module-tabs{border-bottom-color:#45302a}
+.module-tab.active{color:#ffe7c8;border-bottom-color:#ff4842;text-shadow:0 0 14px rgba(255,60,49,.16)}
+.module-tab.active .tab-index{color:#f8c26f}
+/* LED: contornos duplos suaves, em vez de grandes superfícies luminosas. */
+.stage-panel,.information-panel,.energy-panel,.sci-card,.compare-card,.lesson-card,.challenge-card,.advanced-card,.teaching-card,.viewer-card,.panel-card{
+  border-color:rgba(169,103,64,.46);
+  background-color:#110e0e;
+  box-shadow:0 17px 42px rgba(0,0,0,.39),0 0 0 1px rgba(225,151,67,.05),-3px 0 12px rgba(248,44,42,.09),3px 0 12px rgba(239,182,87,.06);
+}
+.stage-panel,.information-panel,.energy-panel,.sci-card,.compare-card{position:relative;isolation:isolate}
+.stage-panel::before,.information-panel::before,.energy-panel::before,.sci-card::before,.compare-card::before{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;border:1px solid transparent;
+  background:var(--led-border) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  opacity:.72;
+}
+.panel-head{background:linear-gradient(90deg,rgba(46,18,17,.88),rgba(25,17,14,.92));border-bottom:1px solid rgba(208,111,55,.32);color:#d9bda7}
+.header-dot{background:#f44542;box-shadow:0 0 10px rgba(255,48,46,.82)}
+.header-dot.turquoise,.header-dot.amber{background:#f5c46d;box-shadow:0 0 10px rgba(255,195,86,.72)}
+.stage,.advanced-scene,.aom-scene{background:radial-gradient(ellipse at 49% 45%,#34201c 0%,#1d1212 48%,#0c090a 100%)}
+.stage-ambient{background:radial-gradient(ellipse,rgba(175,56,40,.13),transparent 67%)}
+.stage-grid{background-image:linear-gradient(rgba(212,106,64,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(212,106,64,.09) 1px,transparent 1px)}
+.stage-corner{border-color:#efb961;filter:drop-shadow(0 0 5px rgba(255,191,80,.32))}
+.stage-label{color:#f5e9d8;text-shadow:0 2px 10px #080405}
+.label-icon,.stage-tip span{color:#f1ba5e}
+.axis-x{color:#ff5149}.axis-y{color:#efbc69}.axis-z{color:#d6c2a0}
+.stage-controls{background:#141011;border-top:1px solid rgba(214,109,64,.19)}
+.control-btn,.icon-button,.tour-replay-top{border-color:#644438;background:linear-gradient(150deg,#271919,#151113);color:#ead1b6}
+.control-btn:hover,.icon-button:hover,.tour-replay-top:hover{background:#34201b;border-color:#e3a358;box-shadow:0 0 11px rgba(242,173,79,.12)}
+.control-btn.active-toggle{border-color:#e18442;background:rgba(105,45,20,.29);color:#ffd48a;box-shadow:inset 0 0 12px rgba(244,151,55,.12),0 0 12px rgba(240,139,52,.12)}
+.phase-a{background:#f7c56c;box-shadow:0 0 10px rgba(254,191,72,.55)}
+.phase-b{background:#f24843;box-shadow:0 0 10px rgba(255,61,52,.5)}
+.micro-line{background:linear-gradient(90deg,#ff4342,#f6c36b);box-shadow:0 0 12px rgba(246,93,48,.4)}
+.info-kind,.fact-label{color:#deab69}
+.note,.science-note{background:rgba(80,39,26,.32);border-color:#694936;color:#dec2a3}
+.note>span{color:#f7bf66}
+.primary-button,.ot-next{background:linear-gradient(110deg,#9d2420,#eb3e32 56%,#ec9c48);border-color:#f36d45;color:#fff3e3;box-shadow:inset 0 1px rgba(255,217,147,.25),0 0 13px rgba(252,62,48,.17)}
+.primary-button:hover,.ot-next:hover{filter:brightness(1.1);box-shadow:0 0 20px rgba(253,71,45,.29),0 0 13px rgba(247,183,76,.20)}
+.quiz-choice.right{border-color:#edb763;background:#3a281a}
+.quiz-choice.wrong{border-color:#ee5551;background:#36171a}
+.science-chip.measured{background:#38291b;border-color:#b98549;color:#ffe0a5}
+.science-chip.calculated{background:#401b1b;border-color:#b54840;color:#fbc3b5}
+.science-chip.modeled{background:#392716;border-color:#c28d48;color:#f2d19a}
+.citation-box{border-left-color:#df9c4b;background:#251a16}
+.citation-box a,.science-text-link,.sci-footnote code{color:#f5c674}
+.formula-showcase{background:linear-gradient(110deg,#311e19,#201617);border-color:#8a5935;color:#fff0d0}
+.sci-stat{background:#201617;border-color:#593e2d}
+.sci-stat strong,.sci-label strong,.sci-intro h2 em{color:#f4c778}
+.sci-equation,.sci-eqn-stack{background:#24191a;border-color:#604031}
+.sci-label input:not([type=range]),.sci-label select,.sci-controls-two input,.sci-controls-three select,.compare-controls select,.compare-parameters input[type=number]{background:#130e0f;border-color:#644337;color:#f2dfcd}
+.module-switch,.module-switch select{background:#191112;border-color:#624137;color:#f2dfce}
+.db-energy svg,.aom-energy svg,.science-graph{background:#130e0e}
+/* Tutorial com fita de LED vermelha / dourada, sem arco-íris. */
+.ot-shade{background:rgba(4,2,2,.8)}
+.ot-rgb-frame{box-shadow:0 0 0 1px rgba(255,211,146,.23),0 0 16px rgba(255,57,50,.45),0 0 32px rgba(251,191,84,.25)}
+.ot-rgb-frame::before{background:conic-gradient(from var(--ot-spin,0deg),#ff3938,#ed9f47,#ffcf78,#e93734,#ae2627,#ff3938) border-box;filter:drop-shadow(0 0 4px rgba(255,61,53,.32))}
+.ot-card{border-color:#9a6137;background:linear-gradient(145deg,#251717,#151010 70%,#1c1510);box-shadow:0 20px 75px rgba(0,0,0,.75),0 0 26px rgba(245,113,49,.13);scrollbar-color:#956240 transparent}
+.ot-kicker{color:#f6c473}
+.ot-card h2{color:#fff0de}
+.ot-track{background:#36231e}
+.ot-track>span{background:linear-gradient(90deg,#dc3731,#f7bd62)}
+.ot-practice{background:#302019;border-color:#805438;color:#f3d1a0}
+.ot-practice.ot-tried{background:#382719;border-color:#ae7d3d;color:#ffe0a6}
+.ot-back,.ot-close{background:#261a19;border-color:#664539;color:#f0d3b5}
+.ot-actions,.ot-footer{background-color:transparent}
+.ot-index-label select{background:#1a1111;border-color:#79513b;color:#f4d6b5}
+/* Etiqueta de brilho discreto em estados ativos. */
+button:not(:disabled):active{filter:brightness(1.12)}
+@media(prefers-reduced-motion:reduce){.ot-rgb-frame::before{animation:none;--ot-spin:40deg}*,*::before,*::after{scroll-behavior:auto}}
+@media(max-height:480px){.ot-actions,.ot-footer{background:#181111}}

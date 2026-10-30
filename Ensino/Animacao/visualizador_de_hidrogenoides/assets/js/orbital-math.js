@@ -1,0 +1,9 @@
+export function entryNeedsPlaneFallback(entry) { return (entry.wavePsiMaxAbs || 0) <= 1.000001e-12; }
+export function preferredFallbackPlane(entry) { const planeMap={p_y:'yz',d_xy:'xy',d_yz:'yz'}; return planeMap[entry.orbital] || entry.wavePlane || 'xz'; }
+export function planeAxesForName(plane) { if(plane==='xy') return [0,1,2,['x / a0','y / a0']]; if(plane==='yz') return [1,2,0,['y / a0','z / a0']]; return [0,2,1,['x / a0','z / a0']]; }
+function factorialInt(n){ let value=1; for(let i=2;i<=n;i++) value*=i; return value; }
+function generalizedLaguerre(k,alpha,x){ if(k===0)return 1; if(k===1)return 1+alpha-x; let a=1,b=1+alpha-x; for(let m=2;m<=k;m++){ const c=((2*m-1+alpha-x)*b-(m-1+alpha)*a)/m; a=b; b=c; } return b; }
+export function orbitalToL(orbital){ if(orbital==='s')return 0; if(['p_x','p_y','p_z'].includes(orbital))return 1; return 2; }
+export function radialHydrogen(n,l,r){ const rho=2*r/n; const prefactor=Math.pow(2/n,1.5); const norm=Math.sqrt(factorialInt(n-l-1)/(2*n*factorialInt(n+l))); const laguerre=generalizedLaguerre(n-l-1,2*l+1,rho); return prefactor*norm*Math.exp(-rho/2)*Math.pow(rho,l)*laguerre; }
+export function angularRealCartesian(orbital,x,y,z,r){ const rr=Math.max(r*r,1e-12); if(orbital==='s')return 1/Math.sqrt(4*Math.PI); if(orbital==='p_x')return Math.sqrt(3/(4*Math.PI))*(r>1e-12?x/r:0); if(orbital==='p_y')return -Math.sqrt(3/(4*Math.PI))*(r>1e-12?y/r:0); if(orbital==='p_z')return Math.sqrt(3/(4*Math.PI))*(r>1e-12?z/r:0); if(orbital==='d_xy')return -Math.sqrt(15/(4*Math.PI))*x*y/rr; if(orbital==='d_xz')return Math.sqrt(15/(4*Math.PI))*x*z/rr; if(orbital==='d_yz')return -Math.sqrt(15/(4*Math.PI))*y*z/rr; if(orbital==='d_x2_y2')return Math.sqrt(15/(16*Math.PI))*(x*x-y*y)/rr; if(orbital==='d_z2')return Math.sqrt(5/(16*Math.PI))*(3*z*z-rr)/rr; return 0; }
+export function planeCoords(plane,u,v){ if(plane==='xy')return [u,v,0]; if(plane==='yz')return [0,u,v]; return [u,0,v]; }

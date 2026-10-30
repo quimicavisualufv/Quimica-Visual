@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1a1c29"/>
+      <stop offset="60%" stop-color="#0d0e15"/>
+      <stop offset="100%" stop-color="#050508"/>
+    </radialGradient>
+
+    <!-- Floor Gradient -->
+    <radialGradient id="floor-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a2d45" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#121420" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#050508" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Gibbs (Gold/Light) Gradients -->
+    <linearGradient id="g-grad-main" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9C4"/>
+      <stop offset="50%" stop-color="#F1C40F"/>
+      <stop offset="100%" stop-color="#F39C12"/>
+    </linearGradient>
+    <linearGradient id="g-grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F39C12"/>
+      <stop offset="100%" stop-color="#D35400"/>
+    </linearGradient>
+    <linearGradient id="g-grad-light" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F1C40F"/>
+    </linearGradient>
+
+    <!-- Enthalpy (Fire/Red) Gradients -->
+    <linearGradient id="h-grad-main" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF7043"/>
+      <stop offset="50%" stop-color="#E53935"/>
+      <stop offset="100%" stop-color="#B71C1C"/>
+    </linearGradient>
+    <linearGradient id="h-grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C62828"/>
+      <stop offset="100%" stop-color="#7F0000"/>
+    </linearGradient>
+    <linearGradient id="h-grad-light" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFB74D"/>
+      <stop offset="100%" stop-color="#E53935"/>
+    </linearGradient>
+
+    <!-- Entropy (Chaos/Purple-Cyan) Gradients -->
+    <linearGradient id="s-grad-main" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#8E24AA"/>
+      <stop offset="100%" stop-color="#4A148C"/>
+    </linearGradient>
+    <linearGradient id="s-grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6A1B9A"/>
+      <stop offset="100%" stop-color="#311B92"/>
+    </linearGradient>
+    <linearGradient id="s-grad-light" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#84FFFF"/>
+      <stop offset="100%" stop-color="#00B0FF"/>
+    </linearGradient>
+
+    <!-- Glow Filters -->
+    <filter id="glow-strong" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Drop Shadow for Speech Bubbles -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="url(#bg-grad)"/>
+
+  <!-- Floor Grid / Platform -->
+  <g transform="translate(0, 50)">
+    <ellipse cx="600" cy="750" rx="550" ry="120" fill="url(#floor-grad)"/>
+    <ellipse cx="600" cy="750" rx="550" ry="120" fill="none" stroke="#393e59" stroke-width="2" opacity="0.5"/>
+    <ellipse cx="600" cy="750" rx="450" ry="90" fill="none" stroke="#4a5075" stroke-width="1.5" opacity="0.4"/>
+    <ellipse cx="600" cy="750" rx="350" ry="60" fill="none" stroke="#F1C40F" stroke-width="1" opacity="0.3"/>
+    
+    <!-- Grid Lines -->
+    <path d="M 50 750 L 1150 750 M 600 630 L 600 870 M 200 665 L 1000 835 M 200 835 L 1000 665" stroke="#393e59" stroke-width="1" opacity="0.3"/>
+  </g>
+
+  <!-- Connection Lines (Gibbs to H and S) -->
+  <g stroke-dasharray="10, 10" stroke-width="3" opacity="0.6" fill="none">
+    <path d="M 600 450 Q 400 400 250 500" stroke="#F1C40F" filter="url(#glow-subtle)"/>
+    <path d="M 600 450 Q 800 400 950 500" stroke="#F1C40F" filter="url(#glow-subtle)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- ENTHALPY (H) - Left Character              -->
+  <!-- ========================================== -->
+  <g id="enthalpy" transform="translate(250, 550)">
+    <!-- Aura / Flames -->
+    <path d="M -60 0 Q -80 -100 -30 -150 Q -40 -80 0 -50 Q 40 -80 30 -150 Q 80 -100 60 0 Z" fill="#FF7043" opacity="0.3" filter="url(#glow-strong)"/>
+    
+    <!-- Body Base -->
+    <polygon points="-70,150 70,150 90,0 50,-80 -50,-80 -90,0" fill="url(#h-grad-dark)"/>
+    
+    <!-- Chest / Armor Facets -->
+    <polygon points="-50,-80 0,-40 50,-80 70,0 0,60 -70,0" fill="url(#h-grad-main)"/>
+    <polygon points="-50,-80 0,-40 0,60 -70,0" fill="url(#h-grad-light)" opacity="0.8"/>
+    
+    <!-- Shoulders -->
+    <polygon points="-90,0 -50,-80 -110,-60" fill="url(#h-grad-light)"/>
+    <polygon points="90,0 50,-80 110,-60" fill="url(#h-grad-main)"/>
+    
+    <!-- Head (Flame Shape) -->
+    <path d="M 0 -90 Q -40 -130 0 -190 Q 40 -130 0 -90 Z" fill="url(#h-grad-light)" filter="url(#glow-subtle)"/>
+    <polygon points="-15,-110 0,-140 15,-110 0,-95" fill="#FFFFFF" opacity="0.9"/>
+
+    <!-- Arms -->
+    <path d="M -70 0 L -120 80 L -90 100" fill="url(#h-grad-main)" stroke="#B71C1C" stroke-width="4"/>
+    <path d="M 70 0 L 140 -40 L 170 -20" fill="url(#h-grad-light)" stroke="#B71C1C" stroke-width="4"/> <!-- Reaching out -->
+
+    <!-- Emblem 'H' -->
+    <text x="0" y="10" font-family="system-ui, sans-serif" font-weight="900" font-size="48" fill="#FFFFFF" text-anchor="middle" filter="url(#glow-subtle)">H</text>
+
+    <!-- Floating Embers -->
+    <circle cx="-80" cy="-120" r="4" fill="#FFB74D" filter="url(#glow-subtle)"/>
+    <circle cx="60" cy="-160" r="6" fill="#FF7043" filter="url(#glow-subtle)"/>
+    <circle cx="90" cy="-80" r="3" fill="#FFFFFF" filter="url(#glow-subtle)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- ENTROPY (S) - Right Character              -->
+  <!-- ========================================== -->
+  <g id="entropy" transform="translate(950, 550)">
+    <!-- Aura / Swirls -->
+    <path d="M -80 50 C -150 -50 0 -150 50 -100 C 100 -50 150 -150 80 -200 C 0 -250 -100 -100 -50 0 Z" fill="#8E24AA" opacity="0.3" filter="url(#glow-strong)"/>
+
+    <!-- Body Base (Fluid/Curved) -->
+    <path d="M -40 150 Q 0 100 -30 50 T 0 -50 Q 40 -100 0 -120 Q -40 -100 0 -50 T 30 50 Q 0 100 40 150 Z" fill="url(#s-grad-dark)"/>
+    
+    <!-- Torso Waves -->
+    <path d="M -30 50 C -80 0 -20 -60 0 -80 C 20 -60 80 0 30 50 C 0 80 -30 50 -30 50 Z" fill="url(#s-grad-main)"/>
+    <path d="M -15 30 C -50 -10 -10 -50 0 -60 C 10 -50 50 -10 15 30 Z" fill="url(#s-grad-light)" opacity="0.9"/>
+
+    <!-- Head (Floating Spheres/Galaxy) -->
+    <circle cx="0" cy="-140" r="30" fill="url(#s-grad-light)" filter="url(#glow-subtle)"/>
+    <circle cx="0" cy="-140" r="15" fill="#FFFFFF" opacity="0.8"/>
+    <ellipse cx="0" cy="-140" rx="45" ry="10" fill="none" stroke="#00FFFF" stroke-width="3" transform="rotate(-20 0 -140)" filter="url(#glow-subtle)"/>
+    <ellipse cx="0" cy="-140" rx="45" ry="10" fill="none" stroke="#84FFFF" stroke-width="1" transform="rotate(40 0 -140)"/>
+
+    <!-- Arms (Ribbons) -->
+    <path d="M -20 -40 C -80 -20 -120 40 -150 0" fill="none" stroke="url(#s-grad-light)" stroke-width="12" stroke-linecap="round"/> <!-- Reaching out -->
+    <path d="M 20 -40 C 80 -20 100 60 120 80" fill="none" stroke="url(#s-grad-main)" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Emblem 'S' -->
+    <text x="0" y="-5" font-family="system-ui, sans-serif" font-weight="900" font-size="48" fill="#FFFFFF" text-anchor="middle" filter="url(#glow-subtle)">S</text>
+
+    <!-- Floating Chaos Particles -->
+    <circle cx="-60" cy="-180" r="5" fill="#00FFFF" filter="url(#glow-subtle)"/>
+    <circle cx="70" cy="-100" r="4" fill="#84FFFF" filter="url(#glow-subtle)"/>
+    <circle cx="40" cy="-200" r="3" fill="#FFFFFF" filter="url(#glow-subtle)"/>
+    <rect x="-90" y="-80" width="6" height="6" fill="#8E24AA" transform="rotate(45 -90 -80)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- GIBBS FREE ENERGY (G) - Center Character   -->
+  <!-- ========================================== -->
+  <g id="gibbs" transform="translate(600, 480)">
+    <!-- Majestic Aura -->
+    <circle cx="0" cy="-120" r="140" fill="#F1C40F" opacity="0.15" filter="url(#glow-strong)"/>
+    <path d="M 0 -280 L 20 -120 L 180 -120 L 20 -100 L 0 60 L -20 -100 L -180 -120 L -20 -120 Z" fill="#FFF9C4" opacity="0.2" filter="url(#glow-subtle)"/>
+
+    <!-- Levitating Base/Legs -->
+    <polygon points="-30,180 30,180 50,60 -50,60" fill="url(#g-grad-dark)"/>
+    <polygon points="-15,180 15,180 25,60 -25,60" fill="url(#g-grad-main)"/>
+
+    <!-- Torso / Mantle -->
+    <polygon points="-80,60 80,60 120,-60 60,-100 -60,-100 -120,-60" fill="url(#g-grad-dark)"/>
+    <polygon points="-60,60 0,80 60,60 90,-50 0,-80 -90,-50" fill="url(#g-grad-main)"/>
+    <polygon points="-60,60 0,80 0,-80 -90,-50" fill="url(#g-grad-light)" opacity="0.8"/>
+
+    <!-- Head (Glowing Diamond/Sun) -->
+    <polygon points="0,-180 40,-130 0,-80 -40,-130" fill="url(#g-grad-light)" filter="url(#glow-subtle)"/>
+    <polygon points="0,-160 20,-130 0,-100 -20,-130" fill="#FFFFFF"/>
+
+    <!-- Arms (Authoritative Gestures) -->
+    <!-- Left Arm pointing to Enthalpy -->
+    <path d="M -80 -60 L -160 -20 L -220 -40" fill="none" stroke="url(#g-grad-light)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Right Arm pointing to Entropy -->
+    <path d="M 80 -60 L 160 -20 L 220 -40" fill="none" stroke="url(#g-grad-main)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Emblem 'G' -->
+    <text x="0" y="20" font-family="system-ui, sans-serif" font-weight="900" font-size="56" fill="#FFFFFF" text-anchor="middle" filter="url(#glow-subtle)">G</text>
+
+    <!-- Energy Sparks -->
+    <polygon points="-120,-160 -115,-150 -125,-150" fill="#FFFFFF" filter="url(#glow-subtle)"/>
+    <polygon points="130,-180 135,-170 125,-170" fill="#FFF9C4" filter="url(#glow-subtle)"/>
+    <circle cx="0" cy="200" r="40" fill="#F1C40F" opacity="0.2" filter="url(#glow-strong)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- DIALOGUE & HOLOGRAPHIC SPEECH BUBBLES      -->
+  <!-- ========================================== -->
+
+  <!-- Enthalpy Bubble (Left) -->
+  <g transform="translate(220, 220)" filter="url(#drop-shadow)">
+    <!-- Bubble Path -->
+    <path d="M -120 -60 L 120 -60 L 140 -40 L 140 40 L 120 60 L 20 60 L 40 100 L -20 60 L -120 60 L -140 40 L -140 -40 Z" fill="#1a1110" stroke="#E53935" stroke-width="3" opacity="0.9"/>
+    <!-- Text -->
+    <text x="0" y="-15" font-family="system-ui, sans-serif" font-weight="bold" font-size="20" fill="#FFB74D" text-anchor="middle">Eu minimizo energia!</text>
+    <text x="0" y="20" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle" filter="url(#glow-subtle)">ΔH &lt; 0</text>
+  </g>
+
+  <!-- Entropy Bubble (Right) -->
+  <g transform="translate(980, 220)" filter="url(#drop-shadow)">
+    <!-- Bubble Path -->
+    <path d="M -120 -60 L 120 -60 L 140 -40 L 140 40 L 120 60 L 20 60 L -40 100 L -20 60 L -120 60 L -140 40 L -140 -40 Z" fill="#110d1a" stroke="#00E5FF" stroke-width="3" opacity="0.9"/>
+    <!-- Text -->
+    <text x="0" y="-15" font-family="system-ui, sans-serif" font-weight="bold" font-size="20" fill="#84FFFF" text-anchor="middle">Eu maximizo caos!</text>
+    <text x="0" y="20" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle" filter="url(#glow-subtle)">ΔS &gt; 0</text>
+    <!-- Temperature Modifier Note -->
+    <text x="0" y="45" font-family="system-ui, sans-serif" font-weight="bold" font-size="14" fill="#8E24AA" text-anchor="middle">(Escalonado por T)</text>
+  </g>
+
+  <!-- Gibbs Master Bubble (Top Center) -->
+  <g transform="translate(600, 140)" filter="url(#drop-shadow)">
+    <!-- Sci-Fi Bubble Path -->
+    <path d="M -220 -70 L 220 -70 L 250 -40 L 250 50 L 220 80 L 30 80 L 0 130 L -30 80 L -220 80 L -250 50 L -250 -40 Z" fill="#16140d" stroke="#F1C40F" stroke-width="4" opacity="0.95"/>
+    
+    <!-- Decorative Tech Lines -->
+    <path d="M -240 -35 L -240 45" stroke="#F39C12" stroke-width="2"/>
+    <path d="M 240 -35 L 240 45" stroke="#F39C12" stroke-width="2"/>
+    
+    <!-- Text -->
+    <text x="0" y="-30" font-family="system-ui, sans-serif" font-weight="bold" font-size="22" fill="#FFF9C4" text-anchor="middle">Eu vejo...Beleza!</text>
+    
+    <!-- The Equation -->
+    <g transform="translate(0, 25)">
+      <text x="-90" y="0" font-family="system-ui, sans-serif" font-weight="900" font-size="42" fill="#F1C40F" text-anchor="middle" filter="url(#glow-subtle)">ΔG</text>
+      <text x="-30" y="-5" font-family="system-ui, sans-serif" font-weight="bold" font-size="36" fill="#FFFFFF" text-anchor="middle">=</text>
+      <text x="30" y="0" font-family="system-ui, sans-serif" font-weight="900" font-size="42" fill="#E53935" text-anchor="middle" filter="url(#glow-subtle)">ΔH</text>
+      <text x="90" y="-5" font-family="system-ui, sans-serif" font-weight="bold" font-size="36" fill="#FFFFFF" text-anchor="middle">-</text>
+      <text x="135" y="0" font-family="system-ui, sans-serif" font-weight="900" font-size="42" fill="#4CAF50" text-anchor="middle" filter="url(#glow-subtle)">T</text>
+      <text x="195" y="0" font-family="system-ui, sans-serif" font-weight="900" font-size="42" fill="#00E5FF" text-anchor="middle" filter="url(#glow-subtle)">ΔS</text>
+    </g>
+    
+    <!-- Subtext -->
+    <text x="0" y="65" font-family="system-ui, sans-serif" font-weight="bold" font-size="16" fill="#AAB7B8" text-anchor="middle">Se ΔG &lt; 0, Nós prosseguiremos!</text>
+  </g>
+
+  <!-- Floating Math Symbols in the air -->
+  <g font-family="system-ui, sans-serif" font-weight="900" font-size="32" opacity="0.4">
+    <!-- Near Enthalpy -->
+    <text x="380" y="420" fill="#E53935" filter="url(#glow-subtle)">-</text>
+    <text x="320" y="550" fill="#FF7043" filter="url(#glow-subtle)">-</text>
+    
+    <!-- Near Entropy -->
+    <text x="820" y="420" fill="#00E5FF" filter="url(#glow-subtle)">+</text>
+    <text x="880" y="550" fill="#84FFFF" filter="url(#glow-subtle)">+</text>
+    
+    <!-- Near Gibbs -->
+    <text x="480" y="350" fill="#F1C40F" filter="url(#glow-subtle)">&lt;</text>
+    <text x="720" y="350" fill="#F1C40F" filter="url(#glow-subtle)">&lt;</text>
+  </g>
+
+</svg>

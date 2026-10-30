@@ -1,0 +1,18 @@
+#team-1-v5iWwJmnJm .simoens-person-about-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  margin-top: .35rem;
+  color: #092158;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  line-height: 1.2;
+  transition: opacity .2s ease, transform .2s ease;
+}
+#team-1-v5iWwJmnJm .simoens-person-about-link:hover,
+#team-1-v5iWwJmnJm .simoens-person-about-link:focus-visible {
+  opacity: .78;
+  transform: translateY(-1px);
+}

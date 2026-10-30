@@ -1,0 +1,60 @@
+/* Tutorial VOICES: contorno RGB animado, centro absolutamente vazado.
+   O elemento original mantém suas cores e sua interação. */
+.tour-replay-top{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;min-height:33px;border-radius:8px;border:1px solid #41322e;background:#1f1a18;color:#f0c364;font-size:11px;font-weight:750;letter-spacing:.2px;cursor:pointer;transition:border-color .2s,background .2s}
+.tour-replay-top:hover,.tour-replay-top:focus-visible{border-color:#edb94c;background:#2e2421}
+.ot-root[hidden],.ot-root [hidden]{display:none!important}
+.ot-root{position:fixed;inset:0;z-index:2200;font-family:inherit;pointer-events:none}
+.ot-shade{position:fixed;z-index:1;background:rgba(8,6,6,.76);pointer-events:auto}
+.ot-rgb-frame{position:fixed;z-index:2;box-sizing:border-box;border-radius:11px;pointer-events:none;isolation:isolate;box-shadow:0 0 0 1px rgba(255,255,255,.20),0 0 18px rgba(237,184,71,.42),0 0 31px rgba(240,83,73,.22);background:transparent!important}
+.ot-rgb-frame::before{content:"";position:absolute;inset:0;border:3px solid transparent;border-radius:inherit;background:conic-gradient(from var(--ot-spin,0deg),#bfb3a6,#f7d788,#edb745,#edb745,#f0544a,#bfb3a6) border-box;-webkit-mask:linear-gradient(#ffffff 0 0) padding-box,linear-gradient(#ffffff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#ffffff 0 0) padding-box,linear-gradient(#ffffff 0 0);mask-composite:exclude;animation:ot-hue 3.5s linear infinite;pointer-events:none}
+@property --ot-spin{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes ot-hue{to{--ot-spin:360deg}}
+.ot-card{position:fixed;z-index:3;width:min(364px,calc(100vw - 24px));max-height:min(490px,calc(100dvh - 32px));overflow-y:auto;pointer-events:auto;border:1px solid #dbac4d;background:linear-gradient(145deg,#211b1a 0%,#181413 64%,#171312 100%);color:#f1c873;border-radius:16px;box-shadow:0 20px 75px rgba(0,0,0,.7),0 0 26px #edb74515;padding:18px;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#dbac4d transparent}
+.ot-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ot-kicker{color:#eebb4f;font-size:10px;line-height:1.3;font-weight:800;letter-spacing:1px}
+.ot-close{font-size:25px;width:29px;height:29px;display:grid;place-items:center;border:1px solid #da382f;border-radius:7px;background:#241e1d;color:#f0c365;cursor:pointer;line-height:1}
+.ot-close:hover{border-color:#efc160}
+.ot-meter{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:13px;color:#edb94a;font-size:10px;letter-spacing:.5px;font-weight:700}
+.ot-track{height:4px;background:#342825;border-radius:10px;overflow:hidden;margin-top:7px}
+.ot-track>span{display:block;height:100%;background:linear-gradient(90deg,#edb745,#f15c53,#f15e55);border-radius:10px;transition:width .15s ease}
+.ot-card h2{font-size:21px;line-height:1.17;margin:17px 0 8px;color:#f1c975;letter-spacing:-.3px;font-family:'Space Grotesk',sans-serif;font-weight:750}
+.ot-card p{font-size:12px;line-height:1.65;color:#f2655c;margin:0}
+.ot-practice{color:#eebd54;background:#241e1c;border:1px solid #3c2e2b;border-radius:9px;padding:9px 11px;font-size:11px;line-height:1.5;margin-top:14px}
+.ot-practice.ot-tried{background:#211b1a;color:#f0c263;border-color:#dbac4d}
+.ot-actions{display:flex;justify-content:space-between;gap:8px;margin-top:17px}
+.ot-button{font-size:12px;font-weight:750;border-radius:9px;min-height:40px;padding:9px 14px;cursor:pointer;font-family:inherit}
+.ot-back{background:#201b1a;border:1px solid #dbac4d;color:#efc05e}
+.ot-back:disabled{opacity:.34;cursor:not-allowed}
+.ot-next{background:linear-gradient(112deg,#edba4e,#f1594f);color:#141110;border:1px solid #f0c365;flex:1;max-width:180px}
+.ot-next:hover{filter:brightness(1.07)}
+.ot-footer{display:flex;justify-content:space-between;gap:12px;margin-top:12px}
+.ot-link{border:0;background:transparent;padding:5px 0;font:inherit;font-size:10px;color:#f04d43;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ot-link:hover{color:#f0c56a}
+.ot-card button:focus-visible,.tour-replay-top:focus-visible{outline:2px solid #ffffff;outline-offset:3px}
+@media(max-width:760px){.ot-card{width:calc(100vw - 24px);padding:14px 16px;max-height:min(360px,calc(100dvh - 155px))}.ot-card h2{font-size:19px;margin-top:11px}.ot-card p{font-size:11px;line-height:1.5}.ot-practice{margin-top:9px;padding:8px}.ot-actions{margin-top:10px}.ot-button{min-height:37px}.ot-meter{margin-top:9px}.ot-footer{margin-top:7px}.tour-replay-top{font-size:10px;padding:7px 9px}}
+@media(max-width:390px){.ot-kicker{font-size:9px}.ot-card h2{font-size:17px}.ot-card{max-height:calc(100dvh - 148px)}}
+@media(prefers-reduced-motion:reduce){.ot-rgb-frame::before{animation:none;--ot-spin:55deg}.ot-track>span{transition:none}}
+/* Em celulares na horizontal, navegação permanece visível enquanto a explicação rola. */
+@media(max-height:480px){
+ .ot-card{padding-bottom:0;overscroll-behavior:contain}
+ .ot-actions{position:sticky;bottom:27px;z-index:4;margin:9px -16px 0;padding:7px 16px 4px;background:#1a1514;box-shadow:0 -7px 11px #181413b3}
+ .ot-footer{position:sticky;bottom:0;z-index:5;margin:0 -16px;padding:4px 16px 8px;background:#1a1514}
+ .ot-card h2{margin-top:7px}
+}
+
+@media(max-width:760px){.ot-card{max-height:min(360px,calc(100dvh - 100px))}.ot-close{width:36px;height:36px}.ot-footer button{min-height:34px}}
+
+@media(max-height:480px){.ot-card{max-height:calc(100dvh - 28px)}.ot-actions{margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px}.ot-footer{margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px}}
+.ot-index-label{display:block;font-size:10px;color:#edb94c;margin-top:12px}.ot-index-label select{display:block;width:100%;margin-top:5px;padding:8px;border:1px solid #dbac4d;border-radius:7px;background:#1b1615;color:#f0c56a;font:inherit;font-size:11px;min-height:34px}.ot-index-label select:focus-visible{outline:2px solid #eebb51;outline-offset:2px}
+@media(max-width:760px){.ot-index-label{margin-top:8px}.ot-card{max-height:min(410px,calc(100dvh - 130px))}}
+@media(max-height:480px){.ot-card{max-height:calc(100dvh - 28px)}}
+/* Em telas baixas e largas, reserve uma coluna para a explicação do guia. */
+@media(min-width:760px) and (max-width:1100px) and (max-height:480px){
+ body.ot-running .content{margin-right:398px;padding:20px 14px}
+ body.ot-running .main-grid,body.ot-running .sim-grid,body.ot-running .lab-layout,body.ot-running .lesson-layout,body.ot-running .viewer-main,body.ot-running .sci-grid-two{grid-template-columns:minmax(0,1fr)}
+ body.ot-running .comparison-grid .compare-card{display:block}
+ body.ot-running .compare-controls>label{min-width:100%}
+ body.ot-running .compare-parameters,body.ot-running .sci-controls-three{grid-template-columns:minmax(0,1fr)}
+ body.ot-running .information-panel{display:block}
+ body.ot-running #lessonViewer .viewer-main,body.ot-running #ligandLab .viewer-main{grid-template-columns:minmax(0,1fr)}
+}

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" role="img" aria-labelledby="cardTitle cardDescription">
+  <title id="cardTitle">Orbital Lab — Complexos e Campo Cristalino</title>
+  <desc id="cardDescription">A arte enviada pelo autor mostra quatro lóbulos brilhantes em ciano e magenta, sobre eixos, com acabamento no padrão dos cards do SiMoEns.</desc>
+  <defs>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0b1220"/><stop offset="100%" stop-color="#15233d"/></linearGradient>
+    <linearGradient id="cardBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1f2f4f"/><stop offset="100%" stop-color="#16243f"/></linearGradient>
+    <radialGradient id="cardHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#007fff" stop-opacity="0.22"/><stop offset="75%" stop-color="#8f4cf0" stop-opacity="0.10"/><stop offset="100%" stop-color="#0e1729" stop-opacity="0"/></radialGradient>
+    <clipPath id="cardPreviewClip"><rect x="20" y="20" width="600" height="300" rx="24"/></clipPath>
+    <filter id="cardShadow" x="-20%" y="-25%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000" flood-opacity=".3"/></filter>
+  </defs>
+  <rect width="640" height="420" rx="28" fill="url(#cardBg)"/>
+  <g opacity=".08" stroke="#9cc7ff" stroke-width="1"><path d="M0 70H640 M0 140H640 M0 210H640 M0 280H640 M0 350H640 M90 0V420 M180 0V420 M270 0V420 M360 0V420 M450 0V420 M540 0V420"/></g>
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#0b1020" stroke="#223555" stroke-width="2" filter="url(#cardShadow)"/>
+  <g clip-path="url(#cardPreviewClip)">
+    <rect x="20" y="20" width="600" height="300" fill="url(#cardHalo)"/>
+    <g stroke="#67e0ff" stroke-width="1.5" stroke-opacity=".18" fill="none"><circle cx="320" cy="170" r="125"/><circle cx="320" cy="170" r="147"/><path d="M40 170H600 M320 32V308"/></g>
+    <svg x="167" y="27" width="306" height="286" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+<defs xmlns="http://www.w3.org/2000/svg">
+    
+    <radialGradient id="backGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1a1a2e" />
+      <stop offset="100%" stop-color="#0a0a12" />
+    </radialGradient>
+
+    
+    <radialGradient id="posGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#00f2ff" />
+      <stop offset="50%" stop-color="#0072ff" />
+      <stop offset="100%" stop-color="#002244" />
+    </radialGradient>
+
+    
+    <radialGradient id="negGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ff00cc" />
+      <stop offset="50%" stop-color="#9900ff" />
+      <stop offset="100%" stop-color="#330044" />
+    </radialGradient>
+
+    
+    <radialGradient id="nucleusGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+    </radialGradient>
+
+    
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  
+  <g xmlns="http://www.w3.org/2000/svg" stroke="rgba(255,255,255,0.1)" stroke-width="2">
+    <line x1="256" y1="50" x2="256" y2="462" />
+    <line x1="50" y1="256" x2="462" y2="256" />
+    <line x1="110" y1="110" x2="402" y2="402" />
+    <line x1="402" y1="110" x2="110" y2="402" />
+  </g>
+
+  
+  <g xmlns="http://www.w3.org/2000/svg" transform="translate(256, 256)" filter="url(#glow)">
+    
+    
+    <g transform="rotate(-45)">
+      <path d="M 0,0 C 40,-120 120,-120 120,-80 C 120,-40 40,0 0,0 Z" fill="url(#posGrad)" opacity="0.9" />
+    </g>
+
+    
+    <g transform="rotate(-135)">
+      <path d="M 0,0 C 40,-120 120,-120 120,-80 C 120,-40 40,0 0,0 Z" fill="url(#negGrad)" opacity="0.9" />
+    </g>
+
+    
+    <g transform="rotate(-225)">
+      <path d="M 0,0 C 40,-120 120,-120 120,-80 C 120,-40 40,0 0,0 Z" fill="url(#posGrad)" opacity="0.9" />
+    </g>
+
+    
+    <g transform="rotate(-315)">
+      <path d="M 0,0 C 40,-120 120,-120 120,-80 C 120,-40 40,0 0,0 Z" fill="url(#negGrad)" opacity="0.9" />
+    </g>
+
+    
+    <circle cx="0" cy="0" r="10" fill="url(#nucleusGrad)" opacity="0.8" />
+  </g>
+
+  
+  <g xmlns="http://www.w3.org/2000/svg" transform="translate(256, 256)" opacity="0.5">
+    <ellipse cx="65" cy="-65" rx="15" ry="30" transform="rotate(45)" fill="white" filter="blur(10px)" />
+    <ellipse cx="-65" cy="-65" rx="15" ry="30" transform="rotate(-45)" fill="white" filter="blur(10px)" />
+    <ellipse cx="-65" cy="65" rx="15" ry="30" transform="rotate(-135)" fill="white" filter="blur(10px)" />
+    <ellipse cx="65" cy="65" rx="15" ry="30" transform="rotate(-225)" fill="white" filter="blur(10px)" />
+  </g>
+
+    </svg>
+    <g font-family="Manrope,Segoe UI,Arial,sans-serif" fill="#b1bcd4" font-size="12" letter-spacing="1.3" opacity=".7"><text x="45" y="54">ORBITAIS d</text><text x="490" y="288">COMPLEXOS 3D</text></g>
+    <path d="M45 68h78 M495 272h96" stroke="#52d8ff" stroke-opacity=".45" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#cardBar)" stroke="#25365b"/>
+  <text x="44" y="376" fill="#eaf3ff" font-family="Manrope,Segoe UI,Arial,sans-serif" font-size="28" font-weight="700">Orbital Lab — Campo Cristalino</text>
+</svg>

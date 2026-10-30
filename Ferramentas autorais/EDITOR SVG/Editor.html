@@ -1,0 +1,368 @@
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor SVG Web</title>
+<link rel="stylesheet" href="Editor.inline-style-01.css">
+<script defer src="../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+<link rel="stylesheet" href="Editor.inline-styles.css">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-badge">SVG</div>
+      <div class="brand-copy">
+        <h1>Editor SVG</h1>
+        <p id="fileLabel">exemplo.svg</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <label class="file-btn" for="openFileInput">Abrir/Substituir</label>
+      <input type="file" id="openFileInput" accept=".svg,image/svg+xml">
+      <label class="file-btn" for="addLayerInput">Adicionar como layer</label>
+      <input type="file" id="addLayerInput" accept=".svg,image/svg+xml" multiple="">
+      <button class="btn ghost" id="loadExampleBtn">Carregar exemplo</button>
+      <button class="btn ghost" id="pasteSvgBtn">Colar SVG</button>
+      <button class="btn ghost" id="undoBtn" disabled="">↶ Voltar</button>
+      <button class="btn ghost" id="redoBtn" disabled="">↷ Avançar</button>
+      <button class="btn" id="copyBtn" disabled="">Copiar</button>
+      <button class="btn" id="pasteBtn" disabled="">Colar</button>
+      <button class="btn" id="duplicateBtn" disabled="">Duplicar</button>
+      <button class="btn danger" id="deleteBtn" disabled="">Apagar</button>
+      <button class="btn" id="frontBtn" disabled="">Trazer frente</button>
+      <button class="btn" id="backBtn" disabled="">Enviar trás</button>
+      <button class="btn primary" id="downloadBtn">Exportar SVG</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Layers</h2>
+        <span id="layerCount">11 layers</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3>Seleção</h3>
+          <div class="mini-actions">
+            <button class="btn ghost" id="clearSelectionBtn" disabled="">Limpar</button>
+            <button class="btn ghost" id="selectAllBtn">Selecionar tudo</button>
+            <button class="btn ghost" id="groupBtn" disabled="">Agrupar</button>
+            <button class="btn ghost" id="ungroupBtn" disabled="">Desagrupar</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Pilha de layers</h3>
+          <div class="layer-list" id="layerList"><div class="layer-row" data-key="40" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-001" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="36" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-002" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="21" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-003" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">vector-art</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="12" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-004" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="7" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-005" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">g</span><span class="layer-name">g</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="6" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-006" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="5" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-007" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="4" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-008" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="3" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-009" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">text</span><span class="layer-name">text</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="2" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-010" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">rect</span><span class="layer-name">rect</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div><div class="layer-row" data-key="1" draggable="true"><button type="button" class="layer-toggle simoens-inline-style-Editor-011" disabled="">•</button><button type="button" class="layer-eye">◉</button><button type="button" class="layer-lock">🔓</button><button type="button" class="layer-item"><span class="layer-tag">rect</span><span class="layer-name">rect</span></button><button type="button" class="layer-drag" title="Arraste pra reordenar">↕</button></div></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="panel stage-wrap">
+      <div class="stage-top">
+        <div class="meta">
+          <strong id="stageTitle">exemplo.svg</strong>
+          <span id="stageMeta">Clique para selecionar, arraste para mover, esconda camadas, desfaça/refaça e exporte quando terminar.</span>
+        </div>
+        <div class="stage-controls">
+          <div class="zoom-wrap">
+            <span>Zoom</span>
+            <input type="range" id="zoomRange" min="25" max="300" value="100">
+            <strong id="zoomValue">100%</strong>
+          </div>
+          <button class="btn ghost" id="fitBtn">Ajustar</button>
+        </div>
+      </div>
+      <div class="stage" id="stage">
+        <div class="canvas-box">
+          <div class="canvas-shell simoens-inline-style-Editor-012" id="canvasShell">
+            <div class="svg-host" id="svgHost"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" data-editor-original-width="512" data-editor-original-height="512" class="simoens-inline-style-Editor-013">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1A1C29"></stop>
+      <stop offset="100%" stop-color="#0D0E15"></stop>
+    </radialGradient>
+
+    <!-- Card Gradient -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26293C"></stop>
+      <stop offset="100%" stop-color="#151722"></stop>
+    </linearGradient>
+
+    <!-- Shape Gradients -->
+    <linearGradient id="cyan-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"></stop>
+      <stop offset="100%" stop-color="#0057FF"></stop>
+    </linearGradient>
+
+    <linearGradient id="magenta-orange" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF007A"></stop>
+      <stop offset="100%" stop-color="#FF7A00"></stop>
+    </linearGradient>
+
+    <linearGradient id="yellow-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE600"></stop>
+      <stop offset="100%" stop-color="#FF00E5"></stop>
+    </linearGradient>
+
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#FFFFFF" stroke-opacity="0.03" stroke-width="1"></path>
+    </pattern>
+
+    <!-- Dot Pattern -->
+    <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#FFFFFF" fill-opacity="0.1"></circle>
+    </pattern>
+
+    <!-- Filters -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"></feDropShadow>
+    </filter>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+    </filter>
+
+    <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"></feGaussianBlur>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+    </filter>
+  </defs>
+
+  <!-- Main Background -->
+  <rect width="512" height="512" fill="url(#bg-grad)" data-editor-key="1" class="simoens-inline-style-Editor-014"></rect>
+  <rect width="512" height="512" fill="url(#dots)" data-editor-key="2" class="simoens-inline-style-Editor-015"></rect>
+
+  <!-- Background Code Snippets -->
+  <text x="24" y="40" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="3" class="simoens-inline-style-Editor-016">&lt;svg viewBox="0 0 512 512"&gt;</text>
+  <text x="360" y="480" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="4" class="simoens-inline-style-Editor-017">&lt;/svg&gt;</text>
+  <text x="420" y="80" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="5" class="simoens-inline-style-Editor-018">&lt;g id="art"&gt;</text>
+  <text x="24" y="450" font-family="monospace" font-size="10" fill="#FFFFFF" opacity="0.15" data-editor-key="6" class="simoens-inline-style-Editor-019">&lt;path d="M..."/&gt;</text>
+
+  <!-- Main Card -->
+  <g filter="url(#drop-shadow)" data-editor-key="7" class="simoens-inline-style-Editor-020">
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#card-grad)" data-editor-key="8" class="simoens-inline-style-Editor-021"></rect>
+    <rect x="48" y="64" width="416" height="384" rx="24" fill="url(#grid)" data-editor-key="9" class="simoens-inline-style-Editor-022"></rect>
+    <!-- Card Inner Border -->
+    <rect x="49" y="65" width="414" height="382" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2" data-editor-key="10" class="simoens-inline-style-Editor-023"></rect>
+    
+    <!-- Large Faint Background Text -->
+    <text x="256" y="320" font-family="sans-serif" font-weight="900" font-size="200" fill="#FFFFFF" opacity="0.02" text-anchor="middle" letter-spacing="-10" data-editor-key="11" class="simoens-inline-style-Editor-024">&lt;/&gt;</text>
+  </g>
+
+  <!-- Geometric Shapes (Translucent & Overlapping) -->
+  <g filter="url(#drop-shadow)" data-editor-key="12" class="simoens-inline-style-Editor-025">
+    <!-- Cyan Circle -->
+    <circle cx="160" cy="280" r="80" fill="url(#cyan-blue)" opacity="0.85" data-editor-key="13" class="simoens-inline-style-Editor-026"></circle>
+    <!-- Circle Inner Highlight -->
+    <circle cx="160" cy="280" r="79" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="14" class="simoens-inline-style-Editor-027"></circle>
+
+    <!-- Yellow/Pink Square -->
+    <g transform="translate(340, 160) rotate(15)" data-editor-key="15" class="simoens-inline-style-Editor-028">
+      <rect x="-60" y="-60" width="120" height="120" rx="20" fill="url(#yellow-pink)" opacity="0.85" data-editor-key="16" class="simoens-inline-style-Editor-029"></rect>
+      <rect x="-59" y="-59" width="118" height="118" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="17" class="simoens-inline-style-Editor-030"></rect>
+    </g>
+
+    <!-- Magenta/Orange Triangle -->
+    <g transform="translate(256, 360)" data-editor-key="18" class="simoens-inline-style-Editor-031">
+      <path d="M 0 -70 L 80 60 L -80 60 Z" fill="url(#magenta-orange)" opacity="0.85" data-editor-key="19" class="simoens-inline-style-Editor-032"></path>
+      <path d="M 0 -68 L 78 58 L -78 58 Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="1" data-editor-key="20" class="simoens-inline-style-Editor-033"></path>
+    </g>
+  </g>
+
+  <!-- Vector Path & Nodes -->
+  <g id="vector-art" data-editor-key="21" class="simoens-inline-style-Editor-034">
+    <!-- Handle Lines -->
+    <path d="M 32 256 L 140 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="22" class="simoens-inline-style-Editor-035"></path>
+    <path d="M 256 256 L 256 80" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="23" class="simoens-inline-style-Editor-036"></path>
+    <path d="M 256 256 L 256 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="24" class="simoens-inline-style-Editor-037"></path>
+    <path d="M 480 256 L 372 432" fill="none" stroke="#FF007A" stroke-width="2" stroke-dasharray="6 6" opacity="0.7" data-editor-key="25" class="simoens-inline-style-Editor-038"></path>
+
+    <!-- Main Bezier Curve (Glow Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#00F0FF" stroke-width="8" filter="url(#glow-strong)" opacity="0.6" data-editor-key="26" class="simoens-inline-style-Editor-039"></path>
+    
+    <!-- Main Bezier Curve (Core Layer) -->
+    <path d="M 32 256 C 140 80, 256 80, 256 256 C 256 432, 372 432, 480 256" fill="none" stroke="#FFFFFF" stroke-width="4" filter="url(#glow)" stroke-linecap="round" data-editor-key="27" class="simoens-inline-style-Editor-040"></path>
+
+    <!-- Control Handles (Nodes) -->
+    <circle cx="140" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="28" class="simoens-inline-style-Editor-041"></circle>
+    <circle cx="256" cy="80" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="29" class="simoens-inline-style-Editor-042"></circle>
+    <circle cx="256" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="30" class="simoens-inline-style-Editor-043"></circle>
+    <circle cx="372" cy="432" r="5" fill="#151722" stroke="#FF007A" stroke-width="2" data-editor-key="31" class="simoens-inline-style-Editor-044"></circle>
+
+    <!-- Active Selection Box around Center Anchor -->
+    <rect x="244" y="244" width="24" height="24" fill="none" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="4 4" data-editor-key="32" class="simoens-inline-style-Editor-045"></rect>
+
+    <!-- Anchor Points -->
+    <circle cx="32" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="33" class="simoens-inline-style-Editor-046"></circle>
+    <circle cx="256" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="34" class="simoens-inline-style-Editor-047"></circle>
+    <circle cx="480" cy="256" r="7" fill="#FFFFFF" stroke="#0057FF" stroke-width="3" filter="url(#drop-shadow)" data-editor-key="35" class="simoens-inline-style-Editor-048"></circle>
+  </g>
+
+  <!-- Top Badge / Label -->
+  <g filter="url(#drop-shadow)" transform="translate(196, 24)" data-editor-key="36" class="simoens-inline-style-Editor-049">
+    <rect x="0" y="0" width="120" height="40" rx="20" fill="url(#cyan-blue)" data-editor-key="37" class="simoens-inline-style-Editor-050"></rect>
+    <!-- Badge Inner Highlight -->
+    <rect x="1" y="1" width="118" height="38" rx="19" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" data-editor-key="38" class="simoens-inline-style-Editor-051"></rect>
+    <text x="60" y="26" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" text-anchor="middle" letter-spacing="3" data-editor-key="39" class="simoens-inline-style-Editor-052">SVG</text>
+  </g>
+
+  <!-- Decorative Crosses -->
+  <g stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" data-editor-key="40" class="simoens-inline-style-Editor-053">
+    <!-- Top Left -->
+    <path d="M 80 120 L 90 120 M 85 115 L 85 125" data-editor-key="41" class="simoens-inline-style-Editor-054"></path>
+    <!-- Bottom Right -->
+    <path d="M 420 380 L 430 380 M 425 375 L 425 385" data-editor-key="42" class="simoens-inline-style-Editor-055"></path>
+  </g>
+</svg></div>
+            <svg id="overlaySvg" viewBox="0 0 512 512" width="512" height="512" class="simoens-inline-style-Editor-056"></svg>
+          </div>
+        </div>
+        <div class="empty-state hidden" id="emptyState">
+          <div class="empty-card">
+            <h3>Abre teu SVG e vai mexendo tudo localmente</h3>
+            <p>Use <strong>Abrir/Substituir</strong> para trocar o documento atual ou <strong>Adicionar como layer</strong> para juntar um ou vários SVGs no mesmo arquivo. Seleciona com clique, arrasta para mover, usa <span class="kbd">Shift</span> + clique para multisseleção, faz caixa de seleção arrastando no vazio, duplica, apaga e exporta de volta como <strong>.svg</strong>. Tudo offline.</p>
+          </div>
+        </div>
+        <div id="marquee" class="simoens-inline-style-Editor-057"></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Inspeção</h2>
+        <span id="selectionCount">0 selecionados</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3>Elemento ativo</h3>
+          <dl class="info-grid" id="infoGrid"><dt>Tag</dt><dd>—</dd><dt>ID</dt><dd>—</dd><dt>Classe</dt><dd>—</dd><dt>Layer</dt><dd>—</dd><dt>Transform</dt><dd>—</dd><dt>Caixa</dt><dd>—</dd></dl>
+        </div>
+        <div class="panel-section">
+          <h3>Transform</h3>
+          <input class="input" id="transformInput" placeholder="translate(10 20) rotate(5)" disabled="">
+          <div class="simoens-inline-style-Editor-058"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyTransformBtn" disabled="">Aplicar</button>
+            <button class="btn ghost" id="resetTransformBtn" disabled="">Limpar transform</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Tela útil</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="canvasWidthInput">Largura do viewBox</label>
+              <input class="input" id="canvasWidthInput" type="number" min="1" step="1" placeholder="1200">
+            </div>
+            <div class="field">
+              <label for="canvasHeightInput">Altura do viewBox</label>
+              <input class="input" id="canvasHeightInput" type="number" min="1" step="1" placeholder="800">
+            </div>
+            <div class="field full">
+              <label for="aspectPreset">Preset de proporção</label>
+              <select class="select" id="aspectPreset">
+                <option value="custom">Personalizado</option>
+                <option value="1:1">Quadrado · 1:1</option>
+                <option value="4:3">Clássico · 4:3</option>
+                <option value="3:4">Retrato · 3:4</option>
+                <option value="16:9">Widescreen · 16:9</option>
+                <option value="9:16">Vertical · 9:16</option>
+                <option value="21:9">Ultrawide · 21:9</option>
+                <option value="a4-landscape">A4 horizontal</option>
+                <option value="a4-portrait">A4 vertical</option>
+              </select>
+            </div>
+          </div>
+          <div class="simoens-inline-style-Editor-059"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyCanvasSizeBtn">Aplicar tela</button>
+            <button class="btn ghost" id="resetCanvasSizeBtn">Voltar ao original</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Nome da layer</h3>
+          <input class="input" id="layerNameInput" placeholder="ex.: capa.svg" disabled="">
+          <div class="simoens-inline-style-Editor-060"></div>
+          <div class="mini-actions">
+            <button class="btn ghost" id="applyLayerNameBtn" disabled="">Renomear</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Opacidade e mesclagem</h3>
+          <div class="field full">
+            <label for="opacityRange">Opacidade</label>
+            <input id="opacityRange" type="range" min="0" max="100" value="100" disabled="">
+            <div id="opacityValue" class="notice">100%</div>
+          </div>
+          <div class="field full">
+            <label for="blendModeSelect">Modo de mesclagem</label>
+            <select class="select" id="blendModeSelect" disabled="">
+              <option value="normal">Normal</option>
+              <option value="multiply">Multiply</option>
+              <option value="screen">Screen</option>
+              <option value="overlay">Overlay</option>
+              <option value="darken">Darken</option>
+              <option value="lighten">Lighten</option>
+              <option value="color-dodge">Color Dodge</option>
+              <option value="color-burn">Color Burn</option>
+              <option value="hard-light">Hard Light</option>
+              <option value="soft-light">Soft Light</option>
+              <option value="difference">Difference</option>
+              <option value="exclusion">Exclusion</option>
+              <option value="hue">Hue</option>
+              <option value="saturation">Saturation</option>
+              <option value="color">Color</option>
+              <option value="luminosity">Luminosity</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Atalhos</h3>
+          <div class="shortcuts">
+            <div class="shortcut-row"><span><span class="kbd">Clique</span></span><span>Selecionar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Shift</span> + clique</span><span>Multisseleção</span></div>
+            <div class="shortcut-row"><span>Arrastar no vazio</span><span>Caixa de seleção</span></div>
+            <div class="shortcut-row"><span>Arrastar seleção/layer</span><span>Mover tudo junto</span></div>
+            <div class="shortcut-row"><span>Alças da caixa</span><span>Redimensionar</span></div>
+            <div class="shortcut-row"><span>Bolinha verde</span><span>Rotacionar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">C</span></span><span>Copiar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">V</span></span><span>Colar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">D</span></span><span>Duplicar</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></span><span>Desfazer</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Ctrl</span> + <span class="kbd">Y</span></span><span>Refazer</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Del</span></span><span>Apagar</span></div>
+            <div class="shortcut-row"><span>Setas</span><span>Mover 1px</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Shift</span> + setas</span><span>Mover 10px</span></div>
+            <div class="shortcut-row"><span><span class="kbd">Esc</span></span><span>Limpar seleção</span></div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h3>Colar SVG bruto</h3>
+          <textarea class="textarea" id="rawSvgInput" placeholder="Cole aqui o código completo do SVG"></textarea>
+          <div class="simoens-inline-style-Editor-061"></div>
+          <button class="btn success" id="loadRawBtn">Carregar código colado</button>
+        </div>
+        
+      </div>
+    </aside>
+  </div>
+
+  <div class="statusbar">
+    <div class="status-left">
+      <span class="badge" id="statusText">SVG carregado</span>
+      <span id="viewBoxText">viewBox: 0 0 512.0 512.0</span>
+    </div>
+    <div class="status-right">
+      <span id="sizeText">Tamanho: 512 × 512</span>
+      <span id="clipboardText">Clipboard: vazio</span>
+    </div>
+  </div>
+</div>
+
+<script src="Editor.inline-script-01.js"></script>
+
+
+</body></html>

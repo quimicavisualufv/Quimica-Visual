@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#15233d"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1f2f4f"/>
+      <stop offset="100%" stop-color="#16243f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+    <clipPath id="previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24"/>
+    </clipPath>
+  </defs>
+
+  <rect width="640" height="420" rx="28" fill="url(#bg)"/>
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1">
+    <path d="M0 70H640"/><path d="M0 140H640"/><path d="M0 210H640"/><path d="M0 280H640"/><path d="M0 350H640"/>
+    <path d="M90 0V420"/><path d="M180 0V420"/><path d="M270 0V420"/><path d="M360 0V420"/><path d="M450 0V420"/><path d="M540 0V420"/>
+  </g>
+
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)"/>
+
+  <g clip-path="url(#previewClip)">
+    <g transform="translate(170 20) scale(0.3)">
+      
+    <defs>
+        <!-- Glow Filters -->
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="12" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+
+        <!-- Background Gradient -->
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="60%" stop-color="#050914"/>
+            <stop offset="100%" stop-color="#02040a"/>
+        </radialGradient>
+
+        <!-- Central Orbital Gradients -->
+        <radialGradient id="cyanLobeGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="20%" stop-color="#00ffff" stop-opacity="0.9"/>
+            <stop offset="60%" stop-color="#0055ff" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#000a33" stop-opacity="0"/>
+        </radialGradient>
+
+        <linearGradient id="torusFrontGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#330066" stop-opacity="0.8"/>
+            <stop offset="20%" stop-color="#ff007f" stop-opacity="0.9"/>
+            <stop offset="50%" stop-color="#ffaaaa" stop-opacity="1"/>
+            <stop offset="80%" stop-color="#ff007f" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#330066" stop-opacity="0.8"/>
+        </linearGradient>
+
+        <linearGradient id="torusBackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1a0033" stop-opacity="0.6"/>
+            <stop offset="50%" stop-color="#880044" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#1a0033" stop-opacity="0.6"/>
+        </linearGradient>
+
+        <!-- Mini Orbital Gradients -->
+        <radialGradient id="miniCyanGrad" cx="60%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="30%" stop-color="#00ffff" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#0022aa" stop-opacity="0"/>
+        </radialGradient>
+
+        <radialGradient id="miniMagentaGrad" cx="60%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="30%" stop-color="#ff007f" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#aa0022" stop-opacity="0"/>
+        </radialGradient>
+
+        <radialGradient id="sOrbitalGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="20%" stop-color="#00ffff" stop-opacity="0.8"/>
+            <stop offset="60%" stop-color="#0055ff" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#000033" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Reusable Paths -->
+        <path id="mainLobe" d="M 0,0 C 120,-150 80,-380 0,-380 C -80,-380 -120,-150 0,0 Z"/>
+        <path id="mainLobeCore" d="M 0,0 C 60,-100 40,-280 0,-280 C -40,-280 -60,-100 0,0 Z"/>
+        <path id="miniLobe" d="M 0,0 C 25,-20 50,-10 50,0 C 50,10 25,20 0,0 Z"/>
+
+        <!-- UI Box Frame -->
+        <g id="boxFrame">
+            <rect x="0" y="0" width="200" height="200" fill="#001133" fill-opacity="0.3" stroke="#38bdf8" stroke-opacity="0.1" stroke-width="1"/>
+            <path d="M 0,20 L 0,0 L 20,0 M 180,0 L 200,0 L 200,20 M 200,180 L 200,200 L 180,200 M 20,200 L 0,200 L 0,180" fill="none" stroke="#00ffff" stroke-width="2" opacity="0.7"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#38bdf8" stroke-opacity="0.05" stroke-width="1" stroke-dasharray="2 4"/>
+        </g>
+    </defs>
+
+    <!-- Background -->
+    
+
+    <!-- Background Math Equations -->
+    <g fill="#ffffff" opacity="0.06" font-family="Georgia, serif" font-style="italic" text-anchor="middle">
+        <text x="500" y="180" font-size="36">iℏ ∂Ψ(r,t)/∂t = Ĥ Ψ(r,t)</text>
+        <text x="500" y="240" font-size="28">Ĥ = - (ℏ² / 2μ) ∇² - e² / (4π ε₀ r)</text>
+        <text x="500" y="780" font-size="28">Ψₙₗₘ(r,θ,φ) = Rₙₗ(r) Yₗᵐ(θ,φ)</text>
+        <text x="500" y="840" font-size="24">Rₙₗ(r) = Nₙₗ e^{-ρ/2} ρˡ Lₙ₋ₗ₋₁²ˡ⁺¹(ρ)</text>
+        
+        <text x="-500" y="120" transform="rotate(-90)" font-size="24">∇² = (1/r²) ∂/∂r (r² ∂/∂r) + (1/r²sinθ) ∂/∂θ (sinθ ∂/∂θ) + (1/r²sin²θ) ∂²/∂φ²</text>
+        <text x="500" y="-880" transform="rotate(90)" font-size="24">Yₗᵐ(θ,φ) = Θₗᵐ(θ) Φₘ(φ) = N Pₗᵐ(cos θ) eⁱᵐᵠ</text>
+    </g>
+
+    <!-- Radar / Polar Grid -->
+    <g stroke="#38bdf8" fill="none" stroke-width="1">
+        <circle cx="500" cy="500" r="100" stroke-opacity="0.05"/>
+        <circle cx="500" cy="500" r="200" stroke-opacity="0.05"/>
+        <circle cx="500" cy="500" r="300" stroke-opacity="0.05"/>
+        <circle cx="500" cy="500" r="400" stroke-opacity="0.1" stroke-dasharray="4 8"/>
+        <circle cx="500" cy="500" r="420" stroke-opacity="0.2" stroke-dasharray="2 6"/>
+        <circle cx="500" cy="500" r="430" stroke-width="2" stroke-opacity="0.1" stroke-dasharray="20 10 5 10"/>
+        <circle cx="500" cy="500" r="440" stroke-opacity="0.15"/>
+        <!-- Tick marks -->
+        <circle cx="500" cy="500" r="440" stroke-width="6" stroke-opacity="0.4" stroke-dasharray="2 36.397"/>
+        
+        <!-- Radial Lines -->
+        <line x1="500" y1="60" x2="500" y2="940" stroke-opacity="0.1" stroke-dasharray="5 5"/>
+        <line x1="60" y1="500" x2="940" y2="500" stroke-opacity="0.1" stroke-dasharray="5 5"/>
+        <line x1="188" y1="188" x2="812" y2="812" stroke-opacity="0.05"/>
+        <line x1="188" y1="812" x2="812" y2="188" stroke-opacity="0.05"/>
+    </g>
+
+    <!-- Angular Nodes for 3d_z^2 (Cones at 54.7 degrees) -->
+    <g stroke="#ffffff" stroke-opacity="0.15" stroke-width="2" stroke-dasharray="8 8">
+        <line x1="250" y1="146" x2="750" y2="854"/>
+        <line x1="250" y1="854" x2="750" y2="146"/>
+    </g>
+
+    <!-- Central 3d_z^2 Orbital -->
+    <g id="centralOrbital">
+        <!-- Z-Axis (Back) -->
+        <line x1="500" y1="500" x2="500" y2="100" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2" stroke-dasharray="10 5"/>
+        
+        <!-- Back Half of Torus -->
+        <path d="M -200,0 A 200,60 0 0,1 200,0 L 120,0 A 120,36 0 0,0 -120,0 Z" transform="translate(500,500)" fill="url(#torusBackGrad)" filter="url(#glow-subtle)"/>
+        
+        <!-- Top Lobe (Cyan) -->
+        <use href="#mainLobe" transform="translate(500,500) rotate(0)" fill="url(#cyanLobeGrad)" filter="url(#glow)"/>
+        <use href="#mainLobeCore" transform="translate(500,500) rotate(0)" fill="#ffffff" opacity="0.6" filter="url(#glow)"/>
+        
+        <!-- Bottom Lobe (Cyan) -->
+        <use href="#mainLobe" transform="translate(500,500) rotate(180)" fill="url(#cyanLobeGrad)" filter="url(#glow)"/>
+        <use href="#mainLobeCore" transform="translate(500,500) rotate(180)" fill="#ffffff" opacity="0.6" filter="url(#glow)"/>
+        
+        <!-- Front Half of Torus (Magenta) -->
+        <path d="M -200,0 A 200,60 0 0,0 200,0 L 120,0 A 120,36 0 0,1 -120,0 Z" transform="translate(500,500)" fill="url(#torusFrontGrad)" filter="url(#glow)"/>
+        <!-- Torus Core -->
+        <path d="M -160,0 A 160,48 0 0,0 160,0 L 140,0 A 140,42 0 0,1 -140,0 Z" transform="translate(500,500)" fill="#ffffff" opacity="0.5" filter="url(#glow)"/>
+
+        <!-- Z-Axis (Front) -->
+        <line x1="500" y1="500" x2="500" y2="900" stroke="#ffffff" stroke-opacity="0.4" stroke-width="2" stroke-dasharray="10 5"/>
+        <!-- X and Y Axes -->
+        <line x1="500" y1="500" x2="250" y2="650" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="5 5"/>
+        <line x1="500" y1="500" x2="750" y2="650" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="5 5"/>
+    </g>
+
+    <!-- Electron Particles (Probability Cloud Highlights) -->
+    <g fill="#ffffff" filter="url(#glow-subtle)">
+        <circle cx="500" cy="250" r="2" opacity="0.8"/>
+        <circle cx="480" cy="300" r="1.5" opacity="0.6"/>
+        <circle cx="520" cy="200" r="2.5" opacity="0.9"/>
+        <circle cx="500" cy="750" r="2" opacity="0.8"/>
+        <circle cx="515" cy="700" r="1.5" opacity="0.6"/>
+        <circle cx="485" cy="800" r="2.5" opacity="0.9"/>
+        <circle cx="350" cy="510" r="2" opacity="0.7"/>
+        <circle cx="650" cy="490" r="2" opacity="0.7"/>
+    </g>
+
+    <!-- UI Frames for Mini Orbitals -->
+    <use href="#boxFrame" x="40" y="40"/>
+    <use href="#boxFrame" x="760" y="40"/>
+    <use href="#boxFrame" x="40" y="760"/>
+    <use href="#boxFrame" x="760" y="760"/>
+
+    <!-- Mini Orbital 1: 1s -->
+    <g id="mini-1s" transform="translate(140, 140)">
+        <line x1="-70" y1="0" x2="70" y2="0" stroke="#ffffff" stroke-opacity="0.2" stroke-dasharray="2 2"/>
+        <line x1="0" y1="-70" x2="0" y2="70" stroke="#ffffff" stroke-opacity="0.2" stroke-dasharray="2 2"/>
+        <circle cx="0" cy="0" r="50" fill="url(#sOrbitalGrad)" filter="url(#glow-subtle)"/>
+        <circle cx="0" cy="0" r="15" fill="#ffffff" opacity="0.5" filter="url(#glow)"/>
+    </g>
+    <text x="50" y="225" fill="#88ccff" font-size="12" font-family="monospace" letter-spacing="1">Ψ(1,0,0) : 1s</text>
+
+    <!-- Mini Orbital 2: 2p_x -->
+    <g id="mini-2px" transform="translate(860, 140)">
+        <line x1="-70" y1="0" x2="70" y2="0" stroke="#ffffff" stroke-opacity="0.2" stroke-dasharray="2 2"/>
+        <line x1="0" y1="-70" x2="0" y2="70" stroke="#ffffff" stroke-opacity="0.4" stroke-dasharray="4 4"/> <!-- Node -->
+        <use href="#miniLobe" transform="rotate(0)" fill="url(#miniCyanGrad)" filter="url(#glow-subtle)"/>
+        <use href="#miniLobe" transform="rotate(180)" fill="url(#miniMagentaGrad)" filter="url(#glow-subtle)"/>
+    </g>
+    <text x="770" y="225" fill="#88ccff" font-size="12" font-family="monospace" letter-spacing="1">Ψ(2,1,±1) : 2px</text>
+
+    <!-- Mini Orbital 3: 3d_xy -->
+    <g id="mini-3dxy" transform="translate(140, 860)">
+        <line x1="-70" y1="0" x2="70" y2="0" stroke="#ffffff" stroke-opacity="0.4" stroke-dasharray="4 4"/> <!-- Node -->
+        <line x1="0" y1="-70" x2="0" y2="70" stroke="#ffffff" stroke-opacity="0.4" stroke-dasharray="4 4"/> <!-- Node -->
+        <use href="#miniLobe" transform="rotate(-45)" fill="url(#miniCyanGrad)" filter="url(#glow-subtle)"/>
+        <use href="#miniLobe" transform="rotate(135)" fill="url(#miniCyanGrad)" filter="url(#glow-subtle)"/>
+        <use href="#miniLobe" transform="rotate(45)" fill="url(#miniMagentaGrad)" filter="url(#glow-subtle)"/>
+        <use href="#miniLobe" transform="rotate(-135)" fill="url(#miniMagentaGrad)" filter="url(#glow-subtle)"/>
+    </g>
+    <text x="50" y="945" fill="#88ccff" font-size="12" font-family="monospace" letter-spacing="1">Ψ(3,2,±2) : 3dxy</text>
+
+    <!-- Mini Orbital 4: Radial Probability Graph -->
+    <g id="mini-graph" transform="translate(760, 760)">
+        <!-- Grid -->
+        <line x1="20" y1="100" x2="180" y2="100" stroke="#ffffff" stroke-opacity="0.1" stroke-dasharray="2 2"/>
+        <line x1="20" y1="30" x2="180" y2="30" stroke="#ffffff" stroke-opacity="0.1" stroke-dasharray="2 2"/>
+        <!-- Axes -->
+        <line x1="20" y1="170" x2="180" y2="170" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1"/>
+        <line x1="20" y1="170" x2="20" y2="20" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1"/>
+        <!-- Curve (3s orbital radial probability) -->
+        <path d="M 20,170 C 25,120 35,120 40,170 C 50,90 60,90 70,170 C 90,-10 120,-10 150,170 L 180,170" fill="none" stroke="#00ffff" stroke-width="2" filter="url(#glow-subtle)"/>
+        <path d="M 20,170 C 25,120 35,120 40,170 C 50,90 60,90 70,170 C 90,-10 120,-10 150,170 L 180,170 L 20,170 Z" fill="#00ffff" opacity="0.15"/>
+        <!-- Labels -->
+        <text x="170" y="185" fill="#ffffff" opacity="0.5" font-size="10" font-family="sans-serif">r</text>
+        <text x="5" y="30" fill="#ffffff" opacity="0.5" font-size="10" font-family="sans-serif">P</text>
+    </g>
+    <text x="770" y="945" fill="#88ccff" font-size="12" font-family="monospace" letter-spacing="1">P(r) = r²|R(r)|²</text>
+
+    <!-- Main Titles -->
+    <text x="500" y="55" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="bold" letter-spacing="6" filter="url(#glow-subtle)">FUNÇÕES DE SCHRÖDINGER DO HIDROGÊNIO</text>
+    <text x="500" y="80" text-anchor="middle" fill="#38bdf8" font-size="13" letter-spacing="3" opacity="0.8">DENSIDADE DE PROBABILIDADE &amp; ORBITAIS ATÔMICOS</text>
+    
+    <text x="500" y="965" text-anchor="middle" fill="#ffffff" font-size="18" letter-spacing="2" filter="url(#glow-subtle)">Orbital 3dz² | Ψ(3, 2, 0)</text>
+
+    </g>
+  </g>
+
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b"/>
+  <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700">Orbitais Atômicos do Hidrogênio</text>
+</svg>

@@ -1,0 +1,332 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" preserveAspectRatio="xMidYMid meet" data-editor-original-width="640" data-editor-original-height="420" style="width: 516.571px; height: 339px;">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#bg">
+      <stop offset="0%" stop-color="#0b1220" data-layer-name="stop 3"/>
+      <stop offset="100%" stop-color="#15233d" data-layer-name="stop 4"/>
+    </linearGradient>
+
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0" data-layer-name="lineargradient#bar">
+      <stop offset="0%" stop-color="#1f2f4f" data-layer-name="stop 6"/>
+      <stop offset="100%" stop-color="#16243f" data-layer-name="stop 7"/>
+    </linearGradient>
+
+    <linearGradient id="metaballFill" x1="0.18" y1="0.08" x2="0.86" y2="0.88" data-layer-name="lineargradient#metaballFill">
+      <stop offset="0%" stop-color="#ff504d" data-layer-name="stop 9"/>
+      <stop offset="34%" stop-color="#d22c71" data-layer-name="stop 10"/>
+      <stop offset="58%" stop-color="#5d1f9f" data-layer-name="stop 11"/>
+      <stop offset="84%" stop-color="#0c1d97" data-layer-name="stop 12"/>
+      <stop offset="100%" stop-color="#08135e" data-layer-name="stop 13"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" data-layer-name="filter#shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28" data-layer-name="fedropshadow 15"/>
+    </filter>
+
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%" data-layer-name="filter#softShadow">
+      <feDropShadow dx="0" dy="11" stdDeviation="9" flood-color="#000" flood-opacity="0.34" data-layer-name="fedropshadow 17"/>
+    </filter>
+
+    <filter id="innerShade" x="-20%" y="-20%" width="140%" height="140%" data-layer-name="filter#innerShade">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur" data-layer-name="fegaussianblur 19"/>
+      <feOffset dx="0" dy="8" result="off" data-layer-name="feoffset 20"/>
+      <feComposite in="off" in2="SourceAlpha" operator="out" result="inner" data-layer-name="fecomposite 21"/>
+      <feColorMatrix in="inner" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0" result="shade" data-layer-name="fecolormatrix 22"/>
+      <feBlend in="SourceGraphic" in2="shade" mode="multiply" data-layer-name="feblend 23"/>
+    </filter>
+
+    <radialGradient id="highlight" cx="30%" cy="18%" r="75%" data-layer-name="radialgradient#highlight">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.23" data-layer-name="stop 25"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.08" data-layer-name="stop 26"/>
+      <stop offset="65%" stop-color="#ffffff" stop-opacity="0" data-layer-name="stop 27"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" data-layer-name="stop 28"/>
+    </radialGradient>
+
+    <clipPath id="previewClip" data-layer-name="clippath#previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24" data-layer-name="rect 30"/>
+    </clipPath>
+  <radialGradient id="impmpov0fdz_s42lt_bg-grad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%" data-layer-name="radialgradient#bg-grad">
+      <stop offset="0%" stop-color="#0f172a" data-layer-name="stop 3"/>
+      <stop offset="100%" stop-color="#020617" data-layer-name="stop 4"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_compression-grad" cx="50%" cy="50%" r="50%" data-layer-name="radialgradient#compression-grad">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.35" data-layer-name="stop 6"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0" data-layer-name="stop 7"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_tension-grad" cx="50%" cy="50%" r="50%" data-layer-name="radialgradient#tension-grad">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25" data-layer-name="stop 9"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" data-layer-name="stop 10"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_atom-regular" cx="30%" cy="30%" r="70%" data-layer-name="radialgradient#atom-regular">
+      <stop offset="0%" stop-color="#a5f3fc" data-layer-name="stop 12"/>
+      <stop offset="40%" stop-color="#06b6d4" data-layer-name="stop 13"/>
+      <stop offset="100%" stop-color="#083344" data-layer-name="stop 14"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_atom-sub-large" cx="30%" cy="30%" r="70%" data-layer-name="radialgradient#atom-sub-large">
+      <stop offset="0%" stop-color="#fbcfe8" data-layer-name="stop 16"/>
+      <stop offset="40%" stop-color="#db2777" data-layer-name="stop 17"/>
+      <stop offset="100%" stop-color="#4c0519" data-layer-name="stop 18"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_atom-sub-small" cx="30%" cy="30%" r="70%" data-layer-name="radialgradient#atom-sub-small">
+      <stop offset="0%" stop-color="#d9f99d" data-layer-name="stop 20"/>
+      <stop offset="40%" stop-color="#65a30d" data-layer-name="stop 21"/>
+      <stop offset="100%" stop-color="#1a2e05" data-layer-name="stop 22"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_atom-interstitial" cx="30%" cy="30%" r="70%" data-layer-name="radialgradient#atom-interstitial">
+      <stop offset="0%" stop-color="#fef08a" data-layer-name="stop 24"/>
+      <stop offset="40%" stop-color="#d97706" data-layer-name="stop 25"/>
+      <stop offset="100%" stop-color="#451a03" data-layer-name="stop 26"/>
+    </radialGradient><radialGradient id="impmpov0fdz_s42lt_atom-core" cx="30%" cy="30%" r="70%" data-layer-name="radialgradient#atom-core">
+      <stop offset="0%" stop-color="#fca5a5" data-layer-name="stop 28"/>
+      <stop offset="40%" stop-color="#dc2626" data-layer-name="stop 29"/>
+      <stop offset="100%" stop-color="#450a0a" data-layer-name="stop 30"/>
+    </radialGradient><filter id="impmpov0fdz_s42lt_glow-cyan" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#glow-cyan">
+      <feGaussianBlur stdDeviation="4" result="blur" data-layer-name="fegaussianblur 32"/>
+      <feMerge data-layer-name="femerge 33">
+        <feMergeNode in="blur" data-layer-name="femergenode 34"/>
+        <feMergeNode in="SourceGraphic" data-layer-name="femergenode 35"/>
+      </feMerge>
+    </filter><filter id="impmpov0fdz_s42lt_glow-red" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#glow-red">
+      <feGaussianBlur stdDeviation="6" result="blur" data-layer-name="fegaussianblur 37"/>
+      <feComponentTransfer in="blur" result="glow" data-layer-name="fecomponenttransfer 38">
+        <feFuncA type="linear" slope="1.5" data-layer-name="fefunca 39"/>
+      </feComponentTransfer>
+      <feMerge data-layer-name="femerge 40">
+        <feMergeNode in="glow" data-layer-name="femergenode 41"/>
+        <feMergeNode in="SourceGraphic" data-layer-name="femergenode 42"/>
+      </feMerge>
+    </filter><filter id="impmpov0fdz_s42lt_glow-orange" x="-50%" y="-50%" width="200%" height="200%" data-layer-name="filter#glow-orange">
+      <feGaussianBlur stdDeviation="3" result="blur" data-layer-name="fegaussianblur 44"/>
+      <feMerge data-layer-name="femerge 45">
+        <feMergeNode in="blur" data-layer-name="femergenode 46"/>
+        <feMergeNode in="SourceGraphic" data-layer-name="femergenode 47"/>
+      </feMerge>
+    </filter><marker id="impmpov0fdz_s42lt_arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse" data-layer-name="marker#arrow">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8" data-layer-name="path 49"/>
+    </marker></defs>
+
+  <rect width="640" height="420" rx="28" fill="url(#bg)" data-layer-name="rect 31"/>
+
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1" data-layer-group="1" data-layer-name="g 32">
+    <path d="M0 70H640" data-layer-name="path 33"/><path d="M0 140H640" data-layer-name="path 34"/><path d="M0 210H640" data-layer-name="path 35"/><path d="M0 280H640" data-layer-name="path 36"/><path d="M0 350H640" data-layer-name="path 37"/>
+    <path d="M90 0V420" data-layer-name="path 38"/><path d="M180 0V420" data-layer-name="path 39"/><path d="M270 0V420" data-layer-name="path 40"/><path d="M360 0V420" data-layer-name="path 41"/><path d="M450 0V420" data-layer-name="path 42"/><path d="M540 0V420" data-layer-name="path 43"/>
+  </g>
+
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)" data-layer-name="rect 44"/>
+
+  <g clip-path="url(#previewClip)" data-layer-group="1" data-layer-name="g 45">
+    <g data-layer-group="1" data-layer-name="g 46">
+      
+      
+      
+    </g>
+
+    <g data-layer-group="1" data-layer-name="g 47">
+      
+      
+      
+    </g>
+
+    <g data-layer-group="1" data-layer-name="g 48">
+      
+      
+      
+      
+    </g>
+  </g>
+
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b" data-layer-name="rect 49"/>
+  <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700" data-layer-name="text 50">Defeitos Cristalinos</text>
+<g data-layer-name="vectorcraft-3d9cbdb0-71c3-4a4e-af62-f69ff0b33673.svg" data-layer-group="1" data-editor-layer="1" style="width: 604.16px; height: 604.16px;" transform="matrix(0.7044301 0 0 0.68704748 136.30078697 -4.95575142)" data-import-viewBox="0 0 512 512"><ellipse cx="256" cy="200" rx="90" ry="60" fill="url(#impmpov0fdz_s42lt_compression-grad)" data-layer-name="ellipse 51"/><ellipse cx="256" cy="300" rx="90" ry="60" fill="url(#impmpov0fdz_s42lt_tension-grad)" data-layer-name="ellipse 52"/><g stroke="#0891b2" stroke-width="2.5" stroke-linecap="round" opacity="0.6" data-layer-group="1" data-layer-name="g 53">
+    <!-- Row 0 Horizontal -->
+    <line x1="76" y1="70" x2="136" y2="70" data-layer-name="line 54"/>
+    <line x1="136" y1="70" x2="196" y2="70" data-layer-name="line 55"/>
+    <line x1="196" y1="70" x2="256" y2="70" data-layer-name="line 56"/>
+    <line x1="256" y1="70" x2="316" y2="70" data-layer-name="line 57"/>
+    <line x1="316" y1="70" x2="376" y2="70" data-layer-name="line 58"/>
+    <line x1="376" y1="70" x2="436" y2="70" data-layer-name="line 59"/>
+    <!-- Row 1 Horizontal -->
+    <line x1="76" y1="130" x2="136" y2="130" data-layer-name="line 60"/>
+    <line x1="136" y1="130" x2="196" y2="130" data-layer-name="line 61"/>
+    <line x1="196" y1="130" x2="256" y2="130" data-layer-name="line 62"/>
+    <line x1="256" y1="130" x2="308" y2="122" data-layer-name="line 63"/>
+    <line x1="308" y1="122" x2="384" y2="122" data-layer-name="line 64"/>
+    <line x1="384" y1="122" x2="436" y2="130" data-layer-name="line 65"/>
+    <!-- Row 2 Horizontal -->
+    <line x1="78" y1="190" x2="138" y2="190" data-layer-name="line 66"/>
+    <line x1="138" y1="190" x2="202" y2="190" data-layer-name="line 67"/>
+    <line x1="202" y1="190" x2="256" y2="190" data-layer-name="line 68"/>
+    <line x1="256" y1="190" x2="302" y2="198" data-layer-name="line 69"/>
+    <line x1="302" y1="198" x2="382" y2="198" data-layer-name="line 70"/>
+    <line x1="382" y1="198" x2="434" y2="190" data-layer-name="line 71"/>
+    <!-- Row 3 Horizontal -->
+    <line x1="86" y1="250" x2="148" y2="250" data-layer-name="line 72"/>
+    <line x1="148" y1="250" x2="216" y2="250" data-layer-name="line 73"/>
+    <line x1="216" y1="250" x2="256" y2="250" data-layer-name="line 74"/>
+    <line x1="256" y1="250" x2="296" y2="250" data-layer-name="line 75"/>
+    <line x1="296" y1="250" x2="364" y2="250" data-layer-name="line 76"/>
+    <line x1="364" y1="250" x2="426" y2="250" data-layer-name="line 77"/>
+    <!-- Row 4 Horizontal -->
+    <line x1="96" y1="310" x2="160" y2="310" data-layer-name="line 78"/>
+    <line x1="160" y1="310" x2="226" y2="310" data-layer-name="line 79"/>
+    <line x1="226" y1="310" x2="286" y2="310" data-layer-name="line 80"/>
+    <line x1="286" y1="310" x2="352" y2="310" data-layer-name="line 81"/>
+    <line x1="352" y1="310" x2="416" y2="310" data-layer-name="line 82"/>
+    <!-- Row 5 Horizontal -->
+    <line x1="102" y1="370" x2="164" y2="370" data-layer-name="line 83"/>
+    <line x1="164" y1="370" x2="226" y2="370" data-layer-name="line 84"/>
+    <line x1="226" y1="370" x2="286" y2="370" data-layer-name="line 85"/>
+    <!-- Row 6 Horizontal -->
+    <line x1="106" y1="430" x2="166" y2="430" data-layer-name="line 86"/>
+    <line x1="166" y1="430" x2="226" y2="430" data-layer-name="line 87"/>
+    <line x1="226" y1="430" x2="286" y2="430" data-layer-name="line 88"/>
+    <line x1="286" y1="430" x2="346" y2="430" data-layer-name="line 89"/>
+    <line x1="346" y1="430" x2="406" y2="430" data-layer-name="line 90"/>
+
+    <!-- Vertical Bonds R0 to R1 -->
+    <line x1="76" y1="70" x2="76" y2="130" data-layer-name="line 91"/>
+    <line x1="136" y1="70" x2="136" y2="130" data-layer-name="line 92"/>
+    <line x1="196" y1="70" x2="196" y2="130" data-layer-name="line 93"/>
+    <line x1="256" y1="70" x2="256" y2="130" data-layer-name="line 94"/>
+    <line x1="316" y1="70" x2="308" y2="122" data-layer-name="line 95"/>
+    <line x1="376" y1="70" x2="384" y2="122" data-layer-name="line 96"/>
+    <line x1="436" y1="70" x2="436" y2="130" data-layer-name="line 97"/>
+    <!-- Vertical Bonds R1 to R2 -->
+    <line x1="76" y1="130" x2="78" y2="190" data-layer-name="line 98"/>
+    <line x1="136" y1="130" x2="138" y2="190" data-layer-name="line 99"/>
+    <line x1="196" y1="130" x2="202" y2="190" data-layer-name="line 100"/>
+    <line x1="256" y1="130" x2="256" y2="190" data-layer-name="line 101"/>
+    <line x1="308" y1="122" x2="302" y2="198" data-layer-name="line 102"/>
+    <line x1="384" y1="122" x2="382" y2="198" data-layer-name="line 103"/>
+    <line x1="436" y1="130" x2="434" y2="190" data-layer-name="line 104"/>
+    <!-- Vertical Bonds R2 to R3 -->
+    <line x1="78" y1="190" x2="86" y2="250" data-layer-name="line 105"/>
+    <line x1="138" y1="190" x2="148" y2="250" data-layer-name="line 106"/>
+    <line x1="202" y1="190" x2="216" y2="250" data-layer-name="line 107"/>
+    <line x1="256" y1="190" x2="256" y2="250" data-layer-name="line 108"/>
+    <line x1="302" y1="198" x2="296" y2="250" data-layer-name="line 109"/>
+    <line x1="382" y1="198" x2="364" y2="250" data-layer-name="line 110"/>
+    <line x1="434" y1="190" x2="426" y2="250" data-layer-name="line 111"/>
+    <!-- Vertical Bonds R3 to R4 (Dislocation Core V-Shape) -->
+    <line x1="86" y1="250" x2="96" y2="310" data-layer-name="line 112"/>
+    <line x1="148" y1="250" x2="160" y2="310" data-layer-name="line 113"/>
+    <line x1="216" y1="250" x2="226" y2="310" data-layer-name="line 114"/>
+    <line x1="256" y1="250" x2="226" y2="310" data-layer-name="line 115"/> <!-- Core Left -->
+    <line x1="256" y1="250" x2="286" y2="310" data-layer-name="line 116"/> <!-- Core Right -->
+    <line x1="296" y1="250" x2="286" y2="310" data-layer-name="line 117"/>
+    <line x1="364" y1="250" x2="352" y2="310" data-layer-name="line 118"/>
+    <line x1="426" y1="250" x2="416" y2="310" data-layer-name="line 119"/>
+    <!-- Vertical Bonds R4 to R5 -->
+    <line x1="96" y1="310" x2="102" y2="370" data-layer-name="line 120"/>
+    <line x1="160" y1="310" x2="164" y2="370" data-layer-name="line 121"/>
+    <line x1="226" y1="310" x2="226" y2="370" data-layer-name="line 122"/>
+    <line x1="286" y1="310" x2="286" y2="370" data-layer-name="line 123"/>
+    <line x1="416" y1="310" x2="410" y2="370" data-layer-name="line 124"/>
+    <!-- Vertical Bonds R5 to R6 -->
+    <line x1="102" y1="370" x2="106" y2="430" data-layer-name="line 125"/>
+    <line x1="164" y1="370" x2="166" y2="430" data-layer-name="line 126"/>
+    <line x1="226" y1="370" x2="226" y2="430" data-layer-name="line 127"/>
+    <line x1="286" y1="370" x2="286" y2="430" data-layer-name="line 128"/>
+    <line x1="410" y1="370" x2="406" y2="430" data-layer-name="line 129"/>
+  </g><g stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 5" opacity="0.4" data-layer-group="1" data-layer-name="g 130">
+    <line x1="286" y1="370" x2="338" y2="370" data-layer-name="line 131"/>
+    <line x1="410" y1="370" x2="358" y2="370" data-layer-name="line 132"/>
+    <line x1="352" y1="310" x2="348" y2="360" data-layer-name="line 133"/>
+    <line x1="346" y1="430" x2="348" y2="380" data-layer-name="line 134"/>
+  </g><g stroke="#impmpov0fdz_s42lt_f59e0b" stroke-width="1.5" opacity="0.8" filter="url(#impmpov0fdz_s42lt_glow-orange)" data-layer-group="1" data-layer-name="g 135">
+    <!-- Interstitial 1 (344, 160) -->
+    <line x1="344" y1="160" x2="308" y2="122" data-layer-name="line 136"/>
+    <line x1="344" y1="160" x2="384" y2="122" data-layer-name="line 137"/>
+    <line x1="344" y1="160" x2="302" y2="198" data-layer-name="line 138"/>
+    <line x1="344" y1="160" x2="382" y2="198" data-layer-name="line 139"/>
+  </g><g stroke="#22d3ee" stroke-width="1.5" opacity="0.8" filter="url(#impmpov0fdz_s42lt_glow-cyan)" data-layer-group="1" data-layer-name="g 140">
+    <!-- Frenkel Interstitial (385, 335) -->
+    <line x1="385" y1="335" x2="352" y2="310" data-layer-name="line 141"/>
+    <line x1="385" y1="335" x2="416" y2="310" data-layer-name="line 142"/>
+    <line x1="385" y1="335" x2="348" y2="370" data-layer-name="line 143"/>
+    <line x1="385" y1="335" x2="410" y2="370" data-layer-name="line 144"/>
+  </g><g fill="url(#impmpov0fdz_s42lt_atom-regular)" filter="url(#impmpov0fdz_s42lt_glow-cyan)" data-layer-group="1" data-layer-name="g 145">
+    <!-- Row 0 -->
+    <circle cx="76" cy="70" r="10" data-layer-name="circle 146"/>
+    <circle cx="136" cy="70" r="10" data-layer-name="circle 147"/>
+    <circle cx="196" cy="70" r="10" data-layer-name="circle 148"/>
+    <circle cx="256" cy="70" r="10" data-layer-name="circle 149"/>
+    <circle cx="316" cy="70" r="10" data-layer-name="circle 150"/>
+    <circle cx="376" cy="70" r="10" data-layer-name="circle 151"/>
+    <circle cx="436" cy="70" r="10" data-layer-name="circle 152"/>
+    <!-- Row 1 -->
+    <circle cx="76" cy="130" r="10" data-layer-name="circle 153"/>
+    <!-- Substitutional Large goes here -->
+    <circle cx="196" cy="130" r="10" data-layer-name="circle 154"/>
+    <circle cx="256" cy="130" r="10" data-layer-name="circle 155"/>
+    <circle cx="308" cy="122" r="10" data-layer-name="circle 156"/>
+    <circle cx="384" cy="122" r="10" data-layer-name="circle 157"/>
+    <circle cx="436" cy="130" r="10" data-layer-name="circle 158"/>
+    <!-- Row 2 -->
+    <circle cx="78" cy="190" r="10" data-layer-name="circle 159"/>
+    <circle cx="138" cy="190" r="10" data-layer-name="circle 160"/>
+    <circle cx="202" cy="190" r="10" data-layer-name="circle 161"/>
+    <circle cx="256" cy="190" r="10" data-layer-name="circle 162"/>
+    <circle cx="302" cy="198" r="10" data-layer-name="circle 163"/>
+    <circle cx="382" cy="198" r="10" data-layer-name="circle 164"/>
+    <circle cx="434" cy="190" r="10" data-layer-name="circle 165"/>
+    <!-- Row 3 -->
+    <circle cx="86" cy="250" r="10" data-layer-name="circle 166"/>
+    <circle cx="148" cy="250" r="10" data-layer-name="circle 167"/>
+    <circle cx="216" cy="250" r="10" data-layer-name="circle 168"/>
+    <!-- Core goes here -->
+    <circle cx="296" cy="250" r="10" data-layer-name="circle 169"/>
+    <circle cx="364" cy="250" r="10" data-layer-name="circle 170"/>
+    <circle cx="426" cy="250" r="10" data-layer-name="circle 171"/>
+    <!-- Row 4 -->
+    <circle cx="96" cy="310" r="10" data-layer-name="circle 172"/>
+    <circle cx="160" cy="310" r="10" data-layer-name="circle 173"/>
+    <circle cx="226" cy="310" r="10" data-layer-name="circle 174"/>
+    <circle cx="286" cy="310" r="10" data-layer-name="circle 175"/>
+    <circle cx="352" cy="310" r="10" data-layer-name="circle 176"/>
+    <circle cx="416" cy="310" r="10" data-layer-name="circle 177"/>
+    <!-- Row 5 -->
+    <circle cx="102" cy="370" r="10" data-layer-name="circle 178"/>
+    <!-- Substitutional Small goes here -->
+    <circle cx="226" cy="370" r="10" data-layer-name="circle 179"/>
+    <circle cx="286" cy="370" r="10" data-layer-name="circle 180"/>
+    <!-- Vacancy goes here -->
+    <circle cx="410" cy="370" r="10" data-layer-name="circle 181"/>
+    <!-- Row 6 -->
+    <circle cx="106" cy="430" r="10" data-layer-name="circle 182"/>
+    <circle cx="166" cy="430" r="10" data-layer-name="circle 183"/>
+    <circle cx="226" cy="430" r="10" data-layer-name="circle 184"/>
+    <circle cx="286" cy="430" r="10" data-layer-name="circle 185"/>
+    <circle cx="346" cy="430" r="10" data-layer-name="circle 186"/>
+    <circle cx="406" cy="430" r="10" data-layer-name="circle 187"/>
+    
+    <!-- Frenkel Interstitial Atom -->
+    <circle cx="385" cy="335" r="10" data-layer-name="circle 188"/>
+  </g><circle cx="136" cy="130" r="16" fill="url(#impmpov0fdz_s42lt_atom-sub-large)" data-layer-name="circle 189"/><circle cx="164" cy="370" r="6" fill="url(#impmpov0fdz_s42lt_atom-sub-small)" data-layer-name="circle 190"/><circle cx="344" cy="160" r="7" fill="url(#impmpov0fdz_s42lt_atom-interstitial)" filter="url(#impmpov0fdz_s42lt_glow-orange)" data-layer-name="circle 191"/><circle cx="256" cy="250" r="11" fill="url(#impmpov0fdz_s42lt_atom-core)" filter="url(#impmpov0fdz_s42lt_glow-red)" data-layer-name="circle 192"/><circle cx="348" cy="370" r="10" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 3" opacity="0.8" data-layer-name="circle 193"/><path d="M 352 365 Q 375 365 382 342" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#impmpov0fdz_s42lt_arrow)" opacity="0.8" data-layer-name="path 194"/><g font-family="sans-serif" font-size="11" font-weight="600" fill="#impmpov0fdz_s42lt_cbd5e1" letter-spacing="1" data-layer-group="1" data-layer-name="g 195">
+    
+    <!-- Edge Dislocation -->
+    
+    
+    
+
+    <!-- Substitutional (Large) -->
+    
+    
+    
+    
+
+    <!-- Interstitial -->
+    
+    
+    
+
+    <!-- Frenkel Defect -->
+    
+    
+    
+
+    <!-- Vacancy -->
+    
+    
+    
+
+    <!-- Substitutional (Small) -->
+    
+    
+    
+    
+
+  </g></g></svg>

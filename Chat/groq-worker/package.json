@@ -1,0 +1,16 @@
+{
+  "name": "simoens-groq-refiner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test": "node --test worker.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.36.0"
+  },
+  "overrides": {
+    "undici": "7.30.1"
+  }
+}

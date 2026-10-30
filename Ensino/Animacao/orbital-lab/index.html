@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <meta name="description" content="Laboratório interativo de orbitais d e teoria do campo cristalino.">
+  <title>Orbital Lab</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/onboarding.css">
+  <link rel="stylesheet" href="css/teaching.css">
+  <link rel="stylesheet" href="css/refinements.css">
+  <link rel="stylesheet" href="css/led-theme.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Ir para o conteúdo</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="#" aria-label="Orbital Lab — início">
+        <span class="brand-symbol"><span></span><span></span><span></span></span>
+        <span><strong>ORBITAL<span class="brand-light">LAB</span></strong><small>EXPLORADOR MOLECULAR</small></span>
+      </a>
+      <div class="side-heading">EXPLORAR</div>
+      <nav class="side-nav" aria-label="Módulos do laboratório">
+        <button class="side-link active" data-mode="orbitals" aria-label="01 · Orbitais d" title="Orbitais d" aria-current="page"><span class="nav-icon">✧</span><span><strong>Orbitais d</strong><small>Parte 01 · Forma e espaço</small></span><span class="nav-number">01</span></button>
+        <button class="side-link" data-mode="geometries" aria-label="02 · Campo cristalino" title="Campo cristalino"><span class="nav-icon">⬡</span><span><strong>Campo cristalino</strong><small>Parte 02 · Ligantes e energia</small></span><span class="nav-number">02</span></button>
+        <button class="side-link" data-mode="compare" aria-label="03 · Comparador 3D" title="Comparador 3D"><span class="nav-icon">▦</span><span><strong>Comparador 3D</strong><small>Parte 03 · Três geometrias</small></span><span class="nav-number">03</span></button>
+        <button class="side-link" data-mode="electrons" aria-label="04 · Elétrons & spin" title="Elétrons & spin"><span class="nav-icon">⇅</span><span><strong>Elétrons & spin</strong><small>Parte 04 · Ocupação e EECC</small></span><span class="nav-number">04</span></button>
+        <button class="side-link" data-mode="classroom" aria-label="05 · Roteiro guiado" title="Roteiro guiado"><span class="nav-icon">✎</span><span><strong>Roteiro guiado</strong><small>Parte 05 · 12 experiências locais</small></span><span class="nav-number">05</span></button>
+        <button class="side-link" data-mode="challenges" aria-label="06 · Desafios" title="Desafios"><span class="nav-icon">✓</span><span><strong>Desafios</strong><small>Parte 06 · 20 questões comentadas</small></span><span class="nav-number">06</span></button>
+        <button class="side-link" data-mode="ligands" aria-label="07 · Ligantes & trocas" title="Ligantes & trocas"><span class="nav-icon">⇄</span><span><strong>Ligantes & trocas</strong><small>Parte 07 · Campo, mecanismos e cinética</small></span><span class="nav-number">07</span></button>
+        <button class="side-link" data-mode="advanced" aria-label="08 · Experimentos" title="Experimentos"><span class="nav-icon">⟡</span><span><strong>Experimentos</strong><small>Parte 08 · Distorções</small></span><span class="nav-number">08</span></button>
+        <div class="side-heading science-heading">MODO CIENTÍFICO</div>
+        <button class="side-link science-link" data-mode="database" aria-label="09 · Dados publicados" title="Dados publicados"><span class="nav-icon">▤</span><span><strong>Dados publicados</strong><small>Parte 09 · Biblioteca</small></span><span class="nav-number">09</span></button>
+        <button class="side-link science-link" data-mode="spectra" aria-label="10 · Espectroscopia" title="Espectroscopia"><span class="nav-icon">∿</span><span><strong>Espectroscopia</strong><small>Parte 10 · Tanabe–Sugano</small></span><span class="nav-number">10</span></button>
+        <button class="side-link science-link" data-mode="aom" aria-label="11 · Modelo AOM" title="Modelo AOM"><span class="nav-icon">⊞</span><span><strong>Modelo AOM</strong><small>Parte 11 · Matriz e CIF</small></span><span class="nav-number">11</span></button>
+      </nav>
+      <div class="side-divider"></div>
+      <div class="sidebar-guide">
+        <div class="guide-icon">i</div>
+        <p>Explore as formas, mova os ligantes e observe como os cinco orbitais deixam de ter a mesma energia.</p>
+      </div>
+      <div class="side-bottom"><span class="online-dot"></span> LABORATÓRIO CIENTÍFICO 3D <span class="version">v3.4</span></div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="topbar-start"><a href="../" class="gallery-return" aria-label="Voltar à galeria de animações">← Animações</a><div class="breadcrumb">LABORATÓRIO <span>/</span> QUÍMICA INORGÂNICA <span>/</span> <b id="breadcrumbCurrent">ORBITAIS d</b></div>
+        </div><div class="topbar-right"><span class="top-chip"><span class="green-dot"></span> INTERATIVO</span><button class="tour-replay-top" type="button" id="replayTourTop" aria-label="Iniciar tutorial guiado">◈ Tutorial</button><button class="icon-button" id="helpButton" title="Instruções" aria-label="Abrir instruções">?</button></div>
+      </header>
+
+      <div class="content" id="mainContent" tabindex="-1">
+        <section class="hero">
+          <div class="eyebrow"><span class="accent-line"></span> TEORIA DO CAMPO CRISTALINO <span class="eyebrow-sep">/</span> LABORATÓRIO CIENTÍFICO 3D</div>
+          <h1 id="heroTitle">A geometria dos <em>orbitais d.</em></h1>
+          <p id="heroSubtitle">Conheça os cinco orbitais em três dimensões. Arraste para girar, aproxime para observar e descubra para onde cada lobo aponta.</p>
+        </section>
+
+        <div class="module-switch"><label for="moduleSelect">Explorar módulo</label><select id="moduleSelect"><option value="orbitals">01 · Orbitais d</option><option value="geometries">02 · Campo cristalino</option><option value="compare">03 · Comparador 3D</option><option value="electrons">04 · Elétrons & spin</option><option value="classroom">05 · Roteiro guiado</option><option value="challenges">06 · Desafios</option><option value="ligands">07 · Ligantes & trocas</option><option value="advanced">08 · Experimentos</option><option value="database">09 · Dados publicados</option><option value="spectra">10 · Espectroscopia</option><option value="aom">11 · Modelo AOM</option></select></div>
+
+        <section id="orbitalsModule" class="module visible" aria-label="Explorador de orbitais">
+          <div class="main-grid">
+            <section class="stage-panel">
+              <div class="panel-head"><span><span class="header-dot"></span> VISUALIZAÇÃO ESPACIAL</span><span class="panel-mark">FIG. <span id="orbFigureNumber">01</span> / 05</span></div>
+              <div class="stage" id="orbStage" aria-label="Modelo tridimensional do orbital selecionado">
+                <div class="stage-ambient"></div>
+                <div class="stage-corner tl"></div><div class="stage-corner tr"></div><div class="stage-corner bl"></div><div class="stage-corner br"></div>
+                <div class="stage-grid"></div>
+                <canvas id="orbitalCanvas" class="gl-canvas" tabindex="0" aria-label="Orbital 3D. Arraste para girar ou use as setas do teclado."></canvas>
+                <div class="stage-label"><span class="label-icon">◈</span><span id="stageOrbitalName">d<sub>xy</sub></span><small>MODELO 3D</small></div>
+                <div class="stage-axis"><span class="axis axis-x">X</span><span class="axis axis-y">Y</span><span class="axis axis-z">Z</span><small>REFERÊNCIA XYZ</small></div>
+                <div class="stage-tip">↔ ARRASTE PARA ROTACIONAR <span>·</span> ROLE PARA ZOOM</div>
+              </div>
+              <div class="stage-controls"><button class="control-btn" id="resetOrbitalView" title="Restaurar câmera">↺ <span>Centralizar</span></button><button class="control-btn active-toggle" id="autoRotate" aria-pressed="true">⟳ <span>Rotação automática</span></button><div class="zoom-control"><span>−</span><input id="orbZoom" type="range" min="45" max="115" value="88" aria-label="Zoom do orbital"><span>+</span></div></div>
+            </section>
+            <aside class="information-panel">
+              <div class="panel-head"><span><span class="header-dot turquoise"></span> SOBRE O ORBITAL</span><span class="info-serial">01 — 05</span></div>
+              <div class="info-body"><div class="info-kind">ORBITAL SELECIONADO</div><h2 id="orbInfoTitle">d<sub>xy</sub></h2><div class="micro-line"></div><p id="orbDescription"></p>
+                <div class="fact-box"><span class="fact-label">ORIENTAÇÃO DOS LOBOS</span><strong id="orbOrientation"></strong></div>
+                <div class="fact-box"><span class="fact-label">EXPRESSÃO ANGULAR (PROPORCIONAL)</span><strong id="orbFormula"></strong></div>
+                <div class="legend"><span class="phase-a"></span> Fase (+) <span class="phase-b"></span> Fase (−)</div>
+                <div class="note"><span>✦</span><p>As duas cores representam <b>fases opostas da função de onda</b>, não cargas elétricas positivas e negativas.</p></div>
+              </div>
+            </aside>
+          </div>
+          <div class="section-heading"><div><div class="section-eyebrow">COLEÇÃO COMPLETA</div><h3>Os cinco orbitais d <span class="muted">— selecione para explorar</span></h3></div><span class="count-tag">05 ORBITAIS</span></div>
+          <div class="orbital-list" id="orbitalList"></div>
+          <div class="call-to-action"><div class="cta-symbol">↗</div><div><strong>Agora que você conhece os orbitais...</strong><p>Veja o que acontece quando os ligantes se aproximam do átomo metálico.</p></div><button id="goToGeometry" class="primary-button">Explorar campo cristalino <span>→</span></button></div>
+        </section>
+
+        <section id="geometriesModule" class="module" aria-label="Geometria e separação de energia">
+          <div class="geometry-picker" aria-label="Escolha da geometria">
+            <button class="geometry-choice active" data-geom="oct"><span class="g-shape">⬡</span><span><strong>Octaédrica</strong><small>O<sub>h</sub> · 6 ligantes</small></span><span class="choice-arrow">↗</span></button>
+            <button class="geometry-choice" data-geom="tet"><span class="g-shape">◇</span><span><strong>Tetraédrica</strong><small>T<sub>d</sub> · 4 ligantes</small></span><span class="choice-arrow">↗</span></button>
+            <button class="geometry-choice" data-geom="square"><span class="g-shape">▱</span><span><strong>Quadrado planar</strong><small>D<sub>4h</sub> · 4 ligantes</small></span><span class="choice-arrow">↗</span></button>
+          </div>
+          <div class="sim-grid">
+            <section class="stage-panel sim-stage-panel">
+              <div class="panel-head"><span><span class="header-dot"></span> MODELO 3D — <span id="geomHeader">OCTÁEDRICO</span></span><span class="panel-mark" id="geomCount">06 LIGANTES</span></div>
+              <div class="stage sim-stage" id="geometryStage">
+                <div class="stage-ambient"></div><div class="stage-grid"></div>
+                <div class="stage-corner tl"></div><div class="stage-corner tr"></div><div class="stage-corner bl"></div><div class="stage-corner br"></div>
+                <canvas id="geometryCanvas" class="gl-canvas" tabindex="0" aria-label="Geometria 3D. Arraste para girar, role para zoom."></canvas>
+                <div class="scene-top-left"><span class="scene-mode-label">SIMULAÇÃO ATIVA</span><strong id="geometryDisplayName">Octaédrica (Oₕ)</strong></div>
+                <div class="scene-progress"><span class="live-pulse"></span><span id="sceneProgressName">AGUARDANDO LIGANTES</span></div>
+                <div class="stage-tip" id="geometryStageTip">↔ ARRASTE O FUNDO PARA GIRAR · ARRASTE UMA ESFERA DOURADA PARA MOVER O LIGANTE</div>
+              </div>
+              <div class="simulation-control">
+                <div class="sim-topline"><strong id="simulationTitle">Aproximação dos ligantes</strong><span id="progressText">0%</span></div>
+                <input id="progressSlider" type="range" min="0" max="100" step="1" value="0" aria-label="Andamento da aproximação dos ligantes">
+                <div class="progress-stages"><span>CAMPO LIVRE</span><span>APROXIMAÇÃO</span><span>CAMPO FORMADO</span></div>
+                <div class="play-row"><button id="playSim" class="primary-button play-button"><span id="playIcon">▶</span> <span id="playText">Iniciar animação</span></button><button id="resetSim" class="control-btn"><span>↺</span> Reiniciar</button><label class="checkbox-label"><input type="checkbox" id="showOrbital" checked><span>Exibir orbital</span></label></div>
+                <div class="ligand-editor"><span id="ligandEditorStatus" aria-live="polite">✦ Arraste um ligante dourado sobre o modelo para modificar sua distância e o diagrama.</span><button id="resetLigands" class="control-btn" type="button">Restaurar ligantes</button></div>
+                <div class="ligand-accessible"><label for="ligandSelect">Ligante para ajuste fino <select id="ligandSelect" aria-label="Selecione um ligante da geometria"></select></label><label for="ligandRadial">Distância relativa <b id="ligandRadialValue">1,00×</b><input id="ligandRadial" type="range" min="155" max="460" step="1" value="214" aria-label="Distância do ligante selecionado"></label></div>
+                <div id="squareExtra" class="square-extra"><button id="axialModeButton" class="axial-button">⇅ &nbsp; Mostrar remoção dos ligantes axiais (±z)</button></div>
+              </div>
+            </section>
+            <aside class="energy-panel">
+              <div class="panel-head"><span><span class="header-dot amber"></span> NÍVEIS DE ENERGIA</span><span class="panel-mark">E ↑</span></div>
+              <div class="energy-content"><div class="energy-heading"><span>SEPARAÇÃO DOS ORBITAIS</span><strong id="energyGeom">CAMPO OCTAÉDRICO</strong></div>
+                <svg id="energySvg" viewBox="0 0 440 296" role="img" aria-label="Diagrama energético dos cinco orbitais d atualizado pela animação">
+                  <defs><pattern id="chartDots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".6" fill="#6b7796" opacity=".23"/></pattern></defs>
+                  <rect x="0" y="0" width="440" height="296" fill="url(#chartDots)"/>
+                  <line x1="47" y1="22" x2="47" y2="264" stroke="#60718e" opacity=".6"/><path d="M 42 31 L 47 18 L 52 31" stroke="#60718e" stroke-width="1.4" fill="none"/>
+                  <line x1="54" y1="158" x2="419" y2="158" stroke="#8894a6" stroke-dasharray="5 6" stroke-width="1" opacity=".58"/>
+                  <text x="12" y="14" fill="#9ca9bc" font-size="11" font-family="sans-serif">E</text>
+                  <text x="53" y="150" fill="#8190a7" font-size="10" font-family="sans-serif">E₀</text>
+                  <g id="energyDynamic"></g>
+                </svg>
+                <div class="energy-footer"><div class="delta-main"><span>DESDOBRAMENTO</span><strong id="deltaSymbol">Δ<sub>o</sub></strong></div><div class="delta-side"><span id="energyGroupTop">e<sub>g</sub> ↑</span><span id="energyGroupBottom">t<sub>2g</sub> ↓</span></div></div>
+                <div class="energy-note"><span class="info-small">i</span><p>As alturas variam durante a aproximação; o gráfico é <b>qualitativo</b>, sem valores absolutos de energia.</p></div>
+              </div>
+              <div class="focus-divider"></div><div class="focus-head"><span>ORBITAL EM DESTAQUE</span><span class="focus-hint">CLIQUE PARA ALTERAR</span></div>
+              <div class="focus-orbital-list" id="focusOrbitalList"></div>
+            </aside>
+          </div>
+          <div class="explain-panel"><div class="explain-symbol">✦</div><div><div class="section-eyebrow" id="explainerTag">POR QUE ISSO ACONTECE?</div><h3 id="explainTitle">Os ligantes chegam pelos eixos.</h3><p id="explainText"></p></div><span class="explain-decoration">01 / 03</span></div>
+          <div class="learn-cards"><div class="learn-card"><span class="learn-number">01</span><strong>Átomo metálico</strong><p>Os cinco orbitais d são representados no início com a mesma energia (degenerados).</p></div><div class="learn-card"><span class="learn-number">02</span><strong>Aproximação</strong><p>As direções dos ligantes determinam quais orbitais sofrem maior repulsão.</p></div><div class="learn-card"><span class="learn-number">03</span><strong>Desdobramento</strong><p>As diferentes interações separam os orbitais em níveis energéticos característicos.</p></div></div>
+        </section>
+
+        <section id="compareModule" class="module" aria-label="Comparação das três geometrias">
+          <div class="section-heading"><div><div class="section-eyebrow">MESMOS CONTROLES · TRÊS ARRANJOS</div><h2>Forma, energia e ocupação lado a lado.</h2></div><span class="count-tag">03 SISTEMAS</span></div>
+          <div class="compare-toolbar"><label for="compareSlider">Formação do campo <b id="comparePct">100%</b></label><input type="range" id="compareSlider" min="0" max="100" value="100"><button class="primary-button" id="comparePlay" type="button">▶ Animar comparação</button><button class="control-btn" id="compareReset" type="button">↺ Reiniciar</button></div>
+          <div class="compare-controls" id="compareControls"><label>Orbital em destaque<select id="compareOrbital"><option value="dxy">dxy</option><option value="dxz">dxz</option><option value="dyz">dyz</option><option value="dx2y2" selected>dx²−y²</option><option value="dz2">dz²</option></select></label><label>Elétrons d <output id="compareElectronsLabel">d⁶</output><input id="compareElectrons" type="range" min="0" max="10" step="1" value="6"></label><div class="compare-switches"><label><input id="compareShowOrbital" type="checkbox" checked> Orbital</label><label><input id="compareBonds" type="checkbox" checked> Ligações</label><label><input id="comparePolyhedron" type="checkbox" checked> Poliedro</label><label><input id="compareLabels" type="checkbox" checked> Rótulos</label></div><button id="compareRotate" class="control-btn" type="button" aria-pressed="false">⟳ Rotação</button><button id="compareCamera" class="control-btn" type="button">↺ Câmeras</button></div>
+          <details class="disclosure compare-settings" id="compareSettings"><summary>Campo, pareamento e distância de câmera</summary><div class="compare-parameters"><label>Escala de campo (Δref) <output id="compareFieldLabel">1,00</output><input id="compareField" type="range" min="35" max="280" value="100" step="1"></label><label>P (unidades relativas)<input id="comparePair" type="number" min=".1" max="3" step=".05" value="1.1"><small id="comparePairError" role="status" aria-live="polite"></small></label><label>Distância das câmeras<input id="compareDistance" type="range" min="540" max="1280" step="1" value="880"></label></div><p class="viewer-micro">A mesma escala e P são aplicados aos três modelos. Alto/baixo spin depende dos níveis e do pareamento. O espaçamento planar é ilustrativo.</p></details>
+          <div class="comparison-grid"><article class="compare-card"><div class="panel-head"><span>Octaédrica · O<sub>h</sub></span><span>6 LIGANTES</span></div><div class="compare-scene"><canvas id="compareOct" class="gl-canvas" aria-label="Modelo octaédrica 3D. Arraste para girar as três câmeras." tabindex="0"></canvas><div class="compare-scene-labels" id="compareLabelsOct" aria-hidden="true"></div><span class="view-hint">ARRASTE · SETAS · RODA PARA ZOOM</span></div><div class="compare-caption">eg acima de t₂g <span>· níveis relativos</span></div><div class="compare-energy" id="compareEnergyOct"></div><div class="compare-stats" id="compareStatsOct"></div></article><article class="compare-card"><div class="panel-head"><span>Tetraédrica · T<sub>d</sub></span><span>4 LIGANTES</span></div><div class="compare-scene"><canvas id="compareTet" class="gl-canvas" aria-label="Modelo tetraédrica 3D. Arraste para girar as três câmeras." tabindex="0"></canvas><div class="compare-scene-labels" id="compareLabelsTet" aria-hidden="true"></div><span class="view-hint">ARRASTE · SETAS · RODA PARA ZOOM</span></div><div class="compare-caption">t₂ acima de e <span>· níveis relativos</span></div><div class="compare-energy" id="compareEnergyTet"></div><div class="compare-stats" id="compareStatsTet"></div></article><article class="compare-card"><div class="panel-head"><span>Quadrado planar · D<sub>4h</sub></span><span>4 LIGANTES</span></div><div class="compare-scene"><canvas id="compareSquare" class="gl-canvas" aria-label="Modelo quadrado planar 3D. Arraste para girar as três câmeras." tabindex="0"></canvas><div class="compare-scene-labels" id="compareLabelsSquare" aria-hidden="true"></div><span class="view-hint">ARRASTE · SETAS · RODA PARA ZOOM</span></div><div class="compare-caption">dx²−y² mais alto <span>· níveis relativos</span></div><div class="compare-energy" id="compareEnergySquare"></div><div class="compare-stats" id="compareStatsSquare"></div></article></div><div id="compareReadout" class="science-note"></div><p class="viewer-micro compare-note">Cores da superfície: fases da função de onda. Todos os diagramas usam a mesma escala vertical. Os resultados são modelos relativos, sem prever a cor ou o magnetismo experimental de um composto.</p>
+        </section>
+
+        <section id="electronsModule" class="module" aria-label="Ocupação de orbitais, spin e EECC">
+          <div class="lab-layout">
+            <div class="lab-card"><div class="panel-head"><span><span class="header-dot"></span> CONFIGURAÇÃO ELETRÔNICA</span><span>SIMULADOR dⁿ</span></div>
+              <div class="lab-body">
+                <label class="control-label" for="electronCount">Quantidade de elétrons d <strong id="electronCountValue">d⁶</strong></label><input type="range" id="electronCount" min="0" max="10" value="6" step="1">
+                <div class="two-controls"><label>Geometria<select id="electronGeometry"><option value="oct">Octaédrica</option><option value="tet">Tetraédrica</option><option value="square">Quadrado planar</option></select></label><label>Estado de spin<select id="spinMode"><option value="auto">Automático (modelo)</option><option value="high">Alto spin (hipotético)</option><option value="low">Baixo spin (hipotético)</option></select></label></div>
+                <label class="control-label" id="ligandStrengthLabel">Ligante — série espectroquímica <strong id="ligandStrengthText">H₂O</strong></label><input hidden aria-hidden="true" type="range" id="ligandStrength" min="0" max="7" value="3" step="1"><div id="spectroSeries" class="spectro-series" role="group" aria-labelledby="ligandStrengthLabel"></div>
+                <div class="two-controls"><label class="control-label">Δ relativo (modelo) <strong id="deltaModelLabel">1,00</strong><input type="range" id="deltaModel" min="35" max="280" value="100" step="1"></label><label class="control-label">Energia de pareamento P (rel.) <strong id="pairLabel">1,10</strong><input type="range" id="pairEnergy" min="40" max="250" value="110" step="5"></label></div>
+                <details class="disclosure"><summary>Como o preenchimento é calculado</summary><div class="science-note small" id="electronExplanation">Os valores são parâmetros adimensionais didáticos, não dados medidos de um complexo específico.</div></details>
+              </div></div>
+            <div class="lab-card"><div class="panel-head"><span><span class="header-dot amber"></span> PREENCHIMENTO DE ORBITAIS</span><span id="diagramSpinLabel">AUTO</span></div>
+              <div class="lab-body"><div id="electronDiagram" class="electron-diagram" role="img" aria-label="Diagrama de níveis com setas dos elétrons"></div>
+                <div class="stat-grid"><div class="stat"><small>ELÉTRONS DESEMPARELHADOS</small><strong id="unpairedValue">—</strong></div><div class="stat"><small>MAGNETISMO (SPIN-ONLY)</small><strong id="magneticType">—</strong></div><div class="stat"><small>EECC RELATIVA</small><strong id="cfseValue">—</strong></div><div class="stat"><small>μ ≈ √[n(n+2)] μB</small><strong id="momentValue">—</strong></div></div>
+                <p class="result-explain" id="electronResult"></p>
+              </div></div>
+          </div>
+          <div class="section-heading"><div><div class="section-eyebrow">APLICAÇÃO</div><h3>Exemplos de complexos de coordenação</h3></div></div>
+          <div id="complexCards" class="complex-grid"></div>
+        </section>
+
+        <section id="classroomModule" class="module" aria-label="Roteiro guiado com visualizador integrado">
+          <div class="lesson-layout"><article class="lab-card lesson-card"><div class="panel-head"><span><span class="header-dot"></span> ROTEIRO GUIADO</span><span id="lessonCount">PASSO 01 / 12</span></div><div class="lab-body"><label class="lesson-select-label">Escolha uma etapa<select id="lessonSelect" aria-label="Escolher etapa do roteiro"></select></label><div class="lesson-meter" id="lessonMeter"></div><div class="lesson-icon" id="lessonIcon">◈</div><h2 class="lesson-title" id="lessonTitle"></h2><p id="lessonDescription" class="lesson-desc"></p><div id="lessonQuestion" class="lesson-question"></div><div class="lesson-buttons"><button id="lessonPrev" class="control-btn">← Anterior</button><button id="lessonDemo" class="control-btn">↺ Restaurar experiência</button><button id="lessonNext" class="primary-button">Próximo passo →</button></div></div></article><section id="lessonViewer" class="interactive-viewer" aria-label="Visualizador integrado da etapa do roteiro"></section></div>
+        </section>
+        <section id="challengesModule" class="module" aria-label="Desafios independentes do roteiro">
+          <div class="challenge-layout">          <div class="lab-card"><div class="panel-head"><span><span class="header-dot amber"></span> DESAFIOS INTERATIVOS</span><span id="quizScore">0 / 0 PONTOS</span></div><div class="lab-body"><label class="quiz-jump-label">Ir para questão<select id="quizJump" aria-label="Escolher questão do desafio"></select></label><div class="quiz-top"><span class="quiz-tag" id="quizTag">DESAFIO 1</span><span class="quiz-tag" id="quizFraction">01 / 20</span></div><p id="quizTopic" class="section-eyebrow"></p><h2 class="lesson-title" id="quizQuestion"></h2><div id="quizOptions" class="quiz-options"></div><div id="quizFeedback" class="quiz-feedback" aria-live="polite"></div><div class="lesson-buttons"><button id="quizPrev" class="control-btn">← Anterior</button><button id="quizHint" class="control-btn">✦ Mostrar pista</button><button id="quizNext" class="primary-button">Próxima questão →</button><button id="quizRestart" class="control-btn">↺ Reiniciar</button></div></div></div></div><p class="science-note">Uma tentativa por questão. Acertar sem pista vale 1 ponto; usar pista zera o ponto da questão. Pontuação e respostas são mantidas nesta sessão.</p>
+        </section>
+        <section id="ligandsModule" class="module" aria-label="Ligantes de campo forte, campo fraco e substituição">
+          <div class="series-card"><div class="section-heading"><div><div class="section-eyebrow">SÉRIE ESPECTROQUÍMICA · RECORTE QUALITATIVO</div><h2>Campo mais fraco → campo mais forte</h2></div></div><div id="ligandSeries" class="ligand-series" aria-label="Selecionar um ligante da série"></div><p id="ligandSeriesNote" class="viewer-micro" role="status">Escolha um ligante para comparar com H₂O. A ordem fina de CN⁻/CO pode depender da comparação; os fatores numéricos da bancada são didáticos.</p></div>
+          <section id="ligandLab" class="interactive-viewer standalone-viewer" aria-label="Bancada de ligantes e substituição"></section>
+          <details class="disclosure"><summary>Um exemplo real e os limites do modelo</summary><div class="science-note small"><p>A RSC descreve a formação de [Cu(NH₃)₄(H₂O)₂]²⁺, azul-intenso, a partir de Cu(II) aquoso e excesso de amônia. NH₃ também atua como base; a precipitação inicial não é animada aqui.</p><p>Campo forte/fraco não é sinônimo de complexo lábil/inerte. Desdobramento orbital, velocidade de substituição e equilíbrio precisam ser analisados separadamente. Os gráficos da bancada usam parâmetros escolhidos para ensino; valores tabulados em cm⁻¹ continuam no módulo Dados publicados.</p></div></details>
+        </section>
+
+        <section id="advancedModule" class="module" aria-label="Distorções e experimentos avançados">
+          <div class="lab-layout"><div class="lab-card"><div class="panel-head"><span><span class="header-dot"></span> EXPERIMENTO · DISTORÇÃO TETRAGONAL</span><span>O<sub>h</sub> → D<sub>4h</sub></span></div><div class="advanced-scene"><canvas id="distortionCanvas" class="gl-canvas" aria-label="Distorção tetragonal 3D" tabindex="0"></canvas></div><div class="lab-body"><label class="control-label" for="axialDistance">Posição dos ligantes axiais ±z (r/r₀) <strong id="axialDistanceLabel">1,00×</strong></label><input type="range" id="axialDistance" min="0" max="160" value="100" step="2"><div class="slider-labels"><span>REMOVIDOS (LIMITE PLANO)</span><span>REGULAR</span><span>COMPRIMIDO</span></div><label class="checkbox-label advanced-check"><input type="checkbox" id="advancedOrbital" checked> Superfície orbital em destaque</label><select id="advancedFocus" aria-label="Orbital em destaque"><option value="dx2y2">dx²−y²</option><option value="dz2">dz²</option><option value="dxy">dxy</option><option value="dxz">dxz</option><option value="dyz">dyz</option></select></div></div>
+          <div class="lab-card"><div class="panel-head"><span><span class="header-dot amber"></span> EVOLUÇÃO DOS NÍVEIS</span><span>MODELO QUALITATIVO</span></div><div class="lab-body"><div id="distortionDiagram" class="advanced-diagram"></div><h3 id="distortionTitle">Octaedro regular</h3><p id="distortionDescription" class="result-explain"></p><div class="science-note small">A interpolação octaédrico → quadrado planar é <b>conceitual</b>. Os níveis de uma distorção real dependem do metal, da simetria, das distâncias e da ligação metal–ligante. Não é um cálculo de estrutura eletrônica.</div></div></div></div>
+          <div class="section-heading"><div><div class="section-eyebrow">LEITURA CIENTÍFICA</div><h3>O que é modelo e o que é fenômeno real?</h3></div></div>
+          <div class="learn-cards"><div class="learn-card"><span class="learn-number">01</span><strong>Série espectroquímica</strong><p>A ordem ajuda a prever diferenças qualitativas de Δ, mas também depende do metal, estado de oxidação e geometria. Ela não fornece valores universais.</p></div><div class="learn-card"><span class="learn-number">02</span><strong>Efeito Jahn–Teller</strong><p>Certas configurações eletrônicas degeneradas favorecem distorções que diminuem a energia. O alongamento octaédrico é um exemplo comum, não uma regra para todos os complexos.</p></div><div class="learn-card"><span class="learn-number">03</span><strong>Limites da TCC</strong><p>O modelo eletrostático explica tendências; uma descrição quantitativa exige considerar covalência, campo ligante e métodos de estrutura eletrônica.</p></div></div>
+        </section>
+
+        <!-- PARTE 07 — BIBLIOTECA DE VALORES DE LITERATURA -->
+        <section id="databaseModule" class="module science-module" aria-label="Biblioteca espectroscópica e equações">
+          <div class="science-ribbon"><span>09 / 11</span><strong>BIBLIOTECA ESPECTROSCÓPICA</strong><span class="science-chip measured">● COMPILAÇÃO PUBLICADA</span></div>
+          <div class="sci-intro"><div><h2>Um complexo. <em>Dados verificáveis.</em></h2><p>Δ retirado de uma fonte identificável; energia, comprimento de onda equivalente, EECC e magnetismo calculados no navegador. Os parâmetros de spin são atribuições didáticas, não medições de susceptibilidade.</p></div><button id="exportDatabase" class="control-btn">↓ Exportar dados CSV</button></div>
+          <div class="sci-grid-two">
+            <article class="sci-card"><div class="panel-head"><span><span class="header-dot turquoise"></span> SELEÇÃO DO COMPLEXO</span><span id="databaseCount">11 REGISTROS</span></div>
+              <div class="sci-pad"><label class="sci-label">Filtrar por metal, ligante ou fórmula<input id="complexSearch" type="search" placeholder="Ex.: Fe, H₂O, Ni, Co..."></label>
+              <label class="sci-label">Complexo<select id="databaseSelect"></select></label><div id="databaseFormula" class="formula-showcase"></div>
+              <div class="sci-stats" id="databaseStats"></div><div class="sci-divider"></div><details class="disclosure" id="sourceDetails"><summary>Fonte, referência e incerteza</summary><div id="databaseSource" class="citation-box"></div></details>
+              <div class="sci-actions"><button id="sendDataElectron" class="primary-button">Usar no módulo de elétrons →</button><button id="sendDataAOM" class="control-btn">Calibrar AOM →</button></div></div>
+            </article>
+            <article class="sci-card"><div class="panel-head"><span><span class="header-dot amber"></span> EQUAÇÕES E DIAGRAMA</span><span class="science-chip calculated">◈ CÁLCULO</span></div>
+              <div class="sci-pad"><div class="sci-equation">E<sub>mol</sub> = N<sub>A</sub>hcν̃ &nbsp;·&nbsp; λ<sub>equiv</sub> = 10⁷/Δ</div><div id="databaseEnergy" class="db-energy" role="img" aria-label="Níveis calculados a partir do desdobramento tabulado"></div>
+              <div id="databaseCFSE" class="science-note small"></div><details class="disclosure"><summary>Como interpretar estes valores</summary><div id="databaseNote" class="sci-footnote"></div></details></div>
+            </article>
+          </div>
+          <div class="science-note">Os valores de Δ são <strong>parâmetros espectroscópicos compilados</strong>. O comprimento de onda equivalente a Δ não deve ser chamado automaticamente de máximo experimental, especialmente em complexos d²–d⁸. A incerteza não consta da tabela de origem.</div>
+        </section>
+
+        <!-- PARTE 08 — TRANSIÇÕES d8, DADOS PUBLICADOS E ESPECTROS CSV -->
+        <section id="spectraModule" class="module science-module" aria-label="Espectros e diagrama de Tanabe–Sugano">
+          <div class="science-ribbon"><span>10 / 11</span><strong>ESPECTROSCOPIA DE Ni(II) d⁸</strong><span class="science-chip calculated">◈ EQUAÇÕES DE LITERATURA</span></div>
+          <div class="sci-intro"><div><h2>Da banda ao <em>termo eletrônico.</em></h2><p>Recorte calculado do diagrama de Tanabe–Sugano para Ni(II) octaédrico: transições <strong>³A₂g → ³T₂g, ³T₁g(F) e ³T₁g(P)</strong>. Não é o diagrama completo de todos os estados singletos e tripletos.</p></div><span class="science-chip measured">● PONTOS EXPERIMENTAIS</span></div>
+          <div class="sci-grid-two">
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot"></span> CONTROLES TANABE–SUGANO</span><span>E/B × Dq/B</span></div><div class="sci-pad">
+            <label class="sci-label">Desdobramento Δ = 10Dq <strong id="tsDeltaValue">8.500 cm⁻¹</strong><input type="range" min="2500" max="22000" step="any" value="8500" id="tsDelta"></label>
+            <label class="sci-label">Parâmetro de Racah B <strong id="tsBValue">900 cm⁻¹</strong><input type="range" min="500" max="1300" step="any" value="900" id="tsB"></label>
+            <div id="tsParams" class="sci-stats"></div><div class="sci-divider"></div>
+            <div class="sci-actions"><span class="sci-footnote">B publicado para [Ni(en)₃]²⁺ em sais distintos:</span><button id="tsB720" class="control-btn" title="Parâmetro B = 720 cm-1 para [Ni(en)3]I2 (Leal et al., 2011)">720 · I⁻</button><button id="tsB804" class="control-btn" title="Parâmetro B = 804 cm-1 para [Ni(en)3]Cl2 (Leal et al., 2011)">804 · Cl⁻</button></div><p class="sci-footnote">Valores do estudo de Leal et al. (2011), <a href="https://doi.org/10.1590/S0100-40422011001000017" target="_blank" rel="noopener noreferrer" class="science-text-link">Química Nova ↗</a>. Estes B não são valores de Δ, nem pertencem ao espectro aquoso de 2018 usado abaixo.</p>
+            <div class="sci-eqn-stack"><p>ν₁ = 10Dq</p><p>ν₂,₃ = 7,5B + 15Dq ∓ ½√(225B² + 100Dq² − 180DqB)</p></div>
+            <p class="sci-footnote">Equações para transições permitidas por spin no modelo de campo ligante d⁸ octaédrico, apresentadas por Gushikem, Química Nova (2005). A intensidade dos espectros simulados não é predita por essas equações.</p>
+            <p id="tsFitStatus" class="inline-status" role="status" aria-live="polite"></p><button id="tsFitPublished" class="primary-button">Ajustar às bandas publicadas (394 e 735 nm)</button>
+           </div></article>
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot amber"></span> TANABE–SUGANO · RAMOS TRIPLETOS</span><span>RECORTE d⁸</span></div><div class="sci-pad"><svg id="tanabeChart" class="science-graph" viewBox="0 0 650 375" role="img" aria-label="Curvas ν sobre B em função de Dq sobre B"></svg><div id="tsLegend" class="sci-legend"></div></div></article>
+          </div>
+          <div class="sci-grid-two space-top">
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot turquoise"></span> BANDAS PUBLICADAS × MODELO</span><span id="spectrumKind">PICOS PUBLICADOS</span></div><div class="sci-pad"><svg id="spectrumChart" class="science-graph" viewBox="0 0 650 330" role="img" aria-label="Espectro reconstruído a partir de posições de bandas"></svg><div class="sci-legend"><span>● 394 nm — ³T₁g(P) (publicado)</span><span>● 735 nm — ³T₁g(F) (publicado)</span></div><p id="spectraExplanation" class="sci-footnote"></p><div class="citation-box" id="spectraSource"></div></div></article>
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot amber"></span> ESPECTRO EXPERIMENTAL PRÓPRIO</span><span>CSV</span></div><div class="sci-pad">
+            <p class="sci-footnote">Importe um CSV com colunas <code>wavelength_nm,absorbance</code> (ou duas colunas numéricas). A curva importada será identificada como <strong>dados do usuário</strong>, nunca como medida da literatura.</p>
+            <label class="sci-label">Carregar CSV UV-Vis<input id="spectraCSV" type="file" accept=".csv,.txt,text/csv"></label>
+            <div class="sci-actions"><button class="control-btn" id="spectraClear">Remover CSV</button><button class="control-btn" id="spectraExample">Voltar aos dados publicados</button></div>
+            <label class="sci-label">Largura de banda gaussiana para ilustração <strong id="spectraWidthValue">28 nm</strong><input id="spectraWidth" type="range" min="10" max="100" value="28"></label>
+            <div class="science-note small">Curvas gaussianas são reconstruções <strong>ilustrativas</strong>. A referência de 2018 contém os máximos publicados; nenhum espectro bruto foi digitalizado nem reproduzido como se fosse medido.</div>
+            <div id="spectraCSVStatus" class="sci-footnote" aria-live="polite">Nenhum arquivo importado.</div>
+           </div></article>
+          </div>
+        </section>
+
+        <!-- PARTE 09 — AOM MATRICIAL + CIF -->
+        <section id="aomModule" class="module science-module" aria-label="Modelo Angular Overlap e estruturas CIF">
+          <div class="science-ribbon"><span>11 / 11</span><strong>ANGULAR OVERLAP MODEL</strong><span class="science-chip calculated">◈ SEMIEMPÍRICO · MATRIZ 5×5</span></div>
+          <div class="sci-intro"><div><h2>Mova os átomos. <em>Diagonalize o campo.</em></h2><p>Somamos contribuições σ e π de cada ligante nas cinco funções d reais e calculamos os autovalores do Hamiltoniano. As energias refletem os parâmetros AOM escolhidos; não substituem cálculos ab initio.</p></div><button class="control-btn" id="aomReset">↺ Restaurar geometria</button></div>
+          <div class="sci-grid-two">
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot"></span> COMPLEXO 3D · CONTROLE DOS LIGANTES</span><span id="aomGeomName">OCTÁEDRICO</span></div><div class="aom-scene"><canvas id="aomCanvas" tabindex="0" aria-label="Modelo 3D interativo do AOM; selecione e arraste ligantes"></canvas><span class="aom-scene-caption" id="aomCanvasInfo">SELECIONE UM LIGANTE · ARRASTE VERTICALMENTE PARA AJUSTAR r · ARRASTE NO FUNDO PARA GIRAR</span></div>
+            <div class="sci-pad"><div class="sci-controls-three"><label class="sci-label">Geometria<select id="aomGeom"><option value="oct">Octaédrica</option><option value="tet">Tetraédrica</option><option value="square">Quadrado planar</option></select></label><label class="sci-label">Ligante<select id="aomLigand"></select></label><label class="sci-label">Orbital em destaque<select id="aomFocus"><option value="">Nenhum</option><option value="dz2">dz²</option><option value="dx2y2">dx²−y²</option><option value="dxy">dxy</option><option value="dxz">dxz</option><option value="dyz">dyz</option></select></label></div>
+            <label class="sci-label">Distância metal–ligante selecionada <strong id="aomRLabel">2,00 Å</strong><input id="aomR" type="range" min="120" max="425" step="1" value="200"></label>
+            <div class="sci-controls-two"><label class="sci-label">θ polar (graus) <input id="aomTheta" type="number" min="0" max="180" step="1" value="90"></label><label class="sci-label">φ azimute (graus) <input id="aomPhi" type="number" min="-180" max="360" step="1" value="0"></label></div>
+            <p class="sci-footnote">Clique na esfera para selecionar; arrastar a esfera altera r. θ e φ controlam sua orientação espacial. O navegador recalcula a matriz após cada ajuste.</p></div></article>
+           <article class="sci-card"><div class="panel-head"><span><span class="header-dot amber"></span> PARÂMETROS DO HAMILTONIANO</span><span>cm⁻¹</span></div><div class="sci-pad">
+            <label class="sci-label">Complexo para calibrar Δ<select id="aomComplex"></select></label>
+            <div class="sci-actions"><button class="control-btn" id="aomCalibrate">Calibrar eσ via Δ tabulado (Oₕ)</button><span id="aomReferenceTag" class="science-chip modeled">◈ PARAMETRIZADO</span></div>
+            <label class="sci-label">eσ <strong id="aomSigmaValue">2.833 cm⁻¹</strong><input id="aomSigma" type="range" min="0" max="17000" step="any" value="2833.4333333333335"></label>
+            <label class="sci-label">eπ <strong id="aomPiValue">0 cm⁻¹</strong><input id="aomPi" type="range" min="-3500" max="3500" step="20" value="0"></label>
+            <label class="sci-label">Expoente radial n (estimativa) <strong id="aomExponentValue">5</strong><input id="aomExponent" type="range" min="2" max="8" step="0.5" value="5"></label>
+            <label class="sci-label">Distância de referência R₀ <strong id="aomR0Value">2,00 Å</strong><input id="aomR0" type="range" min="150" max="270" step="1" value="200"></label>
+            <p id="aomStatus" class="inline-status" role="status" aria-live="polite"></p>           </div></article>
+          </div>
+          <article class="sci-card space-top aom-results"><div class="panel-head"><span><span class="header-dot turquoise"></span> RESULTADOS DO MODELO AOM</span><span>NÍVEIS RELATIVOS AO BARICENTRO</span></div><div class="sci-pad"><div id="aomReadout" class="sci-stats"></div><div id="aomDiagram" class="aom-energy"></div><details class="disclosure" id="matrixDetails"><summary>Matriz 5 × 5 e base orbital</summary><div id="aomMatrix" class="aom-matrix" aria-label="Matriz 5 por 5 do Hamiltoniano AOM"></div></details>
+            <div class="science-note small">H = Σ<sub>L</sub> [eσ,L |σL⟩⟨σL| + eπ,L (|πx,L⟩⟨πx,L| + |πy,L⟩⟨πy,L|)]. O caráter σ/π é definido por projetores direcionais. Distâncias usam (R₀/R)ⁿ como <strong>hipótese</strong>, eσ/eπ não são valores medidos salvo ajuste independente.</div>
+</div></article>
+          <details class="sci-card space-top disclosure" id="cifDetails"><summary>Importar estrutura cristalográfica · CIF <span>Opcional</span></summary>
+           <div class="sci-pad"><div class="sci-controls-two"><div><label class="sci-label">Arquivo CIF<input id="cifFile" type="file" accept=".cif,.txt"></label><p class="sci-footnote">Carregue uma estrutura publicada ou obtida do COD e escolha o sítio metálico. Coordenadas fracionárias são transformadas pela célula unitária.</p><a class="science-text-link" href="https://www.crystallography.net/cod/" target="_blank" rel="noopener noreferrer">Pesquisar arquivos CIF no Crystallography Open Database ↗</a></div>
+           <div><label class="sci-label">Centro metálico<select id="cifMetal" disabled><option>Importe um CIF</option></select></label><div class="sci-actions"><button id="cifApply" class="primary-button" disabled>Usar vizinhança no AOM</button><button id="cifClear" class="control-btn">Limpar estrutura</button></div></div></div>
+           <div id="cifInfo" class="cif-info">Nenhuma estrutura importada. O modelo usa coordenadas geométricas idealizadas (R₀ hipotético).</div><div id="cifAtoms" class="cif-atoms"></div>
+           <div class="science-note small">A extração usa sítios atômicos explicitamente informados e imagens periódicas, <strong>sem expandir operações de simetria</strong>. Algumas estruturas CIF ficam incompletas nesse método. Confira manualmente a primeira esfera de coordenação antes de interpretar os valores.</div>
+           </div></details>
+          <div class="sci-actions space-top"><button id="aomExport" class="primary-button">↓ Exportar resultados AOM (CSV)</button><button id="aomSendGeom" class="control-btn">Ver geometria original no módulo 3D →</button></div>
+        </section>
+        <footer class="footer"><span>ORBITAL LAB / EXPERIÊNCIA DIDÁTICA INTERATIVA</span><span></span></footer>
+      </div>
+    </main>
+  </div>
+  <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle"><div class="dialog-head"><strong id="helpTitle">Como explorar o laboratório</strong><button id="closeHelp" aria-label="Fechar">✕</button></div><p><b>Tutorial:</b> o guia tem 74 etapas e um índice para ir diretamente a qualquer função. Em telas baixas e largas, o painel deixa uma coluna livre para o elemento destacado.</p><p><b>Orbitais e campo:</b> escolha uma superfície, gire com mouse ou teclado e aproxime os ligantes. O comparador permite escolher orbital e elétrons, alternar camadas, sincronizar câmeras e comparar ocupação, EECC e magnetismo. Use também elétrons e distorções para explorar essas relações.</p><p><b>Roteiro guiado:</b> são 12 etapas com um visualizador na própria tela. Escolha uma etapa pelo seletor, teste os controles e responda à checagem. Restaurar experiência repõe somente o experimento local.</p><p><b>Desafios:</b> ficam em uma seção independente, com 20 questões. Uma resposta correta sem pista vale 1 ponto; usar pista zera a pontuação da questão.</p><p><b>Ligantes &amp; trocas:</b> compare campo forte/fraco, veja os esquemas A/D/I, explore leis cinéticas limite e acompanhe o exemplo cobre(II)/amônia. Gráficos de exercício são identificados como modelos.</p><p><b>Modo científico:</b> consulte Dados publicados, Espectroscopia e AOM/CIF para fontes, equações, estruturas e exportações. Os parâmetros de um modelo não substituem medições de um composto.</p><p class="dialog-note">As superfícies, as trocas animadas e os gráficos pedagógicos são representações idealizadas. Os cálculos são realizados no seu navegador; uma nova abertura requer os arquivos estáticos do site.</p><button id="helpStartTour" class="primary-button" type="button">◈ Iniciar tutorial interativo</button></dialog>
+  <script src="js/data/dados-cientificos.js"></script>
+  <script src="js/core/equacoes.js"></script>
+  <script src="js/core/scientific-core.js"></script>
+  <script src="js/core/teaching-core.js"></script>
+  <script src="js/data/teaching-content.js"></script>
+  <script src="js/render/app.js"></script>
+  <script src="js/features/teaching-ui.js"></script>
+  <script src="js/render/lab2.js"></script>
+  <script src="js/features/scientific-ui.js"></script>
+  <script src="js/ui/notation.js"></script>
+  <script src="js/data/guide-content.js"></script>
+  <script src="js/ui/onboarding.js"></script>
+</body>
+</html>

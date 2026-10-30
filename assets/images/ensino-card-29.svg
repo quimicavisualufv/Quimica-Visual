@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" preserveAspectRatio="xMidYMid meet" data-editor-original-width="640" data-editor-original-height="420" style="width: 844.8px; height: 554.4px;">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#bg">
+      <stop offset="0%" stop-color="#0b1220" data-layer-name="stop 3"/>
+      <stop offset="100%" stop-color="#15233d" data-layer-name="stop 4"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0" data-layer-name="lineargradient#bar">
+      <stop offset="0%" stop-color="#1f2f4f" data-layer-name="stop 6"/>
+      <stop offset="100%" stop-color="#16243f" data-layer-name="stop 7"/>
+    </linearGradient>
+    <linearGradient id="panelGlow" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#panelGlow">
+      <stop offset="0%" stop-color="#182844" data-layer-name="stop 9"/>
+      <stop offset="100%" stop-color="#0d1729" data-layer-name="stop 10"/>
+    </linearGradient>
+    <linearGradient id="accentA" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#accentA">
+      <stop offset="0%" stop-color="#89f7ff" data-layer-name="stop 12"/>
+      <stop offset="100%" stop-color="#4e72ff" data-layer-name="stop 13"/>
+    </linearGradient>
+    <linearGradient id="accentB" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#accentB">
+      <stop offset="0%" stop-color="#ff6c78" data-layer-name="stop 15"/>
+      <stop offset="100%" stop-color="#9f4bff" data-layer-name="stop 16"/>
+    </linearGradient>
+    <linearGradient id="accentC" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#accentC">
+      <stop offset="0%" stop-color="#78ffb9" data-layer-name="stop 18"/>
+      <stop offset="100%" stop-color="#11b5c9" data-layer-name="stop 19"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" data-layer-name="filter#shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28" data-layer-name="fedropshadow 21"/>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%" data-layer-name="filter#softShadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.24" data-layer-name="fedropshadow 23"/>
+    </filter>
+    <filter id="pieceShadow" x="-30%" y="-30%" width="160%" height="170%" data-layer-name="filter#pieceShadow">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.32" data-layer-name="fedropshadow 25"/>
+    </filter>
+    <radialGradient id="highlight" cx="30%" cy="18%" r="75%" data-layer-name="radialgradient#highlight">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.2" data-layer-name="stop 27"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.08" data-layer-name="stop 28"/>
+      <stop offset="65%" stop-color="#ffffff" stop-opacity="0" data-layer-name="stop 29"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" data-layer-name="stop 30"/>
+    </radialGradient>
+    <clipPath id="previewClip" data-layer-name="clippath#previewClip">
+      <rect x="20" y="20" width="600" height="300" rx="24" data-layer-name="rect 32"/>
+    </clipPath>
+    <linearGradient id="boardDark" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#boardDark"><stop offset="0%" stop-color="#0f192c" data-layer-name="stop 34"/><stop offset="100%" stop-color="#13213a" data-layer-name="stop 35"/></linearGradient>
+    <linearGradient id="pieceLight" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#pieceLight"><stop offset="0%" stop-color="#9be8ff" data-layer-name="stop 37"/><stop offset="100%" stop-color="#5f72ff" data-layer-name="stop 38"/></linearGradient>
+    <linearGradient id="piecePink" x1="0" y1="0" x2="1" y2="1" data-layer-name="lineargradient#piecePink"><stop offset="0%" stop-color="#ff8198" data-layer-name="stop 40"/><stop offset="100%" stop-color="#9a52ff" data-layer-name="stop 41"/></linearGradient>
+  </defs>
+  <rect width="640" height="420" rx="28" fill="url(#bg)" data-layer-name="rect 42"/>
+  <g opacity="0.08" stroke="#9cc7ff" stroke-width="1" data-layer-group="1" data-layer-name="g 43">
+    <path d="M0 70H640" data-layer-name="path 44"/><path d="M0 140H640" data-layer-name="path 45"/><path d="M0 210H640" data-layer-name="path 46"/><path d="M0 280H640" data-layer-name="path 47"/><path d="M0 350H640" data-layer-name="path 48"/>
+    <path d="M90 0V420" data-layer-name="path 49"/><path d="M180 0V420" data-layer-name="path 50"/><path d="M270 0V420" data-layer-name="path 51"/><path d="M360 0V420" data-layer-name="path 52"/><path d="M450 0V420" data-layer-name="path 53"/><path d="M540 0V420" data-layer-name="path 54"/>
+  </g>
+  <rect x="20" y="20" width="600" height="300" rx="24" fill="#111b2e" stroke="#223555" stroke-width="2" filter="url(#shadow)" data-layer-name="rect 55"/>
+  <g clip-path="url(#previewClip)" data-layer-group="1" data-layer-name="g 56" transform="matrix(1 0 0 1 15.99344921 0)">
+    <circle cx="76" cy="70" r="96" fill="url(#accentC)" opacity="0.10" data-layer-name="circle 57"/>
+    <circle cx="580" cy="30" r="120" fill="url(#accentB)" opacity="0.12" data-layer-name="circle 58"/>
+    <circle cx="560" cy="280" r="120" fill="url(#accentA)" opacity="0.10" data-layer-name="circle 59"/>
+    <rect x="66" y="46" width="322" height="228" rx="24" fill="url(#boardDark)" stroke="#2d496f" stroke-width="2" data-layer-name="rect 60" transform="matrix(1 0 0 1 0.59420103 -1.18835884)"/>
+    
+    
+    
+    <g transform="matrix(1 0 0 1 107.99344921 64)" data-layer-group="1" data-layer-name="g 64" data-collapsed="1"><rect x="0" y="0" width="188" height="188" rx="16" fill="#0b1425" stroke="#304a73" data-layer-name="rect 65" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="10" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 66" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="10" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 67" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="66" y="10" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 68" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="10" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 69" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="122" y="10" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 70" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="10" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 71" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="38" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 72" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="38" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 73" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="66" y="38" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 74" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="38" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 75" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="122" y="38" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 76" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="38" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 77" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="66" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 78" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="66" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 79" transform="matrix(0.99935913 -0.03579823 0.03579823 0.99935913 13.16291904 1.91278613)"/><rect x="66" y="66" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 80" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="66" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 81" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="122" y="66" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 82" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="66" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 83" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="94" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 84" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="94" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 85" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="66" y="94" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 86" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="94" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 87" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="122" y="94" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 88" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="94" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 89" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="122" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 90" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="122" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 91" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="66" y="122" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 92" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="122" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 93" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="122" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 95" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="10" y="150" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 96" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="38" y="150" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 97" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="66" y="150" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 98" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="94" y="150" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 99" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="122" y="150" width="28" height="28" rx="4" fill="#0f1b31" data-layer-name="rect 100" transform="matrix(1 0 0 1 15.99344921 0)"/><rect x="150" y="150" width="28" height="28" rx="4" fill="#172744" data-layer-name="rect 101" transform="matrix(1 0 0 1 15.99344921 0)"/></g>    
+    
+        <g transform="matrix(1 0 0 1 135.99344921 200)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 104" data-collapsed="1"><path d="M-15 -18H15L12 15Q0 22 -12 15Z" fill="url(#piecePink)" data-layer-name="path 105" transform="matrix(0.59386706 0 0 0.67863715 10.79595041 26.7414093)"/></g>    <g transform="matrix(1 0 0 1 193.99344921 172)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 108" data-collapsed="1"/>    <g transform="matrix(1 0 0 1 247.99344921 202)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 111"><path d="M-7 -24H7V-15L18 16Q0 24 -18 16L-7 -15Z" fill="url(#pieceLight)" data-layer-name="path 112" transform="matrix(0.70191216 0 0 0.64250636 13.04041171 -4.13945055)"/></g>    <g transform="matrix(0.92718385 -0.37460659 0.37460659 0.92718385 164.99344921 144)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 114"/>    <g transform="matrix(1 0 0 1 223.99344921 142)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 118"><path d="M-5 -25H5V-11L18 6Q21 24 0 24Q-21 24 -18 6L-5 -11Z" fill="url(#piecePink)" data-layer-name="path 119" transform="matrix(0.59445143 0 0 0.63456821 -18.74159336 -33.41623688)"/></g>    <g transform="matrix(1 0 0 1 277.99344921 143)" filter="url(#pieceShadow)" data-layer-group="1" data-layer-name="g 121"><path d="M-8 -24H8V-14L17 16Q0 25 -17 16L-8 -14Z" fill="url(#pieceLight)" data-layer-name="path 122" transform="matrix(0.51263279 0 0 0.61585337 12.98923087 75.01708221)"/></g>    <g opacity="0.55" data-layer-group="1" data-layer-name="g 137">
+      <path d="M438 238L470 222L501 240L501 274L470 290L438 274Z" fill="none" stroke="#7fdcff" stroke-width="2" data-layer-name="path 138"/>
+      <path d="M470 222V290" stroke="#7fdcff" stroke-width="2" data-layer-name="path 139"/>
+      <path d="M438 274L501 240" stroke="#7fdcff" stroke-width="2" opacity="0.5" data-layer-name="path 140"/>
+    </g>
+    
+      </g>
+  <rect x="20" y="336" width="600" height="64" rx="18" fill="url(#bar)" stroke="#25365b" data-layer-name="rect 142"/>
+  <text x="44" y="378" fill="#eaf3ff" font-family="Manrope, Segoe UI, Arial" font-size="28" font-weight="700" data-layer-name="text 143">Xadrez Químico</text>
+</svg>

@@ -1,0 +1,14 @@
+# Editor and abandoned backup artifacts
+*.bak
+*.orig
+*~
+*.swp
+
+# Local test output
+test-results/
+playwright-report/
+coverage/
+
+# Local dependency and cache directories
+node_modules/
+.cache/

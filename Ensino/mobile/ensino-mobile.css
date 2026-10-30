@@ -1,0 +1,320 @@
+/* Every application adjustment is gated by device detection, never viewport alone. */
+html[data-qv-mobile] {
+  --qv-vh: 100dvh;
+  --qv-top: calc(52px + env(safe-area-inset-top, 0px));
+  --qv-bottom: env(safe-area-inset-bottom, 0px);
+  --qv-side: clamp(220px, 33vw, 310px);
+  --qv-height: calc(var(--qv-vh) - var(--qv-top) - var(--qv-bottom));
+  height: 100%; overflow: hidden; -webkit-text-size-adjust: 100%;
+}
+html[data-qv-mobile][data-qv-embedded] { --qv-top: 0px; --qv-bottom: 0px; }
+html[data-qv-mobile] body {
+  box-sizing: border-box; width: 100%; height: var(--qv-vh); min-height: 0;
+  margin: 0; padding: var(--qv-top) env(safe-area-inset-right, 0px) var(--qv-bottom) env(safe-area-inset-left, 0px);
+  overflow: hidden;
+}
+html[data-qv-mobile][data-qv-embedded] body { padding: 0; }
+html[data-qv-mobile] :where(main, aside, section, .panel, .card, .app, .wrap, .sidebar, .controls, fieldset, label) { min-width: 0; }
+html[data-qv-mobile] :where(button, select, summary, [role="button"]) {
+  box-sizing: border-box; min-height: 44px; touch-action: manipulation; white-space: normal; overflow-wrap: anywhere;
+}
+html[data-qv-mobile] :where(select, input:not([type="checkbox"]):not([type="radio"]), textarea) { max-width: 100%; }
+html[data-qv-mobile] :where(input[type="number"], input[type="text"], input[type="search"], textarea, select) { font-size: 16px; }
+html[data-qv-mobile] select { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html[data-qv-mobile] input[type="range"] { min-height: 36px; touch-action: pan-y; }
+html[data-qv-mobile] :where(label:has(input[type="checkbox"]), label:has(input[type="radio"])) { min-height: 44px; align-content: center; }
+html[data-qv-mobile] :where(input[type="checkbox"], input[type="radio"]) { flex: 0 0 auto; width: 20px; height: 20px; }
+html[data-qv-mobile] :where(aside, .sidebar, .scroll, .controls, .ui, .panelbody) { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+html[data-qv-mobile] :where(canvas, model-viewer) { touch-action: none; }
+
+/* Native controls need explicit colors on Android and iOS as well as desktop
+   emulation. Do not let the operating system pair dark fields with black text. */
+html[data-qv-mobile]:is([data-qv-layout="packing"], [data-qv-layout="crystal-panels"], [data-qv-layout="molecule"], [data-qv-layout="exercise"], [data-qv-layout="guide-right"], [data-qv-layout="crystal-geometry"], [data-qv-layout="hydrogen"], [data-qv-layout="water"], [data-qv-layout="bravais"], [data-qv-layout="unit-cells"], [data-qv-layout="cubic-model"]) { color-scheme: dark; }
+html[data-qv-mobile]:is([data-qv-layout="packing"], [data-qv-layout="crystal-panels"], [data-qv-layout="molecule"], [data-qv-layout="exercise"], [data-qv-layout="guide-right"], [data-qv-layout="crystal-geometry"], [data-qv-layout="hydrogen"], [data-qv-layout="water"], [data-qv-layout="bravais"], [data-qv-layout="unit-cells"], [data-qv-layout="cubic-model"]) :is(select, textarea, input[type="number"], input[type="text"], input[type="search"]) { color: #edf3ff; -webkit-text-fill-color: currentColor; background-color: #101824; border-color: #45546c; }
+html[data-qv-mobile]:is([data-qv-layout="packing"], [data-qv-layout="crystal-panels"], [data-qv-layout="molecule"], [data-qv-layout="exercise"], [data-qv-layout="guide-right"], [data-qv-layout="crystal-geometry"], [data-qv-layout="hydrogen"], [data-qv-layout="water"], [data-qv-layout="bravais"], [data-qv-layout="unit-cells"], [data-qv-layout="cubic-model"]) :is(option, optgroup) { color: #edf3ff; -webkit-text-fill-color: currentColor; background-color: #101824; }
+html[data-qv-mobile] .simoens-a11y-panel :is(select, option, input[type="number"], input[type="text"]) { color-scheme: light; color: #111827; -webkit-text-fill-color: currentColor; background-color: #fff; }
+
+#qv-mobile-bar {
+  position: fixed; z-index: 2147482000; inset: 0 0 auto; box-sizing: border-box;
+  height: var(--qv-top); padding: env(safe-area-inset-top, 0px) max(154px, calc(154px + env(safe-area-inset-right, 0px))) 0 max(8px, env(safe-area-inset-left, 0px));
+  display: flex; gap: 16px; align-items: center; background: #101827; color: #eaf3ff;
+  border-bottom: 1px solid #334155; font: 600 12px/1.3 system-ui, sans-serif;
+}
+#qv-mobile-bar button { min-height: 44px; padding: 6px 12px; width: auto; border: 1px solid #526580; border-radius: 10px; background: #1c2c43; color: #fff; font: 700 12px/1.2 system-ui, sans-serif; }
+#qv-mobile-bar span { opacity: .8; letter-spacing: .05em; }
+#qv-mobile-bar .qv-sound { position: static; width: 44px; height: 44px; min-height: 44px; flex: 0 0 44px; padding: 0; margin-left: auto; border-radius: 50%; font-size: 20px; }
+#qv-rotate {
+  box-sizing: border-box; inset: 0; margin: auto; padding: 28px 22px;
+  width: min(380px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
+  border: 1px solid #3b5375; border-radius: 24px; color: #f4f8ff; background: #101b2e;
+  box-shadow: 0 24px 90px #0008; text-align: center; font: 15px/1.55 system-ui, sans-serif;
+  overflow: auto; z-index: 2147483647;
+}
+#qv-rotate:not([open]) { display: none; }
+#qv-rotate::backdrop { background: #060d1bf5; }
+#qv-rotate h2 { margin: 12px 0 8px; font: 800 26px/1.2 system-ui, sans-serif; }
+#qv-rotate p { margin: 8px 0; }
+#qv-rotate .qv-rotate-tip { color: #a8bdd9; font-size: 13px; }
+#qv-rotate button { width: 100%; margin-top: 18px; padding: 12px; border-radius: 12px; border: 0; background: #80dbff; color: #071322; font: 800 15px system-ui, sans-serif; }
+.qv-phone { display: grid; place-items: center; width: 82px; height: 54px; margin: 0 auto; border: 3px solid #80dbff; border-radius: 12px; font-size: 36px; color: #80dbff; }
+html[data-qv-guard-fallback] body > :not(#qv-rotate) { visibility: hidden !important; }
+html[data-qv-guard-fallback] #qv-rotate { position: fixed; box-shadow: 0 0 0 100vmax #060d1b; }
+
+/* These shortcuts have their own strip; none of them sits over the lesson. */
+html[data-qv-mobile] .simoens-a11y-widget { top: max(4px, env(safe-area-inset-top)) !important; right: max(56px, calc(56px + env(safe-area-inset-right))) !important; bottom: auto !important; width: 44px !important; height: 44px !important; }
+html[data-qv-mobile] .simoens-a11y-widget .simoens-a11y-trigger { right: 0 !important; width: 44px !important; height: 44px !important; min-height: 44px; transform: none !important; }
+html[data-qv-mobile] .simoens-a11y-trigger-icon { width: 32px !important; height: 32px !important; }
+html[data-qv-mobile] [vw] { position: fixed !important; inset: 0 0 auto auto !important; width: 0 !important; height: 0 !important; pointer-events: none !important; }
+html[data-qv-mobile] .simoens-a11y-widget .simoens-a11y-panel { position: fixed !important; top: var(--qv-top) !important; right: max(8px, env(safe-area-inset-right)) !important; bottom: auto !important; width: min(360px, calc(100vw - 24px)); max-height: calc(var(--qv-height) - 12px) !important; overflow: auto !important; }
+html[data-qv-mobile] [vw] [vw-access-button] { position: fixed !important; top: max(4px, env(safe-area-inset-top)) !important; right: max(106px, calc(106px + env(safe-area-inset-right))) !important; left: auto !important; bottom: auto !important; width: 44px !important; height: 44px !important; transform: none !important; pointer-events: auto !important; }
+html[data-qv-mobile] [vw] [vw-plugin-wrapper] { position: fixed !important; top: var(--qv-top) !important; bottom: 4px !important; max-height: calc(var(--qv-height) - 8px) !important; pointer-events: auto !important; }
+html[data-qv-mobile][data-qv-embedded] :is(.simoens-a11y-widget, #simoens-chat-widget-host, [vw], #qv-mobile-bar) { display: none !important; }
+
+/* Exercises and the molecular visualizers: controls left, scene right. */
+html[data-qv-mobile]:is([data-qv-layout="exercise"], [data-qv-layout="molecule"]) .app {
+  display: grid; grid-template-columns: var(--qv-side) minmax(0, 1fr) !important; grid-template-rows: minmax(0, 1fr) !important;
+  height: 100% !important; min-height: 0 !important; width: 100%; overflow: hidden;
+}
+html[data-qv-mobile]:is([data-qv-layout="exercise"], [data-qv-layout="molecule"]) .app > aside {
+  height: 100%; min-height: 0; padding: 10px; overflow: auto; border-right: 1px solid #47556950; border-bottom: 0;
+}
+html[data-qv-mobile]:is([data-qv-layout="exercise"], [data-qv-layout="molecule"]) .app > main { height: 100% !important; min-height: 0 !important; width: 100%; position: relative; overflow: hidden; }
+html[data-qv-mobile][data-qv-layout="exercise"] .card { padding: 10px; margin-bottom: 10px; }
+html[data-qv-mobile][data-qv-layout="exercise"] h1 { font-size: 20px; }
+html[data-qv-mobile][data-qv-layout="exercise"] :is(.overlayTop, .hud) { left: 8px; right: 8px; max-width: none; }
+html[data-qv-mobile][data-qv-layout="exercise"] .overlayTop { top: 8px; flex-wrap: wrap; max-height: 48%; overflow: auto; pointer-events: auto; }
+html[data-qv-mobile][data-qv-layout="exercise"] .viewerTools { max-width: 100%; }
+html[data-qv-mobile][data-qv-layout="exercise"] .colorSwatchBtn { width: 44px; height: 44px; flex: 0 0 44px; }
+html[data-qv-mobile][data-qv-layout="exercise"] :is(.toolPanel, .atomFilterPanel) { padding: 6px 8px; }
+html[data-qv-mobile][data-qv-layout="exercise"] .hud { bottom: 8px; max-height: 30%; overflow: auto; padding: 8px 10px; font-size: 12px; }
+html[data-qv-mobile][data-qv-layout="exercise"] .qv-viewer-inspector { margin-top: 10px; padding-top: 8px; border-top: 1px solid #45546c; }
+html[data-qv-mobile][data-qv-layout="exercise"] .qv-viewer-inspector > * { position: static; max-width: 100%; max-height: none; margin: 6px 0; }
+html[data-qv-mobile][data-qv-layout="molecule"] :is(.row3, .row) { grid-template-columns: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="molecule"] .hud { bottom: 8px; max-height: 25%; overflow: auto; max-width: calc(100% - 16px); font-size: 11px; }
+html[data-qv-mobile][data-qv-layout="molecule"] :is(#miniAxesWrap, .angleLegendPanel) { max-width: min(150px, 45%); }
+html[data-qv-mobile][data-qv-layout="molecule"] .boardSplitOverlay { max-height: 100%; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="molecule"] #miniAxesWrap { width: 70px !important; height: 70px !important; min-width: 0 !important; right: 8px !important; bottom: 8px !important; }
+html[data-qv-mobile][data-qv-layout="molecule"] .qv-molecule-inspector { margin-top: 10px; padding-top: 8px; border-top: 1px solid #45546c; }
+html[data-qv-mobile][data-qv-layout="molecule"] .qv-molecule-inspector > * { position: static !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; transform: none !important; width: 100% !important; min-width: 0 !important; max-width: none !important; height: auto !important; max-height: none !important; margin: 6px 0 !important; padding: 8px !important; box-sizing: border-box; }
+html[data-qv-mobile][data-qv-layout="molecule"] .qv-molecule-inspector .angleLegendItem { grid-template-columns: 20px 10px minmax(0, 1fr) auto !important; }
+html[data-qv-mobile][data-qv-layout="molecule"] .tbtn.primary { color: #071322; }
+html[data-qv-mobile][data-qv-layout="molecule"] :is(aside h1, .practicePanel .ppTitle) { font-size: 20px !important; line-height: 1.15 !important; }
+
+/* Two-panel crystal visualizations and symmetry subviews. */
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .wrap { display: grid; grid-template-columns: minmax(0, 1fr) var(--qv-side); grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; padding: 6px; gap: 6px; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .wrap > .panel { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .wrap > .panel > header { flex: 0 0 auto; padding: 8px; gap: 8px; flex-wrap: wrap; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .wrap > .panel > :is(.ui, .controls) { flex: 1; min-height: 0; overflow: auto; padding: 8px; grid-template-columns: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] :is(.controls .row, .controls .row3, .controls .row2, .compact-sliders) { grid-template-columns: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] :is(.col-span-2, .ui > *) { grid-column: 1 / -1; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] :is(#canvas, #sceneCanvas, model-viewer) { flex: 1; height: 0; min-height: 0; width: 100%; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .footer { max-height: 22%; overflow: auto; padding: 6px 8px; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] .viewer-gizmo-toggle { top: auto; bottom: 8px; right: 8px; max-width: calc(100% - 16px); padding: 6px 10px; }
+html[data-qv-mobile][data-qv-layout="crystal-panels"] #painel-controles .viewer-gizmo-toggle { position: static; max-width: 100%; margin: 0; border-radius: 10px; }
+html[data-qv-mobile] .qv-lattice-tools { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px; border-top: 1px solid #334155; background: #131c2b; }
+html[data-qv-mobile] .qv-lattice-tools button { min-width: 44px; padding: 6px 10px; background: #23324a; color: #f1f5ff; border: 1px solid #526580; border-radius: 9px; font: 700 13px/1.2 system-ui, sans-serif; }
+
+/* Guides with a right column. Both columns scroll independently. */
+html[data-qv-mobile][data-qv-layout="guide-right"] .app { display: grid; grid-template-columns: minmax(0, 1fr) var(--qv-side); grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; padding: 6px; gap: 6px; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .app > .panel { height: 100%; min-height: 0; overflow: hidden; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .sidebar { display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .scroll { flex: 1; min-height: 0; padding: 8px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .head { padding: 8px; flex-shrink: 0; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .section { padding: 10px; }
+html[data-qv-mobile][data-qv-layout="guide-right"] :is(.grid3, .steps-grid) { grid-template-columns: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="guide-right"] .view-wrap { height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .stage:has(> .head) { display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .stage:has(> .head) .view-wrap { flex: 1; height: 0; }
+html[data-qv-mobile][data-qv-layout="guide-right"] .equation-banner { top: 8px; right: 8px; max-width: calc(100% - 16px); font-size: 12px; max-height: 28%; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="guide-right"] #hydrogenVisualizerHost { height: 100%; }
+html[data-qv-mobile][data-qv-layout="guide-right"] #hydrogenVisualizerFrame { width: 100%; height: 100%; }
+
+/* A former full-width control header becomes a scrollable left column. */
+html[data-qv-mobile][data-qv-layout="packing"] body { display: grid; grid-template-columns: var(--qv-side) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="packing"] body > header { position: static; height: 100%; min-height: 0; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="packing"] .wrap { padding: 10px; }
+html[data-qv-mobile][data-qv-layout="packing"] #stage { height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="packing"] :is(.panel-row-main > label, .panel-row-main > .control-group) { width: 100%; min-width: 0; flex-wrap: wrap; }
+html[data-qv-mobile][data-qv-layout="packing"] :is(.filter-strip, .panel-row) { gap: 6px; }
+
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] body { display: grid; grid-template-columns: var(--qv-side) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] body > header { position: static; padding: 6px 10px; gap: 8px; }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] header .hint { font-size: 11px; }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] .sidebar { display: block; min-height: 0; overflow: auto; padding: 8px; }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] .main { height: 100%; min-height: 0; grid-template-rows: minmax(100px, 1fr) auto; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] .panel { padding: 8px; gap: 8px; max-height: 46%; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="crystal-geometry"] .panel .info { min-width: 0; flex-basis: 100%; }
+
+html[data-qv-mobile][data-qv-layout="hydrogen"] body { display: grid; grid-template-columns: var(--qv-side) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="hydrogen"] body > aside { height: 100%; min-height: 0; padding: 10px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="hydrogen"] body > main { height: 100%; min-height: 0; display: block; overflow: auto; padding: 8px; }
+html[data-qv-mobile][data-qv-layout="hydrogen"] .canvas-card { height: calc(var(--qv-height) - 16px); min-height: 180px; }
+html[data-qv-mobile][data-qv-layout="hydrogen"] :is(.canvas-wrap, canvas) { min-height: 0; }
+html[data-qv-mobile][data-qv-layout="hydrogen"] .views-grid { grid-template-columns: minmax(0, 1fr); margin-top: 8px; }
+html[data-qv-mobile][data-qv-layout="hydrogen"] .toolbar-three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="hydrogen"] .row { grid-template-columns: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="hydrogen"][data-qv-embedded] body { min-height: 0 !important; }
+html[data-qv-mobile][data-qv-layout="hydrogen"][data-qv-embedded] main { height: 100%; display: block !important; padding: 8px !important; }
+html[data-qv-mobile][data-qv-layout="hydrogen"][data-qv-embedded] .canvas-wrap { min-height: 0 !important; }
+
+html[data-qv-mobile][data-qv-layout="orbitals"] body { position: relative; }
+html[data-qv-mobile][data-qv-layout="orbitals"] body > main { display: block; position: relative; margin-left: var(--qv-side); width: calc(100% - var(--qv-side)); height: 100%; overflow: hidden; }
+html[data-qv-mobile][data-qv-layout="orbitals"] .qv-orbital-controls { position: absolute; top: var(--qv-top); left: env(safe-area-inset-left, 0px); width: var(--qv-side); height: var(--qv-height); overflow: auto; padding: 6px; box-sizing: border-box; background: #eceff3; z-index: 20; }
+html[data-qv-mobile][data-qv-layout="orbitals"] :is(.ui, .structuresPanel) { position: static; width: 100%; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 10px; }
+html[data-qv-mobile][data-qv-layout="orbitals"] .structuresGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="orbitals"] .axesOverlay { width: 90px; height: 90px; bottom: 8px; right: 8px; }
+html[data-qv-mobile][data-qv-layout="orbitals"] .loadingCard { max-height: calc(var(--qv-height) - 12px); overflow: auto; }
+
+/* Tab containers: the tab row scrolls rather than increasing the frame's height. */
+html[data-qv-mobile][data-qv-layout="tabs"] body { display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="tabs"] body > header { flex: 0 0 auto; padding: 4px 6px; min-width: 0; }
+html[data-qv-mobile][data-qv-layout="tabs"] :is(.menu, .tabs) { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; width: 100%; }
+html[data-qv-mobile][data-qv-layout="tabs"] :is(.menu, .tabs) > button { flex: 0 0 auto; white-space: nowrap; padding: 6px 10px; }
+html[data-qv-mobile][data-qv-layout="tabs"] header h1 { font-size: 13px; margin: 0; }
+html[data-qv-mobile][data-qv-layout="tabs"] body > main { flex: 1; height: 0; min-height: 0; display: flex; flex-direction: column; padding: 0; }
+html[data-qv-mobile][data-qv-layout="tabs"] :is(.deck, .frameWrap) { flex: 1; height: 100%; min-height: 0; display: flex; }
+html[data-qv-mobile][data-qv-layout="tabs"] iframe { flex: 1; min-width: 0; height: 100%; border: 0; }
+html[data-qv-mobile][data-qv-layout="tabs"] iframe[hidden] { display: none; }
+
+html[data-qv-mobile][data-qv-layout="cubic-model"] body { display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="cubic-model"] body > header { flex: 0 0 auto; padding: 6px 8px; }
+html[data-qv-mobile][data-qv-layout="cubic-model"] body > main { flex: 1; height: 0; min-height: 0; grid-template-columns: minmax(0, 1fr) var(--qv-side); grid-template-rows: minmax(0, 1fr); gap: 6px; padding: 6px; }
+html[data-qv-mobile][data-qv-layout="cubic-model"] .panel { min-height: 0; height: 100%; }
+html[data-qv-mobile][data-qv-layout="cubic-model"] .right { overflow: auto; padding: 8px; }
+html[data-qv-mobile][data-qv-layout="cubic-model"] model-viewer { height: 100% !important; min-height: 0 !important; }
+
+/* Water, Bravais and unit-cell guides. */
+html[data-qv-mobile][data-qv-layout="water"] :is(.wrap, .wrap > .panel, .workspace) { height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="water"] .workspace { grid-template-columns: var(--qv-side) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="water"] .sidebar { min-height: 0; overflow: auto; border-right: 1px solid #262626; }
+html[data-qv-mobile][data-qv-layout="water"] :is(.sidebarHeader, .sidebarScroll) { padding: 10px; }
+html[data-qv-mobile][data-qv-layout="water"] .sidebarHeader h1 { font-size: 22px; }
+html[data-qv-mobile][data-qv-layout="water"] .mainColumn { height: 100%; min-height: 0; overflow: auto; padding: 8px; }
+html[data-qv-mobile][data-qv-layout="water"] :is(canvas#scene, canvas#phaseChart) { height: max(180px, calc(var(--qv-height) - 100px)); }
+html[data-qv-mobile][data-qv-layout="water"] .tutorialActions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="bravais"] body > main { width: 100%; height: 100%; min-height: 0; padding: 6px; gap: 6px; grid-template-columns: minmax(0, 1fr) var(--qv-side); grid-template-rows: minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="bravais"] #vizPanel .panelbody { overflow: auto; }
+html[data-qv-mobile][data-qv-layout="bravais"] :is(.panelhead, .panelbody, .footerNav) { padding: 8px; }
+html[data-qv-mobile][data-qv-layout="bravais"] .panelhead { flex-wrap: wrap; }
+html[data-qv-mobile][data-qv-layout="bravais"] .qv-bravais-side { flex: 1; min-height: 0; overflow: auto; padding: 8px; }
+html[data-qv-mobile][data-qv-layout="bravais"] .qv-bravais-side #secBody { overflow: visible; padding: 8px 0; }
+html[data-qv-mobile][data-qv-layout="bravais"] #vizPanel .panelbody { flex: 1; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] .app { height: 100%; grid-template-rows: auto minmax(0, 1fr); }
+html[data-qv-mobile][data-qv-layout="unit-cells"] .app > header { padding: 4px 8px; gap: 6px; flex-wrap: wrap; max-height: 110px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] .brand { min-width: 0; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] .main { height: 100%; min-height: 0; display: grid; grid-template-columns: var(--qv-side) minmax(0, 1fr); gap: 6px; padding: 6px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] #leftCard { grid-column: 1; grid-row: 1 / 3; max-height: none; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] #viewerCard { grid-column: 2; grid-row: 1; height: max(200px, calc(var(--qv-height) - 100px)); min-height: 0; }
+html[data-qv-mobile][data-qv-layout="unit-cells"] #rightCard { grid-column: 2; grid-row: 2; max-height: none; overflow: visible; }
+
+/* Touch puzzles: compact library, workspace, and a separately scrollable reading panel. */
+html[data-qv-mobile][data-qv-layout="puzzle"] body { display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="puzzle"] body > header { position: static; padding: 4px 8px; flex: 0 0 auto; gap: 6px; flex-wrap: wrap; max-height: 100px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="puzzle"] header h1 { font-size: 14px; }
+html[data-qv-mobile][data-qv-layout="puzzle"] header .pill { display: none; }
+html[data-qv-mobile][data-qv-layout="puzzle"] main { flex: 1; min-height: 0; width: 100%; padding: 6px; gap: 6px; display: grid; grid-template-columns: minmax(150px, 26%) minmax(0, 1fr); grid-template-areas: 'left board'; grid-template-rows: minmax(240px, 1fr) auto; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="puzzle"] main > .col { min-width: 0; min-height: 0; max-height: none; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="puzzle"] #side { grid-column: 2; grid-row: 2; overflow: visible; }
+html[data-qv-mobile][data-qv-layout="puzzle"] #leftCol { grid-row: 1 / 3; position: sticky; top: 0; align-self: start; max-height: calc(var(--qv-height) - 100px); }
+html[data-qv-mobile][data-qv-layout="puzzle"] body:is(.hideSide, .right-off) #side { display: none !important; }
+html[data-qv-mobile][data-qv-layout="puzzle"] :is(#library, #atomsGrid, #symbolsGrid) { grid-template-columns: minmax(0, 1fr); max-height: none; padding: 10px; }
+html[data-qv-mobile][data-qv-layout="puzzle"] .chip { min-width: 0; min-height: 66px; touch-action: pan-y; }
+html[data-qv-mobile][data-qv-layout="puzzle"] .chip .val { color: #526079; }
+html[data-qv-mobile][data-qv-layout="puzzle"] :is(#board, #boardWrap) { min-height: max(210px, calc(var(--qv-height) - 140px)); }
+html[data-qv-mobile][data-qv-layout="puzzle"] #boardWrap { overflow: auto; }
+html[data-qv-mobile][data-qv-layout="puzzle"] .tile { touch-action: none; }
+html[data-qv-mobile][data-qv-layout="puzzle"] #guide { max-height: calc(var(--qv-height) - 10px); overflow: auto; }
+
+/* Word games keep their board dimensions; the board area can scroll, controls cannot overlap it. */
+html[data-qv-mobile][data-qv-layout="words"] body { overflow: auto; }
+html[data-qv-mobile][data-qv-layout="words"] .launch-screen { min-height: 100%; height: auto; padding: 12px; }
+html[data-qv-mobile][data-qv-layout="words"] .launch-modal { padding: 14px; gap: 14px; }
+html[data-qv-mobile][data-qv-layout="words"] .launch-choices.cols2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="words"] .launch-choices.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="words"] .theme-list { max-height: none; }
+html[data-qv-mobile][data-qv-layout="words"] .minimal-stage { min-height: 100%; display: block; padding: 8px 8px 64px 60px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="words"] :is(.gameSection, .gameSurface, .cw-layout) { max-width: 100%; }
+html[data-qv-mobile][data-qv-layout="words"] .gameSurface { justify-items: start; }
+html[data-qv-mobile][data-qv-layout="words"] .ws-words { width: 100%; justify-content: flex-start; }
+html[data-qv-mobile][data-qv-layout="words"] :is(.ws-cell, .cw-cell, .cw-input, .cw-number) { min-height: 0; overflow-wrap: normal; }
+html[data-qv-mobile][data-qv-layout="words"] .backBtn { top: calc(var(--qv-top) + 8px); left: max(8px, env(safe-area-inset-left)); }
+html[data-qv-mobile][data-qv-layout="words"] .iconToolbar { position: sticky; justify-content: flex-end; padding: 8px; right: 8px; bottom: 0; width: max-content; max-width: 100%; margin-left: auto; background: #fffffff2; border-radius: 12px; }
+html[data-qv-mobile][data-qv-layout="words"] .cw-hintFloat { bottom: 8px; max-height: calc(var(--qv-height) - 16px); overflow: auto; padding-right: 48px; }
+
+html[data-qv-mobile][data-qv-layout="million"] #app { height: 100%; min-height: 0; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="million"] .screen { min-height: 100%; height: auto; padding: 12px; gap: 12px; }
+html[data-qv-mobile][data-qv-layout="million"] .game-screen { min-height: 100%; height: auto; overflow: visible; }
+html[data-qv-mobile][data-qv-layout="million"] .logo-main { width: min(460px, 70vw); max-height: 30vh; }
+html[data-qv-mobile][data-qv-layout="million"] .logo-mini { height: 55px; }
+html[data-qv-mobile][data-qv-layout="million"] .sound-toggle { top: calc(var(--qv-top) + 8px); right: max(8px, env(safe-area-inset-right)); width: 44px; height: 44px; }
+html[data-qv-mobile][data-qv-layout="million"] .game-head { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="million"] .options-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+html[data-qv-mobile][data-qv-layout="million"] .bottom-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="million"] :is(.modal-card, .prize-card) { max-height: calc(var(--qv-height) - 20px); overflow: auto; }
+
+/* React apps keep their own components; only the mobile outer workspace changes. */
+html[data-qv-mobile][data-qv-layout^="react-"] #root { height: 100%; min-height: 0; overflow: auto; }
+html[data-qv-mobile][data-qv-layout^="react-"] #root > * { min-height: 100%; max-width: 100%; }
+html[data-qv-mobile][data-qv-layout^="react-"] :is(.h-screen, .h-dvh, .min-h-screen) { height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout^="react-"] :is([role="dialog"], .thermo-popup-shell) { max-height: calc(var(--qv-height) - 16px); overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-glass"] #root main > .absolute.top-6 { top: 8px; left: 8px; right: 8px; transform: none; width: auto; gap: 8px; justify-content: center; }
+html[data-qv-mobile][data-qv-layout="react-glass"] #root .absolute.top-6.right-6 { top: 64px; right: 8px; max-width: min(46%, 210px); max-height: calc(100% - 130px); overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-glass"] #root .absolute.bottom-6.right-6 { bottom: 8px; right: 8px; }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-overlay { top: var(--qv-top); bottom: var(--qv-bottom); }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-drawer { top: 6px; bottom: 6px; left: 6px; right: 6px; height: auto; min-height: 0; max-height: none; }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-header { flex-wrap: wrap; gap: 6px; max-height: 45%; overflow: auto; flex-shrink: 0; }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-header-actions { max-width: 100%; flex-wrap: wrap; }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-content { display: block; overflow: auto; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="react-glass"] :is(.am-toolbar, .am-formline, .am-frame-meta) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-qv-mobile][data-qv-layout="react-glass"] .am-send-pop { min-width: 0; max-width: calc(100vw - 24px); max-height: calc(var(--qv-height) - 16px); overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-thermo"] #root > div { flex-direction: row; height: 100%; }
+html[data-qv-mobile][data-qv-layout="react-thermo"] #root > div > div:first-child { width: var(--qv-side); height: 100%; flex: 0 0 var(--qv-side); }
+html[data-qv-mobile][data-qv-layout="react-thermo"] #root > div > div:first-child > div { padding: 10px; }
+html[data-qv-mobile][data-qv-layout="react-thermo"] #root > div > div:nth-child(2) { min-width: 0; height: 100%; overflow: auto; }
+
+html[data-qv-mobile][data-qv-layout="react-gems"] { --qv-gem-note: 60px; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .qv-gem-views { position: absolute; left: var(--qv-side); top: 0; bottom: calc(var(--qv-gem-note) + 44px); right: 0; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 6px; padding: 6px; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .qv-gem-view { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid #45546c; border-radius: 12px; background: #0d1726; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .qv-gem-view h2 { flex: 0 0 auto; margin: 0; padding: 8px 4px; color: #edf3ff; background: #172337; text-align: center; font: 700 12px/1.2 system-ui, sans-serif; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .qv-gem-view > .bg-transparent { flex: 1; min-height: 0; height: 0 !important; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.inset-0.flex { display: flex; flex-direction: column; width: var(--qv-side); height: 100%; padding: 6px; gap: 8px; overflow: auto; pointer-events: auto; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.inset-0.flex > div { width: 100%; height: auto; overflow: visible; padding: 0; flex: 0 0 auto; gap: 8px; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.inset-0.flex > div > div { padding: 10px; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.z-20.bottom-4 { left: calc(var(--qv-side) + 8px) !important; right: 8px; bottom: 8px !important; max-width: calc(100% - var(--qv-side) - 16px) !important; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .simoens-didactic-note { position: absolute; top: auto; left: calc(var(--qv-side) + 8px); right: 8px; bottom: 4px; width: auto; max-width: none; transform: none; box-sizing: border-box; padding: 6px 8px; margin: 0; font: 500 11px/1.3 system-ui, sans-serif; color: #e5edf8; background: #101b2c; border-color: #45546c; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root { height: 100%; }
+html[data-qv-mobile][data-qv-layout="react-gems"] .simoens-didactic-note { bottom: 4px; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.z-20.bottom-4 { bottom: calc(var(--qv-gem-note) + 8px) !important; max-height: 38px; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.z-20.bottom-4 { color: #edf3ff; pointer-events: auto; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.z-20.bottom-4 > div { background: #132136; color: #edf3ff; border-color: #52647f; }
+html[data-qv-mobile][data-qv-layout="react-gems"] #root > div > .absolute.z-20.bottom-4 span { color: #edf3ff; }
+html[data-qv-mobile][data-qv-layout="react-gems"] :is(.text-slate-400, h2.text-slate-400) { color: #526079; }
+
+html[data-qv-mobile][data-qv-layout="react-interactions"] #root > div { position: relative; height: 100%; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+html[data-qv-mobile][data-qv-layout="react-interactions"] #root > div > header { flex: 0 0 52px; height: 52px; position: relative; padding: 4px 10px; }
+html[data-qv-mobile][data-qv-layout="react-interactions"] #root > div > div.flex { flex: 1; min-height: 0; height: 0; }
+html[data-qv-mobile][data-qv-layout="react-interactions"] aside { position: absolute; top: auto; bottom: 0; height: calc(100% - 52px); max-width: min(280px, 80vw); padding: 12px; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-interactions"] main { height: 100%; min-height: 0; overflow: auto; }
+html[data-qv-mobile][data-qv-layout="react-interactions"] main > div { padding: 12px; }
+
+html[data-qv-mobile][data-qv-layout="react-chess"] #root > div { display: flex; flex-direction: row; height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="react-chess"] #root > div > .absolute.left-0 { position: relative; flex: 0 0 var(--qv-side); width: var(--qv-side); max-height: 100%; overflow: auto; padding: 60px 12px 12px; transform: none; }
+html[data-qv-mobile][data-qv-layout="react-chess"] #root > div > .absolute.left-0.-translate-x-full { width: 0; flex-basis: 0; padding: 0; border: 0; overflow: hidden; }
+html[data-qv-mobile][data-qv-layout="react-chess"] #root > div > .flex-1 { min-width: 0; width: 0; height: 100%; }
+html[data-qv-mobile][data-qv-layout="react-chess"] .text-gray-600 { color: #a8b3c5; }
+
+/* Defect simulation panels are stacked in one column instead of covering both sides. */
+html[data-qv-mobile][data-qv-layout="defects"] .app-shell { width: 100%; height: 100%; min-height: 0; }
+html[data-qv-mobile][data-qv-layout="defects"] .viewer { left: var(--qv-side); width: calc(100% - var(--qv-side)); }
+html[data-qv-mobile][data-qv-layout="defects"] .interface { width: var(--qv-side); height: 100%; display: flex; flex-direction: column; gap: 8px; padding: 6px; overflow: auto; pointer-events: auto; }
+html[data-qv-mobile][data-qv-layout="defects"] :is(.stats-panel, .sidebar, .info-panel, .mobile-hint) { position: static; transform: none; width: 100%; max-height: none; min-height: auto; margin: 0; padding: 10px; flex-shrink: 0; border-radius: 14px; }
+html[data-qv-mobile][data-qv-layout="defects"] .stats-panel { order: -1; gap: 6px; }
+html[data-qv-mobile][data-qv-layout="defects"] .stat { min-width: 0; }
+html[data-qv-mobile][data-qv-layout="defects"] .stat-value { font-size: 17px; }
+html[data-qv-mobile][data-qv-layout="defects"] .panel-title { font-size: 20px; }
+
+@media (max-height: 420px) {
+  html[data-qv-mobile] { --qv-side: clamp(210px, 32vw, 280px); }
+  html[data-qv-mobile] :is(.tutorialTitle, .guide-heading) { font-size: 19px; }
+  #qv-mobile-bar span { display: none; }
+}

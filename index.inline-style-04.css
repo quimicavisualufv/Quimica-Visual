@@ -1,0 +1,115 @@
+#testimonials-5-v5iWwJmiE2 .credits-logo-grid{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  row-gap: 24px;
+  overflow: visible;
+}
+#testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+  flex: 0 0 16.6667%;
+  max-width: 16.6667%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+#testimonials-5-v5iWwJmiE2 .item-wrapper{
+  height: 100%;
+}
+#testimonials-5-v5iWwJmiE2 .card-box{
+  height: 100%;
+  text-align: center;
+}
+#testimonials-5-v5iWwJmiE2 .credit-card-link,
+#testimonials-5-v5iWwJmiE2 .credit-card-static{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  padding: 1.5rem 1rem;
+  text-decoration: none;
+  border-radius: 18px;
+  background: #ffffff;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame{
+  width: 100%;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .75rem;
+  overflow: visible;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame img{
+  display: block;
+  max-width: 100%;
+  max-height: 88px;
+  width: auto;
+  height: auto;
+  object-fit: contain !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  overflow: visible !important;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-amaweb{
+  width: 100%;
+  max-height: 72px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-w3c{
+  width: 132px;
+  max-height: 58px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-colorfilter{
+  width: 88px;
+  max-height: 31px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-vlibras{
+  width: 110px;
+  max-height: 88px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-whocanuse{
+  width: 197px;
+  max-height: 46px;
+}
+
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame img.credit-logo-funarbe{
+  width: 230px;
+  max-height: 78px;
+}
+#testimonials-5-v5iWwJmiE2 .credit-logo-frame img.credit-logo-ufv{
+  width: 235px;
+  max-height: 112px;
+}
+#testimonials-5-v5iWwJmiE2 .credits-bottom-first{
+  margin-left: 0 !important;
+}
+#testimonials-5-v5iWwJmiE2 .card-title{
+  margin-top: .5rem;
+  text-align: center;
+}
+#testimonials-5-v5iWwJmiE2 .credit-card-link:focus-visible{
+  outline: 4px solid #ffd54a !important;
+  outline-offset: 4px !important;
+}
+@media (max-width: 991.98px){
+  #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+  #testimonials-5-v5iWwJmiE2 .credits-bottom-first{
+    margin-left: 0;
+  }
+}
+@media (max-width: 767.98px){
+  #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+@media (max-width: 575.98px){
+  #testimonials-5-v5iWwJmiE2 .credits-logo-grid > .item.features-without-image{
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

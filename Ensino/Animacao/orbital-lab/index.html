@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-qv-layout="orbital-lab">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d18">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#110e0d">
   <meta name="description" content="Laboratório interativo de orbitais d e teoria do campo cristalino.">
   <title>Orbital Lab</title>
   <link rel="stylesheet" href="css/base.css">
@@ -11,6 +11,12 @@
   <link rel="stylesheet" href="css/teaching.css">
   <link rel="stylesheet" href="css/refinements.css">
   <link rel="stylesheet" href="css/led-theme.css">
+  <!-- Widgets e orientação mobile: mesmos componentes usados nas demais animações. -->
+  <script defer src="../../../Chat/widget/chat-widget.js?v=chat-widget-20260718-global-v3"></script>
+  <link rel="stylesheet" href="../../mobile/ensino-mobile.css?v=20261025-r2">
+  <link rel="stylesheet" href="css/mobile.css?v=20261030-orbital-lab">
+  <script src="../../mobile/ensino-mobile.js?v=20261025-r2"></script>
+  <script defer src="js/ui/mobile.js?v=20261030-orbital-lab"></script>
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Ir para o conteúdo</a>
@@ -45,7 +51,7 @@
 
     <main class="workspace">
       <header class="topbar">
-        <div class="topbar-start"><a href="../" class="gallery-return" aria-label="Voltar à galeria de animações">← Animações</a><div class="breadcrumb">LABORATÓRIO <span>/</span> QUÍMICA INORGÂNICA <span>/</span> <b id="breadcrumbCurrent">ORBITAIS d</b></div>
+        <div class="topbar-start"><a href="../../" class="gallery-return" aria-label="Voltar à galeria de animações">← Animações</a><div class="breadcrumb">LABORATÓRIO <span>/</span> QUÍMICA INORGÂNICA <span>/</span> <b id="breadcrumbCurrent">ORBITAIS d</b></div>
         </div><div class="topbar-right"><span class="top-chip"><span class="green-dot"></span> INTERATIVO</span><button class="tour-replay-top" type="button" id="replayTourTop" aria-label="Iniciar tutorial guiado">◈ Tutorial</button><button class="icon-button" id="helpButton" title="Instruções" aria-label="Abrir instruções">?</button></div>
       </header>
 
@@ -280,5 +286,7 @@
   <script src="js/ui/notation.js"></script>
   <script src="js/data/guide-content.js"></script>
   <script src="js/ui/onboarding.js"></script>
+  <script src="../../../Chat/widget/vlibras-widget.js?v=vlibras-20260716-singleton"></script>
+  <script defer src="../../../Chat/widget/simoens-accessibility.js?v=a11y-widget-20260718-position-fix"></script>
 </body>
 </html>

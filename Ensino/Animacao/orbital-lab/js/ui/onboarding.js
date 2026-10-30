@@ -94,7 +94,10 @@
    let dy=0;
    if(r.top<safeTop)dy=r.top-safeTop;
    else if(r.top>Math.max(safeTop+60,safeBottom-48))dy=r.top-Math.max(safeTop+50,safeBottom-95);
-   if(Math.abs(dy)>8)window.scrollBy({top:dy,behavior:'instant'});
+   if(Math.abs(dy)>8){
+    const pane=document.documentElement.dataset.qvMobile==='true'?document.querySelector('.workspace'):null;
+    (pane||window).scrollBy({top:dy,behavior:'instant'});
+   }
   }else{
    if(r.top<68||r.bottom>h-25)target.scrollIntoView({block:r.height>h*.8?'start':'center',inline:'nearest',behavior:'instant'});
   }

@@ -1,0 +1,194 @@
+/* Orbital Lab — integração horizontal no sistema mobile do SiMoEns.
+   Aplicado somente quando o detector compartilhado identifica um dispositivo móvel.
+   Mantém a identidade preto/vermelho/dourado do laboratório. */
+html[data-qv-mobile][data-qv-layout="orbital-lab"] {
+  color-scheme: dark;
+  --qv-top: calc(50px + env(safe-area-inset-top, 0px));
+  --qv-side: clamp(200px, 32vw, 295px);
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] body {
+  background: #0a0808;
+  color: #f4d7a4;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-mobile-bar {
+  background: linear-gradient(105deg, #110e0d, #211612 80%, #140e0c);
+  border-bottom: 1px solid #65402b;
+  box-shadow: 0 4px 19px #0008, inset 0 -1px 0 #cf583536;
+  color: #f5c975;
+  padding-right: max(118px, calc(118px + env(safe-area-inset-right, 0px)));
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-mobile-bar button {
+  color: #f4c672;
+  background: #2b1b18;
+  border-color: #a66532;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-rotate {
+  border-color: #c58e3b;
+  color: #f7d39b;
+  background: #191311;
+  box-shadow: 0 24px 90px #000b, 0 0 36px #a837272c;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-rotate .qv-phone {
+  border-color: #ecc16c;
+  color: #e9b44c;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-rotate .qv-rotate-tip {color: #c7afa0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-rotate button {
+  background: linear-gradient(112deg, #f2be5a, #e55045); color: #1a1010;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(select, textarea, input[type="text"],input[type="search"],input[type="number"]) {
+  background-color: #1e1715;
+  border-color: #6a4636;
+  color: #f6d8a7;
+  -webkit-text-fill-color: currentColor;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(select option,select optgroup) {
+  background: #1e1715; color: #f6d8a7;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .app-shell {
+  display: block;
+  width: 100%; height: 100%; min-height: 0;
+  overflow: hidden;
+}
+/* In landscape the existing module selector replaces the 11-item sidebar. */
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .sidebar {display: none !important;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .workspace {
+  height: 100%; width: 100%; min-height: 0;
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 !important;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .topbar {
+  height: 46px; min-height: 46px;
+  padding: 0 12px;
+  position: sticky; top: 0; z-index: 12;
+  background: #17110fef;
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid #4f3028;
+  gap: 8px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .breadcrumb {font-size: 9px;max-width: none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height: 1.2;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .breadcrumb span {padding: 0 3px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .gallery-return {flex-shrink:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .topbar-start {display:flex;align-items:center; min-width:0;gap:9px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .topbar-right {gap:7px;flex-shrink:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .top-chip {display:none;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .icon-button {height:44px;width:44px;border-radius:10px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .tour-replay-top {min-height:44px;padding:6px 10px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .content {
+  max-width: 100%; min-width: 0;
+  padding: 12px 12px max(72px, env(safe-area-inset-bottom, 0px));
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero {margin-bottom: 10px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero .eyebrow {font-size: 9px;letter-spacing: .5px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero h1 {font-size: clamp(19px, 3.3vw, 27px);line-height:1.18;margin: 5px 0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero p {font-size:11px;line-height:1.35;margin: 0;max-width:75ch;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch {
+  display: flex !important; align-items:center;
+  position: sticky; top: 46px; z-index: 11;
+  margin: 0 0 10px; padding: 5px 9px;
+  min-height: 52px; gap: 9px;
+  border: 1px solid #5d3c2e; border-radius: 8px;
+  background: #1b1513f5;
+  box-shadow: 0 8px 19px #0006;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch label {font-size: 10px;max-width: none; flex-shrink:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch select {
+  min-height: 42px; max-height: 46px; min-width:0; padding: 5px 11px;
+  color: #f5c96f; border: 1px solid #ad7939; background: #2a1d18;
+  font-size: 14px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .main-grid {
+  grid-template-columns: minmax(0, 1.3fr) minmax(224px, .8fr);
+  gap: 10px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .sim-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(238px, .82fr);
+  gap: 10px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.stage,.sim-stage) {
+  height: clamp(210px, 59dvh, 410px);
+  min-height: 210px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .stage-controls {
+  min-height: 48px; height: auto; flex-wrap:wrap;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .info-body {display:block; padding: 12px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .information-panel .info-body h2 {font-size:31px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .fact-box {margin-top:8px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .orbital-list {grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .orbital-card {min-width:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .mini-canvas {height:80px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .geometry-picker {grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .geometry-choice {min-width:0;padding:8px;}
+/* Side-by-side comparison where possible; swipe individual comparison cards on narrow phones. */
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .comparison-grid {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;
+}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .comparison-grid .compare-card {display:block; min-width:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .compare-scene {height:clamp(165px,46dvh,330px);}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .compare-toolbar {gap:8px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .compare-controls {gap:8px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .sci-grid-two {grid-template-columns:minmax(0,1fr);gap:10px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.lab-layout,.lesson-layout,.viewer-main) {min-width:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.panel-head,.sci-pad,.sci-actions,.science-note) {overflow-wrap:anywhere;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.gl-canvas, .aom-scene canvas, .compare-scene canvas) {touch-action:none;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(button,select,summary) {min-height:44px;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.module,.science-module,.sci-card,.lab-card) {min-width:0;}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-card {max-height: calc(100dvh - 30px);}
+html[data-qv-mobile][data-qv-layout="orbital-lab"] .help-dialog {max-height:calc(100dvh - 24px);max-width:min(640px,calc(100vw - 28px));overflow-y:auto;}
+@media (max-width:760px) {
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .topbar {padding:0 8px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .breadcrumb {display:none;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .topbar-start {margin-right:auto;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .content {padding:9px 9px 74px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero .eyebrow {display:none;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero p {display:none;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch {top:46px;gap:7px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch label {font-size:9px;max-width:58px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.main-grid,.sim-grid) {grid-template-columns:1fr;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .geometry-picker {grid-template-columns:repeat(3,minmax(0,1fr));}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .geometry-choice .g-shape {display:none;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .orbital-list {grid-template-columns:repeat(3,minmax(0,1fr));}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .comparison-grid {
+    display:flex;overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;scroll-padding-inline:2px;
+    padding-bottom:12px;-webkit-overflow-scrolling:touch;
+  }
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .comparison-grid .compare-card {
+    flex:0 0 min(78vw,390px);scroll-snap-align:start;
+  }
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .compare-scene {height:clamp(205px,58dvh,300px);}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-card {max-height:calc(100dvh - 30px);}
+}
+@media (max-height:420px) and (orientation:landscape) {
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero {margin-bottom:7px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .hero h1 {font-size:19px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .module-switch {min-height:46px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] :is(.stage,.sim-stage) {height: min(68dvh,340px);}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-actions,
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-footer {background:#1a1514;}
+}
+
+/* Primeira visita em telefones pequenos: tutorial ocupa a lateral,
+   não bloqueia o painel inteiro nem os controles destacados. */
+@media (max-width:760px) and (orientation:landscape) {
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-card {
+    box-sizing:border-box;
+    width:min(330px,48vw) !important;
+    left:auto !important; right:9px !important;
+    top:55px !important; bottom:8px !important;
+    max-height:calc(100dvh - 63px) !important;
+    padding:11px 12px;
+  }
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-card h2 {font-size:16px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-card p {font-size:10px;line-height:1.4;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-kicker {font-size:9px;}
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-actions,
+  html[data-qv-mobile][data-qv-layout="orbital-lab"] .ot-footer {
+    margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px;
+  }
+}
+
+html[data-qv-mobile][data-qv-layout="orbital-lab"] #qv-mobile-bar > span {color:#edbb59;opacity:1;white-space:nowrap;font-size:11px;letter-spacing:1px;}
